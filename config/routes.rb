@@ -7,7 +7,7 @@ IcuWwwApp::Application.routes.draw do
   get  "redirect" => "redirects#redirect"
   get  "header"   => "header#control"
 
-  %w[home links].each do |page|
+  %w[home links juniors].each do |page|
     get page => "pages##{page}"
   end
   %w[clubs events].each do |page|
@@ -33,7 +33,9 @@ IcuWwwApp::Application.routes.draw do
   resources :clubs,       only: [:index, :show]
   resources :downloads,   only: [:index, :show]
   resources :events,      only: [:index, :show]
-  resources :games,       only: [:index, :show]
+  resources :games,       only: [:index, :show] do
+    get :download, on: :collection
+  end
   resources :images,      only: [:index, :show]
   resources :items,       only: [:new, :create, :destroy]
   resources :new_players, only: [:create]
@@ -76,6 +78,7 @@ IcuWwwApp::Application.routes.draw do
     end
     resources :journal_entries, only: [:index, :show]
     resources :logins,          only: [:index, :show]
+    resources :mail_events,     only: [:index]
     resources :news,            only: [:new, :create, :edit, :update, :destroy]
     resources :officers,        only: [:index, :show, :edit, :update]
     resources :payment_errors,  only: [:index]
@@ -83,7 +86,7 @@ IcuWwwApp::Application.routes.draw do
     resources :players,         only: [:show, :new, :create, :edit, :update]
     resources :refunds,         only: [:index]
     resources :relays,          only: [:index, :show, :edit, :update] do
-      get :refresh, on: :collection
+      get :refresh, :enable_all, :disable_all, on: :collection
     end
     resources :series,          only: [:new, :create, :edit, :update, :destroy]
     resources :tournaments,     only: [:new, :create, :edit, :update, :destroy]

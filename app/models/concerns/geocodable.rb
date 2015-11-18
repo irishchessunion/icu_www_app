@@ -29,16 +29,22 @@ module Geocodable
       when /corrib.+great.+southern.+galway/i
         self.lat  = 53.278550
         self.long = -9.006227
+      when /castle.+hotel.+bunratty/i
+        self.lat  = 52.69614
+        self.long = -8.816272
       when /dunraven.+arms.+hotel.+adare/i
         self.lat  = 52.565697
         self.long = -8.786747
       when /esplanade.+hotel.+bray/i
         self.lat  = 53.199098
         self.long = -6.096285
+      when /grand.+hotel.+wicklow/i
+        self.lat  = 52.980893
+        self.long = -6.047359
       when /gresham.+hotel.+connell.+dublin/i
         self.lat  = 53.351888
         self.long = -6.260601
-      when /gresham.+metropole.+hotel.+cork/i
+      when /metropole.+hotel.+cork/i
         self.lat  = 51.901628
         self.long = -8.467355
       when /hilton.+airport.+(northern|malahide).+dublin/i
@@ -80,6 +86,9 @@ module Geocodable
       when /teachers.+club.+parnell.+dublin/i
         self.lat  = 53.353324
         self.long = -6.265133
+      when /west.+county.+ennis/i
+        self.lat  = 52.831998
+        self.long = -8.981091
       when /wynn.+hotel.+abbey.+dublin/i
         self.lat  = 53.348649
         self.long = -6.258743

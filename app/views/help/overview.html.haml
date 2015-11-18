@@ -1,0 +1,1950 @@
+= render "titles", text: "help.overview"
+
+%p
+  This is an introduction to the ICU websites: how they work, what's involved, how to make changes.
+  It's primarily intended as a resource for ICU webmasters.
+  The websites have evolved since the first one appeared in 2004 and will probably continue to do so in the future.
+  Future webmasters are encouraged to <b>keep this document up to date</b>.
+- v1 = "Feb 2015"
+%ul
+  %li= "Version 1, created in #{v1} by MO."
+%hr
+%ul
+  %li
+    = render "link", topic: "intro.intro"
+    %ul
+      - %w[roles components local_env test_commit_push_deploy logging_into_server accounts financial resources].each do |topic|
+        = render "item", topic: "intro.#{topic}"
+  %li
+    = render "link", topic: "tasks.tasks"
+    %ul
+      - %w[maintenance_mode check_ticket sql_query manage_help_pages manage_icu_pages create_new_payment_type updates seasonal].each do |topic|
+        = render "item", topic: "tasks.#{topic}"
+  %li
+    = render "link", topic: "appendix.appendix"
+    %ul
+      - %w[apache backups bundler can_can capistrano centos ftp gems git github google haml linode mailgun mysql passenger rails rake redis register365 rspec ruby secrets ssl stripe style_script webalizer webrick whenever].each do |topic|
+        = render "item", topic: "appendix.#{topic}"
+
+= render "header", topic: "intro.intro"
+%p
+  = "The ICU currently (#{v1}) runs two web sites:"
+%ol
+  %li
+    A
+    %a{href: "http://www.icu.ie", target: "internal"} www
+    site mainly for news, articles, general information and online payments.
+  %li
+    A
+    %a{href: "http://ratings.icu.ie", target: "internal"} ratings
+    site for the ICU's chess rating system.
+
+= render "header", topic: "intro.roles"
+%p
+  These websites are managed by a team, one of which is the webmaster. Some examples of roles other than webmaster on the main site are:
+%ul
+  %li Editor: manages news items, articles, images, games, club listings, calendar entries, etc.
+  %li Calendar Editor: can only manage calendar entries.
+  %li Treasurer: manages subscription and other fees; can process offline payments, issue refunds and view shopping carts.
+  %li Membership Officer: can process offline payments and manage player data.
+  %li Translator: manages Irish language translations.
+%p And on the ratings site:
+%ul
+  %li Reporter: loads tournament reports for rating.
+  %li Rating Officer: rates tournaments, publishes rating lists.
+%p
+  When anyone with a role logs in, certain pages become available through which changes can be made to the databases
+  (depending what the role is; see
+  = render "link", topic: "appendix.can_can"
+  for more details). For example:
+  %ul
+    %li
+      On the main site, Editors can edit news items and articles
+      = precede("(") do
+        = succeed(").") do
+          %a{href: "/help/articles", target: "internal"} more details
+    %li
+      On the ratings site, Reporters can upload tournament reports
+      = precede("(") do
+        = succeed(").") do
+          %a{href: "http://ratings.icu.ie/articles/6", target: "internal"} more details
+    %li On both sites, Admins can grant roles to (or remove roles from) other users.
+%p
+  Further details of tasks that users with roles can accomplish via the websites can be found in the main
+  = link_to t("help.help"), help_index_path, target: "internal"
+  page on this site and in the
+  %a{href: "http://ratings.icu.ie/articles", target: "external"} articles
+  on the <em>ratings</em> site.
+%p
+  The webmaster's role (Admin) is the most powerful one and it enables the webmaster to do anything other users can do (and more).
+  However, the day-to-day content management of the sites (news, articles, ratings, etc) is not the webmaster's top priority.
+  Their chief responsibilities are:
+%ul
+  %li Managing the technical side of things (server, application code, databases, external services, etc.) as described in further detail on this help page.
+  %li Ensuring each member of the team is capable of managing their particular responsibilities.
+  %li Dealing with queries from website users and the executive.
+  %li Maintaining a log of all upgrades and configuration changes on the production server.
+  %li
+    Maintaining
+    = succeed(".") do
+      = render "link", topic: "appendix.backups"
+%p
+  In practice, as well as looking after the technical side of things, the webmaster acts as cover for the rest of the team
+  and can expect to perform a little bit of all the other roles.
+
+= render "header", topic: "intro.components"
+%p
+  The main technical subsystems supporting the two websites,
+  all of which the webmaster is responsible for maintaining, are as follows:
+%ul
+  %li
+    An account with a hosting provider for a <em>production server</em> (see
+    = succeed(").") do
+      = render "link", topic: "appendix.linode"
+  %li
+    A Linux distribution running on the production server (see
+    = succeed(").") do
+      = render "link", topic: "appendix.centos"
+  %li
+    Web (see
+    = succeed(")") do
+      = render "link", topic: "appendix.apache"
+    and application server software (see
+    = succeed(").") do
+      = render "link", topic: "appendix.passenger"
+  %li
+    Two web applications, one for each website (see
+    = succeed(").") do
+      = render "link", topic: "appendix.rails"
+  %li
+    Two SQL databases, one for each website (see
+    = succeed(").") do
+      = render "link", topic: "appendix.mysql"
+  %li
+    A no-SQL database for fast retrieval of Irish language translations (see
+    = succeed(").") do
+      = render "link", topic: "appendix.redis"
+  %li
+    Some software packages for specific tasks (see
+    = succeed(").") do
+      = render "link", topic: "appendix.gems"
+  %li
+    An FTP service mainly for tournament controllers (see
+    = succeed(").") do
+      = render "link", topic: "appendix.ftp"
+  %li
+    Data files containing sensitive information (passwords, API keys, cryptographic data, etc) which are never committed to the repository (see
+    = succeed(").") do
+      = render "link", topic: "appendix.secrets"
+  %li
+    A system for scheduling regular jobs (see
+    = succeed(").") do
+      = render "link", topic: "appendix.whenever"
+  %li
+    Development and test versions of the websites setup by the webmaster on their own machine (see
+    = succeed(").") do
+      = render "link", topic: "intro.local_env"
+  %li
+    An account with a domain registrar for <em>icu.ie</em> (see
+    = succeed(").") do
+      = render "link", topic: "appendix.register365"
+  %li
+    An account with an e-commerce business to process online card payments (see
+    = succeed(").") do
+      = render "link", topic: "appendix.stripe"
+  %li
+    An account with an email provider for delivery and relays (see
+    = succeed(").") do
+      = render "link", topic: "appendix.mailgun"
+  %li
+    An account with a repository hosting service for source code management (see
+    = succeed(").") do
+      = render "link", topic: "appendix.github"
+
+= render "header", topic: "intro.local_env"
+%p
+  The local environment is what the webmaster has on their own machine to develop, test and deploy new code to the production server.
+  New webmasters should spend some time setting it up correctly as it's essential. It's used to:
+%ul
+  %li develop new functionality or fix bugs,
+  %li write new automated tests,
+  %li
+    run automated tests to prove new functionality and make sure old functionally hasn't regressed (see
+    = succeed("),") do
+      = render "link", topic: "appendix.rspec"
+  %li
+    manually check functionality on a locally running web server (see
+    = succeed("),") do
+      = render "link", topic: "appendix.webrick"
+  %li
+    commit changes to a local repository and then push them to the master repository (see
+    = succeed("),") do
+      = render "link", topic: "appendix.git"
+  %li
+    deploy new code to the production server (see
+    = succeed(").") do
+      = render "link", topic: "appendix.capistrano"
+%p
+  Following are the steps to setup the environment for the first time.
+  It's not required to use the same OS (Centos) as the production server,
+  any Unix-like OS should be fine (e.g. MacOS or any flavour of Linux).
+  You should probably avoid Windows.
+%p
+  You can put the ICU code wherever you like but for the sake of an example
+  (which will be used throughout this document), we'll assume it all goes into
+  = succeed(".") do
+    %stong ~/Projects/
+%ul
+  %li
+    Install git and clone all the master repositories (2 web applications and 4 gems) from Github into
+    %stong ~/Projects/
+    (see
+    = succeed(").") do
+      = render "link", topic: "appendix.github"
+  %li
+    Install and start MySQL and then create the 2 test and 2 development databases required.
+    Fill the development databases with data copied from the production server but leave the test databases empty (see
+    = succeed(").") do
+      = render "link", topic: "appendix.mysql"
+    Whatever connection parameters you choose (username, password), copy them to
+    %strong config/database.yml
+    (see
+    = succeed(").") do
+      = render "link", topic: "appendix.secrets"
+  %li
+    Install
+    = render "link", topic: "appendix.redis"
+    and make sure it's responding on the standard port (6379).
+  %li
+    Install the same version of Ruby that is currently in use on the server
+    (look at the file ~/Projects/icu_www_app/.ruby-version to find out what that is).
+    It's convenient to be able to switch Ruby versions in the local environment,
+    so consider installing
+    %em rbenv
+    or
+    %em rvm
+    (see
+    = succeed(").") do
+      = render "link", topic: "appendix.ruby"
+  %li
+    Install
+    = render "link", topic: "appendix.bundler"
+    and issue the following commands:
+    - cmd = []
+    - cmd << '$ cd ~/Projects/icu_www_app/'
+    - cmd << '$ bundle install'
+    - cmd << '$ cd ~/Projects/icu_ratings_app/'
+    - cmd << '$ bundle install'
+    %pre~ cmd.join("\n")
+    which will install all the other
+    = render "link", topic: "appendix.gems"
+    required by the applications.
+  %li
+    Follow the instructions in
+    = render "link", topic: "appendix.secrets"
+    for setting up local versions of
+    %strong config/secrets.yml
+    for both applications.
+  %li
+    Issue the following commands (see
+    = succeed("):") do
+      = render "link", topic: "appendix.webrick"
+    - cmd = []
+    - cmd << '$ cd ~/Projects/icu_www_app/'
+    - cmd << '$ bin/rails s'
+    %pre~ cmd.join("\n")
+    You should now be able to see a development version of the main site at:
+    = succeed(".") do
+      %em http://127.0.0.1:3000
+    Type Control-C to quit.
+  %li
+    Similarly, for the ratings site run the following commands (see:
+    - cmd = []
+    - cmd << '$ cd ~/Projects/icu_ratings_app/'
+    - cmd << '$ bin/rails s'
+    %pre~ cmd.join("\n")
+    and visit the same address to see the development version of the ratings site.
+  %li
+    The final check of whether the environment is correctly setup is to run all the automated tests:
+    - cmd = []
+    - cmd << '$ cd ~/Projects/icu_www_app/'
+    - cmd << '$ bin/rake # this will take a few minutes'
+    - cmd << '$ cd ~/Projects/icu_ratings_app/'
+    - cmd << '$ bin/rake # this will also take a few minutes'
+    %pre~ cmd.join("\n")
+    If all these tests should pass (or nearly all, see
+    = succeed("),") do
+      = render "link", topic: "appendix.rspec"
+    the environment is working correctly.
+
+= render "header", topic: "intro.test_commit_push_deploy"
+%p
+  The steps to deploy a new release of either of the two web applications to the production server are always the same and rely on
+  = succeed(",") do
+    = render "link", topic: "appendix.rspec"
+  = render "link", topic: "appendix.git"
+  and
+  = render "link", topic: "appendix.capistrano"
+  to test, commit and deploy. The same commands are run every time:
+- cmd = []
+- cmd << '$ cd ~/Projects/icu_www_app                      # or ~/Projects/icu_ratings_app for the ratings site'
+- cmd << '$ bin/rake                                       # runs the entire test suite to check nothing has regressed'
+- cmd << '$ git add .                                      # stages all changes'
+- cmd << '$ git commit -m "Comment describing the change"  # commits to the local repository'
+- cmd << '$ git push                                       # pushes to the master Github repository'
+- cmd << '$ cap production deploy                          # deploys to the production server'
+%pre~ cmd.join("\n")
+%p If anything goes wrong with the deployment, it can be rolled back to the previous release with:
+%pre bin/cap production deploy:rollback
+%p
+  The above steps require SSH keys to be registered with both Github and the production server (see
+  = succeed(").") do
+    = render "link", topic: "intro.accounts"
+
+= render "header", topic: "intro.logging_into_server"
+%p
+  Most changes the webmaster performs are done either via the web site (to update the database) or via
+  = render "link", topic: "intro.local_env"
+  (to update the applications).
+  However, there are some things for which logging into the production server is required (see
+  = succeed(").") do
+    = render "link", topic: "appendix.centos"
+  Here are a few examples:
+%ul
+  %li
+    Change web server configuration files (see
+    = succeed(").") do
+      = render "link", topic: "appendix.apache"
+  %li
+    Examine web server (see
+    = succeed(")") do
+      = render "link", topic: "appendix.apache"
+    or application (see
+    = succeed(")") do
+      = render "link", topic: "appendix.rails"
+    log files.
+  %li
+    Update system libraries (see
+    = succeed(").") do
+      = render "link", topic: "appendix.centos"
+  %li
+    Install the latest version of
+    = render "link", topic: "appendix.ruby"
+    and/or
+    = succeed(".") do
+      = render "link", topic: "appendix.passenger"
+  %li
+    Change the password for the
+    = render "link", topic: "appendix.ftp"
+    user.
+%p
+  The website-related logs files are:
+  %ul
+    %li <b>/var/log/http/www/</b>: Apache log files for the <em>www</em> site,
+    %li <b>/var/log/http/ratings/</b>: Apache log files for the <em>ratings</em> site,
+    %li <b>/var/apps/www/current/log/production.log</b>: Rails log file for the <em>www</em> site,
+    %li <b>/var/apps/ratings/current/log/production.log</b>: Rails log file for the <em>ratings</em> site.
+%p
+  Other useful directories and files on the production server to know about:
+  %ul
+    %li <b>/etc/httpd/conf.d/vhost.conf</b>: Apache configuration for both sites,
+    %li
+      <b>/etc/httpd/conf.d/ssl.conf</b>:
+      = render "link", topic: "appendix.ssl"
+      configuration for the www site,
+    %li <b>/var/apps/www/current</b>: root directory for the current release of the <em>www</em> application,
+    %li <b>/var/apps/ratings/current</b>: root directory for the current release of the <em>ratings</em> application,
+    %li <b>/etc/logrotate.d/</b>: log file rotation configuration,
+    %li
+      <b>~/bak/</b>:
+      = render "link", topic: "appendix.backups"
+      are kept here prior to transfer offsite.
+
+= render "header", topic: "intro.accounts"
+%p
+  This is a list of the all the services (both the ICU's and those of external providers)
+  which require access credentials of one kind or another (username/password or API keys).
+  The actual credentials are kept in an offline file by the webmaster
+  and copied to a small number of trusted individuals for backup.
+  Some of the credentials are also in <em>secrets.yml</em> or <em>database.yml</em> on the production server (see
+  = succeed(").") do
+    = render "link", topic: "appendix.secrets"
+%ul
+  %li
+    The <em>root</em> user on the production ICU server:
+    %ul
+      %li Password.
+      %li Remote logins disabled (if you need <em>root</em>, login as the ordinary user and switch).
+  %li
+    The ordinary user on the production ICU server:
+    %ul
+      %li Username and password.
+      %li Remote logins allowed (this is the normal way to login). Setup SSH keys for convenience.
+  %li
+    Read-only access to the <em>www_production</em> database:
+    %ul
+      %li Username and password.
+      %li Remote access allowed.
+  %li
+    Read-write access to the <em>www_production</em> database:
+    %ul
+      %li Username and password.
+      %li Remote access disabled.
+      %li These go in <em>database.yml</em> on the production server.
+  %li
+    Read-only access to the <em>ratings_production</em> database:
+    %ul
+      %li Username and password.
+      %li Remote access allowed.
+  %li
+    Read-write access to the <em>ratings_production</em> database:
+    %ul
+      %li Username and password.
+      %li Remote access disabled.
+      %li These go in <em>database.yml</em> on the production server.
+  %li
+    An
+    = render "link", topic: "appendix.ftp"
+    user on the production ICU server:
+    %ul
+      %li Username and password.
+  %li
+    A
+    = render "link", topic: "appendix.github"
+    account:
+    %ul
+      %li
+        Email and password to login at
+        = succeed(".") do
+          %a{href: "https://github.com/login", target: "external"} github.com/login
+      %li SSH keys (one for each webmaster/developer) registered with Github to enable push access to the repository.
+  %li
+    A
+    = render "link", topic: "appendix.linode"
+    account:
+    %ul
+      %li
+        Email and password to login at
+        = succeed(".") do
+          %a{href: "https://manager.linode.com/", target: "external"} manager.linode.com
+  %li
+    A
+    = render "link", topic: "appendix.mailgun"
+    account:
+    %ul
+      %li
+        Email and password to login at
+        = succeed(".") do
+          %a{href: "https://mailgun.com/sessions/new", target: "external"} mailgun.com/sessions/new
+      %li A password, a secret key and a public key for <em>secrets.yml</em> on the production server.
+  %li
+    A
+    = render "link", topic: "appendix.register365"
+    account:
+    %ul
+      %li
+        Email and password to login at
+        = succeed(".") do
+          %a{href: "https://www.register365.com/login", target: "external"} www.register365.com/login
+  %li
+    A
+    = render "link", topic: "appendix.stripe"
+    account:
+    %ul
+      %li
+        Email and password to login at
+        = succeed(".") do
+          %a{href: "https://dashboard.stripe.com/login", target: "external"} dashboard.stripe.com/login
+      %li A pair of API keys for live transactions which go in <em>secrets.yml</em> on the production server.
+      %li A pair of API keys for test transactions which go in <em>secrets.yml</em> in the webmaster's local environment.
+  %li
+    A
+    = render "link", topic: "appendix.google"
+    API key for <em>secrets.yml</em> (the same key can be used for the production server and local environment).
+
+= render "header", topic: "intro.financial"
+%p The unavoidable costs are:
+%ul
+  %li
+    web hosting, about $20/month (see
+    = succeed("),") do
+      = render "link", topic: "appendix.linode"
+  %li
+    domain registration, about €30/year (see
+    = succeed("),") do
+      = render "link", topic: "appendix.register365"
+  %li
+    a security certificate for the <em>www</em> site, about £10/year (see
+    = succeed(").") do
+      = render "link", topic: "appendix.ssl"
+%p= "Optional extras, none of which are currently used (in #{v1}) are:"
+%ul
+  %li
+    full server backup, about $5/month (see
+    = succeed("),") do
+      = render "link", topic: "appendix.backups"
+  %li
+    extended server monitoring, about $20/month (see
+    = succeed("),") do
+      = render "link", topic: "appendix.linode"
+  %li
+    extra security certificates (one for the <em>ratings</em> site, one for http://icu.ie), each about £10/year (see
+    = succeed(").") do
+      = render "link", topic: "appendix.ssl"
+
+= render "header", topic: "intro.resources"
+%p Other resources helpful to the webmaster are:
+%ul
+  %li
+    A detailed log of all software updates and configuration changes for the current production server (2014-)
+    available from MO as a single <em>Evernote</em> page.
+  %li
+    A
+    %a{href: "https://github.com/sanichi/icu_ratings_app/wiki/Setup", target: "external"} description
+    of how the current production server (2014-) was built.
+  %li
+    A
+    %a{href: "https://github.com/sanichi/icu_www_app/wiki/Setup-a-Server", target: "external"} description
+    of how the previous production server (2011-2014) was built.
+
+= render "header", topic: "tasks.tasks"
+%p This section contains details of some common webmaster tasks.
+
+= render "header", topic: "tasks.maintenance_mode"
+%p
+  If a serious problem develops with one of the websites it can be temporarily taken offline
+  by putting the application on the production server into maintenance mode. This is done from
+  = render "link", topic: "intro.local_env"
+  by running the following
+  = render "link", topic: "appendix.capistrano"
+  task:
+- cmd = []
+- cmd << '$ cd ~/Projects/icu_www_app/  # or ~/Projects/icu_rating_app/ for the ratings site'
+- cmd << '$ bin/cap production deploy:web:disable'
+%pre~ cmd.join("\n")
+%p
+  In maintenance mode
+  = render "link", topic: "appendix.apache"
+  will redirect all requests to a maintenance page which will display the default message:
+%blockquote
+  We're currently offline for maintenance as of [current time].
+  Sorry for any inconvenience. We'll be back shortly.
+%p The words "maintenance" and "shortly" in this message can be replaced by setting temporary environment variables like this:
+- cmd = []
+- cmd << '$ REASON="a system upgrade" BACK="in a couple of hours" bin/rake production deploy:web:disable'
+%pre~ cmd.join("\n")
+%p To exit from maintenance mode and make the site accessible again, run:
+- cmd = []
+- cmd << '$ bin/cap production deploy:web:enable'
+%pre~ cmd.join("\n")
+%p
+  It's possible to allow the webmaster to continue to view the live websites even if they are in maintenance mode.
+  To do this:
+%ul
+  %li log into the production server,
+  %li edit the Apache configuration file for the two sites (<em>/etc/httpd/conf.d/vhost.conf</em>),
+  %li find the maintenance page rewrite rules (there's one set for each of the two websites),
+  %li alter the <em>REMOTE_ADDRESS</em> rule to exclude the webmaster's IP address,
+  %li to view secure <em>www</em> pages, do the same for <em>/etc/httpd/conf.d/ssl.conf</em>,
+  %li restart Apache.
+%p
+  This will allow the site to be accessed by requests from that IP only (all others get the maintenance page).
+  To avoid forgetting to return things to normal once repairs are complete,
+  a prominent notice is displayed at the top of every page whenever maintenance mode is on.
+
+= render "header", topic: "tasks.check_ticket"
+%p
+  Given a season ticket
+  = precede("(") do
+    = succeed("),") do
+      %a{href: "/help/accounts", target: "internal"} more details here
+  say for example, <em>2tDdxD</em>, then you can check it's validity by starting a console for the <em>www</em> web application:
+- cmd = []
+- cmd << '$ cd ~/Projects/icu_www_app/'
+- cmd << '$ bin/rails c'
+- cmd << '>> st = SeasonTicket.new("2tDdxD")'
+- cmd << '>> st.expires_on'
+- cmd << '=> "2010-12-31"'
+- cmd << '>> st.icu_id'
+- cmd << '=> "1234"'
+%pre~ cmd.join("\n")
+%p
+  In this particular example the ticket is valid and belongs to ICU ID 1234 but expired at the end of 2010.
+  If you try the same thing with an invalid ticket you'll get some kind of error, for example:
+- cmd = []
+- cmd << '>> st = SeasonTicket.new("rubbish")'
+- cmd << '>> st.error'
+- cmd << '=> "invalid season ticket (bad characters)"'
+%pre~ cmd.join("\n")
+%p
+  Note that for proper decoding of season tickets in the local environment, the same cryptographic entries configured
+  in the production application's <em>secrets.yml</em> file are required in the local version of that file (see
+  = succeed(").") do
+    = render "link", topic: "appendix.secrets"
+%p
+  If you don't have the right crypto entires in <em>secrets.yml</em>, and alternative would be to log into the production server
+  and perform the operation there, but remember to start the console in the <em>production</em> environment because the
+  default is <em>development</em> (which the production server lacks):
+- cmd = []
+- cmd << '$ cd /var/apps/www/current'
+- cmd << '$ RAILS_ENV=production bin/rails c'
+%pre~ cmd.join("\n")
+
+= render "header", topic: "tasks.sql_query"
+%p
+  The webmaster can expect to occasionally receive requests (from, for example, the treasurer or selection committees)
+  for detailed information from the databases which is not available on either of the two websites. One option would be to
+  add new functionality to one of the websites to display the requested information, but that could require a lot of work.
+%p
+  Alternatively, for a quick one-off answer, the data can be generated by logging into one or both databases, issuing
+  the appropriate SQL commands and converting the results to CSV. To do this the webmaster must:
+%ul
+  %li have a good grasp of which tables of the two databases contain the relevant information,
+  %li have sufficient experience with SQL, especially of table joins.
+%p
+  As an example of a complex query best handled this way is to list, for all juniors (under 19) who have been an ICU member:
+%ul
+  %li ICU number, name and date of birth,
+  %li club and email (if available),
+  %li the date on which each person last subscribed to the ICU,
+  %li their last published rating with publication date.
+%p The data for this particular query is spread across several tables in both databases. One possible way to tackle this is as follows.
+%p First, from the <em>www_production</em> database, get a list of juniors who have subscribed at least once:
+- cmd = []
+- cmd << "SELECT P.id FROM players P WHERE"
+- cmd << "  P.dob > date_sub(current_date(), INTERVAL 19 YEAR) AND"
+- cmd << "  EXISTS("
+- cmd << "    SELECT * FROM items I WHERE"
+- cmd << "    I.player_id = P.id AND"
+- cmd << "    I.status = 'paid' AND"
+- cmd << "    I.description LIKE '%Subscription%');"
+%pre~ cmd.join("\n")
+%p Save the IDs as a comma-separated list and in the queries below, replace "[IDs]" with this list.
+%p Next, get the ID, name, DOB, email and club data from the <em>players</em> and <em>clubs</em> tables, taking into account that not all players belong to a club.
+- cmd = []
+- cmd << "SELECT P.id, P.first_name, P.last_name, P.dob, P.email, C.name"
+- cmd << "  FROM players P LEFT JOIN clubs C ON P.club_id = C.id"
+- cmd << "  WHERE P.id IN ([IDs]);"
+%pre~ cmd.join("\n")
+%p Next, get the last subscribed date.
+- cmd = []
+- cmd << "SELECT MAX(DATE(I.created_at))"
+- cmd << "  FROM players P, items I"
+- cmd << "  WHERE I.player_id = P.id AND I.status = 'paid' AND I.description LIKE '%Subscription%' AND P.id IN ([IDs])"
+- cmd << "  GROUP BY P.id;"
+%pre~ cmd.join("\n")
+%p Next, switch to the <em>ratings_production</em> database and get the last published rating and the publication date for each player in the list.
+- cmd = []
+- cmd << "SELECT MAX(CONCAT(R.list, ',', R.rating))"
+- cmd << "  FROM icu_players P LEFT JOIN icu_ratings R ON P.id = R.icu_id"
+- cmd << "  WHERE P.id IN ([IDs])"
+- cmd << "  GROUP BY P.id;"
+%pre~ cmd.join("\n")
+%p
+  The above results in 3 data sets all with the same number of rows <em>N</em> (where <em>N</em> is the length of the list of IDs)
+  but with varying numbers of columns (6, 1, and 1 respectively) and they need to be combined into one set with <em>N</em>
+  rows and 8 columns while at the same time converting to CSV format. Here are two ways to get the 3 sets of results in CSV format:
+%ul
+  %li Log into the production server and append <em>INTO OUTFILE...</em> (with suitable arguments) to each query.
+  %li
+    Working from the
+    = succeed(",") do
+      = render "link", topic: "intro.local_env"
+    instead of using the command line, use a GUI with the ability export CSV (e.g.
+    %a{href: "http://www.sequelpro.com/", target: "external"} Sequel Pro
+    = succeed(").") do
+      on MacOS
+%p
+  In either case, the result is 3 CSV files (say <em>data1.csv</em>, <em>data2.csv</em> and <em>data3.csv</em>) with <em>N</em> rows and 6, 1 and 1 columns.
+  The final step is to stitch them together horizontally to generate 1 file with <em>N</em> rows and 8 columns using the Unix utility
+  = succeed(":") do
+    %a{href: "http://en.wikipedia.org/wiki/Paste_%28Unix%29", target: "external"} paste
+%pre $ paste -d, data{1,2,3}.csv > data.csv
+%p and, voilà, the answer to the original query is in <em>data.csv</em>.
+
+= render "header", topic: "tasks.manage_help_pages"
+%p
+  The page you're currently reading is an example of a help page.
+  Unlike articles and news items, help pages are not stored in the database and can't be changed by editors.
+  Instead, they're part of the web application code and need the webmaster to create, edit and deploy them.
+  To create a new help page do the following in
+  = succeed(":") do
+    = render "link", topic: "intro.local_env"
+%ul
+  %li
+    think of a single word or short snake-case name for the new page and add it to the
+    %em HELP_PAGES
+    array in
+    = succeed(",") do
+      %strong app/models/global.rb
+  %li
+    map that short name to the full title of your new help page in the file
+    = succeed(",") do
+      %strong config/locales/help/en.yml
+  %li
+    add a link to the new page in the help index:
+    = succeed(",") do
+      %strong app/views/help/index.html.haml
+  %li
+    create a new page view using the same short name you chose earlier:
+    <b>app/views/help/</b><em>short_name</em><b>.html.haml</b>,
+  %li
+    in the same way as other help pages in
+    = succeed(",") do
+      %b app/views/help/
+    start the new page with two titles (one for the browser tab, one for the page) and a horizontal rule,
+  %li
+    insert the help text, divided into sections with headers and (for large articles, such as this one) a table of contents,
+  %li
+    view and manually check your work in a browser (see
+    = succeed("),") do
+      = render "link", topic: "appendix.webrick"
+  %li
+    periodically run the following quick test which is focused solely on the help pages:
+    %pre $ bin/rspec spec/features/help_spec.rb
+  %li
+    when you're finished:
+    = succeed(".") do
+      = render "link", topic: "intro.test_commit_push_deploy"
+%p The steps for updating existing help pages are the same except the first few steps will have already been done.
+
+= render "header", topic: "tasks.manage_icu_pages"
+%p
+  The procedure to follow is very similar to the above case (see
+  = succeed(")") do
+    = render "link", topic: "tasks.manage_help_pages"
+  because, like help pages,
+  = link_to "ICU documentation", icu_index_path, target: "internal"
+  is saved to the
+  = render "link", topic: "appendix.github"
+  repository and therefore changes are managed from
+  = render "link", topic: "intro.local_env"
+  and deployed to the production server by
+  = succeed(".") do
+    = render "link", topic: "appendix.capistrano"
+  The differences are:
+%ul
+  %li
+    instead of one data structure in
+    = succeed(",") do
+      %strong app/models/global.rb
+    there are two:
+    %ol
+      %li
+        <em>ICU_PAGES</em>: an array of keys (see <b>config/locales/icu/en.yml</b>) for the links in the
+        = succeed(",") do
+          = link_to "main index page", icu_index_path, target: "internal"
+      %li
+        <em>ICU_DOCS</em>: a hash for the
+        = link_to "constitution and related documents", icu_documents_path, target: "internal"
+        where the keys (see <b>config/locales/icu/en.yml</b>) are for headings
+        and the values are optional sub-headings (English only),
+  %li the view templates are in <b>app/views/icu</b>,
+  %li
+    the quick test for these pages is
+    %pre $ bin/rspec spec/features/icu_spec.rb
+
+= render "header", topic: "tasks.create_new_payment_type"
+%p= "There are currently (#{v1}) three categories of fees payable on the <em>www</em> website:"
+%ul
+  %li subscriptions,
+  %li tournament entries,
+  %li simple.
+%p The last category, <em>simple</em>, is designed for fees types that have the following properties:
+%ul
+  %li the restrictions, if any, on who can pay the fee are solely in terms of age and/or rating,
+  %li when a payment is made, other than recording it, no additional database table updates are required.
+%p
+  Simple fees, including the creation of new types in that category, can be managed by the treasurer
+  or webmaster via tools on the website (see
+  = succeed(").") do
+    = link_to t("help.fees"), help_fees_path, target: "internal"
+  The
+  %a{href: "http://ratings.icu.ie/articles/14", target: "internal"} foreign tournament rating fee
+  is an example of a simple fee. Another example is a donation.
+%p
+  For more complex categories of fees, special purpose code has to be written to support
+  their management on the website. This has already been done for subscriptions and tournament entries.
+  Unless their requirements change in the future, no further programming effort is necessary.
+%p
+  However, new types of fees that don't fit into any of the existing categories may
+  arise in the future and to support them on the web site will require custom code
+  to be written. To accomplish this the webmaster will need a thorough understanding
+  of how fees and payments are implemented.
+%p
+  An example of a type of fee that would require new code is the payment of license fees
+  for registered coaches (so-called TRG licenses). There are several reasons that the
+  proposed requirements for this type of fee would make it too complex to fit into the
+  <em>simple</em> category:
+%ul
+  %li the fee must be paid every two years from the date it was first paid,
+  %li a fine is imposed for late payments,
+  %li attendance at a relevant course is required before a license can be acquired,
+  %li auxiliary database tables would be needed to hold data on courses and attendees,
+  %li seed data on who has already paid and on what date would also be necessary.
+%p
+  As this example shows, implementing new categories could take a fair amount of work
+  even though the framework for doing so is already present. Depending on the skills
+  of and time available to the webmaster, it might be preferable to squeeze new types
+  of fees into the simple category by watering down their requirements, as was done
+  for the example detailed in
+  = succeed(".") do
+    = link_to t("help.fees"), help_fees_path, target: "internal"
+
+= render "header", topic: "tasks.updates"
+%p Keep packages and libraries on which the applications depend up-to-date. This includes:
+%ul
+  %li
+    on the production server:
+    %ul
+      %li
+        = succeed(",") do
+          = render "link", topic: "appendix.ruby"
+      %li
+        = succeed(",") do
+          = render "link", topic: "appendix.passenger"
+      %li
+        system libraries (see
+        = succeed(";") do
+          = render "link", topic: "appendix.centos"
+        includes
+        = render "link", topic: "appendix.git"
+        and
+        = succeed(").") do
+          = render "link", topic: "appendix.mysql"
+      %li
+        = succeed(",") do
+          = render "link", topic: "appendix.redis"
+  %li
+    in the local environment:
+    %ul
+      %li
+        = succeed(",") do
+          = render "link", topic: "appendix.ruby"
+        = succeed(",") do
+          = render "link", topic: "appendix.git"
+        = succeed(",") do
+          = render "link", topic: "appendix.mysql"
+        and
+        = render "link", topic: "appendix.redis"
+        (maintain the same versions as on the production server),
+      %li
+        = succeed(".") do
+          = render "link", topic: "appendix.gems"
+%p Due to the way Linux distributions are curated, updating all the system libraries on the production server in one go with:
+%pre $ yum update
+%p
+  shouldn't cause any problems. However, updating all
+  = render "link", topic: "appendix.gems"
+  in the local environment with
+%pre $ bundle update
+%p
+  is a riskier proposition. It may be difficult to identify the cause if a lot of gems get updated but something goes wrong.
+  Where gems are concerned, it's better to update in small steps (a few at a time) and afterwards run the test suite.
+  Big changes introduced by new major versions, especially
+  = succeed(",") do
+    = render "link", topic: "appendix.rails"
+  may require changes to the applications.
+
+= render "header", topic: "tasks.seasonal"
+%p
+  %b July
+  (or whenever the Irish Championships finish):
+  Update the right hand panel of the home page of the <em>www</em> site with the names and photos of the new men's and women's champions.
+  The file to edit is:
+  = succeed(".") do
+    %em app/views/layouts/_features.html.haml
+%p
+  = succeed(":") do
+    %b July
+  Make sure the Treasurer has rolled over the current set of subscriptions ready to go on sale on the 1st August (see
+  = succeed(").") do
+    = link_to t("help.rollover_subs"), help_rollover_subs_path
+%p
+  = succeed(":") do
+    %b July
+  Renew the security certificate for <em>www.icu.ie</em> so that <em>https</em> continues to work for credit card payments (see
+  = succeed(").") do
+    = render "link", topic: "appendix.ssl"
+%p
+  %b September
+  (or whenever the executive changes):
+  Update the database records for ICU officers and email addresses (see
+  = succeed(").") do
+    = link_to t("help.officers"), help_officers_path
+%p
+  = succeed(":") do
+    %b December
+  Make sure the annual fee for the <em>icu.ie</em> domain has been paid. It should be automatic as long as a valid credit card is registered with the account (see
+  = succeed(").") do
+    = render "link", topic: "appendix.register365"
+
+= render "header", topic: "appendix.appendix"
+
+= render "header", topic: "appendix.apache"
+%p
+  The web server is Apache and its configuration is in:
+%ul
+  %li
+    = succeed(":") do
+      %em /etc/httpd/conf/httpd.conf
+    the main file but not much different from the default,
+  %li
+    = succeed(":") do
+      %em /etc/httpd/conf.d/vhost.conf
+    contains most of the configuration for the ICU websites,
+  %li
+    = succeed(":") do
+      %em /etc/httpd/conf.d/ssl.conf
+    has a secure version of the configuration settings for the <em>www</em> site.
+%p
+  Log files are in:
+%ul
+  %li
+    = succeed(":") do
+      %em /var/log/httpd/www/
+    for the <em>www</em> site,
+  %li
+    = succeed(":") do
+      %em /var/log/httpd/ratings/
+    for the <em>ratings</em> site,
+  %li
+    = succeed(":") do
+      %em /var/log/httpd/ssl/
+    for secure connections to the <em>www</em> site,
+  %li
+    = succeed(":") do
+      %em /var/log/httpd
+    for everything else.
+%p Log rotation is configured by files in <em>/etc/logrotate.d</em>: <em>www</em>, <em>ratings</em> and <em>httpd</em>.
+%p
+  Apache passes requests for the two websites to the application server (see
+  = succeed("),") do
+    = render "link", topic: "appendix.passenger"
+  so these requests get logged twice, firstly in one of the Apache logs and secondly in one of the two application logs:
+%ul
+  %li <em>/var/apps/www/current/log/production.log</em> or
+  %li <em>/var/apps/ratings/current/log/production.log</em>.
+
+= render "header", topic: "appendix.backups"
+%p
+  The backup policy is to regularly (once a day) save data (the databases) and files that are not in
+  = render "link", topic: "appendix.github"
+  (images, uploads, tournament flyers, Apache configuration, firewall settings and
+  = succeed(")") do
+    = render "link", topic: "appendix.secrets"
+  to a directory (<em>~/bak</em>) on the production server and then periodically
+  <em>rsync</em> this entire directory to one or more offsite locations (for example
+  the webmaster's desktop and laptop). The server backups are managed by the script
+  <em>~/bin/bak.sh</em> run every night via <em>cron</em> (see
+  = succeed(").") do
+    = render "link", topic: "appendix.whenever"
+%p The <em>crontab</em> entry for the <em>rsync</em> running on one of the webmaster's home computers might look something like this:
+%pre 0 10,14,18,22 * * * cd ~/Projects/bak; rsync -rtvz <em>user</em>@aontas.icu.ie:bak/ aontas > aontas.log 2>&1
+%p Multiple attempts per day are made because home computers are not always turned on.
+%p
+  Since the source code for the
+  = render "link", topic: "appendix.rails"
+  applications and ICU
+  = render "link", topic: "appendix.gems"
+  are in
+  = render "link", topic: "appendix.git"
+  repositories, there's no need to back them up.
+%p
+  = render "link", topic: "appendix.linode"
+  offer an inexpensive backup of the entire server which would make it extremely easy to recover from a failure.
+  It's up to each individual webmaster to decide whether to make use of this or not. If you're confident that,
+  if necessary, you could rebuild the server from scratch, you might decide it's not worth it.
+  = "Currently (#{v1}) we aren't using it."
+
+= render "header", topic: "appendix.bundler"
+%p
+  Bundler is a tool for managing
+  = succeed(".") do
+    = render "link", topic: "appendix.gems"
+  Both web applications list the gems they depend on in a file called <em>Gemfile</em> which
+  may also specify constraints on the required gem versions. The explicitly required gems
+  often have implicit dependencies (specified by the gem authors) on yet more gems.
+  Bundler works out a set of gem versions that will satisfy all constraints and saves that
+  set to a file called <em>Gemfile.lock</em> which is committed to the repository, ensuring
+  that all instances of the application will use the exact same set of gems.
+%p
+  In
+  = render "link", topic: "intro.local_env"
+  the tool is invoked from the command line. For example:
+%pre $ bundle install
+%p
+  will install any gems from <em>Gemfile.lock</em> that are not already installed.
+  On the production server, bundler is automatically invoked by
+  = render "link", topic: "appendix.capistrano"
+  during deployment.
+%p
+  Most gems are under active development and new versions are regularly available.
+  If the following command is run locally:
+%pre $ bundle update
+%p
+  the latest available versions of all gems (consistent with the explicit constraints in <em>Gemfile</em>
+  and the implicit constraints of the gem authors) will be installed and <em>Gemfile.lock</em>
+  updated. However, caution should be exercised when updating many gems at the same time as
+  it may be difficult to identify the cause of any incompatibilities that may arise. A better
+  approach is to update a small group of gems together and then run the tests before committing
+  to the new versions. For example, to update just the ICU gems that the
+  <em>ratings</em> application depends on:
+%pre $ bundle update icu_tournament icu_ratings icu_name
+%p
+  This will also try to update the <em>icu_utils</em> gem which is an implicit dependency
+  of <em>icu_tournament</em> (the dependency on <em>icu_utils</em> is specified in the
+  manifest for the <em>icu_tournament</em> gem, not the <em>rating</em> application's <em>Gemfile</em>).
+%p
+  For more details on bundler, see the
+  = succeed(".") do
+    %a{href: "http://bundler.io/", target: "external"} website
+
+= render "header", topic: "appendix.can_can"
+%p
+  Can-can is a gem for authorization and maps
+  = render "link", topic: "intro.roles"
+  to permissions via the file <em>app/models/ability.rb</em>
+  = precede("(") do
+    = succeed(",") do
+      %a{href: "https://github.com/sanichi/icu_www_app/blob/master/app/models/ability.rb", target: "external"} www
+    = succeed(")") do
+      %a{href: "https://github.com/sanichi/icu_ratings_app/blob/master/app/models/ability.rb", target: "external"} ratings
+  along with directives in controllers and views.
+  To give an example from the <em>www</em> site, in <em>ability.rb</em>:
+- cmd = []
+- cmd << 'if user.calendar? || user.editor?'
+- cmd << '  can :create, Event'
+- cmd << '  can [:destroy, :update], Event, user_id: user.id'
+- cmd << 'end'
+%pre~ cmd.join("\n")
+%p
+  means that only users who have the role of
+  = t("user.role.editor")
+  or
+  = t("user.role.calendar")
+  can create, update or delete calendar events and, further, they can only update or delete events that they created themselves,
+  that is, when the user ID of the event (<em>user_id</em>) matches the user's own ID (<em>user.id</em>).
+
+= render "header", topic: "appendix.capistrano"
+%p
+  Capistrano is a command-line tool for automating code deployments.
+  The most common Capistrano task that the webmaster runs is:
+%pre $ bin/cap production deploy
+%p
+  which is part of the
+  = render "link", topic: "intro.test_commit_push_deploy"
+  sequence of commands to update one of the websites.
+  This simple command makes many things happen on the production server:
+%ul
+  %li migrates the database,
+  %li
+    installs gems using
+    = succeed(",") do
+      = render "link", topic: "appendix.bundler"
+  %li
+    installs new code from the master
+    = render "link", topic: "appendix.github"
+    repository,
+  %li archives the previous code release in case it has to be redeployed,
+  %li
+    restarts the application server (see
+    = succeed(").") do
+      = render "link", topic: "appendix.passenger"
+%p If anything goes wrong with a deployment, it can be rolled back with:
+%pre bin/cap production deploy:rollback
+%p To get more detailed feedback, temporarily change the <em>log_level</em> in the file <em>config/deploy.rb</em> to <em>debug</em>.
+%p There are other Capistrano tasks and the following command will list them all.
+%pre bin/cap -T
+%p
+  Most are subtasks of the main <tt>deploy</tt> task.
+  In practice the only tasks the webmaster needs to know about are:
+%ul
+  %li <tt>deploy</tt>,
+  %li <tt>deploy:rollback</tt>,
+  %li
+    <tt>deploy:web:disable</tt> and <tt>deploy:web:enable</tt> (see
+    = succeed(").") do
+      = render "link", topic: "tasks.maintenance_mode"
+
+= render "header", topic: "appendix.centos"
+%p
+  Centos is the Linux distribution used on the production server
+  = "and is currently (#{v1}) at version 6.5."
+  A description of configuring Centos and installing additional software to support the websites
+  = precede("(") do
+    = succeed(")") do
+      = succeed(",") do
+        = render "link", topic: "appendix.ruby"
+      = succeed(",") do
+        = render "link", topic: "appendix.apache"
+      = succeed(",") do
+        = render "link", topic: "appendix.mysql"
+      etc.
+  is available for:
+%ul
+  %li
+    the current server
+    = precede("(") do
+      = succeed("),") do
+        %a{href: "https://github.com/sanichi/icu_www_app/wiki/Setup-a-Server", target: "external"} aontas
+  %li
+    the preceding (and first) self-managed ICU server which is no longer in use
+    = precede("(") do
+      = succeed(").") do
+        %a{href: "https://github.com/sanichi/icu_www_app/wiki/Setup", target: "external"} ratalacha
+%p
+  There's also a detailed log (available from MO as an <em>Evernote</em> page) of all changes made to
+  <em>aontas</em> between November 2013 (when it was first created) and September 2014, which might
+  be useful to future webmasters.
+%p
+  <b>Maintenance</b> of Centos consists of the webmaster periodically updating the system software using
+  the <em>yum</em> package management tool
+  = succeed(").") do
+    = render "link", topic: "tasks.updates"
+  This is important to provide protection against security vulnerabilities such as
+  %a{href: "http://en.wikipedia.org/wiki/Heartbleed", target: "external"} Heartbleed
+  (April 2014) and
+  %a{href: "http://en.wikipedia.org/wiki/Shellshock_%28software_bug%29", target: "external"} Shellshock
+  (September 2014).
+%p
+  <b>Upgrading</b> Centos to the next major version is desirable at some stage although it's not
+  = "currently (#{v1}) urgent."
+  Full updates for Centos 6 should be available until 2017 and maintenance updates
+  until 2020 (according to this Wikipedia
+  = succeed(").") do
+    %a{href: "http://en.wikipedia.org/wiki/CentOS", target: "external"} article
+  The previous update (Centos 5 to Centos 6, <em>ratalacha</em> to <em>aontas</em>) was managed by
+  temporarily having a second server running the new version of Centos which took over serving the
+  websites when it was fully configured and tested. After that the old server was shut down and the
+  ICU went back to paying
+  = render "link", topic: "appendix.linode"
+  for just one server.
+
+= render "header", topic: "appendix.ftp"
+%p
+  This service is for tournament controllers to upload pairing lists, standings and live games
+  and then place links to those on their own websites. Managing the files is entirely up to
+  the controllers (subject to guidelines below), the webmaster just provides the account.
+  People who want to use it should ask the webmaster for the username and password.
+  For security reasons the webmaster should change the password from time to time,
+  but not while any tournaments are in progress (unless urgent).
+%p There are two subdirectories where users can place their files:
+%ul
+  %li <em>live<em> for live games (corresponds to <em>http://www.icu.ie/live/</em>),
+  %li <em>sm</em> for tournament tables and pairings (corresponds to </em>http://www.icu.ie/sm/</em>).
+%p
+  Users are encouraged to create a subdirectory in which to place all their files.
+  For example, the files for the Bunratty 2015 tournaments might all go into <em>sm/bunratty15/</em>.
+  This avoids the files for different tournaments getting mixed up together.
+
+= render "header", topic: "appendix.gems"
+%p
+  Gems are packages of
+  = render "link", topic: "appendix.ruby"
+  code designed to perform a particular task.
+  Gems usually come with their own documentation and may have dependencies on other gems.
+  When Ruby is installed, many standard gems are installed with it.
+  = render "link", topic: "appendix.rails"
+  (the application framework used by the ICU websites) is a gem itself and has a large number of gem dependencies.
+  Gems are versioned and often under active development with new versions appearing regularly.
+  = render "link", topic: "appendix.bundler"
+  is a tool to help application developers establish a set of gem versions that work together.
+%p
+  Gems are stored in repositories the biggest of which is
+  = succeed(".") do
+    %a{href: "https://rubygems.org/", target: "external"} RubyGems
+  The repositories used are declared at the top of Bundler's <em>Gemfile</em>.
+  The ICU have developed some gems primarily for its websites but which could theoretically
+  be used independently. Two of the gems are specifically for the <em>ratings</em> site:
+%ul
+  %li
+    = succeed(":") do
+      %a{href: "https://rubygems.org/gems/icu_tournament", target: "external"} icu_tournament
+    for parsing and generating tournament reports,
+  %li
+    = succeed(":") do
+      %a{href: "https://rubygems.org/gems/icu_ratings", target: "external"} icu_ratings
+    for performing rating calculations,
+%p The other two are for code and data that is shared between the two sites:
+%ul
+  %li
+    = succeed(":") do
+      %a{href: "https://rubygems.org/gems/icu_name", target: "external"} icu_name
+    for matching player names,
+  %li
+    = succeed(":") do
+      %a{href: "https://rubygems.org/gems/icu_utils", target: "external"} icu_utils
+    miscellaneous utility classes.
+%p
+  The same procedure is used to update any of these ICU gems, including the web applications that use them.
+  Here we illustrate how to make an update to the <em>icu_ratings</em> gem. First, the gem is updated, tested and released:
+- cmd = []
+- cmd << "$ cd ~/Projects/icu_ratings/        # change to the gem's project directory"
+- cmd << "$ vi ...                            # make changes"
+- cmd << "$ bin/rake                          # run the entire test suite to detect regressions"
+- cmd << "$ vi lib/icu_ratings/version.rb     # update the version number"
+- cmd << "$ bin/rake build                    # check for build errors"
+- cmd << "$ bin/rake release                  # push to RubyGems"
+- cmd << "$ git add .                         # stage and ..."
+- cmd << "$ git commit -m '...'               # ... commit changes to the local repository"
+- cmd << "$ git push                          # push changes to the master repository"
+%pre~ cmd.join("\n")
+%p Next, the web applications that use the gem (in this case only <em>icu_ratings_app</em>) are updated, tested and deployed:
+- cmd = []
+- cmd << "$ cd ~/Projects/icu_ratings_app/    # change to the application's project directory"
+- cmd << "$ bin/bundle update icu_ratings     # update to the latest version of the gem"
+- cmd << "$ bin/rake                          # run the entire test suite to detect regressions"
+- cmd << "$ git add .                         # stage and ..."
+- cmd << "$ git commit -m '...'               # ... commit changes to the local repository"
+- cmd << "$ git push                          # push changes to the master repository"
+- cmd << "$ bin/cap production deploy         # deploy the update to the production server"
+%pre~ cmd.join("\n")
+%p
+  Note that the web applications (<em>icu_ww_app</em>, <em>icu_ratings_app</em>) are not gems.
+  Their only public presence are their master
+  = render "link", topic: "appendix.github"
+  repositories, whereas the ICU gems are on both Github and RubyGems.
+  During a
+  = render "link", topic: "appendix.capistrano"
+  deployment, new application code is downloaded (by
+  = succeed(")") do
+    = render "link", topic: "appendix.git"
+  to the production server from Github while new gems are downloaded (by
+  = succeed(")") do
+    = render "link", topic: "appendix.bundler"
+  from RubyGems.
+
+= render "header", topic: "appendix.git"
+%p
+  Git is a tool for software version control. For each of the ICU web applications and
+  = render "link", topic: "appendix.gems"
+  there are 2 Git repositories:
+%ol
+  %li
+    a master repository on
+    = render "link", topic: "appendix.github"
+    (see the next section),
+  %li
+    a local repository within
+    = succeed(".") do
+      = render "link", topic: "intro.local_env"
+%p
+  Code changes for both the applications and gems are first committed to the local repository and then pushed to the master.
+  The webmaster needs to install the Git command line tool for
+  = render "link", topic: "intro.local_env"
+  and optionally may also wish to use a GUI (such as
+  %a{href: "http://www.git-tower.com/", target: "external"} Tower
+  on MacOS).
+%p
+  Anyone interested in contributing code can <em>fork</em> (copy) the public repositories, add their changes and then send a
+  <em>pull request</em> (proposal to incorporate their work) to the webmaster, the only person with write access to the
+  public repositories. The webmaster would pull the changes into the local repository, test them and decide whether or not
+  to accept them. If accepted they would be committed locally, pushed to the master repository and ultimately deployed
+  to the production server by
+  = succeed(".") do
+    = render "link", topic: "appendix.capistrano"
+  If rejected, they would be deleted from the local repository and never make it to the master or the production server.
+%p
+  In theory, there could be a <b>webmaster team</b> with one person (the official ICU webmaster) being in charge, merging
+  updates into the master repository and deploying them to the production server. The other team members would have their
+  own local environments but without the ability to update the master repositories or to deploy to the production server.
+
+= render "header", topic: "appendix.github"
+%p
+  There are public Github repositories for each of the two web applications:
+%ul
+  %li
+    %a{href: "https://github.com/sanichi/icu_www_app", target: "external"} icu_www_app
+  %li
+    %a{href: "https://github.com/sanichi/icu_ratings_app", target: "external"} icu_ratings_app
+%p
+  Plus 4 more for the
+  = succeed(":") do
+    = render "link", topic: "appendix.gems"
+%ul
+  %li
+    %a{href: "https://github.com/sanichi/icu_ratings", target: "external"} icu_ratings
+  %li
+    %a{href: "https://github.com/sanichi/icu_tournament", target: "external"} icu_tournament
+  %li
+    %a{href: "https://github.com/sanichi/icu_name", target: "external"} icu_name
+  %li
+    %a{href: "https://github.com/sanichi/icu_utils", target: "external"} icu_utils
+%p
+  Anyone can read these repositories but only the webmaster can write to them.
+  = render "link", topic: "appendix.secrets"
+  are never committed to any repositories, including the public ones.
+
+= render "header", topic: "appendix.google"
+%p
+  %a{href: "https://google-developers.appspot.com/chart/", target: "external"} Google Charts
+  is used for rating graphs and the <em>www</em> site uses
+  %a{href: "https://google-developers.appspot.com/maps/", target: "external"} Google Maps
+  for club and event maps. The latter requires an API key which goes in
+  %strong config/secrets.yaml
+  (see
+  = succeed(").") do
+    = render "link", topic: "appendix.secrets"
+
+= render "header", topic: "appendix.linode"
+%p
+  Linode is the company that provides the ICU's hosting services. They're a US company with
+  data centers in several locations round the world the nearest one of which to Ireland
+  is in London and that is where the ICU production server is.
+%p The service consists of:
+%ul
+  %li a virtual server with full root control,
+  %li a web dashboard for managing servers,
+  %li a documentation and support site,
+  %li out-of-band emergency SSH access ("lish"),
+  %li free (but limited data retention) server monitoring ("longview"),
+  %li configurable email alerts.
+%p
+  For extra payment, the following are also available:
+%ul
+  %li full server backups,
+  %li extended data retention for server monitoring.
+%p
+  See also
+  = succeed(".") do
+    = render "link", topic: "intro.financial"
+
+= render "header", topic: "appendix.haml"
+%p
+  HAML is a templating language (HTML with embedded Ruby code) and is the main one used by the ICU web applications.
+  This help page, for example, is written in HAML. Erb, the default Rails templating language, is used in some
+  JavaScript files. To illustrate the difference between HAML and Erb for HTML, here is a simple example. First, HAML:
+- cmd = []
+- cmd << '%p This is a demo.'
+- cmd << '%ul'
+- cmd << '  %li= "The date is #{ Date.today.to_s(:db) }."'
+- cmd << '  %li= "The number of players is #{ Player.count }."'
+%pre~ cmd.join("\n")
+%p Second, Erb:
+- cmd = []
+- cmd << '<p>This is a demo.</p>'
+- cmd << '<ul>'
+- cmd << '  <li>The date is <%= Date.today.to_s(:db)} %>.</li>'
+- cmd << '  <li>The number of players is <%= Player.count %>."</li>'
+- cmd << '</ul>'
+%pre~ cmd.join("\n")
+%p Both examples produce the same output, namely:
+%p This is a demo.
+%ul
+  %li= "The date is #{Date.today.to_s(:db)}."
+  %li= "The number of players is #{Player.count}."
+
+= render "header", topic: "appendix.mailgun"
+%p
+  Instead of running its own mail server, the ICU has chosen to take advantage of one of the
+  mail services that have sprung up in recent years such as AmazonSES, Mailjet, Mandrill,
+  Postmark, SendGrid and <b>Mailgun</b> (which is the one we use). The main benefit of these
+  services for us is that, given the ICU's relatively low monthly transactions, most of them are free.
+  For Mailgun the free threshold is 10,000 transactions per month
+  = "(which so far, in #{v1}, has never been exceeded)"
+  and the cost for each additional transaction over this limit is only $0.0005.
+  Unless a credit card is registered with the account, then the service
+  simply stops if the threshold is exceeded and no mail would be delivered
+  until the start of the next monthly billing period.
+%p There are two types of email delivery this service provides:
+%ol
+  %li Emails sent from the production server (e.g. payment confirmations).
+  %li Emails sent to an @icu.ie address and relayed to one or more private addresses.
+%p In order to work, the relays need the following (which the webmaster is responsible for):
+%ul
+  %li Mail exchange DNS records pointing at Mailgun's servers.
+  %li SPF and DKIM text DNS records for security (values obtained from the Mailgun dashboard).
+  %li Mappings, stored with Mailgun, from @icu.ie addresses to one or more private addresses.
+%p
+  See
+  = render "link", topic: "appendix.register365"
+  for more on DNS entries and
+  = link_to t("help.officers"), help_officers_path, target: "internal"
+  for how to manage the @icu.ie mappings.
+%p
+  As well as delivering mail, the Mailgun service includes a log of all transactions
+  which is very useful for identifying delivery problems. Sometimes the reason for
+  a failed delivery is right there in the log. As long as a credit card is registered
+  with Mailgun the log includes the last 30 days (without a credit card, just 1 day).
+  It doesn't contain the content of messages but it does include sender, recipients,
+  subject and delivery status. It also includes timestamps of when recipients open
+  emails that were delivered to them.
+%p
+  In practice the Mailgun service is free, but in theory the cost is unlimited (if a credit card is registered).
+  Therefore certain safeguards are in place to automatically disable all relays
+  (which are responsible for most of the transactions) if either the predicted
+  end-of-month cost is too high or there is a sudden spike in transactions.
+  Additionally, details of the predicted cost are calculated on the ICU server
+  every night (using Mailgun's API) and the details sent by email to the webmaster.
+%p If the relays are automatically disabled the webmaster should:
+%ul
+  %li ascertain the reason,
+  %li manually re-enable all relays (if safe to do so),
+  %li (optional) adjust the automatic safeguards (in <em>lib/icu/mail_control.rb</em>).
+
+= render "header", topic: "appendix.mysql"
+%p
+  There are two MySQL databases on the production server, one for each web application:
+%ul
+  %li www_production
+  %li ratings_production
+%p
+  Locally, each of these has development and test counterpart (see
+  = succeed("):") do
+    = render "link", topic: "intro.local_env"
+%ul
+  %li www_development
+  %li www_test
+  %li ratings_development
+  %li ratings_test
+%p
+  The test databases should be empty (test data is loaded automatically when tests run).
+  The development databases should be loaded with recent copies of the production databases.
+%p
+  There are several
+  = render "link", topic: "appendix.rake"
+  tasks related to the databases. To see a list of them run:
+%pre $ bin/rake -T db
+%p
+  To make changes to either of the databases, the webmaster first creates a <em>migration</em> (see
+  = succeed(")") do
+    %a{href: "http://guides.rubyonrails.org/active_record_migrations.html", target: "external"} Active Record Migrations
+  and then runs the following <em>rake</em> command to update the local database:
+%pre $ bin/rake db:migrate
+%p
+  During deployment to the production server, database migration is handled automatically by
+  = succeed(".") do
+    = render "link", topic: "appendix.capistrano"
+
+= render "header", topic: "appendix.passenger"
+%p
+  There are a number of options for serving Ruby applications such as Mongrel, Thin and Unicorn.
+  The choice for the ICU websites is the free version of
+  = succeed(".") do
+    %a{href: "https://www.phusionpassenger.com/", target: "external"} Phusion Passenger
+  This software keeps copies of both applications running in memory, even when there are
+  no requests to process, in order to avoid the overhead of restarting applications
+  for every request.
+%p
+  The usual way of installing a new version of Passenger on the production server is to login as <em>root</em>,
+  download the latest Passenger gem and run the command to install the rest of the software:
+- cmd = []
+- cmd << '$ gem install passenger'
+- cmd << '$ passenger-install-apache2-module'
+%pre~ cmd.join("\n")
+%p
+  The installation software will give directions on how to update
+  = render "link", topic: "appendix.apache"
+  configuration (<em>/etc/httpd/conf/httpd.conf</em>) to complete the installation.
+  It also has good diagnostics if there are any installation problems.
+%p
+  The task in <em>lib/capistrano/tasks/restart.rake</em> (in both applications) ensures that Phusion will be restarted after a
+  = render "link", topic: "appendix.capistrano"
+  deployment.
+%p
+  Before upgrading
+  = render "link", topic: "appendix.ruby"
+  make sure that Passenger supports the new version.
+%p
+  It's not necessary to run Passenger in
+  = succeed(",") do
+    = render "link", topic: "intro.local_env"
+  although it's certainly possible.
+  = render "link", topic: "appendix.webrick"
+  is sufficient.
+
+= render "header", topic: "appendix.rails"
+%p
+  Rails is a model-view-controller application framework. It:
+%ul
+  %li dictates, in general terms, how the application works,
+  %li provides a default directory structure for the application files,
+  %li makes default choices for some of the supporting technologies.
+%p Developers are free to choose their own favorite technologies over the defaults, as the ICU have done for:
+%ul
+  %li
+    templates: preferring
+    = render "link", topic: "appendix.haml"
+    over Erb,
+  %li
+    testing: preferring
+    = render "link", topic: "appendix.rspec"
+    over <em>Test::Unit</em> or <em>Minitest</em>.
+%p
+  The
+  %a{href: "http://guides.rubyonrails.org/", target: "external"} Guides
+  and
+  %a{href: "http://api.rubyonrails.org/", target: "external"} API
+  are amongst the best internet resources for Rails.
+%p
+  Rails is under active development and new versions with new features come out regularly.
+  Just upgrading the Rails gem is usually not enough as often there are changes
+  to be made elsewhere, such as the configuration files:
+%ul
+  %li <em>config/application.rb</em>
+  %li <em>config/environments/production.rb</em>
+  %li <em>config/environments/development.rb</em>
+  %li <em>config/environments/test.rb</em>
+%p
+  For this reason, the precise version of the Rails gem currently in use is always specified in
+  = succeed("'s") do
+    = render "link", topic: "appendix.bundler"
+  <em>Gemfile</em>.
+%p
+  To upgrade from
+  = succeed(":") do
+    = render "link", topic: "intro.local_env"
+%ul
+  %li increment the gem's version in <em>Gemfile</em>,
+  %li run <em>bin/bundle install</em>,
+  %li make any additional required changes (consult the release notes for the new version),
+  %li
+    follow the usual procedure
+    = precede("(") do
+      = succeed(")") do
+        = render "link", topic: "intro.test_commit_push_deploy"
+    for deploying any changes to the production server.
+%p
+  It is possible to have different versions of Rails running the two web applications.
+  However, to avoid confusion, if one is upgraded then the other should be too.
+%p
+  The <em>rails</em> command line tool is often used in
+  = succeed(".") do
+    = render "link", topic: "intro.local_env"
+  Some examples:
+- cmd = []
+- cmd << '$ bin/rails s      # start webrick on port 3000'
+- cmd << '$ bin/rails g ...  # generate skeleton files for new code or migrations'
+- cmd << '$ bin/rails db -p  # log into the development database'
+%pre~ cmd.join("\n")
+%p
+  Another useful command is to start an <em>irb</em> (interactive Ruby) console with
+  the development environment already loaded. Any database queries issued are echoed
+  along with and their execution time.
+- cmd = []
+- cmd << '$ bin/rails c'
+- cmd << '>> Rails.env'
+- cmd << '=> "development"'
+- cmd << '>> Player.count'
+- cmd << '   (10.7ms)  SELECT COUNT(*) FROM `players`'
+- cmd << '=> ' + Player.count.to_s
+%pre~ cmd.join("\n")
+
+= render "header", topic: "appendix.rake"
+%p
+  Rake is a Make-like build tool implemented in Ruby with tasks and dependencies specified in standard Ruby syntax.
+  = render "link", topic: "appendix.rails"
+  provides several application-related Rake tasks and
+  = render "link", topic: "appendix.capistrano"
+  is implemented on top of Rake. Some Rake tasks the webmaster will often run in
+  = render "link", topic: "intro.local_env"
+  are:
+- cmd = []
+- cmd << '$ bin/rake db:migrate     # migrate the developent database'
+- cmd << '$ bin/rake db:rollback    # return the development database to the previous state'
+- cmd << '$ bin/rake routes         # examine the routing table'
+- cmd << '$ bin/rake spec           # run all spec tests'
+- cmd << '$ bin/rake                # run all spec tests (that is the default task)'
+- cmd << '$ bin/rake -T             # print a list of all rake tasks'
+%pre~ cmd.join("\n")
+
+= render "header", topic: "appendix.redis"
+%p
+  Redis is a fast key-value store used for retrieving translations (<em>www</em> site only)
+  if the user enables the option for displaying parts of the site (headers and links only) in Irish.
+  Translations are stored in the SQL database (to support their management by the translator)
+  and synced to the Redis database. When pages are rendered translations come from the fast Redis
+  store and not the relatively slow SQL database.
+%p
+  Unfortunately, although the technical work to support a partly bi-lingual <em>www</em> site is complete,
+  the work of actually translating all the English language text snippets is not. The original translator,
+  who also inspired the project, quit without completing the project and nobody has come forward to replace her.
+  Therefore the controls to swap between English and Irish are currently
+  = "(#{v1})"
+  disabled on the production server (not in development or test) via the method
+  <em>irish_enabled?</em> in <em>app/helpers/application_helper.rb</em>.
+%p
+  The webmaster should install Redis in
+  = render "link", topic: "intro.local_env"
+  and start it running with its default port, otherwise parts of the test suite will fail.
+
+= render "header", topic: "appendix.register365"
+%p
+  This is the ICU's domain provider and through the
+  %a{href: "https://admin.register365.com/login.php", target: "external"} control panel
+  the webmaster is able to make DNS updates or change the credit card used to make
+  annual payments. Some DNS entries are for the
+  = render "link", topic: "appendix.linode"
+  production server and the others are for handling mail via
+  = succeed(".") do
+    = render "link", topic: "appendix.mailgun"
+  = "Here's a snapshot taken in #{v1}:"
+.text-center
+  = image_tag "misc/dns.png", alt: t("help.topics.appendix.register365"), title: t("help.topics.appendix.register365")
+
+= render "header", topic: "appendix.rspec"
+%p
+  This is the preferred (over <em>Test::Unit</em> or <em>Minitest</em>) test framework.
+  It's used in conjunction with a number of other
+  = succeed(":") do
+    = render "link", topic: "appendix.gems"
+%ul
+  %li <em>capybara</em> and <em>selenium-webdriver</em> for in-browser tests,
+  %li <em>factory_girl_rails</em> for test data,
+  %li <em>faker</em> for random but realistic person names, email addresses, etc.
+  %li <em>database_cleaner</em> to keep the test database in a known state (empty) at the start of each test.
+%p The tests are all in the directory <em>spec</em> with most in:
+%ul
+  %li <em>spec/models</em>: relatively fast tests of small individual components,
+  %li <em>spec/features</em>: relatively slow tests of entire website features.
+%p Some special directories and files are:
+%ul
+  %li <em>spec/factories</em>: test data definitions (using <em>factory_girl</em> and <em>faker</em>),
+  %li <em>spec/files</em>: file-oriented test data,
+  %li <em>spec/support</em>: shared test data,
+  %li <em>spec/rails_helper.rb</em>: application setup and test helpers,
+  %li <em>spec/spec_helper.rb</em>: rspec setup.
+%p The entire test suite can be run as follows and takes a few minutes:
+%pre $ bin/rspec spec
+%p
+  Alternatively, since this is the default
+  = render "link", topic: "appendix.rake"
+  command, the following will do exactly the same thing:
+%pre $ bin/rake
+%p
+  At the end of any development work the webmaster should always run the entire test suite
+  before committing anything to the local repository. During development, avoid repeatedly
+  running all tests (that would be too slow). Instead, identify a small subset of existing
+  relevant tests that can provide more rapid feedback on whether anything has been broken.
+  Also, strongly consider writing new tests for the feature being developed to defend against
+  future regressions.
+%p
+  An example of a quick, focused test designed to be run repeatedly during development
+  is the test for this very page of documentation:
+%pre $ bin/rspec spec/features/help_spec.rb -e overview
+%p
+  It may seem strange to be testing a page of documentation but in fact there is a system of
+  keys being used for the headings and links in this page (to avoid repeating the same text
+  over and over again) and the test is useful to detect spelling mistakes in these keys.
+
+= render "header", topic: "appendix.ruby"
+%p
+  Since
+  = render "link", topic: "appendix.rails"
+  is the chosen web application framework, it follows that most of the application code is written in Ruby,
+  an elegant, object-oriented language which surged in popularity around 2005
+  (partly due to the success of Rails). The language is still in active development.
+%p
+  As with
+  = render "link", topic: "appendix.rails"
+  and
+  = render "link", topic: "appendix.passenger"
+  the general approach to new versions,
+  = "at least up to now (#{v1}),"
+  has been to upgrade on a regular basis, if it's safe to do so.
+  With Ruby, the main thing to check is that Passenger and Rails support the new version.
+%p
+  On the production server there is just one version of the <em>ruby</em> executable, the one in <em>/usr/local/bin</em>.
+  The installation steps are illustrated below for the 2.0.0 version:
+- cmd = []
+- cmd << '$ cd ~/src'
+- cmd << '$ wget http://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0.tar.gz'
+- cmd << '$ tar -zxvf ruby-2.0.0.tar.gz'
+- cmd << '$ cd ruby-2.0.0'
+- cmd << '$ ./configure'
+- cmd << '$ make'
+- cmd << '$ sudo make install'
+- cmd << '$ touch /var/apps/{www,ratings}/current/tmp/restart.txt'
+%pre~ cmd.join("\n")
+%p The last step restarts both web applications.
+%p
+  In
+  = succeed(",") do
+    = render "link", topic: "intro.local_env"
+  the webmaster should use the same version of Ruby as on the production server.
+  However, it's recommended to have multiple versions of Ruby installed
+  and managed by either
+  %a{href: "https://github.com/sstephenson/rbenv", target: "external"} rbenv
+  or
+  = succeed(".") do
+    %a{href: "https://rvm.io/", target: "external"} rvm
+  This makes it easy to test both applications with a new version
+  of Ruby before upgrading the version on the production server.
+%p
+  The file <b>.ruby-version</b> in the root directory of both applications has no effect
+  on the production server but, locally, it automatically runs the specified version
+  of Ruby in development or test mode if either <em>rbenv</em> or <em>rvm</em> is installed.
+  So testing a new version is as simple as installing it, setting it in the <em>.ruby-version</em>
+  file (for both applications) and then running both test suites.
+
+= render "header", topic: "appendix.secrets"
+%p
+  Each web application has a pair of files that are used to store sensitive information such as
+  API keys, database connection parameters, cryptographic data and passwords. The two files are:
+%ul
+  %li
+    = succeed(",") do
+      %em config/database.yml
+  %li
+    = succeed(".") do
+      %em config/secrets.yml
+%p
+  These files are <b>NEVER COMMITTED TO THE REPOSITORY</b> because anyone can view the Github data.
+  For this reason, the above two files are included in <b>.gitignore</b> for both web apps.
+%p
+  When setting up a development and test environment, separate versions of these files
+  (different to those on the production server) are required.
+  Sample files showing what's required are available in the repository in
+  = succeed(",") do
+    %strong config/examples/
+  but they contain dummy data.
+  Examples of data that will differ between live site and local environment are:
+%ul
+  %li
+    connection parameters to the payment processor - the local versions should be for testing only (see
+    = succeed("),") do
+      = render "link", topic: "appendix.stripe"
+  %li
+    database connection parameters will refer to databases running on the local machine, not the production server (see
+    = succeed(").") do
+      = render "link", topic: "appendix.mysql"
+%p
+  A few things can remain the same, such as the API key for Google Maps (see
+  = succeed(").") do
+    = render "link", topic: "appendix.google"
+%p A new webmaster, setting up their local environment for the first time should:
+%ul
+  %li create their own version of <em>database.yml</em>,
+  %li ask the previous webmaster for their local version of <em>secrets.yml</em>.
+%p
+  See also
+  = succeed(".") do
+    = render "link", topic: "intro.accounts"
+
+= render "header", topic: "appendix.stripe"
+%p
+  Stripe provides a way for individuals and organizations to accept payments over the internet.
+  Although the company is American it was founded by two brothers from Limerick.
+  Previously the ICU used Paypal but Stripe is technically superior and setting up and verifying an account is easier.
+%p
+  As the ICU has no legal standing (not being incorporated) it's necessary for an individual (called a <em>sole trader</em>)
+  to own the Stripe account on behalf of the ICU and for that person's name and address to be used for the account verification process
+  (the same applied to PayPal). Once the account has been verified and connected to the ICU's bank account two pairs of API keys
+  (one pair for production and one pair for test and development) need to be registered with the application (see
+  = render "link", topic: "appendix.secrets"
+  and
+  = succeed(")") do
+    = render "link", topic: "intro.accounts"
+  before payments can be made.
+%p
+  The person who owns the account is normally a member of the ICU committee at the time the account is first setup.
+  They are able to login to the account dashboard (on the Stripe website) which, amongst other things, provides details
+  of all transactions made through the account. Most of the information that the treasurer needs is recorded in the ICU
+  database but, if the account holder is not also the treasurer, it's normal to share the dashboard login credentials
+  with the treasurer so that they can also benefit from the additional source of information.
+%p
+  One issue that the sole trader model gives rise to is what happens when that person leaves the ICU committee and
+  doesn't wish to continue in the role (and may even wish to shut down their Stripe account)? With Stripe the solution is easy:
+%ul
+  %li find another committee member to volunteer as the sole trader,
+  %li get them to setup and verify a new Stripe account connected to the same ICU bank account,
+  %li
+    replace the old account's API keys with the new ones (in <em>secrets.yml</em> — see
+    = succeed(").") do
+      = render "link", topic: "appendix.secrets"
+%p
+  Note that when a new Stripe account is used then payments made with older accounts can no longer be automatically
+  refunded (if any refunds are required). Instead payments would first have to be revoked in the ICU database and then
+  reimbursement made manually (e.g. sending a cheque) — see
+  = link_to t("help.treasurer"), help_treasurer_path
+  for details of the distinction between refunds and revokes.
+
+= render "header", topic: "appendix.ssl"
+%p
+  To enable secure communication between the user's browser and the ICU server during credit card purchases
+  there is an SSL (aka TLS) certificate for the <em>www.icu.ie</em> domain which is renewed annually.
+  The first one ever purchased from
+  %a{href: "https://www.123-reg.co.uk/", target: "external"} 123-reg
+  (the cheapest that could be found at the time) cost £10 and
+  = Date.today >= Date.new(2015, 8, 4) ? "expired" : "expires"
+  on 4th August 2015, so the right time to start the renewal process each year is July (see
+  = succeed(").") do
+    = render "link", topic: "tasks.seasonal"
+%p Notes:
+%ul
+  %li The certificate files are kept in <b>/etc/httpd/ssl/</b>.
+  %li
+    There is a separate configuration file for the SSL/TLS port, <b>/etc/httpd/conf.d/ssl.conf</b>,
+    and separate log files in <b>/var/log/httpd/ssl/</b> (see
+    = succeed(").") do
+      = render "link", topic: "appendix.apache"
+  %li The secure connection is also used for logging into the <em>www</em> site.
+  %li
+    The certificate doesn't work for <em>ratings.icu.ie</em>, so logging in there is not protected
+    (it could easily be if the ICU paid for a second certificate).
+  %li
+    The certificate also doesn't work for <em>https://icu.ie</em> (this would again require paying for another certificate).
+    To cope with this, such URLs are redirected to <em>https://www.icu.ie</em> by directives in <em>ssl.conf</em>.
+%p
+  There is support in the <em>www</em> application for automatically switching into secure mode, when required,
+  and back out of it, when no longer required. Thus the user will stay in normal mode unless they go to login
+  or make a credit card payment. See the helper methods <em>switch_to_tls</em> and <em>switch_from_tls</em> in
+  <b>app/controllers/application_controller.rb</b> and the file <b>app/assets/javascripts/switch_from_tls.js</b>.
+
+= render "header", topic: "appendix.style_script"
+%p
+  Other than a common reliance on
+  %a{href: "http://jquery.com/", target: "external"} jQuery
+  (via the <em>jquery-rails</em> gem) the two web applications
+  take different approaches to CSS and JavaScript extensions.
+%p
+  The <em>www</em> site uses
+  = succeed(",") do
+    %a{href: "http://getbootstrap.com/", target: "external"} Twitter Bootstrap
+  a responsive framework (styling adapts to the size of the viewing device).
+  Moreover, signed-in members can choose from a number of themes
+  (different versions of Bootstrap provided by
+  = succeed(").") do
+    %a{href: "http://bootswatch.com/", target: "external"} Bootswatch
+  Some of the implementation details:
+%ul
+  %li the Bootswatch files in <em>app/assets/stylesheets</em>,
+  %li the constants <em>THEMES</em> and <em>DEFAULT_THEME</em> in <em>app/models/user.rb</em>,
+  %li a collection of Bootstrap-related helper templates in <em>app/views/utils</em>.
+%p
+  From time to time new bug-fix versions of Bootstrap (in the version 3 series) are released
+  and Bootswatch usually follows suit shortly thereafter. The webmaster should replace the old
+  Bootswatch files with the new versions and then go through the usual
+  = render "link", topic: "intro.test_commit_push_deploy"
+  procedure.
+%p
+  The <em>ratings</em> site is more basic: there are no user-selectable themes and it's not responsive.
+  Styling is provided by a custom set of rules written in
+  = succeed(",") do
+    %a{href: "http://sass-lang.com/", target: "external"} SASS
+  a developer-friendly extension of CSS, in the file <em>app/assets/stylesheets/main.sass</em>.
+  This file is automatically compiled to CSS by the Rails
+  = succeed(".") do
+    %a{href: "http://guides.rubyonrails.org/asset_pipeline.html", target: "external"} Asset Pipeline.
+%p
+  Support for dynamic features is provided by
+  = succeed(".") do
+    %a{href: "http://jqueryui.com/", target: "external"} jQuery UI
+  The <em>Dialog</em> widget, in particular, is used a lot in the administrative part of the site.
+  The hover-to-reveal-menu behaviour of the top navigation bar is due to something called SuperFish
+  (see <em>vendor/assets/javascripts/superfish.js</em>).
+
+= render "header", topic: "appendix.webalizer"
+%p
+  Webalizer is a simple web server log file analysis program. It's reports for the two sites cab be viewed here:
+  = succeed(",") do
+    %a{href: "http://www.icu.ie/webalizer/index.html", target: "internal"} www
+  = succeed(".") do
+    %a{href: "http://ratings.icu.ie/webalizer/index.html", target: "internal"} ratings
+%p The Webalizer configuration files for the two sites are:
+%ul
+  %li <em>/etc/webalizer/www.conf</em>,
+  %li <em>/etc/webalizer/ratings.conf</em>.
+%p
+  Unlike most other scheduled tasks (see
+  = succeed("),") do
+    = render "link", topic: "appendix.whenever"
+  which run under the ordinary user, the two Webalizer daily tasks are scheduled in the <em>root</em> user's <em>crontab</em>.
+
+= render "header", topic: "appendix.webrick"
+%p
+  Run from an application's root directory in
+  = succeed(",") do
+    = render "link", topic: "intro.local_env"
+  the command:
+%pre $ bin/rails s
+%p
+  ("s" is short for "server") starts a small web server called Webrick
+  (distributed as part of Ruby's standard library) running on the default port 3000.
+  The application can then be accessed in development mode at:
+  = succeed(".") do
+    %a{href: "http://localhost:3000", target: "internal"} http://localhost:3000
+%p
+  There's no particular need to replicate the setup on the production server
+  = precede("(") do
+    = render "link", topic: "appendix.apache"
+    plus
+    = succeed("),") do
+      = render "link", topic: "appendix.passenger"
+  Webrick is perfectly adequate for development work.
+  The converse, however, would not be true: <em>Webrick</em> would be too slow for the production websites.
+
+= render "header", topic: "appendix.whenever"
+%p Both applications and the production server have tasks that need to be scheduled with <em>crontab</em>.
+%p For <em>www</em>:
+%ul
+  %li
+    daily:
+    %ul
+      %li cleanup empty carts that are more than a day old,
+      %li cleanup unpaid carts and their items that are more than a month old,
+      %li email the latest Mailgun stats to the webmaster,
+      %li store a summary of Mailgun events for the day to the database,
+      %li
+        = render "link", topic: "appendix.webalizer"
+        log file analysis,
+  %li
+    hourly:
+    %ul
+      %li assess the latest Mailgun stats and take appropriate action.
+%p For <em>ratings</em>:
+%ul
+  %li
+    once every minute:
+    %ul
+      %li check to see if the rating officer has requested a rating run and, if so, start one,
+  %li
+    daily:
+    %ul
+      %li import new and updated data from the <em>www</em> database (players, users, subscriptions, foreign rating fees),
+      %li export the latest published and live ratings to a file that tournament controllers can download,
+      %li
+        = render "link", topic: "appendix.webalizer"
+        log file analysis,
+  %li
+    weekly:
+    %ul
+      %li import new and updated FIDE player data (IDs, names, federation, YOBs, latest rating).
+%p For the production server:
+%ul
+  %li
+    daily:
+    %ul
+      %li
+        = succeed(".") do
+          = render "link", topic: "appendix.backups"
+%p
+  Managing these tasks could be achieved by requiring the webmaster to (a) log into the production server and
+  (b) manually edit the <em>crontab</em> file. However, a better solution is to make use of the
+  %a{href: "https://github.com/javan/whenever", target: "external"} Whenever
+  gem and configure application specific tasks in the file <b>config/schedule.rb</b>. There are two benefits:
+%ul
+  %li
+    Just like most other website changes, scheduled tasks are managed from
+    = render "link", topic: "intro.local_env"
+    and the production server's crontab is updated automatically by <em>Whenever</em> during a
+    = render "link", topic: "appendix.capistrano"
+    deployment.
+  %li The gem has a cleaner syntax for specifying tasks than the possibly familiar but archaic <em>crontab</em>.
+  %li The gem automatically takes care of some Rails specific details which can thus be omitted from the specifications.
+%p To illustrate, compare the following <em>Whenever</em> task specification in <em>config/schedule.rb</em>:
+- cmd = []
+- cmd << 'every :day, at: "5:15am" do'
+- cmd << '  rake "pgn:db"'
+- cmd << 'end'
+%pre~ cmd.join("\n")
+%p with the corresponding specification in <em>crontab</em>:
+%pre= "15 5 * * * cd /var/apps/www/releases/current && RAILS_ENV=production bin/rake pgn:db >> log/cron.log"
+%p
+  That said, there are some tasks that are entered directly in the <em>crontab</em> and not managed by <em>Whenever</em>
+  (because either they're not application specific or need to run under <em>root</em>) and those are
+  = render "link", topic: "appendix.backups"
+  and
+  = succeed(".") do
+    = render "link", topic: "appendix.webalizer"

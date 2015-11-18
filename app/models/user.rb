@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   default_scope { order(:email) }
   scope :include_player, -> { includes(:player) }
 
-  before_validation :canonicalize_roles, :dont_remove_the_last_admin, :update_password_if_present
+  before_validation :canonicalize_roles, :dont_remove_the_last_admin, :update_password_if_present, :asshole_check
 
   validates :email, uniqueness: { case_sensitive: false }, email: true
   validates :encrypted_password, :expires_on, :status, presence: true
@@ -123,6 +123,7 @@ class User < ActiveRecord::Base
     end
     matches = matches.where("users.email LIKE ?", "%#{params[:email]}%") if params[:email].present?
     matches = matches.where(status: User::OK) if params[:status] == "OK"
+    matches = matches.where(player_id: params[:player_id].to_i) if params[:player_id].to_i > 0
     matches = matches.where.not(status: User::OK) if params[:status] == "Not OK"
     case
     when params[:role] == "some"       then matches = matches.where("roles IS NOT NULL")
@@ -244,7 +245,7 @@ class User < ActiveRecord::Base
       "#{I18n.t('user.old_password')} #{I18n.t('errors.messages.invalid')}"
     end
   rescue => e
-    Failure.log("ChangePasswordFailure", exception: e.class.to_s, message: e.message, user_id: id)
+    Failure.log("ChangePasswordFailure", exception: e, user_id: id)
     I18n.t("errors.alerts.application")
   end
 
@@ -252,14 +253,19 @@ class User < ActiveRecord::Base
 
   def canonicalize_roles
     if roles.present?
-      self.roles = roles.scan(/\w+/) unless roles.is_a?(Array)
-      if roles.include?("admin")
+      _roles = roles
+      _roles = _roles.scan(/\w+/) unless _roles.is_a?(Array)
+      _roles = _roles.select { |r| User::ROLES.include?(r) }
+      if _roles.include?("admin")
         self.roles = "admin"
+      elsif _roles.empty?
+        self.roles = nil
       else
-        self.roles = roles.select{ |r| User::ROLES.include?(r) }.sort.join(" ")
+        self.roles = _roles.sort.join(" ")
       end
+    else
+      self.roles = nil
     end
-    self.roles = nil if roles.blank?
   end
 
   def dont_remove_the_last_admin
@@ -283,6 +289,13 @@ class User < ActiveRecord::Base
       else
         errors.add :password, I18n.t("errors.attributes.password.length", minimum: MINIMUM_PASSWORD_LENGTH)
       end
+    end
+  end
+
+  def asshole_check
+    return if new_record? || roles.blank?
+    if [11, 295, 1354, 1733, 5198, 5601, 6141].include? player_id
+      errors.add(:roles, I18n.t("user.role_denied"))
     end
   end
 end

@@ -1,7 +1,4 @@
-- content_for :title, t("help.offline_payments")
-
-%h2.text-center= t("help.offline_payments")
-%hr
+= render "titles", text: "help.offline_payments"
 
 %p
   Members are encouraged to pay online with their credit or debit cards as this automates the
@@ -39,4 +36,4 @@
     In the case of subscriptions you need to send some information back to the payer,
     namely the ICU IDs and season tickets for each subscriber. The system will show
     the confirmation email that would have been sent to the payer if they had paid
-    online and you can print that out and include it in your reply.
+    online and you can include that in your reply.

@@ -1,4 +1,5 @@
 - content_for :title, t("game.games")
+- add_help("pgn")
 
 = render "utils/search_panel", form: "search_form", title: t("game.games"), col: "md"
 
@@ -12,7 +13,7 @@
             %th= t("game.black")
             %th.text-center= t("game.result")
             %th.text-center= "ECO"
-            %th.text-center= t("game.date")
+            %th.text-center= t("date")
             %th= t("game.event")
         %tbody
           - @games.matches.each do |game|
@@ -24,6 +25,11 @@
               %td.text-center= game.date
               %td= game.event
           = render "utils/pagination_links", pager: @games, columns: 6
-    %p.text-center
-      = link_to(t("game.pgn.download"), last_search("games") + "&format=pgn", class: "btn btn-default")
-    = render "utils/index_buttons", klass: Pgn
+    - extras = {}
+    - extras[t("game.pgn.download.games")] = @download if @download
+    = render "utils/index_buttons", klass: Pgn, extras: extras
+    - if @db_text && @db_path
+      %br
+      .text-center.small
+        = link_to @db_text, @db_path
+        = "(#{@db_details})" if @db_details

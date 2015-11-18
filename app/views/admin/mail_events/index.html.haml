@@ -1,0 +1,43 @@
+- content_for :title, "Mail Events"
+
+.panel{class: "panel-#{@month.status}"}
+  .panel-body.text-center
+    Predicted bill on
+    = succeed(":") do
+      %strong= @month.end_date
+    count =
+    = succeed(",") do
+      %strong= @month.predicted_count
+    cost =
+    %span.label{class: "label-#{@month.status}"}= @month.predicted_cost
+    = @month.provider_profile.currency
+
+= render "utils/search_panel", form: "admin/mail_events/search_form", title: "Mail Events"
+- if @events.count > 0
+  .row
+    .col-sm-12
+      %table{class: "table table-striped table-bordered"}
+        %thead
+          %tr
+            %th.text-center Date
+            - MailEvent::CODES.values.each do |code|
+              %th.text-center
+                = succeed(code == :AC ? "*" : "") do
+                  = code
+            %th.text-center Total
+            %th.text-center Pages
+            %th.text-center= t("updated_at")
+        %tbody
+          - @events.matches.each do |event|
+            %tr{class: event.chargeable > 660 ? "danger" : (event.chargeable > 330 ? "warning" : "success")}
+              %td.text-center= event.date
+              - MailEvent::CODES.keys.each do |atr|
+                %td.text-center= event.send(atr)
+              %td.text-center= event.total
+              %td.text-center= event.pages
+              %td.text-center= event.updated_at.to_s(:nosec)
+          = render "utils/pagination_links", pager: @events, columns: 16
+
+%hr
+%p.small= "#{MailEvent::CODES.map { |atr,code| "#{code}: #{atr}" }.join(', ')}"
+%p.small= "* chargeable"

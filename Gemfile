@@ -1,10 +1,9 @@
 source "https://rubygems.org"
-source 'https://code.stripe.com'
 
-gem "rails", "4.1.5"
+gem "rails", "4.2.1.rc3"
 gem "mysql2"
 gem "haml-rails"
-gem "sass-rails", "~> 4.0.3"
+gem "sass-rails", "~> 5.0"
 gem "uglifier", ">= 1.3.0"
 gem "jquery-rails"
 gem "cancan", "~> 1.6"
@@ -20,9 +19,7 @@ gem "colored"
 gem "whenever", :require => false
 
 group :development do
-  gem "capistrano"
-  gem "capistrano-rails"
-  gem "capistrano-bundler"
+  gem "capistrano-rails", "~> 1.1"
   gem "wirble"
 end
 
@@ -34,4 +31,5 @@ group :development, :test do
   gem "launchy"
   gem "faker"
   gem "database_cleaner"
+  gem "byebug"
 end

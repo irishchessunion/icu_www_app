@@ -15,11 +15,17 @@
             = t("relay.to")
             = link_to "▾", admin_relays_path(order: "to") if @order == :from
           %th= t("officer.officer")
+          %th= t("relay.enabled")
       %tbody
         - @relays.each do |relay|
           %tr
             %td= link_to relay.from, [:admin, relay]
             %td= relay.to
             %td= link_to t("officer.role.#{relay.officer.role}"), [:admin, relay.officer] if relay.officer
+            %td.text-center= ok_ko(relay.enabled)
     .text-center
       = link_to t("relay.refresh"), refresh_admin_relays_path, class: "btn btn-info"
+      - if @enable_all_button
+        = link_to t("relay.enable_all"), enable_all_admin_relays_path, class: "btn btn-info"
+      - if @disable_all_button
+        = link_to t("relay.disable_all"), disable_all_admin_relays_path, data: { confirm: "Are you sure you want to disable all relays? Mail sent to @icu.ie addresses will cease to function." }, class: "btn btn-danger"

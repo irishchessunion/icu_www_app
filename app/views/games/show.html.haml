@@ -1,4 +1,5 @@
 - content_for :title, t("game.game")
+- add_help("pgn")
 
 = render "utils/prev_next", prev_next: @prev_next
 
@@ -14,9 +15,8 @@
   %p.text-center= "#{t('game.annotator')}: #{@game.annotator}"
 %pre= @game.moves
 
-%p.text-center
-  = link_to(t("game.pgn.download"), game_path(@game, format: 'pgn'), class: "btn btn-default")
-
-= render "utils/show_buttons", object: @game
+- extras = {}
+- extras[t("game.pgn.download.game")] = game_path(@game, format: "pgn") if can?(:download, Game)
+= render "utils/show_buttons", object: @game, extras: extras
 
 = render "admin/journal_entries/changes", entries: @entries

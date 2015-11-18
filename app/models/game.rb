@@ -3,10 +3,16 @@ class Game < ActiveRecord::Base
   include Normalizable
   include Pageable
 
+  attr_accessor :clean
+
   journalize %w[annotator black black_elo date eco event fen moves ply result round site white white_elo], "/games/%d"
 
   MAX_ELO = 3000
   RESULTS = %w[1-0 0-1 ½-½ ?-?]
+  ZIP_FILE = Rails.root + "public" + "system" + "icu.pgn.zip"
+  PGN_FILE = Rails.root + "tmp" + "icu.pgn"
+  LOG_FILE = Rails.root + "log" + "last_pgn_db.norotate"
+  MAX_DOWNLOAD_SIZE = Rails.env.test?? 2 : 1000
 
   belongs_to :pgn
 
@@ -27,11 +33,10 @@ class Game < ActiveRecord::Base
   scope :ordered, -> { order(date: :desc) }
 
   def self.search(params, path)
-    matches = search_unpaged(params, path)
-    paginate(matches, params, path)
+    paginate(matches(params), params, path)
   end
 
-  def self.search_unpaged(params, path)
+  def self.matches(params)
     matches = ordered
     if params[:date].present?
       if params[:date].match(/\A\s*(\d{4})(?:\D+(0[1-9]|1[012]|[1-9])(?:\D+(0[1-9]|[12][0-9]|3[01]|[1-9]))?)?/)
@@ -144,34 +149,67 @@ class Game < ActiveRecord::Base
 
   def to_pgn
     lines = []
-    add_pgn_tag(lines, 'Event', event)
-    add_pgn_tag(lines, 'Site', site)
-    lines << "[Date \"#{date}\"]"
-    lines << "[Round \"#{round}\"]"
-    lines << "[White \"#{white}\"]"
-    lines << "[Black \"#{black}\"]"
-    lines << "[Result \"#{result}\"]"
-    lines << "[WhiteElo \"#{white_elo}\"]" if white_elo.present?
-    lines << "[BlackElo \"#{black_elo}\"]" if black_elo.present?
-    lines << "[ECO \"#{eco}\"]" if eco.present?
-    lines << "[Annotator \"#{annotator}\"]" if annotator.present?
-    lines << "[FEN \"#{fen}\"]" if fen.present?
-    lines << ''
+
+    lines << %Q/[Event "#{event || '?'}"]/
+    lines << %Q/[Site "#{site || "?"}"]/
+    lines << %Q/[Date "#{date}"]/
+    lines << %Q/[Round "#{round || '?'}"]/
+    lines << %Q/[White "#{white}"]/
+    lines << %Q/[Black "#{black}"]/
+    lines << %Q/[Result "#{result == '½-½' ? '1/2-1/2' : (result == '?-?' ? '*' : result)}"]/
+    lines << %Q/[WhiteElo "#{white_elo}"]/ if white_elo.present?
+    lines << %Q/[BlackElo "#{black_elo}"]/ if black_elo.present?
+    lines << %Q/[ECO "#{eco}"]/ if eco.present?
+    lines << %Q/[Annotator "#{annotator}"]/ if annotator.present?
+    lines << %Q/[FEN "#{fen}"]/ if fen.present?
+    lines << ""
     lines << moves
 
-    lines.join("\n")
+    text = lines.join("\n")
+    text += text.match(/\n\z/) ? "\n" : "\n\n"
+
+    text
   end
+
+  def self.save_last_pgn_db(last_mod, count)
+    File.open(LOG_FILE, "w") do |f|
+      f.write "#{last_mod}|#{count}"
+    end
+  end
+
+  def self.get_last_pgn_db
+    last_mod_count = File.open(LOG_FILE, "r") { |f| f.each_line.first }
+    if last_mod_count.to_s.match(/\A([^|]+)\|([1-9]\d+)\z/)
+      last_mod = $1
+      count = $2
+    else
+      Failure.log("GetLastPGNDB", message: "unexpected log file contents", last_mod_count: last_mod_count || "(nil)")
+    end
+    [last_mod, count]
+  rescue Errno::ENOENT
+    [nil, nil]
+  end
+
+  def self.db_link
+    path, text, details = nil, nil
+    if File.exists?(ZIP_FILE)
+      path = "/#{ZIP_FILE.relative_path_from(Rails.root + 'public')}"
+      text = I18n.t("game.pgn.download.db")
+      last_mod, count = get_last_pgn_db
+      if last_mod && count
+        details = I18n.t("game.pgn.download.details", last_mod: last_mod, count: count)
+      end
+    end
+    [path, text, details]
+  end
+
   private
 
-  def add_pgn_tag(lines, tag, value)
-    lines << "[#{tag} \"#{value.present? ? value : '?'}\"]"
-  end
-
-  def add_optional_pgn_tag(lines, tag, value)
-    lines << "[#{tag} \"#{value}\"]" if value.present?
-  end
-
   def normalize_attributes
+    case clean
+    when "clock"
+      self.moves = moves.gsub(/\s*\{\[%clk[^\]]+\]\}\s*/, " ")
+    end
     normalize_newlines(:moves)
     %w[annotator eco event fen round site].each do |atr|
       if send(atr).blank? || send(atr).trim.match(/\A\?+\z/)
@@ -180,9 +218,9 @@ class Game < ActiveRecord::Base
         send("#{atr}=", send(atr).trim)
       end
     end
-    if result == "1/2-1/2"
+    if result == "1/2-1/2" || result == "½-½"
       self.result = "½-½"
-    elsif result == "*"
+    elsif result != "1-0" && result != "0-1"
       self.result = "?-?"
     end
     if date.present?
@@ -217,7 +255,7 @@ class Game < ActiveRecord::Base
     duplicate = duplicates.first
     if duplicate
       errors.add(:base, "Duplicate game found (ID: #{duplicate.id})") # to higlight the error for the user
-      errors.add(:signature, "duplicate")                             # so the PGN parser (see models/pgn.rb) can be sure the problem is a duplicate error
+      errors.add(:signature, "duplicate") # so the PGN parser (see models/pgn.rb) can be sure the problem is a duplicate error
     end
   end
 end

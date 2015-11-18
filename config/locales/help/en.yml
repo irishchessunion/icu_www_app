@@ -3,20 +3,83 @@ en:
     help: Help
     HELP: HELP
     accounts: Login Accounts for the ICU Websites
-    admins: Administrators
-    downloads: Uploading Files for Later Download
+    articles: Create and Edit News Items and Articles
+    downloads: Upload Files for Later Download
+    exceptions: Monitor and Investigate Exceptions
+    fees: Configure a New Simple Fee
     header: Hide or Show the Banner Header
-    index: Help
-    make_refund: Make a Refund
+    images: Upload Images
+    index: Help Index
+    make_refund: Refunds
+    make_revoke: Revokes
     markdown: Markdown for Articles and News Items
-    members: Members
     membership: Annual Subscriptions and Membership of the ICU
-    officers: Managing Officers and Mail Relays
-    offline_payments: Processing Offline Payments
+    officers: Manage Officers and Mail Relays
+    offline_payments: Process Offline Payments
+    overview: Overview of the ICU Websites
+    password_reset: Reset a User's Forgotten Password
     payment_status: Payment Status
+    pgn: Download PGN Games
+    pgn_upload: Upload PGN Games
+    players: "Player Classification, Synchronisation and Resurrection"
     privacy: Privacy Policy
     profile: Change your Club or Contact Details
+    rollover_subs: Rollover Subscriptions
     search_carts: Search Carts
     search_items: Search Items
     shortcuts: Link Shortcuts in Articles and News Items
+    suspend_account: Suspend a User's Login Account
+    transfer_payment: Transfer a Payment to Another ICU ID
     treasurer: "Carts, Items, Refunds and the Sales Ledger"
+    topics:
+      intro:
+        accounts: "Usernames, Passwords and API Keys"
+        components: System Components
+        financial: The Cost of the Websites
+        intro: Introduction
+        local_env: The Local Environment
+        logging_into_server: Logging in to the Server
+        resources: Other Webmaster Resouces
+        roles: User Roles
+        test_commit_push_deploy: "Test, Commit, Push, Deploy"
+      tasks:
+        check_ticket: Check a Season Ticket
+        create_new_payment_type: Create a New Payment Type
+        maintenance_mode: Put an Application into Maintenance Mode
+        manage_help_pages: Create and Update Help Pages
+        manage_icu_pages: Create and Update ICU Documentation
+        seasonal: Seasonal Tasks
+        sql_query: Answer Complex Queries using SQL
+        tasks: Common Tasks
+        updates: Keep Software Up-To-Date
+      appendix:
+        apache: Apache
+        appendix: Appendix
+        backups: Backups
+        bundler: Bundler
+        can_can: Can-Can
+        capistrano: Capistrano
+        centos: Centos
+        ftp: FTP
+        gems: Gems
+        git: Git
+        github: Github
+        google: Google Apps
+        haml: HAML
+        linode: Linode
+        mailgun: Mailgun
+        mysql: MyQSL
+        passenger: Passenger
+        rails: Rails
+        rake: Rake
+        redis: Redis
+        register365: Register365
+        rspec: RSpec
+        ruby: Ruby
+        secrets: Secrets
+        ssl: SSL/TLS
+        stripe: Stripe
+        style_script: Styling and Scripting
+        webalizer: Webalizer
+        webrick: WEBrick
+        whenever: Whenever

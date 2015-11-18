@@ -22,7 +22,15 @@ class Cart < ActiveRecord::Base
   end
 
   def refundable?
-    active? && payment_method == "stripe"
+    active? && purchased_with_current_payment_account?
+  end
+
+  def revokable?
+    active?
+  end
+
+  def refund_type
+    I18n.t("shop.payment.#{purchased_with_current_payment_account?? 'refund' : 'revoke'}")
   end
 
   def duplicates?(new_item, add_error: false)
@@ -54,7 +62,7 @@ class Cart < ActiveRecord::Base
   rescue => e
     add_payment_error(e, name, email, "Something went wrong, please contact webmaster@icu.ie")
   else
-    successful_payment("stripe", charge.id)
+    successful_payment("stripe", charge.id, Cart.current_payment_account)
   ensure
     update_cart(total, name, email, user)
     send_receipt
@@ -67,13 +75,14 @@ class Cart < ActiveRecord::Base
   end
 
   def refund(item_ids, user)
-    refund = Refund.new(user: user, cart: self)
-    charge = Stripe::Charge.retrieve(payment_ref)
+    automatic = refundable?
+    refund = Refund.new(user: user, cart: self, automatic: automatic)
+    charge = Stripe::Charge.retrieve(payment_ref) if automatic
     refund.amount = refund_amount(item_ids, charge)
-    charge.refund(amount: cents(refund.amount))
+    charge.refund(amount: cents(refund.amount)) if automatic
     items.each do |item|
       if item_ids.include?(item.id)
-        item.update_column(:status, "refunded")
+        item.refund
       end
     end
     self.status = self.total == refund.amount ? "refunded" : "part_refunded"
@@ -105,6 +114,14 @@ class Cart < ActiveRecord::Base
     paginate(matches, params, path)
   end
 
+  def purchased_with_current_payment_account?
+    payment_method == "stripe" && payment_account == Cart.current_payment_account
+  end
+
+  def self.current_payment_account
+    @current_payment_account ||= Rails.application.secrets.stripe["public"].truncate(32, omission: "")
+  end
+
   def all_notes
     items.each_with_object({}) do |item, notes|
       item.notes.each do |note|
@@ -115,9 +132,10 @@ class Cart < ActiveRecord::Base
 
   private
 
-  def successful_payment(payment_method, charge_id=nil)
+  def successful_payment(payment_method, charge_id=nil, payment_account=nil)
     self.status = "paid"
     self.payment_method = payment_method
+    self.payment_account = payment_account
     self.payment_ref = charge_id
     self.payment_completed = Time.now
     items.each { |item| item.complete(payment_method) }
@@ -137,7 +155,7 @@ class Cart < ActiveRecord::Base
     mail = IcuMailer.payment_receipt(id)
     update_column(:confirmation_text, mail.body.decoded)
     raise "no email address available" unless confirmation_email.present?
-    mail.deliver
+    mail.deliver_now
     update_column(:confirmation_sent, true)
   rescue => e
     update_columns(confirmation_sent: false, confirmation_error: e.message.gsub(/\s+/, ' ').truncate(255))
@@ -170,15 +188,18 @@ class Cart < ActiveRecord::Base
       refund_amount += item.cost
     end
 
-    # Check that the ICU cart and Stripe totals are consistent.
-    unless cents(original_total) == charge.amount
-      raise "Cart amount (#{cents(original_total)}) is inconsistent with Stripe amount (#{charge.amount})"
-    end
+    # If there's a charge object (we're automatically refunding the payment as well as updating the database).
+    if charge
+      # Check that the ICU cart and Stripe totals are consistent.
+      unless cents(original_total) == charge.amount
+        raise "Cart amount (#{cents(original_total)}) is inconsistent with Stripe amount (#{charge.amount})"
+      end
 
-    # Check any previous refund amounts are consistent.
-    cart_refund = cents(original_total) - cents(total)
-    unless cart_refund == charge.amount_refunded
-      raise "Previous cart refund (#{cart_refund}) is inconsistent with previous Stripe refund (#{charge.amount_refunded})"
+      # Check any previous refund amounts are consistent.
+      cart_refund = cents(original_total) - cents(total)
+      unless cart_refund == charge.amount_refunded
+        raise "Previous cart refund (#{cart_refund}) is inconsistent with previous Stripe refund (#{charge.amount_refunded})"
+      end
     end
 
     # Check the proposed refund isn't too large.

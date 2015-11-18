@@ -33,18 +33,47 @@ class Item < ActiveRecord::Base
     matches = matches.where(player_id: params[:player_id].to_i) if params[:player_id].to_i > 0
     matches = matches.where("players.last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
     matches = matches.where("players.first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
+    matches = matches.where("description LIKE ?", "%#{params[:description]}%") if params[:description].present?
     paginate(matches, params, path)
   end
 
   def complete(payment_method)
     update_columns(payment_method: payment_method, status: "paid")
-    if player_id.blank? && player_data.present?
-      begin
-        player = new_player.to_player
-        player.save!
-        update_column(:player_id, player.id)
-      rescue => e
-        Failure.log("NewPlayerCreateFailure", exception: e.class.to_s, message: e.message, data: player_data)
+    if fee.present? && fee.subtype == "subscription"
+      if player_id.present?
+        begin
+          season = Season.new(fee.years)
+          player.users.each do |user|
+            user.update_column(:expires_on, season.end_of_grace_period)
+          end
+        rescue => e
+          Failure.log("UpdateUsersAfterSubscriptionFailure", exception: e)
+        end
+      elsif player_data.present?
+        begin
+          player = new_player.to_player
+          player.save!
+          update_column(:player_id, player.id)
+        rescue => e
+          Failure.log("NewPlayerCreateFailure", exception: e, data: player_data)
+        end
+      end
+    end
+  end
+
+  def refund
+    update_column(:status, "refunded")
+    if subtype == "subscription" && player.present? && player.users.any?
+      last_subscription = Item::Subscription.active.where(player: player).where.not(end_date: nil).order(:end_date).last
+      if last_subscription
+        # Reset to that subscription.
+        expires_on = Season.new(last_subscription.end_date).end_of_grace_period
+      else
+        # Reset to two season's ago so they are no longer valid.
+        expires_on = Season.new.last.last.end_of_grace_period
+      end
+      player.users.each do |user|
+        user.update_column(:expires_on, expires_on)
       end
     end
   end
