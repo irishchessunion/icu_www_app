@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :news do
     active   true
-    summary  { Faker::Lorem.paragraphs.join("\n\n") }
+    summary  { Faker::Lorem.sentence(2) }
     headline { Faker::Lorem.sentence(4) }
     user
     date     { Date.today }

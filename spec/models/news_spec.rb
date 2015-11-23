@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe News do
   context "#html" do
-    let(:news)   { create(:news_extra) }
+    let(:news)   { build(:news_extra) }
     let!(:event) { create(:event, id: 98) }
 
     it "various substitutions" do
