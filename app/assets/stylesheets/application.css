@@ -10,6 +10,7 @@
  *
  *= require_self
  *= require boards
+ *= require board-min
  */
 
 /* Text styling. */
@@ -183,4 +184,8 @@ a.no-underline {
 /* For Google Maps. */
 #map-canvas {
   height: 600px;
+}
+
+.hidden {
+    display: none;
 }

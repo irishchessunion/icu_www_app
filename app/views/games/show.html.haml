@@ -1,4 +1,6 @@
 - content_for :title, t("game.game")
+- content_for :includes do
+  = javascript_include_tag "pgnyui", "pgnviewer"
 - add_help("pgn")
 
 = render "utils/prev_next", prev_next: @prev_next
@@ -13,8 +15,12 @@
   %strong= @game.result
 - if @game.annotator
   %p.text-center= "#{t('game.annotator')}: #{@game.annotator}"
-%pre= @game.moves
-
+#demo_pgn.hidden
+  = @game.to_pgn
+%div{id: 'demo-container'}
+%div{id: 'demo-moves'}
+%script
+  new  PgnViewer({boardName: "demo", pgnDiv: 'demo_pgn', pieceSet: 'leipzig', pieceSize: 46, highlightFromTo: false, soundEnabled: false, showBracketsOnVariation: true, showToMoveIndicators: true});
 - extras = {}
 - extras[t("game.pgn.download.game")] = game_path(@game, format: "pgn") if can?(:download, Game)
 = render "utils/show_buttons", object: @game, extras: extras
