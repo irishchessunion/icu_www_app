@@ -1,12 +1,13 @@
 module Pageable
   extend ActiveSupport::Concern
+  DEFAULT_ROWS_PER_PAGE = 20
 
   module ClassMethods
     def paginate(matches, params, path, opt={})
       count = matches.count
       page = params[:page].to_i > 0 ? params[:page].to_i : 1
       per_page = opt[:per_page].to_i
-      per_page = 10 if per_page == 0
+      per_page = DEFAULT_ROWS_PER_PAGE if per_page == 0
       remote = opt[:remote] ? true : false
       page = 1 + count / per_page if page > 1 && (page - 1) * per_page >= count
       matches = matches.offset(per_page * (page - 1)) if page > 1
