@@ -18,6 +18,7 @@ gem "mailgun-ruby", require: "mailgun"
 gem "paperclip", "~> 4.1"
 gem "colored"
 gem "whenever", :require => false
+gem "quiet_assets"
 
 group :development do
   gem "capistrano-rails", "~> 1.1"
