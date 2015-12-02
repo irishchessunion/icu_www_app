@@ -1,4 +1,9 @@
 module ApplicationHelper
+  def chesstempo_image_path
+    p = image_path('neveruse.png')
+    p[0..p.rindex('/')] + "chesstempo"
+  end
+
   def active?(controller, action=nil)
     controller_name == controller && (action.blank? || action_name == action)
   end
