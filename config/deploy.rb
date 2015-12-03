@@ -1,7 +1,7 @@
 set :application, "icu_www_app"
 
 set :scm, :git
-set :repo_url, "git://github.com/sanichi/icu_www_app.git"
+set :repo_url, "git://github.com/ninkibah/icu_www_app.git"
 set :branch, "master"
 
 set :deploy_to, "/var/apps/www"
