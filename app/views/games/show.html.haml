@@ -19,8 +19,11 @@
   = @game.to_pgn
 %div{id: 'demo-container'}
 %div{id: 'demo-moves'}
+%p
+  Thanks to <a id='ct-link' href='http://chesstempo.com/play-chess-online.html'>Chess Tempo</a> for the Pgn Game player.
 %script
-  new  PgnViewer({boardName: "demo", pgnDiv: 'demo_pgn', pieceSet: 'leipzig', pieceSize: 46, highlightFromTo: false, soundEnabled: false, showBracketsOnVariation: true, showToMoveIndicators: true});
+  var flip_listener = function(board) {};
+  window.pgn_viewer = new  PgnViewer({boardName: "demo", pgnDiv: 'demo_pgn', pieceSet: 'leipzig', pieceSize: 44, highlightFromTo: false, showCoordinates: false, soundEnabled: false, showBracketsOnVariation: true, showToMoveIndicators: true});
 - extras = {}
 - extras[t("game.pgn.download.game")] = game_path(@game, format: "pgn") if can?(:download, Game)
 = render "utils/show_buttons", object: @game, extras: extras
