@@ -9,7 +9,6 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require boards
  *= require board-min
  */
 
@@ -188,4 +187,12 @@ a.no-underline {
 
 .hidden {
     display: none;
+}
+
+#demo-boardBorder {
+    border: none;
+}
+
+.ct-start, .ct-end, .ct-back, .ct-forward, .ct-play, .ct-stop {
+    width: 24px;
 }
