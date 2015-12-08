@@ -39,10 +39,6 @@ GEM
     addressable (2.3.7)
     arel (6.0.3)
     builder (3.2.2)
-    byebug (3.5.1)
-      columnize (~> 0.8)
-      debugger-linecache (~> 1.2)
-      slop (~> 3.6)
     cancan (1.6.10)
     capistrano (3.4.0)
       i18n
@@ -69,9 +65,7 @@ GEM
       climate_control (>= 0.0.3, < 1.0)
     colored (1.2)
     colorize (0.7.5)
-    columnize (0.9.0)
     database_cleaner (1.4.0)
-    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.4.0)
@@ -202,7 +196,6 @@ GEM
       rubyzip (~> 1.0)
       websocket (~> 1.0)
     sexp_processor (4.4.5)
-    slop (3.6.0)
     sprockets (2.12.3)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -242,7 +235,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  byebug
   cancan (~> 1.6)
   capistrano-rails (~> 1.1)
   capybara
