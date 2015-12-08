@@ -79,6 +79,11 @@ class User < ActiveRecord::Base
     t.valid? ? t.to_s : t.error
   end
 
+  # Updates the last_used_at attribute with the current time.
+  def used_site_now
+    self.update_attributes(last_used_at: Time.now)
+  end
+
   # Cater for a theme getting removed, as Ameila was in Aug 2014 after Bootswatch announced they were dropping it.
   def preferred_theme
     theme.present? && THEMES.include?(theme) ? theme : DEFAULT_THEME
@@ -108,6 +113,7 @@ class User < ActiveRecord::Base
     def player; nil end
     def roles; nil end
     def preferred_theme; DEFAULT_THEME end
+    def used_site_now; end
     User::ROLES.each do |role|
       define_method "#{role}?" do
         false

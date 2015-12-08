@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include SessionsHelper
   before_action :set_locale
+  before_action :increment_usage_counts
   after_action :set_last_page_before_sign_in
   protect_from_forgery with: :exception
   helper_method :switch_to_tls, :switch_from_tls, :last_search, :failure_details, :show_header?, :toggle_header
@@ -153,5 +154,9 @@ class ApplicationController < ActionController::Base
     else
       session.delete(:hide_header)
     end
+  end
+
+  def increment_usage_counts
+    current_user.used_site_now
   end
 end

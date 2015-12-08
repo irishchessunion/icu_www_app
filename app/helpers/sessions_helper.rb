@@ -1,6 +1,7 @@
 module SessionsHelper
   private
 
+  # @return [User]
   def current_user
     return @current_user if @current_user
     if session[:user_id]
