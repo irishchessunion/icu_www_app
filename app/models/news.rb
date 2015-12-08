@@ -11,7 +11,7 @@ class News < ActiveRecord::Base
 
   before_validation :normalize_attributes
   validates :headline, presence: true, length: { maximum: 100 }
-  validates :summary, presence: true, length: { maximum: 140, too_long: 'The summary is too long. Please create an article, and link to it here. [ART:123:My Article]' }
+  validates :summary, presence: true, length: { maximum: 140, too_long: 'The summary is too long. Please create an article, and link to it so: [ART:123:My Article]' }
   validates :date, date: { on_or_before: :today }
   validate :expansions
 

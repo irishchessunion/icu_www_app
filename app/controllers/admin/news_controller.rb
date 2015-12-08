@@ -15,7 +15,7 @@ class Admin::NewsController < ApplicationController
       @news.journal(:create, current_user, request.remote_ip)
       redirect_to @news, notice: "News was successfully created"
     else
-      flash_first_error(@news, base_only: true)
+      flash_first_error(@news, base_only: false)
       render action: "new"
     end
   end
@@ -26,7 +26,7 @@ class Admin::NewsController < ApplicationController
       @news.journal(:update, current_user, request.remote_ip)
       redirect_to @news, notice: "News was successfully updated"
     else
-      flash_first_error(@news, base_only: true)
+      flash_first_error(@news, base_only: false)
       render action: "edit"
     end
   end
