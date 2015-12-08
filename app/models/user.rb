@@ -7,7 +7,8 @@ class User < ActiveRecord::Base
   attr_accessor :password, :ticket
 
   OK = "OK"
-  ROLES = %w[admin calendar editor inspector membership translator treasurer]
+  # The tester role is used to show new functionality
+  ROLES = %w[admin tester calendar editor inspector membership translator treasurer]
   MINIMUM_PASSWORD_LENGTH = 6
   THEMES = %w[Cerulean Cosmo Cyborg Darkly Flatly Journal Lumen Superhero Paper Readable Sandstone Simplex Slate Spacelab United Yeti]
   DEFAULT_THEME = "Flatly"
