@@ -177,13 +177,13 @@ describe Club do
       click_link next_link
 
       expect(page).to have_css(header, text: club9.name)
-      click_link next_link
+      click_link last_search
 
       expect(page).to have_button(search)
       click_link club10.name
 
       expect(page).to_not have_link(next_link)
-      click_link prev_link
+      click_link last_search
 
       expect(page).to have_button(search)
       click_link club9.name

@@ -315,12 +315,9 @@ describe Player do
       expect(page).to have_css(header, text: player10.name)
       click_link next_link
 
-      expect(page).to have_button(search)
-      click_link player11.name(reversed: true)
-
       expect(page).to have_css(header, text: player11.name)
       expect(page).to_not have_link(next_link)
-      click_link prev_link
+      click_link last_search
 
       expect(page).to have_button(search)
       click_link player10.name(reversed: true)
