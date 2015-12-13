@@ -89,6 +89,7 @@ IcuWwwApp::Application.routes.draw do
       get :refresh, :enable_all, :disable_all, on: :collection
     end
     resources :series,          only: [:new, :create, :edit, :update, :destroy]
+    resources :statistics, only: [:index]
     resources :tournaments,     only: [:new, :create, :edit, :update, :destroy]
     resources :translations,    only: [:index, :show, :edit, :update, :destroy]
     resources :user_inputs,     only: [:show, :new, :create, :edit, :update, :destroy]

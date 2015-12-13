@@ -318,6 +318,8 @@ ActiveRecord::Schema.define(version: 20151208122913) do
     t.datetime "created_at"
   end
 
+  add_index "logins", ["created_at", "user_id"], name: "index_logins_on_created_at_and_user_id", using: :btree
+  add_index "logins", ["created_at"], name: "index_logins_on_created_at", using: :btree
   add_index "logins", ["error"], name: "index_logins_on_error", using: :btree
   add_index "logins", ["ip"], name: "index_logins_on_ip", using: :btree
   add_index "logins", ["user_id"], name: "index_logins_on_user_id", using: :btree
@@ -539,6 +541,7 @@ ActiveRecord::Schema.define(version: 20151208122913) do
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["expires_on"], name: "index_users_on_expires_on", using: :btree
+  add_index "users", ["last_used_at"], name: "index_users_on_last_used_at", using: :btree
   add_index "users", ["player_id"], name: "index_users_on_player_id", using: :btree
   add_index "users", ["roles"], name: "index_users_on_roles", using: :btree
   add_index "users", ["status"], name: "index_users_on_status", using: :btree

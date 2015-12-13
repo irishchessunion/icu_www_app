@@ -1,0 +1,25 @@
+%h1 Usage Statistics
+
+.row
+  %table{class: "table table-striped table-hover"}
+    %thead
+      %tr
+        %th
+        %th.text-right Last hour
+        %th.text-right Last day
+        %th.text-right Last week
+        %th.text-right Last month
+        %th.text-right Last year
+        %th.text-right Since 2010
+
+
+    %tbody
+      - @statistics.each do |statistic|
+        %tr
+          %td= statistic.name
+          %td.text-right= statistic.hour
+          %td.text-right= statistic.day
+          %td.text-right= statistic.week
+          %td.text-right= statistic.month
+          %td.text-right= statistic.year
+          %td.text-right= statistic.forever

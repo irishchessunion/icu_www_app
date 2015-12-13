@@ -10,6 +10,10 @@ class Ability
         return
       end
 
+      if user.tester?
+        can :manage, Admin::Statistic
+      end
+
       if user.editor?
         can :create, [Article, Image, News]
         can [:create, :show], Download
