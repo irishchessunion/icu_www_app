@@ -3,8 +3,6 @@
     %li= link_to t("session.sign_in"), switch_to_tls(:sign_in)
   - unless active?("users", "new")
     %li= link_to t("user.sign_up"), switch_to_tls(:sign_up)
-  - unless active?("passwords", "new")
-    %li= link_to t("password.new"), new_password_path
 - else
   %li.dropdown
     = link_to "#", class: "dropdown-toggle", data: { toggle: "dropdown" } do
