@@ -46,6 +46,12 @@ class PasswordsController < ApplicationController
 
   private
 
+  def last_page_before_sign_in_or_home(notice)
+    goto = session[:last_page_before_sign_in]
+    goto = :home unless goto.present? && goto.match(/\A\//)
+    redirect_to switch_from_tls(goto), notice: notice
+  end
+
   # Only allow a trusted parameter "white list" through.
   def password_params
     params.permit(:new_password, :new_password_confirmation, :token)
