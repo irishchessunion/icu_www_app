@@ -3,6 +3,7 @@ class IcuMailer < ActionMailer::Base
 
   FROM = "NO-REPLY@icu.ie"
   CONFIRMATION = "Confirmation of your Payment to the ICU"
+  FORGOT_PASSWORD = "Instructions for changing your ICU password"
   VERIFICATION = "Please verify your ICU login account email address"
   MAIL_STATS = "ICU mail statistics at %s"
   WEBMASTER = "webmaster@icu.ie"
@@ -29,6 +30,12 @@ class IcuMailer < ActionMailer::Base
   def mail_stats(stats)
     @stats = stats
     mail(to: WEBMASTER, subject: MAIL_STATS % Time.now.to_s(:db))
+  end
+
+  def forgot_password(user_id, token)
+    @user = User.include_player.find(user_id)
+    @token = token
+    mail(to: @user.email, subject: FORGOT_PASSWORD)
   end
 
   private

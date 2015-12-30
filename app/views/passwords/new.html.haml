@@ -1,0 +1,14 @@
+- content_for :title, t("password.new")
+
+.row
+  .col-sm-8.col-sm-offset-2
+    %h1.text-center= t("password.new")
+    %hr
+    = form_tag password_path, method: :post, class: "form-horizontal", role: "form" do
+      %fieldset
+        - locals = { col: "sm", pad: 4, width: 4 }
+        = render "utils/text_field_tag", locals.merge(param: :email, text: t("password.email"), type: 'email')
+      %hr
+      .text-center
+        = submit_tag t("send_request"), class: "btn btn-primary"
+        = link_to t("cancel"), root_path, class: "btn btn-default"

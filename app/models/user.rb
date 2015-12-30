@@ -256,6 +256,41 @@ class User < ActiveRecord::Base
     I18n.t("errors.alerts.application")
   end
 
+  # Resets reset password token and send reset password instructions by email.
+  # Returns the token sent in the e-mail.
+  def send_reset_password_instructions
+    token = set_reset_password_token
+    send_reset_password_instructions_notification(token)
+
+    token
+  end
+
+  def reset_password_period_valid?
+    reset_password_sent_at && reset_password_sent_at.utc >= 24.hours.ago
+  end
+
+  # Removes reset_password token
+  def clear_reset_password_token
+    self.reset_password_token = nil
+    self.reset_password_sent_at = nil
+  end
+
+  def set_reset_password_token
+    while true
+      token = SecureRandom.hex(32)
+      break unless User.where(reset_password_token: token).exists?
+    end
+
+    self.reset_password_token   = token
+    self.reset_password_sent_at = Time.now.utc
+    self.save(validate: false)
+    token
+  end
+
+  def send_reset_password_instructions_notification(token)
+    IcuMailer.forgot_password(id, token).deliver_now
+  end
+
   private
 
   def canonicalize_roles

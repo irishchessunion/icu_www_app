@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151208122913) do
+ActiveRecord::Schema.define(version: 20151228222207) do
 
   create_table "articles", force: :cascade do |t|
     t.string   "access",     limit: 20
@@ -523,20 +523,22 @@ ActiveRecord::Schema.define(version: 20151208122913) do
   add_index "user_inputs", ["type"], name: "index_user_inputs_on_type", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",              limit: 255
-    t.string   "roles",              limit: 255
-    t.string   "encrypted_password", limit: 32
-    t.string   "salt",               limit: 32
-    t.string   "status",             limit: 255, default: "OK"
-    t.integer  "player_id",          limit: 4
+    t.string   "email",                  limit: 255
+    t.string   "roles",                  limit: 255
+    t.string   "encrypted_password",     limit: 32
+    t.string   "salt",                   limit: 32
+    t.string   "status",                 limit: 255, default: "OK"
+    t.integer  "player_id",              limit: 4
     t.date     "expires_on"
     t.datetime "verified_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "theme",              limit: 16
-    t.string   "locale",             limit: 2,   default: "en"
-    t.boolean  "hide_header",                    default: false
+    t.string   "theme",                  limit: 16
+    t.string   "locale",                 limit: 2,   default: "en"
+    t.boolean  "hide_header",                        default: false
     t.datetime "last_used_at"
+    t.string   "reset_password_token",   limit: 255
+    t.datetime "reset_password_sent_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree

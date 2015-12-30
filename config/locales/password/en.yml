@@ -1,0 +1,7 @@
+en:
+  send_request: Send request
+  password:
+    email: Email
+    forgotten_password_email_sent: You have been sent an email with a link in it.
+    new: "Forgot password?"
+    unknown_email: That email address is not known

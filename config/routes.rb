@@ -42,6 +42,7 @@ IcuWwwApp::Application.routes.draw do
   resources :news,        only: [:index, :show] do
     get :source, on: :member
   end
+  resource :password, only: [:new, :create, :edit, :update]
   resources :player_ids,  only: [:index]
   resources :players,     only: [:index, :edit, :update]
   resources :series,      only: [:index, :show]
