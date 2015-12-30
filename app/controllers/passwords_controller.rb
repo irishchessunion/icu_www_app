@@ -32,7 +32,13 @@ class PasswordsController < ApplicationController
     @password = NewPassword.new(password_params)
 
     if @password.save
-      redirect_to root_path, notice: 'Your password was successfully changed.'
+      # Login as the user
+      session[:user_id] = @password.user.id
+      session[:old_locale] = session[:locale] || I18n.default_locale
+      session[:old_hide_header] = !show_header?
+      switch_locale(@password.user.locale)
+      switch_header(@password.user.hide_header)
+      last_page_before_sign_in_or_home('Your password was successfully changed.')
     else
       render :new
     end
