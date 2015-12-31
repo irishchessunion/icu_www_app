@@ -1,0 +1,4 @@
+- @news.matches.each do |news|
+  = render "news/panel", news: news
+
+.text-center.well.well-sm= link_to t("news.search"), news_index_path

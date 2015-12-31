@@ -7,7 +7,7 @@ IcuWwwApp::Application.routes.draw do
   get  "redirect" => "redirects#redirect"
   get  "header"   => "header#control"
 
-  %w[home links juniors].each do |page|
+  %w[home home2 links juniors].each do |page|
     get page => "pages##{page}"
   end
   %w[clubs events].each do |page|
