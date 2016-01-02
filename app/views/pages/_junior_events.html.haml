@@ -1,6 +1,6 @@
 .panel.panel-primary
   .panel-heading
-    =link_to 'Junior events', juniors_path
+    .text-center= t('junior.events')
   - @juniors.each do |event|
     .panel-body
       = link_to event.name, event
@@ -8,3 +8,4 @@
       = event.dates
       %br
       = ((event.note || '').strip.split("\n").first || '').strip
+  .text-center= link_to t('junior.chess'), juniors_path

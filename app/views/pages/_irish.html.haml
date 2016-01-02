@@ -1,11 +1,11 @@
 .panel.panel-primary
   .panel-heading
-    =link_to 'Upcoming Events', events_path
+    .text-center Upcoming Events
   - events.each do |event|
-    .panel.panel-default
-      .panel-heading
-        = link_to event.name, event
-      .panel-body
-        = event.dates
-        %br
-        = ((event.note || '').strip.split("\n").first || '').strip
+    .panel-body
+      = link_to event.name, event
+      %br
+      = event.dates
+      %br
+      = ((event.note || '').strip.split("\n").first || '').strip
+  .text-center= link_to t("event.calendar"), events_path
