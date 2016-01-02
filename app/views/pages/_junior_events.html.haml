@@ -1,0 +1,10 @@
+.panel.panel-primary
+  .panel-heading
+    =link_to 'Junior events', juniors_path
+  - @juniors.each do |event|
+    .panel-body
+      = link_to event.name, event
+      %br
+      = event.dates
+      %br
+      = ((event.note || '').strip.split("\n").first || '').strip

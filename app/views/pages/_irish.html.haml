@@ -1,0 +1,10 @@
+.panel.panel-primary
+  .panel-heading
+    =link_to 'Upcoming Events', events_path
+  - events.each do |event|
+    .panel-body
+      = link_to event.name, event
+      %br
+      = event.dates
+      %br
+      = ((event.note || '').strip.split("\n").first || '').strip
