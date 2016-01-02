@@ -18,7 +18,8 @@ en:
     url: Event website
     category:
       any: Any type
+      foreign: Foreign
       irish: Irish
+      junint: Junior International
       junior: Juniors only
       women: Women only
-      foreign: Foreign

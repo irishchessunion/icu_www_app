@@ -9,7 +9,7 @@ class Event < ActiveRecord::Base
 
   MIN_SIZE = 1.kilobyte
   MAX_SIZE = 3.megabytes
-  CATEGORIES = %w[irish junior women foreign]
+  CATEGORIES = %w[irish junior women foreign junint]
   TYPES = {
     pdf:  "application/pdf",
     doc:  "application/msword",
