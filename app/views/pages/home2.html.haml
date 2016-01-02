@@ -1,4 +1,26 @@
-- @news.matches.each do |news|
-  = render "news/panel", news: news
+.row
+  .col-sm-3
+    .panel.panel-primary
+      .panel-heading
+        Upcoming events
+      - @irish.each do |event|
+        .panel-body
+          = link_to event.name, event
+          %br
+          = event.dates
+      .text-center.well.well-sm= link_to t("event.calendar"), events_path
+    .panel.panel-primary
+      .panel-heading
+        Junior events
+      - @juniors.each do |event|
+        .panel-body
+          = link_to event.name, event
+          %br
+          = event.dates
+  .col-sm-7
+    - @news.matches.each do |news|
+      = render "news/panel", news: news
 
-.text-center.well.well-sm= link_to t("news.search"), news_index_path
+    .text-center.well.well-sm= link_to t("news.search"), news_index_path
+  .col-sm-2
+    = render "layouts/features"
