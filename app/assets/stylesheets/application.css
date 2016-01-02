@@ -39,6 +39,28 @@
   z-index: 50;
 }
 
+#header.jumbotron {
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.header-logo {
+    margin-top: 15px;
+}
+
+#header.jumbotron h1 {
+    font-size: 34px;
+}
+
+.panel.panel-default {
+    margin-bottom: 0;
+}
+
+.home2 .panel-body {
+    padding: 10px 15px 0;
+}
+
 /* Vertical offsets and centering. */
 .voffset1 { margin-top: 10px; }
 .voffset2 { margin-top: 15px; }
