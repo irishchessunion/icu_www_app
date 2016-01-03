@@ -1,8 +1,8 @@
-.panel.panel-default
+.panel-default
   .panel-heading
     = news.headline
     - unless news.active
       = "(inactive)"
-    .pull-right.hidden-xs= news.date
-    .pull-right.visible-xs-block= news.short_date
+    .pull-right.hidden-sm= news.date
+    .pull-right.visible-sm-block= news.short_date
   .panel-body.news= news.html

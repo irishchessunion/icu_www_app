@@ -57,8 +57,13 @@
     margin-bottom: 0;
 }
 
-.home2 .panel-body {
+.irish-events .panel-body, .junior-events .panel-body, .news .panel-body {
     padding: 10px 15px 0;
+}
+
+.irish-events .panel-footer, .junior-events .panel-footer, .news .panel-footer {
+    border-top: solid 1px;
+    background: inherit;
 }
 
 /* Vertical offsets and centering. */

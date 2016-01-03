@@ -1,11 +1,11 @@
-.panel.panel-primary
+.panel.panel-primary.irish-events
   .panel-heading
     .text-center Upcoming Events
-  - events.each do |event|
+  - @irish_events.each do |event|
     .panel-body
       = link_to event.name, event
       %br
       = event.dates
       %br
       = ((event.note || '').strip.split("\n").first || '').strip
-  .text-center= link_to t("event.calendar"), events_path
+  .panel-footer.text-center= link_to t("event.calendar"), events_path

@@ -25,13 +25,6 @@
       = render "layouts/nav"
       = render "layouts/spinner"
       = render "layouts/flash"
-      - if home_page?
-        .row
-          .col-sm-10
-            = yield
-          .col-sm-2
-            = render "layouts/features"
-      - else
-        = yield
+      = yield
     .container
       = render "layouts/footer"

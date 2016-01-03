@@ -1,11 +1,11 @@
-.panel.panel-primary
+.panel.panel-primary.junior-events
   .panel-heading
     .text-center= t('junior.events')
-  - @juniors.each do |event|
+  - @junior_events.each do |event|
     .panel-body
       = link_to event.name, event
       %br
       = event.dates
       %br
       = ((event.note || '').strip.split("\n").first || '').strip
-  .text-center= link_to t('junior.chess'), juniors_path
+  .panel-footer.text-center= link_to t('junior.chess'), juniors_path
