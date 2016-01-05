@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151228222207) do
+ActiveRecord::Schema.define(version: 20160103163014) do
+
+  create_table "article_likes", force: :cascade do |t|
+    t.integer  "article_id", limit: 4
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at"
+  end
+
+  add_index "article_likes", ["article_id", "user_id"], name: "index_article_likes_on_article_id_and_user_id", unique: true, using: :btree
 
   create_table "articles", force: :cascade do |t|
     t.string   "access",     limit: 20
@@ -25,6 +33,7 @@ ActiveRecord::Schema.define(version: 20151228222207) do
     t.integer  "year",       limit: 2
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "nlikes",     limit: 4
   end
 
   add_index "articles", ["access"], name: "index_articles_on_access", using: :btree
@@ -352,12 +361,21 @@ ActiveRecord::Schema.define(version: 20151228222207) do
     t.integer  "user_id",    limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "nlikes",     limit: 4
   end
 
   add_index "news", ["active"], name: "index_news_on_active", using: :btree
   add_index "news", ["date"], name: "index_news_on_date", using: :btree
   add_index "news", ["headline"], name: "index_news_on_headline", using: :btree
   add_index "news", ["user_id"], name: "index_news_on_user_id", using: :btree
+
+  create_table "news_likes", force: :cascade do |t|
+    t.integer  "news_id",    limit: 4
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at"
+  end
+
+  add_index "news_likes", ["news_id", "user_id"], name: "index_news_likes_on_news_id_and_user_id", unique: true, using: :btree
 
   create_table "officers", force: :cascade do |t|
     t.string   "role",       limit: 20

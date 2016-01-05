@@ -99,4 +99,23 @@ module ApplicationHelper
   def ok_ko(bool)
     t("symbol.#{bool ? 'ok' : 'ko'}")
   end
+
+  # @param user [User]
+  # @param news [News]
+  def like_button(user, news)
+    if user.guest?
+      path = sign_in_path
+      options = {method: :get, class: 'button btn-xs btn-default'}
+    elsif NewsLike.likes?(user, news)
+      path = like_path(news.id)
+      options = {method: :delete, class: 'button btn-xs btn-info'}
+    else
+      path = likes_path(news_id: news.id)
+      options = {class: 'button btn-xs btn-default'}
+    end
+
+    button_to(path, options) do
+      (content_tag('span', '', class: 'glyphicon glyphicon-thumbs-up') + ' ' + (news.nlikes || '0').to_s).html_safe
+    end
+  end
 end

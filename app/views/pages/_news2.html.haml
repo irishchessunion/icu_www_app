@@ -1,0 +1,7 @@
+.panel.panel-primary.news
+  .panel-heading
+    .text-center Latest News
+  - @news.matches.each do |news|
+    = render 'news/panel2', news: news
+
+  .panel-footer.text-center= link_to t('news.search'), news_index_path
