@@ -1,0 +1,11 @@
+.panel-default
+  .panel-heading
+    = news.headline
+    - unless news.active
+      = "(inactive)"
+    .pull-right.hidden-sm= news.date
+    .pull-right.visible-sm-block= news.short_date
+    .pull-right.right-margin-thin
+      = like_button(current_user, news)
+  .panel-body.news
+    = news.html
