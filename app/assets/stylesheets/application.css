@@ -132,6 +132,23 @@
   padding: 0.4em;
 }
 
+button.like-btn {
+    border: none;
+    background-color: inherit;
+}
+
+button.like-btn.liked span {
+    color: red;
+}
+
+button.like-btn.unliked span {
+    color: grey;
+}
+
+button.like-btn span:hover {
+    color: red;
+}
+
 /* General styles for board tables (see models/board.rb). */
 table.board { border: solid 1px #ccc !important; margin-bottom: 0.7em; }
 table.board td { border: 0 !important; padding: 0; }

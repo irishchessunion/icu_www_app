@@ -105,17 +105,17 @@ module ApplicationHelper
   def like_button(user, news)
     if user.guest?
       path = sign_in_path
-      options = {method: :get, class: 'button btn-xs btn-default'}
+      options = {method: :get, class: 'like-btn unliked', title: 'Login first to like'}
     elsif NewsLike.likes?(user, news)
       path = like_path(news.id)
-      options = {method: :delete, class: 'button btn-xs btn-info'}
+      options = {method: :delete, class: 'like-btn liked', title: 'Undo like'}
     else
       path = likes_path(news_id: news.id)
-      options = {class: 'button btn-xs btn-default'}
+      options = {class: 'like-btn  unliked', title: 'Like'}
     end
 
     button_to(path, options) do
-      (content_tag('span', '', class: 'glyphicon glyphicon-thumbs-up') + ' ' + (news.nlikes || '0').to_s).html_safe
+      (content_tag('span', '', class: 'glyphicon glyphicon-heart') + ' ' + (news.nlikes || '0').to_s).html_safe
     end
   end
 end

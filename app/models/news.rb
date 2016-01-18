@@ -36,6 +36,10 @@ class News < ActiveRecord::Base
     to_html(expand_all(summary), filter_html: false)
   end
 
+  def html2
+    to_html(expand_all("#{date.strftime('%d-%m-%Y')}: #{summary}"), filter_html: false)
+  end
+
   def expand(opt)
     %q{<a href="/news/%d">%s</a>} % [id, opt[:text] || headline]
   end
