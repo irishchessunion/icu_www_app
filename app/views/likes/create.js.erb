@@ -1,0 +1,1 @@
+$("[data-news-id='<%= @news.id -%>']").html("<%= escape_javascript(like_button(current_user, @news)) %>");

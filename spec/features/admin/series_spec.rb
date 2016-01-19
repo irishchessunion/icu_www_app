@@ -196,7 +196,7 @@ describe Series do
       fill_in article_title, with: article.title + force_submit
       click_link article.title
 
-      wait_a_second(0.5)
+      wait_a_second(0.8)
 
       click_button save
 

@@ -1,19 +1,31 @@
 class LikesController < ApplicationController
   # POST /likes
   def create
-    if NewsLike.like(current_user, News.find(params[:news_id]))
-      redirect_to home2_path, notice: 'You like this news item'
+    @news = News.find(params[:news_id])
+    if NewsLike.like(current_user, @news)
+      notice = 'You like this news item'
     else
-      redirect_to home2_path, notice: 'You were not able to like this news item'
+      notice = 'You were not able to like this news item'
+    end
+
+    respond_to do |format|
+      format.html { redirect_to home2_path, notice: notice }
+      format.js { render 'create' }
     end
   end
 
   # DELETE /likes/1
   def destroy
-    if NewsLike.unlike(current_user, News.find(params[:id]))
-      redirect_to home2_path, notice: 'You unliked this news item'
+    @news = News.find(params[:id])
+    if NewsLike.unlike(current_user, @news)
+      notice = 'You unliked this news item'
     else
-      redirect_to home2_path, notice: 'You were not able to unlike this news item'
+      notice = 'You were not able to unlike this news item'
+    end
+
+    respond_to do |format|
+      format.html { redirect_to home2_path, notice: notice }
+      format.js { render 'create' }
     end
   end
 end

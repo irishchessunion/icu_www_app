@@ -3,7 +3,7 @@
     = news.headline
     - unless news.active
       = "(inactive)"
-    .pull-right.right-margin-thin
+    .pull-right.right-margin-thin{data: {news_id: news.id}}
       = like_button(current_user, news)
   .panel-body.news
     = news.html2

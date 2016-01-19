@@ -11,10 +11,11 @@
         %tbody
           - @news.matches.each do |news|
             %tr
-              %td{class: "col-sm-#{admin ? 9 : 10}"}
+              %td{class: "col-sm-#{admin ? 8 : 9}"}
                 = link_to news.headline, news
                 - unless news.active
                   = "(inactive)"
+              %td.col-sm-1{data: {news_id: news.id}}= like_button(current_user, news)
               %td.col-sm-2.text-center= news.date
               - if admin
                 %td.col-sm-1.small.text-center= news.user.player.initials

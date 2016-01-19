@@ -103,19 +103,22 @@ module ApplicationHelper
   # @param user [User]
   # @param news [News]
   def like_button(user, news)
+    if !news.active?
+      return (content_tag('span', '', class: 'glyphicon glyphicon-thumbs-up') + ' ' + (news.nlikes || '0').to_s).html_safe
+    end
     if user.guest?
       path = sign_in_path
       options = {method: :get, class: 'like-btn unliked', title: 'Login first to like'}
     elsif NewsLike.likes?(user, news)
       path = like_path(news.id)
-      options = {method: :delete, class: 'like-btn liked', title: 'Undo like'}
+      options = {method: :delete, class: 'like-btn liked', title: 'Undo like', remote: true}
     else
       path = likes_path(news_id: news.id)
-      options = {class: 'like-btn  unliked', title: 'Like'}
+      options = {class: 'like-btn  unliked', title: 'Like', remote: true}
     end
 
     button_to(path, options) do
-      (content_tag('span', '', class: 'glyphicon glyphicon-heart') + ' ' + (news.nlikes || '0').to_s).html_safe
+      (content_tag('span', '', class: 'glyphicon glyphicon-thumbs-up') + ' ' + (news.nlikes || '0').to_s).html_safe
     end
   end
 end
