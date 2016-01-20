@@ -3,8 +3,8 @@
     = news.headline
     - unless news.active
       = "(inactive)"
-    .pull-right.visible-sm-block= news.short_date
-    .pull-right.right-margin-thin
+    .pull-right.visible-sm-block.text-sm.right-margin-thin= news.short_date
+    .pull-right.text-sm.right-margin-thin
       .visible-lg-inline-block.right-margin-thin= news.date.strftime('%d-%m-%Y')
       .visible-lg-inline-block.right-margin-thin{data: {news_id: news.id}}= like_button(current_user, news)
   .panel-body.news

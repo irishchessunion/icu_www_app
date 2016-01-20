@@ -240,3 +240,7 @@ a.no-underline {
 .ct-start, .ct-end, .ct-back, .ct-forward, .ct-play, .ct-stop {
     width: 24px;
 }
+
+.text-sm {
+    font-size: 13px;
+}
