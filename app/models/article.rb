@@ -61,6 +61,15 @@ class Article < ActiveRecord::Base
     %q{<a href="/articles/%d">%s</a>} % [id, opt[:title] || title]
   end
 
+  # Just returns the Like class for this type of item
+  def like_class
+    ArticleLike
+  end
+
+  def like_button_options
+    { article_id: id }
+  end
+
   private
 
   def normalize_attributes

@@ -17,6 +17,7 @@
             - if admin
               %th.col-sm-2= t("user.role.editor")
               %th.col-sm-1.text-center= t("active")
+            %th.col-sm-1
         %tbody
           - @articles.matches.each do |article|
             %tr.result
@@ -27,5 +28,6 @@
               - if admin
                 %td= article.user.player.name
                 %td.text-center= ok_ko(article.active)
+              %td.col-sm-1{data: {article_id: article.id}}= like_button(current_user, article)
           = render "utils/pagination_links", pager: @articles, columns: 4 + (admin ? 2 : 0)
     = render "utils/index_buttons", klass: Article

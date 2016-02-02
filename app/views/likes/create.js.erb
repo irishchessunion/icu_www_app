@@ -1,1 +1,1 @@
-$("[data-news-id='<%= @news.id -%>']").html("<%= escape_javascript(like_button(current_user, @news)) %>");
+$("[data-<%= @item.class.name.downcase %>-id='<%= @item.id -%>']").html("<%= escape_javascript(like_button(current_user, @item)) %>");

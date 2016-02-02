@@ -48,6 +48,15 @@ class News < ActiveRecord::Base
     "#{date.mon}-#{date.mday}"
   end
 
+  # Just returns the Like class for this type of item
+  def like_class
+    NewsLike
+  end
+
+  def like_button_options
+    { news_id: id }
+  end
+
   private
 
   def normalize_attributes
