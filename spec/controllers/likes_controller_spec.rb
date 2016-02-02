@@ -24,6 +24,8 @@ RSpec.describe LikesController, type: :controller do
 
   let(:news) { FactoryGirl.create :news }
 
+  let(:article) { FactoryGirl.create :article }
+
   # This should return the minimal set of attributes required to create a valid
   # Like. As you add validations to Like, be sure to
   # adjust the attributes here as well.
@@ -33,7 +35,7 @@ RSpec.describe LikesController, type: :controller do
   # LikesController. Be sure to keep this updated too.
   let(:valid_session) { { user_id: user.id } }
 
-  describe "POST #create" do
+  describe "POST #create news like" do
     context "with valid params" do
       it "creates a new Like" do
         expect {
@@ -43,12 +45,31 @@ RSpec.describe LikesController, type: :controller do
     end
   end
 
-  describe "DELETE #destroy" do
+  describe "POST #create article like" do
+    context "with valid params" do
+      it "creates a new Like" do
+        expect {
+          post :create, {article_id: article.id}, valid_session
+        }.to change(ArticleLike, :count).by(1)
+      end
+    end
+  end
+
+  describe "DELETE #destroy news like" do
     it "destroys the requested like" do
       like = NewsLike.create!(user: user, news: news)
       expect {
-        delete :destroy, {id: like.to_param}, valid_session
+        delete :destroy, {id: like.to_param, news_id: news.id}, valid_session
       }.to change(NewsLike, :count).by(-1)
+    end
+  end
+
+  describe "DELETE #destroy article like" do
+    it "destroys the requested like" do
+      like = ArticleLike.create!(user: user, article: article)
+      expect {
+        delete :destroy, {id: like.to_param, article_id: article.id}, valid_session
+      }.to change(ArticleLike, :count).by(-1)
     end
   end
 
