@@ -5,3 +5,4 @@ en:
     forgotten_password_email_sent: You have been sent an email with a link in it.
     new: "Forgot password?"
     unknown_email: That email address is not known
+    instructions: "Enter your email address and click “Send Request”. You should receive an email from “no-reply@icu.ie” to that address containing a password reset link. Click on this link and complete the form by entering your new password twice and clicking Save. It takes upto 1 hour for your password change to filter across to the ratings site."

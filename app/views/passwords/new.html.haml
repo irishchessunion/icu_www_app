@@ -8,6 +8,7 @@
       %fieldset
         - locals = { col: "sm", pad: 4, width: 4 }
         = render "utils/text_field_tag", locals.merge(param: :email, text: t("password.email"), type: 'email')
+        .text-sm= t('password.instructions')
       %hr
       .text-center
         = submit_tag t("send_request"), class: "btn btn-primary"
