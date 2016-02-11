@@ -13,6 +13,8 @@
   %p.text-center= @article.author
 - @article.series.each do |series|
   = render "series", series: series, article: @article
+%div{data: {article_id: @article.id}}= like_button(current_user, @article)
+
 %hr
 #article= @article.html
 %hr
