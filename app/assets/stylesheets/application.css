@@ -244,3 +244,7 @@ a.no-underline {
 .text-sm {
     font-size: 13px;
 }
+
+.panel.results {
+    margin-bottom: 2px;
+}
