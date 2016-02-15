@@ -1,14 +1,20 @@
 .row
-  .col-sm-12
-    =render 'layouts/results_carousel'
+  - if can?(:create, Result)
+    .col-sm-1
+      = link_to 'Report', new_admin_result_path, class: 'btn btn-info'
+    .col-sm-11
+      = render 'layouts/results_carousel'
+  - else
+    .col-sm-12
+      = render 'layouts/results_carousel'
 .row
   .col-sm-3
-    =render 'irish'
-    =render 'junior_events'
+    = render 'irish'
+    = render 'junior_events'
   .col-sm-7
-    =render 'news2'
+    = render 'news2'
   .col-sm-2
     = render 'layouts/features'
 .row
   .col-sm-12
-    =render 'layouts/partners'
+    = render 'layouts/partners'

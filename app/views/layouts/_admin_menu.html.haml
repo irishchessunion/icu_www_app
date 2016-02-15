@@ -16,6 +16,7 @@
   - links += 1 if pages   = can?(:read, Page)
   - links += 1 if pgns    = can?(:index, Pgn)
   - links += 1 if offs    = can?(:index, Officer)
+  - links += 1 if results    = can?(:manage, Result)
   - links += 1 if stats   = can?(:index, Admin::Statistic)
   - links += 1 if usage   = Rails.env.production? && current_user.admin?
   - nfails = fails ? Failure.active.count : 0
@@ -59,6 +60,8 @@
           %li{class: active("admin/payment_errors")}= link_to "Payment Errors", admin_payment_errors_path
         - if rfnds
           %li{class: active("admin/refunds")}= link_to "Refunds", admin_refunds_path
+        - if results
+          %li{class: active("admin/results")}= link_to "Results", admin_results_path
         - if pages
           %li{class: active("admin/pages", "session_info")}= link_to "Session Info", admin_session_info_path
           %li{class: active("admin/pages", "system_info")}= link_to "System Info", admin_system_info_path

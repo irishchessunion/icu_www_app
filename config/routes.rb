@@ -90,6 +90,7 @@ IcuWwwApp::Application.routes.draw do
     resources :relays,          only: [:index, :show, :edit, :update] do
       get :refresh, :enable_all, :disable_all, on: :collection
     end
+    resources :results, except: [:show]
     resources :series,          only: [:new, :create, :edit, :update, :destroy]
     resources :statistics, only: [:index]
     resources :tournaments,     only: [:new, :create, :edit, :update, :destroy]

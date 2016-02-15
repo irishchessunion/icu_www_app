@@ -37,6 +37,11 @@ class Ability
         can :show, Player
       end
 
+      if user.reporter?
+        can :create, Result
+        can [:destroy, :update], Result, reporter_id: user.id
+      end
+
       if user.translator?
         can :manage, Translation
         can :show, JournalEntry, journalable_type: "Translation"

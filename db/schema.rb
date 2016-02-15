@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160103163014) do
+ActiveRecord::Schema.define(version: 20160215170206) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -387,6 +387,16 @@ ActiveRecord::Schema.define(version: 20160103163014) do
     t.boolean  "active",                default: true
   end
 
+  create_table "partners", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.string   "url",        limit: 255
+    t.integer  "image_id",   limit: 4
+    t.boolean  "active"
+    t.integer  "clicks",     limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
   create_table "payment_errors", force: :cascade do |t|
     t.integer  "cart_id",            limit: 4
     t.string   "message",            limit: 255
@@ -480,6 +490,17 @@ ActiveRecord::Schema.define(version: 20160103163014) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "enabled",                 default: true
+  end
+
+  create_table "results", force: :cascade do |t|
+    t.string   "competition", limit: 255
+    t.string   "player1",     limit: 255
+    t.string   "player2",     limit: 255
+    t.string   "score",       limit: 255
+    t.integer  "reporter_id", limit: 4
+    t.boolean  "active"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "series", force: :cascade do |t|

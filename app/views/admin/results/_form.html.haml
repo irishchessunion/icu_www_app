@@ -1,0 +1,19 @@
+- content_for :javascript do
+  = render "utils/file_field.js", param: "flyer"
+
+.row
+  .col-md-1
+  .col-md-10
+    = form_for [:admin, @result], html: { class: "form-horizontal", role: "form" } do |f|
+      %fieldset
+        = render "utils/form_header", object: @result, atr: :competition
+        - locals = { form: f, object: @result, col: "md", pad: 3, mark: "required" }
+        = render "utils/text_field_for", locals.merge(param: :competition, text: t("result.competition"), width: 5)
+        = render "utils/text_field_for", locals.merge(param: :player1, text: t("result.player1"), width: 6)
+        = render "utils/text_field_for", locals.merge(param: :player2, text: t("result.player2"), width: 6)
+        = render "utils/text_field_for", locals.merge(param: :score, text: t("result.score"), width: 3)
+        = render "utils/check_box_for",  locals.merge(param: :active, text: t("active"), width: 1)
+      %hr
+      .text-center
+        = f.submit t("save"), class: "btn btn-primary"
+        = link_to t("cancel"), admin_results_path, class: "btn btn-default"
