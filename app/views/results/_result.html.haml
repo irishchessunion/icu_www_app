@@ -1,1 +1,3 @@
 = "#{result.competition}: #{result.player1} - #{result.player2} #{result.score}"
+- if can?(:destroy, result)
+  = link_to 'Destroy', admin_result_path(result), :method => :delete, :class => 'btn btn-danger btn-xs', :data => { :confirm => 'Are you sure?' }
