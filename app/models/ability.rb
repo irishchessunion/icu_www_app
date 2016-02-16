@@ -15,17 +15,17 @@ class Ability
       end
 
       if user.editor?
-        can :create, [Article, Image, News]
+        can :create, [Article, Event, Image, News]
         can [:create, :show], Download
         can [:create, :index, :show], Pgn
-        can [:destroy, :update], [Article, Image, News, Pgn, Download], user_id: user.id
+        can [:destroy, :update], [Article, Event, Image, News, Pgn, Download], user_id: user.id
         can [:destroy, :update], Game, pgn: { user_id: user.id }
         can :manage, [Champion, Club, Series, Tournament]
       end
 
-      if user.calendar? || user.editor?
-        can :create, Event
-        can [:destroy, :update], Event, user_id: user.id
+      if user.calendar?
+        can [:create, :update], Event
+        can :destroy, Event, user_id: user.id
       end
 
       if user.membership?
