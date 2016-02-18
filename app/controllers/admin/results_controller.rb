@@ -52,7 +52,7 @@ module Admin
 
       # Only allow a trusted parameter "white list" through.
       def result_params
-        params.require(:result).permit(:competition, :player1, :player2, :score, :active)
+        params.require(:result).permit(:competition, :player1, :player2, :score, :message, :active)
       end
   end
 end

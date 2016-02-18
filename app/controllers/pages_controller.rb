@@ -3,6 +3,7 @@ class PagesController < ApplicationController
     @news = News.search({ active: "true" }, news_index_path, per_page: 8)
     @junior_events = Event.active.where(category: 'junior').where('end_date >= ?', Date.today).ordered.limit(3)
     @irish_events = Event.active.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
+    @results = Result.recent
   end
 
   def home2
