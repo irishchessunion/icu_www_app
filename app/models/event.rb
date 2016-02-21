@@ -40,7 +40,7 @@ class Event < ActiveRecord::Base
   validates :prize_fund, numericality: { greater_than: 0.0 }, allow_nil: true
   validates :start_date, :end_date, presence: true
   validates :url, url: true, allow_nil: true
-  validates :start_date, :end_date, date: { on_or_after: :today }, unless: Proc.new { |e| e.source == "www1" }
+  validates :end_date, date: { on_or_after: :today }, unless: Proc.new { |e| e.source == "www1" }
 
   validate :valid_dates
 
