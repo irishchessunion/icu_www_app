@@ -12,6 +12,7 @@
         = render "utils/text_field_for", locals.merge(param: :password, text: t("user.password"))
         = render "utils/text_field_for", locals.merge(param: :expires_on, text: t("user.expires"), placeholder: t("date_format"))
         = render "utils/select_for", locals.merge(param: :roles, text: t("user.role.roles"), menu: user_roles_menu(@user.roles), multiple: true, width: 4, size: User::ROLES.size)
+        = render "utils/check_box_for", locals.merge(param: :disallow_reporting, text: t("user.disallow_reporting"), checked: @user.disallow_reporting, auto: true, width: 1)
         - unless @user.new_record? || @user.verified?
           = render "utils/check_box_for", locals.merge(param: :verify, text: t("user.verify"), on: "yes", off: "no", width: 1)
       %hr

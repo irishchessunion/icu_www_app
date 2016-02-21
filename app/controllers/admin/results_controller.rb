@@ -1,6 +1,6 @@
 module Admin
   class ResultsController < ApplicationController
-    before_action :set_result, only: [:show, :edit, :update, :destroy]
+    before_action :set_result, only: [:ban, :edit, :update, :destroy]
     authorize_resource
 
     # GET /results
@@ -23,7 +23,7 @@ module Admin
       @result.reporter_id = current_user.id
 
       if @result.save
-        redirect_to home2_path, notice: 'Result was successfully created.'
+        redirect_to home_path, notice: 'Result was successfully created.'
       else
         render :new
       end
@@ -32,16 +32,23 @@ module Admin
     # PATCH/PUT /results/1
     def update
       if @result.update(result_params)
-        redirect_to home2_path, notice: 'Result was successfully updated.'
+        redirect_to home_path, notice: 'Result was successfully updated.'
       else
         render :edit
       end
     end
 
+    # POST /results/1/ban
+    def ban
+      @result.update(active: false)
+      @result.reporter.update(disallow_reporting: true)
+      redirect_to home_path, notice: 'Result was successfully destroyed.'
+    end
+
     # DELETE /results/1
     def destroy
       @result.destroy
-      redirect_to home2_path, notice: 'Result was successfully destroyed.'
+      redirect_to home_path, notice: 'Result was successfully destroyed.'
     end
 
     private

@@ -37,9 +37,16 @@ class Ability
         can :show, Player
       end
 
-      if user.reporter?
+      # Most people can report results
+      # If you created a result, you can delete it.
+      # Reporters can delete messages or ban people from reporting.
+      unless user.disallow_reporting?
         can :create, Result
-        can [:destroy, :update], Result, reporter_id: user.id
+      end
+      can :destroy, Result, reporter_id: user.id
+
+      if user.reporter?
+        can [:destroy, :update], Result
       end
 
       if user.translator?
