@@ -44,6 +44,10 @@ class Result < ActiveRecord::Base
     if !reporter || reporter.disallow_reporting?
       errors.add(:base, 'You are not allowed to report results')
     end
+
+    if reporter && message.present? && !reporter.reporter?
+      errors.add(:base, 'You are not allowed to specify a message')
+    end
   end
 
   def make_active
