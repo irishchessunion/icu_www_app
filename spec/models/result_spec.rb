@@ -4,8 +4,8 @@ describe Result do
   let(:user) {FactoryGirl.create :user}
 
   context "normal reporter" do
-    it "can't create Result" do
-      result = Result.new(reporter: user)
+    it "can create Result" do
+      result = Result.new(reporter: user, competition: 'ARM', player1: 'JOC', player2: 'GMacE', score: '1-0')
       expect(result.valid?).to eq true
     end
 

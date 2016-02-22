@@ -72,7 +72,7 @@ describe JournalEntry do
     expect(page).to have_xpath(xpath("changes", "update", "status", "banned", @name), count: 1)
 
     visit admin_journal_entries_path
-    expect(page).to have_xpath(xpath("results"), count: 3)
+    expect(page).to have_xpath(xpath("results"), count: 4)
     expect(page).to have_xpath(xpath("results", "Club", @club.id, "create", @name, @ip), count: 1)
     expect(page).to have_xpath(xpath("results", "Translation", @translation.id, "update", "value", "bruscar", @name, @ip), count: 1)
     expect(page).to have_xpath(xpath("results", "User", @user.id, "update", "status", "banned", @name, @ip), count: 1)
