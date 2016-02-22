@@ -1,13 +1,14 @@
-- if @results.length > 0
+- if @results.length > 0 || can?(:create, Result)
   .panel.panel-info.results
     .panel-heading
       .panel-title
         - if can?(:create, Result)
           = link_to 'Report Result', new_admin_result_path, class: 'btn btn-primary btn-sm'
-        #results-carousel.carousel.slide{data: {ride: "carousel", interval: '10000'}, style: 'display: inline-box; display: inline-flex;'}
-          .carousel-inner{role: "listbox"}
-            .item.active
-              = render @results.first
-            -@results[1..-1].each do |result|
-              .item
-                = render result
+        - if @results.length > 0
+          #results-carousel.carousel.slide{data: {ride: "carousel", interval: '10000'}, style: 'display: inline-box; display: inline-flex;'}
+            .carousel-inner{role: "listbox"}
+              .item.active
+                = render @results.first
+              -@results[1..-1].each do |result|
+                .item
+                  = render result
