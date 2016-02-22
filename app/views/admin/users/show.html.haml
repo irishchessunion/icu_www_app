@@ -25,6 +25,11 @@
         %th Roles
         %td= @user.human_roles(locale: "en")
       %tr
+        %th Reporting disallowed?
+        %td
+          - if @user.disallow_reporting?
+            Yes
+      %tr
         %th Verified
         %td
           - if @user.verified?

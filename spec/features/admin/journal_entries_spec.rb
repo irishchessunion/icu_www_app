@@ -68,7 +68,7 @@ describe JournalEntry do
 
     visit admin_user_path(@user)
     expect(page).to have_css("h4", text: "Changes")
-    expect(page).to have_xpath(xpath("changes"), count: 1)
+    expect(page).to have_xpath(xpath("changes"), count: 2)
     expect(page).to have_xpath(xpath("changes", "update", "status", "banned", @name), count: 1)
 
     visit admin_journal_entries_path

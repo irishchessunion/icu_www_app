@@ -2,11 +2,14 @@ class User < ActiveRecord::Base
   include Journalable
   include Pageable
 
-  journalize [:status, :encrypted_password, :roles, :verified_at, :reset_password_sent_at], "/admin/users/%d"
+  journalize [:status, :encrypted_password, :roles, :verified_at, :reset_password_sent_at, :disallow_reporting], "/admin/users/%d"
 
   attr_accessor :password, :ticket
 
   OK = "OK"
+
+  ASSHOLE_PLAYER_IDS = [11, 295, 1354, 1733, 5198, 5601, 6141]
+
   # The tester role is used to show new functionality
   ROLES = %w[admin tester calendar editor inspector membership reporter translator treasurer]
   MINIMUM_PASSWORD_LENGTH = 6
@@ -119,6 +122,8 @@ class User < ActiveRecord::Base
         false
       end
     end
+    def disallow_reporting; true; end
+    def disallow_reporting?; true; end
   end
 
   def self.search(params, path)
@@ -336,7 +341,7 @@ class User < ActiveRecord::Base
 
   def asshole_check
     return if new_record? || roles.blank?
-    if [11, 295, 1354, 1733, 5198, 5601, 6141].include? player_id
+    if ASSHOLE_PLAYER_IDS.include? player_id
       errors.add(:roles, I18n.t("user.role_denied"))
     end
   end

@@ -15,11 +15,38 @@ class Result < ActiveRecord::Base
 
   scope :recent, -> { active.include_reporter.ordered.limit(5) }
 
+  before_create :make_active
+
+  validate :only_allowed_reporters, on: :create
+  validates_presence_of :competition, :player1, :player2, :score, if: -> {message.blank?}
+
   def reporter_name
-    reporter.player.name
+    reporter.player.initials
   end
 
-  def html
-    expand_all(message).html_safe
+  def full_message
+    if message.present?
+      expand_all(message).html_safe
+    else
+      "#{competition}: #{player1} #{score} #{player2}"
+    end
+  end
+
+  # Bans the reporter and deactivates the result
+  def ban
+    update(active: false)
+    reporter.update(disallow_reporting: true)
+  end
+
+  private
+
+  def only_allowed_reporters
+    if !reporter || reporter.disallow_reporting?
+      errors.add(:base, 'You are not allowed to report results')
+    end
+  end
+
+  def make_active
+    self.active = true
   end
 end

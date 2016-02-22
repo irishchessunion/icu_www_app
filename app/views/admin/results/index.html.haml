@@ -1,26 +1,22 @@
 - content_for :title, t("result.results")
-%h1 Results Service
+%h1 Results Messages
 .row
   .col-md-12
     %table{class: "table table-striped"}
       %thead
         %tr
-          %th= t("result.competition")
-          %th= t("result.player1")
-          %th= t("result.player2")
-          %th= t("result.score")
           %th= t("result.reporter")
+          %th= t("result.created_at")
+          %th= t("result.message")
           %th= t("result.active")
           %th
       %tbody
         - @results.each do |result|
           %tr
-            %td= result.competition
-            %td= result.player1
-            %td= result.player2
-            %td= result.score
             %td= result.reporter.name
-            %td= result.active
+            %td= "#{time_ago_in_words result.updated_at, scope: 'datetime.short_distance_in_words'} ago"
+            %td= result.full_message
+            %td= result.active? ? '' : 'No'
             %td
               = link_to 'Edit', edit_admin_result_path(result)
               = link_to 'Destroy', admin_result_path(result), :method => :delete, :data => { :confirm => 'Are you sure?' }

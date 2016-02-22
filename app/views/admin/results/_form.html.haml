@@ -1,19 +1,21 @@
-- content_for :javascript do
-  = render "utils/file_field.js", param: "flyer"
-
 .row
   .col-md-1
   .col-md-10
     = form_for [:admin, @result], html: { class: "form-horizontal", role: "form" } do |f|
       %fieldset
         = render "utils/form_header", object: @result, atr: :competition
+        - unless @result.errors[:base].empty?
+          .form-group.has-error
+            .col-md-3
+            .col-md-9.help-block= @result.errors[:base].first
         - locals = { form: f, object: @result, col: "md", pad: 3 }
         = render "utils/text_field_for", locals.merge(param: :competition, text: t("result.competition"), width: 5)
         = render "utils/text_field_for", locals.merge(param: :player1, text: t("result.player1"), width: 6)
         = render "utils/text_field_for", locals.merge(param: :player2, text: t("result.player2"), width: 6)
         = render "utils/text_field_for", locals.merge(param: :score, text: t("result.score"), width: 3)
-        = render "utils/text_field_for", locals.merge(param: :message, text: t("result.message"), width: 10)
-        = render "utils/check_box_for",  locals.merge(param: :active, text: t("active"), width: 1)
+        - if current_user.reporter?
+          = render "utils/text_field_for", locals.merge(param: :message, text: t("result.message"), placeholder: t('result.message_placeholder'), width: 9)
+        = render "utils/check_box_for",  locals.merge(param: :active, text: t("active"), width: 1) if @result.persisted?
       %hr
       .text-center
         = f.submit t("save"), class: "btn btn-primary"

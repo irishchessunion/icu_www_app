@@ -197,4 +197,8 @@ describe User::Guest do
       expect(user.send("#{role}?")).to be false
     end
   end
+
+  it "not allowed to report" do
+    expect(user.disallow_reporting?).to be true
+  end
 end

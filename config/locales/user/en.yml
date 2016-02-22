@@ -8,6 +8,7 @@ en:
     completed_registration: "User account successfully verified, you can login now"
     created: New user account successsfully created
     create_failed: New user account NOT created
+    disallow_reporting: Disallow reporting
     expires: Expires on
     forgot_password: Forgotten password
     hide_header: Hide header
