@@ -15,7 +15,8 @@ module ICU
     private
 
     def compress_zip
-      cmd = "zip -q #{zip_file} #{pgn_file}" # The old version used to use gzip, but this is not compatible with zip on Windows.
+      # This zip command fails if you don't first delete the old zip file.
+      cmd = "rm #{zip_file} && zip -q #{zip_file} #{pgn_file}" # The old version used to use gzip, but this is not compatible with zip on Windows.
       if system(cmd)
         pgn_size = File.size(pgn_file) rescue 0
         zip_size = File.size(zip_file) rescue 0
