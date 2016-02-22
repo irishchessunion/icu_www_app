@@ -25,6 +25,7 @@ module Admin
       if @result.save
         redirect_to home_path, notice: 'Result was successfully created.'
       else
+        Rails.logger.info @result.errors.inspect
         render :new
       end
     end

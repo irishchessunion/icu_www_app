@@ -122,6 +122,8 @@ class User < ActiveRecord::Base
         false
       end
     end
+    def disallow_reporting; true; end
+    def disallow_reporting?; true; end
   end
 
   def self.search(params, path)
