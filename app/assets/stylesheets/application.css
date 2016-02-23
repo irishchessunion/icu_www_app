@@ -248,3 +248,22 @@ a.no-underline {
 .panel.results {
     margin-bottom: 2px;
 }
+
+ol.nested-numbering {
+    list-style-type: none;
+    counter-reset: item;
+    margin: 0;
+    padding: 0;
+}
+
+ol.nested-numbering > li {
+    display: table;
+    counter-increment: item;
+    margin-bottom: 0.6em;
+}
+ol.nested-numbering > li:before {
+    content: counters(item, ".") ". ";
+    display: table-cell;
+    padding-right: 0.6em;
+}
+
