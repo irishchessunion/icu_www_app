@@ -32,6 +32,10 @@ class Ability
       can :manage, Player
     end
 
+    if user.gameskeeper?
+      can :manage, Pgn
+    end
+
     if user.inspector?
       can :show, Player
     end

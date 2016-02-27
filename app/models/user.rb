@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   ASSHOLE_PLAYER_IDS = [11, 295, 1354, 1733, 5198, 5601, 6141]
 
   # The tester role is used to show new functionality
-  ROLES = %w[admin tester calendar editor inspector membership reporter translator treasurer]
+  ROLES = %w[admin tester calendar editor gameskeeper inspector membership reporter translator treasurer]
   MINIMUM_PASSWORD_LENGTH = 6
   THEMES = %w[Cerulean Cosmo Cyborg Darkly Flatly Journal Lumen Superhero Paper Readable Sandstone Simplex Slate Spacelab United Yeti]
   DEFAULT_THEME = "Flatly"
