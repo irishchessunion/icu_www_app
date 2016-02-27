@@ -241,6 +241,15 @@ a.no-underline {
     width: 24px;
 }
 
+.ct-nav-buttons {
+    text-align: center;
+}
+
+.ct-board-border {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .text-sm {
     font-size: 13px;
 }

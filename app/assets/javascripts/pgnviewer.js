@@ -248,6 +248,7 @@ function init_gettext() {
 function _js(n) {
     return gt ? gt.gettext(n) : n
 }
+
 function _has_translation(n) {
     var t = getLocale();
     if (t) {
