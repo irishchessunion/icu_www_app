@@ -10,7 +10,7 @@ describe Pgn do
     let(:cell)   { "//td[.='#{pgn.file_name}']" }
     let(:level1) { ["admin", user] }
     let(:level2) { ["editor"] }
-    let(:level3) { User::ROLES.reject { |r| r == "admin" || r == "editor" }.append("guest") }
+    let(:level3) { User::ROLES.reject { |r| %w(admin editor gameskeeper).include?(r) }.append("guest") }
     let(:pgn)    { create(:pgn, user: user) }
     let(:user)   { create(:user, roles: "editor") }
 
