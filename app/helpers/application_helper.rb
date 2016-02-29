@@ -12,6 +12,12 @@ module ApplicationHelper
     active?(controller, action) ? "active" : nil
   end
 
+  def icon_link_to(icon, text, *args)
+    link_to(*args) do
+      content_tag(:span, text, class: "glyphicon glyphicon-#{icon}", 'aria-hidden' => true)
+    end
+  end
+
   def home_page?
     controller_name = "pages" && action_name == "home"
   end
