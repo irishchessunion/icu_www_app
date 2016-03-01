@@ -11,7 +11,7 @@ describe Game do
 
   context "authorization" do
     let(:level1) { ["admin", user] }
-    let(:level2) { User::ROLES.reject { |r| r == "admin" }.append("guest") }
+    let(:level2) { User::ROLES.reject { |r| r == "admin" || r == "gameskeeper" }.append("guest") }
 
     it "level 1 can edit games as well as view" do
       level1.each do |role|

@@ -182,6 +182,7 @@ describe Series do
       fill_in series_title, with: new_title
       click_button save
 
+      wait_a_second(0.4)
       series.reload
       expect(series.title).to eq new_title
       expect(series.episodes.count).to eq 3
