@@ -33,7 +33,7 @@ class Ability
     end
 
     if user.gameskeeper?
-      can :manage, Pgn
+      can :manage, [Pgn, Game]
     end
 
     if user.inspector?
