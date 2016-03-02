@@ -162,6 +162,7 @@ class Game < ActiveRecord::Base
     lines << %Q/[ECO "#{eco}"]/ if eco.present?
     lines << %Q/[Annotator "#{annotator}"]/ if annotator.present?
     lines << %Q/[FEN "#{fen}"]/ if fen.present?
+    lines << %Q/[ICUid "#{id}"]/
     lines << ""
     lines << moves
 
