@@ -17,6 +17,7 @@ class News < ActiveRecord::Base
 
   scope :include_player, -> { includes(user: :player) }
   scope :ordered, -> { order(date: :desc, updated_at: :desc) }
+  scope :linked_to_game, -> { where("headline like '%[GME:%' or summary like '%[GME:%'") }
 
   def self.search(params, path, opt={})
     matches = ordered.include_player
@@ -55,6 +56,12 @@ class News < ActiveRecord::Base
 
   def like_button_options
     { news_id: id }
+  end
+
+  # @return [Array<Numeric, String>] A collection of ids of games that are linked in the title or the text of the article.
+  def game_ids
+    re = /\[GME:(\d+)/
+    [headline.scan(re), summary.scan(re)].flatten
   end
 
   private

@@ -25,6 +25,7 @@ class Article < ActiveRecord::Base
   scope :include_player, -> { includes(user: :player) }
   scope :include_series, -> { includes(episodes: :series) }
   scope :ordered, -> { order(year: :desc, created_at: :desc) }
+  scope :linked_to_game, -> { where("text like '%[GME:%' or title like '%[GME:%'") }
 
   def self.search(params, path, user, opt={})
     matches = ordered.include_player
@@ -68,6 +69,12 @@ class Article < ActiveRecord::Base
 
   def like_button_options
     { article_id: id }
+  end
+
+  # @return [Array<Numeric, String>] A collection of ids of games that are linked in the title or the text of the article.
+  def game_ids
+    re = /\[GME:(\d+)/
+    [text.scan(re), title.scan(re)].flatten
   end
 
   private

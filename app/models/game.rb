@@ -163,6 +163,7 @@ class Game < ActiveRecord::Base
     lines << %Q/[Annotator "#{annotator}"]/ if annotator.present?
     lines << %Q/[FEN "#{fen}"]/ if fen.present?
     lines << %Q/[ICUid "#{id}"]/
+    lines << %Q/[UsedInIcuSite "true"]/ if in_link?
     lines << ""
     lines << moves
 
@@ -204,6 +205,11 @@ class Game < ActiveRecord::Base
     [path, text, details]
   end
 
+  # This method searches through all the articles and news items for any links to games, and
+  # then sets the in_link field to true for those games.
+  def self.mark_linked_games
+    Article.linked_to_game
+  end
   private
 
   def normalize_attributes

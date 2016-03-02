@@ -1,6 +1,7 @@
 module ICU
   class PGN
     def database(force)
+      Game::LinkedGameMarker.new.run # marks all in use games
       count = get_count || return
       last_mod = get_last_mod(count, force) || return
       compile_pgn
