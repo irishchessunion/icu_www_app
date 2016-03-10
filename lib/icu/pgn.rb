@@ -17,7 +17,9 @@ module ICU
 
     def compress_zip
       # This zip command fails if you don't first delete the old zip file.
-      cmd = "rm #{zip_file} && zip -q #{zip_file} #{pgn_file}" # The old version used to use gzip, but this is not compatible with zip on Windows.
+      # The old version used to use gzip, but this is not compatible with zip on Windows.
+      # The -j flag is used to junk the file path, as we don't need it.
+      cmd = "rm #{zip_file} && zip -j -q #{zip_file} #{pgn_file}"
       if system(cmd)
         pgn_size = File.size(pgn_file) rescue 0
         zip_size = File.size(zip_file) rescue 0

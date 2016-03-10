@@ -1,5 +1,5 @@
 namespace :pgn do
-  desc "Email the latest mail stats to the webmaster or just print them"
+  desc "Generate a refreshed PGN database"
   task :db, [:force] => :environment do |_, args|
     ICU::PGN.new.database(args[:force])
   end
