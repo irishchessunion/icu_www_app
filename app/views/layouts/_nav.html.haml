@@ -20,7 +20,7 @@
           %li{class: active("icu.documents")}= link_to t("icu.documents"), icu_documents_path
           %li{class: active("icu.officers")}= link_to t("icu.officers"), icu_officers_path
           %li{class: active("icu.subscribers")}= link_to t("icu.subscribers"), icu_subscribers_path
-          %li{class: active("icu.life_members")}= link_to t("icu.life_members"), icu_documents_path
+          %li{class: active("icu.life_members")}= link_to t("icu.life_members"), icu_life_members_path
           - if can?(:sales_ledger, Item)
             %li{class: active("item.sales_ledger")}= link_to t("item.sales_ledger"), sales_ledger_admin_items_path
       %li.dropdown
@@ -39,6 +39,7 @@
           %li{class: active("news")}= link_to t("news.news"), news_index_path
           %li{class: active("players")}= link_to t("player.players"), players_path
           %li= link_to t("player.rating.ratings"), "http://ratings.icu.ie", target: "ratings"
+          %li= link_to t("sponsor.sponsors"), sponsors_path
           %li{class: active("tournaments")}= link_to t("tournament.tournaments"), tournaments_path
       - if content_for?(:help)
         %li.dropdown
