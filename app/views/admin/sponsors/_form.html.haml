@@ -1,0 +1,19 @@
+- content_for :javascript do
+  = render "utils/file_field.js", param: "logo"
+
+.row
+  .col-sm-1
+  .col-sm-10
+    = form_for [:admin, @sponsor], html: { class: "form-horizontal", role: "form" } do |f|
+      %fieldset
+        = render "utils/form_header", object: @sponsor, atr: [:name]
+        - locals = { form: f, object: @sponsor, col: "sm", pad: 2, width: 4 }
+        = render "utils/text_field_for", locals.merge(param: :name, text: t("sponsor.name"), width: 3)
+        = render "utils/text_field_for", locals.merge(param: :weblink, text: t("sponsor.weblink"), width: 3)
+        = render "utils/file_field_for", locals.merge(param: :logo, text: t("sponsor.logo"), width: 2)
+        = render "utils/text_field_for", locals.merge(param: :weight, text: t("sponsor.weight"), width: 3)
+        = render "utils/text_field_for", locals.merge(param: :contact_name, text: t("sponsor.contact_name"), width: 3)
+        = render "utils/text_field_for", locals.merge(param: :contact_email, text: t("sponsor.contact_email"), width: 3)
+        = render "utils/text_field_for", locals.merge(param: :contact_phone, text: t("sponsor.contact_phone"), width: 3)
+        = render "utils/text_area_for", locals.merge(param: :notes, text: t("notes"), width: 10, rows: 10)
+      = render "utils/form_buttons", form: f, object: @sponsor, admin: "show"

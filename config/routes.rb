@@ -48,6 +48,11 @@ IcuWwwApp::Application.routes.draw do
   resources :players,     only: [:index, :edit, :update]
   resources :series,      only: [:index, :show]
   resources :sessions,    only: [:create]
+  resources :sponsors, only: [:index] do
+    member do
+      get :click_on
+    end
+  end
   resources :tournaments, only: [:index, :show]
   resources :users,       only: [:new, :create, :edit, :update] do
     get :verify, on: :member
@@ -97,6 +102,7 @@ IcuWwwApp::Application.routes.draw do
     end
 
     resources :series,          only: [:new, :create, :edit, :update, :destroy]
+    resources :sponsors, only: [:new, :create, :edit, :update, :show]
     resources :statistics, only: [:index]
     resources :tournaments,     only: [:new, :create, :edit, :update, :destroy]
     resources :translations,    only: [:index, :show, :edit, :update, :destroy]

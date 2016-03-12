@@ -1,0 +1,48 @@
+- content_for :title, t("sponsor.sponsor")
+
+- if @prev_next
+  = render "utils/prev_next", prev_next: @prev_next, numbers: true
+
+.row
+  .col-md-8.col-md-offset-2
+    %h1.text-center
+      = link_to_sponsor(@sponsor)
+    .voffset3
+    %table.table.table-bordered
+      %tr
+        %th= t("sponsor.id")
+        %td= @sponsor.id
+      %tr
+        %th= t("sponsor.weblink")
+        %td= @sponsor.weblink
+      %tr
+        %th= t("sponsor.logo")
+        %td= image_link_to_sponsor(@sponsor)
+      - if can?(:manage, Sponsor)
+        %tr
+          %th= t("sponsor.valid_until")
+          %td= @sponsor.valid_until
+        %tr
+          %th= t("sponsor.weight")
+          %td= @sponsor.weight
+        %tr
+          %th= t("sponsor.contact_name")
+          %td= @sponsor.contact_name
+        %tr
+          %th= t("sponsor.contact_email")
+          %td= @sponsor.contact_email
+        %tr
+          %th= t("sponsor.contact_phone")
+          %td= @sponsor.contact_phone
+        %tr
+          %th= t("sponsor.clicks")
+          %td= @sponsor.clicks
+        = render "utils/timestamps", object: @sponsor, ability: :manage
+        - if @sponsor.notes.present?
+          %tr
+            %th{colspan: 2, class: "text-center"}= t("notes")
+          %tr
+            %td{colspan: 2}= @sponsor.notes
+    = render "utils/show_buttons", object: @sponsor, extras: {}, delete: false
+
+= render "admin/journal_entries/changes", entries: @entries

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160302200320) do
+ActiveRecord::Schema.define(version: 20160310184317) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -512,6 +512,24 @@ ActiveRecord::Schema.define(version: 20160302200320) do
   end
 
   add_index "series", ["title"], name: "index_series_on_title", using: :btree
+
+  create_table "sponsors", force: :cascade do |t|
+    t.string   "name",              limit: 255
+    t.integer  "weight",            limit: 4
+    t.string   "weblink",           limit: 255
+    t.string   "contact_email",     limit: 255
+    t.string   "contact_name",      limit: 255
+    t.string   "contact_phone",     limit: 255
+    t.integer  "clicks",            limit: 4
+    t.date     "valid_until"
+    t.text     "notes",             limit: 65535
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.string   "logo_file_name",    limit: 255
+    t.string   "logo_content_type", limit: 255
+    t.integer  "logo_file_size",    limit: 4
+    t.datetime "logo_updated_at"
+  end
 
   create_table "tournaments", force: :cascade do |t|
     t.boolean  "active"

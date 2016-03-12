@@ -1,0 +1,16 @@
+en:
+  sponsor:
+    abbrev:
+      id: ID
+    clicks: Clicks
+    contact_email: Contact Email
+    contact_name: Contact Name
+    contact_phone: Contact Phone Nr
+    id: ICU ID
+    logo: Logo
+    name: Name
+    new: New Sponsor
+    sponsor: Sponsor
+    sponsors: Sponsors
+    weblink: Web Link
+    weight: Weight

@@ -60,7 +60,7 @@ class Ability
     if user.treasurer?
       can :create, CashPayment
       can :index, [Item, PaymentError, Refund]
-      can :manage, [Cart, Fee, UserInput]
+      can :manage, [Cart, Fee, Sponsor, UserInput]
     end
 
     can :manage_preferences, User, id: user.id
