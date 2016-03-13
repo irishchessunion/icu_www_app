@@ -39,9 +39,14 @@ class Sponsor < ActiveRecord::Base
     increment!(:clicks)
   end
 
+  def record_eyeball
+    increment!(:eyeballs)
+  end
+
   private
 
   def init_clicks
     self.clicks ||= 0
+    self.eyeballs ||= 0
   end
 end

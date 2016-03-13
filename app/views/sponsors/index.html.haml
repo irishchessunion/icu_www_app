@@ -11,6 +11,7 @@
             %th= t("sponsor.weblink")
             - if can?(:manage, Sponsor)
               %th= t("sponsor.weight")
+              %th= t("sponsor.eyeballs")
               %th= t("sponsor.clicks")
               %th
         %tbody
@@ -21,6 +22,7 @@
               %td= sponsor.weblink
               - if can?(:manage, Sponsor)
                 %td= sponsor.weight
+                %td= sponsor.eyeballs
                 %td= sponsor.clicks
                 %td= link_to t('show'), admin_sponsor_path(sponsor)
           = render "utils/pagination_links", pager: @sponsors, columns: 3 + (can?(:manage, Sponsor) ? 0 : 2)

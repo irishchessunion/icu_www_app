@@ -6,11 +6,13 @@ en:
     contact_email: Contact Email
     contact_name: Contact Name
     contact_phone: Contact Phone Nr
+    eyeballs: Eyeballs
     id: ICU ID
     logo: Logo
     name: Name
     new: New Sponsor
     sponsor: Sponsor
     sponsors: Sponsors
+    valid_until: Valid Until
     weblink: Web Link
     weight: Weight

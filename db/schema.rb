@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160310184317) do
+ActiveRecord::Schema.define(version: 20160313135721) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -529,6 +529,7 @@ ActiveRecord::Schema.define(version: 20160310184317) do
     t.string   "logo_content_type", limit: 255
     t.integer  "logo_file_size",    limit: 4
     t.datetime "logo_updated_at"
+    t.integer  "eyeballs",          limit: 4
   end
 
   create_table "tournaments", force: :cascade do |t|

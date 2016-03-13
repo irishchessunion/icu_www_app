@@ -35,6 +35,9 @@
           %th= t("sponsor.contact_phone")
           %td= @sponsor.contact_phone
         %tr
+          %th= t("sponsor.eyeballs")
+          %td= @sponsor.eyeballs
+        %tr
           %th= t("sponsor.clicks")
           %td= @sponsor.clicks
         = render "utils/timestamps", object: @sponsor, ability: :manage
