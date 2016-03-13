@@ -12,7 +12,6 @@ class Sponsor < ActiveRecord::Base
   has_attached_file :logo, keep_old_files: true
 
   validates_attachment :logo, content_type: { content_type: /\Aimage\/(#{Image::TYPES})\z/, file_name: /\.(#{Image::TYPES})\z/i }
-  validates :logo, presence: true
   validates_presence_of :name, :weblink, :weight
   validates :contact_email, email: true, allow_nil: true, allow_blank: true
   validates :valid_until, date: { on_or_after: :today }, allow_nil: true

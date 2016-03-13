@@ -17,7 +17,6 @@ class CreateSponsors < ActiveRecord::Migration
   end
 
   def down
-    remove_attachment :sponsors, :logo
     drop_table :sponsors
   end
 end
