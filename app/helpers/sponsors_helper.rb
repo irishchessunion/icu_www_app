@@ -12,4 +12,11 @@ module SponsorsHelper
       image_tag sponsor.logo.url
     end
   end
+
+  def image_link_to_random_sponsor
+    sponsor = Sponsor.random
+    link_to click_on_sponsor_path(sponsor), target: '_blank', title: sponsor.name do
+      image_tag sponsor.logo.url, class: 'center-block'
+    end
+  end
 end
