@@ -179,6 +179,32 @@ describe User do
       expect(user.verification_param).to match /\A[a-f0-9]{10}\z/
     end
   end
+
+  context "#for_subscribed_player" do
+    it "should find existing user" do
+      existing_user = create(:user)
+      user = User.for_subscribed_player(existing_user.email)
+      expect(user).to eq(existing_user)
+    end
+
+    it "should not find user with no player" do
+      user = User.for_subscribed_player("no_email@no_email.com")
+      expect(user).to be nil
+    end
+
+    it "should not find user with unsubscribed player" do
+      player = create(:player)
+      user = User.for_subscribed_player(player.email)
+      expect(user).to be nil
+    end
+
+    it "should not find user with subscribed player" do
+      player = create(:player)
+      create(:paid_subscription_item, player: player)
+      user = User.for_subscribed_player(player.email)
+      expect(user).to_not be nil
+    end
+  end
 end
 
 describe User::Guest do

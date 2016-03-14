@@ -27,6 +27,7 @@ class Player < ActiveRecord::Base
 
   scope :include_clubs, -> { includes(:club) }
   scope :non_duplicates, -> { where("player_id IS NULL") }
+  scope :subscribed_in, ->(season) { where(search_subscribers_sql, "%#{season}")}
 
   before_validation :normalize_attributes, :conditional_adjustment, :canonicalize_privacy
 
@@ -208,7 +209,7 @@ class Player < ActiveRecord::Base
   def self.search_subscribers(params, path)
     matches = include_clubs.order(:last_name, :first_name)
     if params[:season].present? && params[:season].to_s.match(/\A20\d\d-\d\d\z/)
-      matches = matches.where(search_subscribers_sql, "%#{params[:season]}")
+      matches = matches.subscribed_in(params[:season])
       matches = matches.where(first_name_like(params[:first_name], params[:last_name])) if params[:first_name].present?
       matches = matches.where(last_name_like(params[:last_name], params[:first_name])) if params[:last_name].present?
       if params[:club_id].present?

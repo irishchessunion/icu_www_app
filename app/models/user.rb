@@ -296,6 +296,21 @@ class User < ActiveRecord::Base
     IcuMailer.forgot_password(id, token).deliver_now
   end
 
+  # Looks up a user with the given email. If no user is found, it looks for a player with the given email,
+  # who has a current subscription, and then creates a new user for that player.
+  # @return [User] if there is a player with the given email that is subscribed for the current season
+  def self.for_subscribed_player(email)
+    user = where(email: email).first
+    return user if user
+    season = Season.new
+    player = Player.subscribed_in(season).where(email: email).first
+    if player
+      User.create(email: email, player_id: player.id, expires_on: season.end, status: 'OK', password: "Reset#{rand(1_000_000_000)}")
+    else
+      nil
+    end
+  end
+
   private
 
   def canonicalize_roles
