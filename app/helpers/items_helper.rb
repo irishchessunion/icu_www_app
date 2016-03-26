@@ -22,4 +22,9 @@ module ItemsHelper
     statuses.unshift [t(default), ""]
     options_for_select(statuses, selected)
   end
+
+  def admin_items_path_for_fee(fee)
+    item_type = fee.type.sub('Fee::', 'Item::')
+    admin_items_path(description: fee.name, type: item_type)
+  end
 end

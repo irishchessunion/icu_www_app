@@ -3,6 +3,7 @@ en:
     add: Add to Cart
     confirm_delete: Sure you want to delete this item?
     cost: Cost
+    csv: Generate CSV Report
     item: Item
     items: Items
     sales_ledger: Sales Ledger
