@@ -6,7 +6,7 @@ describe Fee do
   context "authorization" do
     let(:fee)    { create(:subscription_fee) }
     let(:level1) { %w[admin treasurer] }
-    let(:level2) { User::ROLES.reject { |role| level1.include?(role) }.append("guest") }
+    let(:level2) { User::ROLES.reject { |role| level1.include?(role) || role == 'organiser' }.append("guest") }
     let(:paths)  { [admin_fees_path, admin_fee_path(fee), edit_admin_fee_path(fee), new_admin_fee_path, clone_admin_fee_path(fee), rollover_admin_fee_path(fee)] }
 
     it "level 1 can manage subscription fees" do
