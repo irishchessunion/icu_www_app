@@ -48,6 +48,11 @@ class Ability
     end
     can :destroy, Result, reporter_id: user.id
 
+    # Useful for tournament organizers
+    if user.organiser?
+      can [:index, :show], [Fee, Item]
+    end
+
     if user.reporter?
       can [:destroy, :update], Result
     end
