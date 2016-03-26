@@ -6,11 +6,14 @@
       %span.icon-bar
   .collapse.navbar-collapse.navbar-ex1-collapse
     %ul.nav.navbar-nav
-      - unless active("pages", "home")
+      - if active("pages", "home")
+        %li= link_to t("event.calendar"), events_path
+      - else
         %li= link_to t("home"), home_path
       %li{class: active("payments")}= link_to t("shop.shop"), shop_path
       %li{class: active("clubs")}= link_to t("club.clubs"), clubs_path
       %li= link_to t("player.rating.ratings"), "http://ratings.icu.ie", target: "ratings"
+      %li{class: active("pages", "juniors")}= link_to t("junior.juniors"), juniors_path
       %li{class: ".dropdown #{active("icu")}"}
         = link_to '#', class: "dropdown-toggle", data: { toggle: "dropdown" } do
           = t("icu.ICU")
@@ -30,6 +33,8 @@
         %ul.dropdown-menu
           %li{class: active("articles")}= link_to t("article.articles"), articles_path
           %li{class: active("series")}= link_to t("article.series.series"), series_index_path
+          - unless active("pages", "home")
+            %li= link_to t("event.calendar"), events_path
           %li{class: active("downloads")}= link_to t("download.downloads"), downloads_path
           %li{class: active("games")}= link_to t("game.games"), games_path
           %li{class: active("images")}= link_to t("image.images"), images_path
