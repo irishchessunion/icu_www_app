@@ -24,7 +24,7 @@ class Admin::ItemsController < ApplicationController
   def csv_data
     CSV.generate do |csv|
       csv << ["Items for #{params[:description]} generated on #{Time.now}", '', '', '', '']
-      csv << %w(Description Player ICU# Fee Status)
+      csv << %w(Description Player ICU# Fee Status Notes)
       @items.each do |item|
         if item.player.present?
           name, id = item.player.name, item.player.id
@@ -33,7 +33,7 @@ class Admin::ItemsController < ApplicationController
         else
           name, id = nil, nil
         end
-        csv << [item.description, name, id, item.cost, item.status]
+        csv << [item.description, name, id, item.cost, item.status, *item.notes]
       end
     end
   end
