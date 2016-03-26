@@ -24,16 +24,16 @@ class Admin::ItemsController < ApplicationController
   def csv_data
     CSV.generate do |csv|
       csv << ["Items for #{params[:description]} generated on #{Time.now}", '', '', '', '']
-      csv << %w(Description Player ICU# Fee Status Notes)
+      csv << %w(Description Player ICU# Rating Fee Status Notes)
       @items.each do |item|
         if item.player.present?
-          name, id = item.player.name, item.player.id
+          name, id, rating = item.player.name, item.player.id, item.player.latest_rating
         elsif new_player = item.new_player
-          name, id = new_player.name, 'new'
+          name, id, rating = new_player.name, 'new', 'unknown'
         else
-          name, id = nil, nil
+          name, id, rating = nil, nil, nil
         end
-        csv << [item.description, name, id, item.cost, item.status, *item.notes]
+        csv << [item.description, name, id, rating, item.cost, item.status, *item.notes]
       end
     end
   end
