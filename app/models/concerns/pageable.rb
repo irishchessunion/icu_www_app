@@ -29,6 +29,12 @@ module Pageable
       @remote   = remote
     end
 
+    def each
+      matches.each do |obj|
+        yield obj
+      end
+    end
+
     def multi_page?
       @count > @per_page
     end
@@ -41,7 +47,7 @@ module Pageable
       @page > 1
     end
 
-    def frst_page
+    def first_page
       page_path(1)
     end
 
