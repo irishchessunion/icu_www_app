@@ -20,6 +20,7 @@ class Player < ActiveRecord::Base
   SOURCES = %w[import archive subscription officer]
   STATUSES = %w[active inactive foreign deceased]
   PLAYER_TITLES = %w[GM IM FM CM NM WGM WIM WFM WCM]
+  TITLES_TO_SWISSMANAGER_FMT = {'GM' => 'g', 'IM' => 'i', 'FM' => 'f', 'CM' => 'c', 'WGM' => 'wg', 'WIM' => 'wi', 'WFM' => 'wf', 'WCM' => 'wc'}
   ARBITER_TITLES = %w[IA FA NA]
   TRAINER_TITLES = %w[FST FT FI NI DI]
   RATING_TYPES = %w[full provisional]
@@ -56,6 +57,10 @@ class Player < ActiveRecord::Base
     names << (reversed ? "#{last_name}, #{first_name}" : "#{first_name} #{last_name}")
     names << "(#{self.id || I18n.t('new')})" if id
     names.join(" ")
+  end
+
+  def club_name
+    club && club.name
   end
 
   def initials
