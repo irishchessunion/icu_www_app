@@ -79,6 +79,12 @@ class Player < ActiveRecord::Base
     status == "deceased"
   end
 
+  # @return [Item::Subscription]
+  # This code handles the problem of lifetime members properly.
+  def most_recent_subscription
+    Item::Subscription.where(player_id: id).order("coalesce(start_date, CURRENT_DATE) DESC").limit(1).first
+  end
+
   def age(ref=Date.today)
     return unless dob
     age = ref.year - dob.year
@@ -254,6 +260,7 @@ EXISTS(SELECT * FROM items WHERE
 )
 SQL
   end
+
 
   private
 

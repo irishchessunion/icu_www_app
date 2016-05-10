@@ -10,7 +10,6 @@ module Admin
   # ID number Name                              TitlFed  Mar16 GamesBorn  Flag
   # 10586     Abberton, Eamonn                      IRL  1467    0  1957  U Castlebar
   # 6150      Abberton, Gerard                           1320    0        U Galuay
-
   class SwissManagerGenerator
     def initialize
       #           00000000011111111112222222222333333333344444444445555555555666666666677777
@@ -29,8 +28,7 @@ module Admin
       yob = player.dob.year.to_s
       # Add gender (if female) and club (if there is one) but replace any occurrences of "w" in club.
       # Also add a something to indicate subscription (lifetime, this season or last season).
-      flag = player.gender == 'F' ? 'wU' : 'U'
-      # my $sub = $subscriptions->{$id} || 'U';
+      flag = "#{player.gender == 'F' ? 'w' : ''}#{subscription_type(player)}"
       club = player.club_name
       if club
         club = club.gsub('W', 'U')
@@ -55,6 +53,18 @@ module Admin
         add_player(item.player) if item.player.present?
       end
       @content
+    end
+
+    private
+    # @param player [Player]
+    # @return [String] It returns L for lifetime members, S for currently paid up members, P for paid up last year members, and U for all others.
+    def subscription_type(player)
+      sub = player.most_recent_subscription
+      return 'U' unless sub
+      return 'L' if sub.description.start_with?('Lifetime')
+      return 'S' if Date.today <= sub.end_date
+      return 'P' if 1.year.ago.to_date <= sub.end_date
+      'U'
     end
   end
 end
