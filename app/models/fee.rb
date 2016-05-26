@@ -24,6 +24,7 @@ class Fee < ActiveRecord::Base
   scope :alphabetic, -> { order(name: :asc) }
   scope :old_to_new, -> { order(end_date: :desc) }
   scope :new_to_old, -> { order(start_date: :asc) }
+  scope :without_event, -> { where(event_id: nil) }
   scope :on_sale, -> { where(active: true).where("sale_start IS NULL OR sale_start <= ?", Date.today).where("sale_end IS NULL OR sale_end >= ?", Date.today) }
 
   def self.search(params, path)
@@ -41,7 +42,7 @@ class Fee < ActiveRecord::Base
   end
 
   def self.for_sale
-    Fee.on_sale.each_with_object(Hash.new{|h,k| h[k] = []}) do |fee, hash|
+    Fee.on_sale.without_event.each_with_object(Hash.new{|h,k| h[k] = []}) do |fee, hash|
       hash[fee.type].push(fee)
     end
   end

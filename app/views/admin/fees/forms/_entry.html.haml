@@ -14,3 +14,4 @@
 = render "utils/text_field_for", locals.merge(param: :max_age, text: t("fee.age.max"))
 = render "utils/text_field_for", locals.merge(param: :age_ref_date, text: t("fee.age.ref_date"), placeholder: t("date_format"), width: 3)
 = render "utils/text_field_for", locals.merge(param: :url, text: t("fee.url"), width: 4)
+= render "utils/select_for",     locals.merge(param: :event_id, text: t("fee.event"), width: 3, menu: events_menu(@fee, Event.upcoming))

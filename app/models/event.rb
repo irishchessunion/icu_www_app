@@ -21,10 +21,12 @@ class Event < ActiveRecord::Base
 
   scope :active, -> { where(active: true) }
   scope :with_geocodes, -> { where.not(lat: nil).where.not(long: nil) }
+  scope :upcoming, -> { active.where("start_date > ?", Date.today).order(:start_date).limit(10) }
 
   has_attached_file :flyer, keep_old_files: true
 
   belongs_to :user
+  has_many :fee_entries, class_name: 'Fee::Entry'
 
   before_validation :normalize_attributes
 

@@ -14,4 +14,8 @@ module EventsHelper
     years = (2005..Date.today.year).to_a.reverse.map { |y| [y, y] }
     options_for_select(years, selected)
   end
+
+  def events_menu(selected_event, events)
+    options_for_select(events.map { |event| [event.name, event.id] }, selected_event.id)
+  end
 end

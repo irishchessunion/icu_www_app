@@ -29,7 +29,7 @@
               = render "select_user_button"
             - if @fee.new_player_allowed?
               = render "new_player_button"
-          = link_to t("cancel"), shop_path, class: "btn btn-default btn-sm"
+          = link_to t("cancel"), :back, class: "btn btn-default btn-sm"
           = form.submit t("item.add"), class: "btn btn-info btn-sm pull-right"
 
 - if @fee.player_required

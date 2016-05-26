@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160313135721) do
+ActiveRecord::Schema.define(version: 20160525201906) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -211,10 +211,12 @@ ActiveRecord::Schema.define(version: 20160313135721) do
     t.boolean  "player_required",                                       default: true
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id",          limit: 4
   end
 
   add_index "fees", ["active"], name: "index_fees_on_active", using: :btree
   add_index "fees", ["end_date"], name: "index_fees_on_end_date", using: :btree
+  add_index "fees", ["event_id"], name: "index_fees_on_event_id", using: :btree
   add_index "fees", ["name"], name: "index_fees_on_name", using: :btree
   add_index "fees", ["sale_end"], name: "index_fees_on_sale_end", using: :btree
   add_index "fees", ["sale_start"], name: "index_fees_on_sale_start", using: :btree
@@ -610,4 +612,5 @@ ActiveRecord::Schema.define(version: 20160313135721) do
   add_index "users", ["status"], name: "index_users_on_status", using: :btree
   add_index "users", ["verified_at"], name: "index_users_on_verified_at", using: :btree
 
+  add_foreign_key "fees", "events"
 end

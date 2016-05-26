@@ -62,6 +62,13 @@
           %th{colspan: 2, class: "text-center"}= t("notes")
         %tr
           %td{colspan: 2}= @event.note_html
+
     = render "utils/show_buttons", object: @event
+
+    - unless @event.fee_entries.empty?
+      %h2.text-center Enter Tournament
+      %p
+        - @event.fee_entries.each do |fee_entry|
+          = link_to "Enter #{fee_entry.description} #{euros(fee_entry.amount)}", new_item_path(fee_id: fee_entry.id), class: 'btn btn-info'
 
 = render "admin/journal_entries/changes", entries: @entries

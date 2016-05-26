@@ -1,6 +1,8 @@
 class Fee::Entry < Fee
   before_validation :default_attributes
 
+  belongs_to :event
+
   validates :start_date, :end_date, :sale_start, :sale_end, presence: true
   validates :name, uniqueness: { scope: :start_date, message: "duplicate tournament name and start date" }
 

@@ -56,6 +56,10 @@
       %tr
         %td= t("fee.url")
         %td{colspan: 3}= link_to @fee.url, @fee.url, target: "_external" if @fee.url
+      - if @fee.event_id
+        %tr
+          %td= t("fee.event")
+          %td{colspan: 3}= link_to @fee.event.name, @fee.event
       = render "utils/timestamps", object: @fee, two_col: true, tdth: true
     .text-center
       = link_to t("edit"), edit_admin_fee_path(@fee), class: "btn btn-primary" if can?(:edit, @fee)

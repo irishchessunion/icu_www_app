@@ -6,6 +6,7 @@ en:
     discounted_amount: Discounted amount
     discount_deadline: Discount deadline
     end: End date
+    event: Event
     fees: Fees
     name: Name
     player_required: Player required
