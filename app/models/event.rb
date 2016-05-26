@@ -73,6 +73,11 @@ class Event < ActiveRecord::Base
     paginate(matches, params, path)
   end
 
+  # @return [Array<Item::Entry>] belonging to this event
+  def items
+    Item::Entry.joins(:fee).joins(:player).where("fees.event_id=?", id).order("players.latest_rating desc")
+  end
+
   def note_html
     to_html(note)
   end
