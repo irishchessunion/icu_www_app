@@ -18,4 +18,13 @@ module PaymentsHelper
     years.unshift [t("shop.payment.card.yyyy"), ""]
     options_for_select(years)
   end
+
+  # @param item [Item]
+  def description_in_cart(item)
+    if item.section.present?
+      "#{item.description} #{item.section}"
+    else
+      item.description
+    end
+  end
 end

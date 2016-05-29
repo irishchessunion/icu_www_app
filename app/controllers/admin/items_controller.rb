@@ -1,6 +1,9 @@
 require 'csv'
 
 class Admin::ItemsController < ApplicationController
+  before_action :set_item, only: [:edit, :update]
+  authorize_resource only: [:edit, :update]
+
   def index
     authorize! :index, Item
     @items = Item.search(params, admin_items_path)
@@ -22,7 +25,27 @@ class Admin::ItemsController < ApplicationController
     @ledger = SalesLedger.new
   end
 
+  def edit
+    @fee = @item.fee
+    @player_name = @item.player.name(id: true) if @item.player
+  end
+
+  def update
+    @item.update_attributes(item_params)
+    redirect_to event_path(@item.fee.event_id) if @item.fee.event_id
+  end
+
   private
+
+  def set_item
+    @item = Item.find(params[:id])
+  end
+
+  private
+
+  def item_params
+    params.require(:item).permit(:section)
+  end
 
   def csv_data
     CSV.generate do |csv|

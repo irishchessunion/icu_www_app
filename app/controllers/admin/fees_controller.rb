@@ -85,7 +85,7 @@ class Admin::FeesController < ApplicationController
   def fee_params(new_record=false)
     attrs = case params[:fee][:type]
       when "Fee::Subscription" then %i[years]
-      when "Fee::Entry"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url event_id]
+      when "Fee::Entry"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url event_id sections]
       when "Fee::Other"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url days player_required]
       else []
     end

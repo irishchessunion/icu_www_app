@@ -15,6 +15,7 @@ en:
     start: Start date
     phone: Contact phone
     prize_fund: Prize fund
+    sections: Sections
     url: Event website
     category:
       any: Any type

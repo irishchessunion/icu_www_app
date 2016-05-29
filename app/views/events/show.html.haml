@@ -22,6 +22,10 @@
         %tr
           %th= t("event.prize_fund")
           %td= euros(@event.prize_fund, precision: 0)
+      - if @event.sections.present?
+        %tr
+          %th= t("event.sections")
+          %td= @event.sections
       - if @event.contact.present? || @event.email.present? || @event.phone.present?
         %tr
           %th= t("contact")
@@ -73,6 +77,13 @@
 
     - unless @event.items.empty?
       %h2.text-center Entries
-      - @event.items.each do |entry_item|
-        %p= "#{entry_item.player.name} (#{entry_item.player.latest_rating})"
+      - @event.items.where(section: nil).each do |entry_item|
+        %p
+          = "#{entry_item.player.name} (#{entry_item.player.latest_rating}) #{entry_item.fee.description}"
+          - if admin
+            = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
+      - @event.section_names.each do |section|
+        %h3= section
+        - @event.items.where(section: section).each do |entry_item|
+          %p= "#{entry_item.player.name} (#{entry_item.player.latest_rating})"
 = render "admin/journal_entries/changes", entries: @entries

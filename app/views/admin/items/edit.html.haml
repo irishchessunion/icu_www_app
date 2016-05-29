@@ -1,0 +1,19 @@
+- content_for :title, t("fee.type.#{@fee.subtype}")
+- content_for :javascript do
+  = render "items/utils.js"
+
+= form_for @item, url: admin_item_path(@item.id), method: 'put' do |form|
+  .row
+    .col-md-6.col-md-offset-3
+      .panel.panel-info
+        .panel-heading
+          %h4.panel-title
+            = @item.fee.description(:full)
+            .pull-right= euros(@item.fee.amount)
+        .panel-body
+          = render "fees/#{@item.fee.subtype}", fee: @item.fee, player_name: @player_name
+          = render "items/notes", fee: @item.fee, notes: @item.notes
+          = render "fees/more_info", fee: @item.fee
+        .panel-footer
+          = link_to t("cancel"), :back, class: "btn btn-default btn-sm"
+          = form.submit t("item.change_section"), class: "btn btn-info btn-sm pull-right"

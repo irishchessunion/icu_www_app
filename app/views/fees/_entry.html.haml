@@ -1,3 +1,8 @@
 = render "fees/detail", term: "Event start", desc: fee.start_date.to_s
 = render "fees/detail", term: "Event end", desc: fee.end_date.to_s
 = render "fees/detail", term: "Name & ID", desc: player_name, id: "player_name"
+- if fee.sections.present?
+  %p
+    %em Section:
+    = select_tag 'item[section]', options_for_select(fee.section_names), class: "pull-right text-center"
+

@@ -60,6 +60,10 @@
         %tr
           %td= t("fee.event")
           %td{colspan: 3}= link_to @fee.event.name, @fee.event
+        - if @fee.sections
+          %tr
+            %td= t("fee.sections")
+            %td{colspan: 3}= @fee.sections
       = render "utils/timestamps", object: @fee, two_col: true, tdth: true
     .text-center
       = link_to t("edit"), edit_admin_fee_path(@fee), class: "btn btn-primary" if can?(:edit, @fee)

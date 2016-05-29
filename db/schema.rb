@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160525201906) do
+ActiveRecord::Schema.define(version: 20160526153340) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -171,6 +171,7 @@ ActiveRecord::Schema.define(version: 20160525201906) do
     t.integer  "user_id",            limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "sections",           limit: 255
   end
 
   add_index "events", ["active"], name: "index_events_on_active", using: :btree
@@ -212,6 +213,7 @@ ActiveRecord::Schema.define(version: 20160525201906) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_id",          limit: 4
+    t.string   "sections",          limit: 255
   end
 
   add_index "fees", ["active"], name: "index_fees_on_active", using: :btree
@@ -289,6 +291,7 @@ ActiveRecord::Schema.define(version: 20160525201906) do
     t.string   "notes",          limit: 1000,                         default: "--- []\n"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "section",        limit: 255
   end
 
   add_index "items", ["cart_id"], name: "index_items_on_cart_id", using: :btree

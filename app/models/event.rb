@@ -5,7 +5,7 @@ class Event < ActiveRecord::Base
   include Pageable
   include Remarkable
 
-  journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date active category contact email phone url prize_fund note], "/events/%d"
+  journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date active category contact email phone url prize_fund note sections], "/events/%d"
 
   MIN_SIZE = 1.kilobyte
   MAX_SIZE = 3.megabytes
@@ -76,6 +76,11 @@ class Event < ActiveRecord::Base
   # @return [Array<Item::Entry>] belonging to this event
   def items
     Item::Entry.joins(:fee).joins(:player).where("fees.event_id=?", id).order("players.latest_rating desc")
+  end
+
+  # @return [Array<String>] A collection of section names for this event. Mostly "Minor", "Intermediate", "Major", "Masters"
+  def section_names
+    sections.split(',').map {|s| s.strip}
   end
 
   def note_html

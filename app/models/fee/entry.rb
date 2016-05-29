@@ -7,6 +7,12 @@ class Fee::Entry < Fee
   validates :name, uniqueness: { scope: :start_date, message: "duplicate tournament name and start date" }
 
   validate :sale_end_date
+  validate :sections_subset_of_event
+
+  # @return [Array<String>] A collection of section names for this event. Mostly "Minor", "Intermediate", "Major", "Masters"
+  def section_names
+    sections.split(',').map {|s| s.strip}
+  end
 
   def description(full=false)
     parts = []
@@ -64,6 +70,20 @@ class Fee::Entry < Fee
   def sale_end_date
     if sale_end.present? && start_date.present? && sale_end > start_date
       errors.add(:sale_end, "should end on or before the start date")
+    end
+  end
+
+  def sections_subset_of_event
+    if event
+      if event.sections.present?
+        unless (section_names - event.section_names).empty?
+          errors.add(:sections, "Can only include #{event.sections}")
+        end
+      elsif sections.present?
+        errors.add(:sections, "The event has no sections listed, so you don't need to specify any for the entry fee")
+      end
+    elsif sections.present?
+      errors.add(:sections, "This entry fee is not associated with an event, so you can't specify sections")
     end
   end
 end

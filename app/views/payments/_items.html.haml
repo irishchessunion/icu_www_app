@@ -15,7 +15,7 @@
           - cart.items.each do |item|
             %tr
               %td
-                = item.description
+                = description_in_cart(item)
                 - note_references = item.note_references(all_notes)
                 - if note_references.any?
                   %sup= "[#{note_references.join(',')}]"
