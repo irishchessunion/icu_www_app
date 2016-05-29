@@ -80,4 +80,26 @@ describe Fee::Entry do
       expect{Fee::Entry.create!(params.merge(url: "http://www.icu.ie"))}.to_not raise_error
     end
   end
+
+  context "sections errors" do
+    let(:params) { attributes_for(:entry_fee) }
+    let(:event_with_sections) { Event.new(sections: 'masters, major, minor')}
+    let(:event_without_sections) { Event.new }
+
+    it "fee with sections for no event fails" do
+      expect(Fee::Entry.new(params.merge(event: nil, sections: 'masters')).valid?).to be false
+    end
+
+    it "fee with sections for event with no sections fails" do
+      expect(Fee::Entry.new(params.merge(event: event_without_sections, sections: 'masters')).valid?).to be false
+    end
+
+    it "fee with correct sections for event with sections succeeds" do
+      expect(Fee::Entry.new(params.merge(event: event_with_sections, sections: 'masters')).valid?).to be true
+    end
+
+    it "fee with incorrect sections for event with sections fails" do
+      expect(Fee::Entry.new(params.merge(event: event_with_sections, sections: 'masters, junior')).valid?).to be false
+    end
+  end
 end
