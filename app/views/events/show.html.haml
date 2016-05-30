@@ -77,13 +77,16 @@
 
     - unless @event.items.empty?
       %h2.text-center Entries
-      - @event.items.where(section: nil).each do |entry_item|
+      - @event.items.paid.where(section: nil).each do |entry_item|
         %p
-          = "#{entry_item.player.name} (#{entry_item.player.latest_rating}) #{entry_item.fee.description}"
           - if admin
             = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
+          = "#{entry_item.player.name} (#{entry_item.player.latest_rating}) #{entry_item.fee.description}"
       - @event.section_names.each do |section|
         %h3= section
-        - @event.items.where(section: section).each do |entry_item|
-          %p= "#{entry_item.player.name} (#{entry_item.player.latest_rating})"
+        - @event.items.paid.where(section: section).each do |entry_item|
+          %p
+            - if admin
+              = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
+            = can?(:show, Player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
 = render "admin/journal_entries/changes", entries: @entries

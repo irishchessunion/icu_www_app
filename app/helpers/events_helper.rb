@@ -18,4 +18,19 @@ module EventsHelper
   def events_menu(selected_event_id, events)
     options_for_select(([Event.new(name: '')] + events).map { |event| [event.name, event.id] }, selected_event_id)
   end
+
+  # @param entry_item [Item::Entry]
+  def event_entry_item_description(entry_item)
+    if entry_item.player_id
+      desc = entry_item.player.name
+      if entry_item.player.latest_rating
+        desc += " (#{entry_item.player.latest_rating})"
+      elsif entry_item.player.legacy_rating
+        desc += " (#{entry_item.player.legacy_rating})"
+      end
+    else
+      desc = "Unknown Player"
+    end
+    desc
+  end
 end

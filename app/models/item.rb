@@ -20,6 +20,8 @@ class Item < ActiveRecord::Base
   validates :source, inclusion: { in: Global::SOURCES }
   validate :age_constraints, :rating_constraints, :check_user_inputs
 
+  scope :paid, -> { where(status: 'paid') }
+
   def self.search(params, path)
     params[:status] = "active" if params[:status].nil?
     matches = includes(:player).references(:players).order(created_at: :desc).includes(:cart)
