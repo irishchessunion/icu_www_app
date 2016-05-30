@@ -11,7 +11,7 @@ class Fee::Entry < Fee
 
   # @return [Array<String>] A collection of section names for this event. Mostly "Minor", "Intermediate", "Major", "Masters"
   def section_names
-    sections.split(',').map {|s| s.strip}
+    (sections || '').split(',').map {|s| s.strip}
   end
 
   def description(full=false)

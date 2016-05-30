@@ -69,11 +69,11 @@
 
     = render "utils/show_buttons", object: @event
 
-    - unless @event.fee_entries.empty?
+    - unless @event.fee_entries.on_sale.empty?
       %h2.text-center Enter Tournament
-      %p
-        - @event.fee_entries.on_sale.each do |fee_entry|
-          = link_to "#{fee_entry.description} #{euros(fee_entry.amount)}", new_item_path(fee_id: fee_entry.id), class: 'btn btn-info'
+      - @event.fee_entries.on_sale.each do |fee_entry|
+        %p
+          = event_entry_fee_button(fee_entry)
 
     - unless @event.items.empty?
       %h2.text-center Entries

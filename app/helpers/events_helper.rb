@@ -33,4 +33,30 @@ module EventsHelper
     end
     desc
   end
+
+  # @param fee_entry [Fee::Entry]
+  def event_entry_fee_button(fee_entry)
+    descr = fee_entry.name
+    extras = []
+    if fee_entry.sections.present?
+      extras << "Sections: #{fee_entry.sections}"
+    end
+    if fee_entry.min_age.present?
+      extras << "aged #{fee_entry.min_age} or over"
+    end
+    if fee_entry.max_age.present?
+      extras << "aged #{fee_entry.max_age} or under"
+    end
+
+    if fee_entry.min_rating.present?
+      extras << "rated at least #{fee_entry.min_rating}"
+    end
+
+    if fee_entry.max_rating.present?
+      extras << "rated at most #{fee_entry.max_rating}"
+    end
+
+    link_to(euros(fee_entry.amount), new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm') +
+        content_tag(:span, "#{descr} #{extras.join(', ')}")
+  end
 end
