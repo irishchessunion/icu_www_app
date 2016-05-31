@@ -1,5 +1,3 @@
-require 'csv'
-
 class Admin::ItemsController < ApplicationController
   before_action :set_item, only: [:edit, :update]
   authorize_resource only: [:edit, :update]
@@ -48,20 +46,8 @@ class Admin::ItemsController < ApplicationController
   end
 
   def csv_data
-    CSV.generate do |csv|
-      csv << ["Items for #{params[:description]} generated on #{Time.now}", '', '', '', '']
-      csv << %w(Description Player ICU# Rating Fee Status Notes)
-      @items.each do |item|
-        if item.player.present?
-          name, id, rating = item.player.name, item.player.id, item.player.latest_rating
-        elsif new_player = item.new_player
-          name, id, rating = new_player.name, 'new', 'unknown'
-        else
-          name, id, rating = nil, nil, nil
-        end
-        csv << [item.description, name, id, rating, item.cost, item.status, *item.notes]
-      end
-    end
+    generator = Admin::EntryListCsvGenerator.new
+    generator.generate_from_items(@items, params[:description])
   end
 
   def txt_data

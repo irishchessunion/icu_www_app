@@ -33,7 +33,13 @@ IcuWwwApp::Application.routes.draw do
   resources :champions,   only: [:index, :show]
   resources :clubs,       only: [:index, :show]
   resources :downloads,   only: [:index, :show]
-  resources :events,      only: [:index, :show]
+  resources :events,      only: [:index, :show] do
+    member do
+      get :swiss_manager
+      get :csv_list
+    end
+  end
+
   resources :games,       only: [:index, :show] do
     get :download, on: :collection
   end

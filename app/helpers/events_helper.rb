@@ -34,6 +34,7 @@ module EventsHelper
     desc
   end
 
+
   # @param fee_entry [Fee::Entry]
   def event_entry_fee_button(fee_entry)
     descr = fee_entry.name
@@ -57,6 +58,6 @@ module EventsHelper
     end
 
     link_to(euros(fee_entry.amount), new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm') +
-        content_tag(:span, "#{descr} #{extras.join(', ')}")
+        content_tag(:span, " #{descr} #{extras.join(', ')}")
   end
 end

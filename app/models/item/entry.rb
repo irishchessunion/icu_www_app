@@ -1,6 +1,8 @@
 class Item::Entry < Item
   validates :start_date, :end_date, :player, presence: true
   validate :no_duplicates
+  belongs_to :fee_entry, class_name: 'Fee::Entry', foreign_key: :fee_id
+
 
   scope :any_duplicates, ->(fee, player) { active.where(fee_id: fee.id).where(player_id: player.id) }
 
