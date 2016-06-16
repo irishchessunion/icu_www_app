@@ -11,7 +11,7 @@ gem "cancan", "~> 1.6"
 gem "redis"
 gem "therubyracer", platforms: :ruby
 gem "icu_name"
-gem "icu_utils"
+gem "icu_utils", "1.3.1", git: 'https://github.com/ninkibah/icu_utils.git'
 gem "redcarpet"
 gem "stripe"
 gem "mailgun-ruby", require: "mailgun"
