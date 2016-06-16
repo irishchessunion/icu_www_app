@@ -15,6 +15,7 @@ module SessionsHelper
     @current_user ||= User::Guest.new
   end
 
+  # @return [Cart]
   def current_cart(option=nil)
     # If there's no memoized cart, see if there's one in the session.
     if !@current_cart && session[:cart_id]
@@ -58,6 +59,7 @@ module SessionsHelper
     cart_ids.map { |id| Cart.include_items_plus.where(id: id, status: "paid").first }
   end
 
+  # @return [Cart]
   def last_completed_cart
     cart_ids = session[:completed_carts] || []
     return if cart_ids.empty?

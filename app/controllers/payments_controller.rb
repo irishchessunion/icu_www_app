@@ -7,17 +7,27 @@ class PaymentsController < ApplicationController
   end
 
   def cart
-    redirect_to shop_path unless check_cart(:create)
+    load_cart(:create)
+    redirect_to shop_path unless @cart
   end
 
   def card
-    redirect_to shop_path unless check_cart { !@cart.items.empty? }
+    load_cart
+    if @cart.nil? || @cart.items.empty?
+      redirect_to shop_path
+      return
+    end
+    if @cart.total_cost == 0
+      render "zero_cost_card"
+    end
   end
 
   def charge
-    if check_cart { !@cart.items.empty? && request.xhr? }
+    load_cart
+    if @cart && !@cart.items.empty?
       @cart.purchase(params, current_user)
       complete_cart(@cart.id) if @cart.paid?
+      redirect_to shop_path unless request.xhr?
     else
       if request.xhr?
         render nothing: true
@@ -38,8 +48,7 @@ class PaymentsController < ApplicationController
 
   private
 
-  def check_cart(option=nil)
+  def load_cart(option = nil)
     @cart = current_cart(option)
-    @cart && (!block_given? || yield)
   end
 end

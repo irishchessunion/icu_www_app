@@ -1,38 +1,39 @@
 - defined?(hidden) || hidden = false
 
-.row{id: "cart-#{cart.id}", style: hidden ? "display: none" : ""}
-  - if cart.items.any?
-    - all_notes = cart.all_notes
-    .col-md-10.col-md-offset-1
-      %table{class: "table table-striped"}
-        %thead
-          %tr
-            %th.col-sm-5= t("item.item")
-            %th.col-sm-4= t("member")
-            %th.col-sm-2.text-center= t("item.cost")
-            %td.col-sm-1
-        %tbody
-          - cart.items.each do |item|
+- if cart
+  .row{id: "cart-#{cart.id}", style: hidden ? "display: none" : ""}
+    - if cart.items.any?
+      - all_notes = cart.all_notes
+      .col-md-10.col-md-offset-1
+        %table{class: "table table-striped"}
+          %thead
             %tr
-              %td
-                = description_in_cart(item)
-                - note_references = item.note_references(all_notes)
-                - if note_references.any?
-                  %sup= "[#{note_references.join(',')}]"
-              %td= item.player_name
-              %td.text-center= euros(item.cost)
+              %th.col-sm-5= t("item.item")
+              %th.col-sm-4= t("member")
+              %th.col-sm-2.text-center= t("item.cost")
+              %td.col-sm-1
+          %tbody
+            - cart.items.each do |item|
+              %tr
+                %td
+                  = description_in_cart(item)
+                  - note_references = item.note_references(all_notes)
+                  - if note_references.any?
+                    %sup= "[#{note_references.join(',')}]"
+                %td= item.player_name
+                %td.text-center= euros(item.cost)
+                - if cart.unpaid?
+                  %td.text-center= link_to t("symbol.delete"), item.becomes(Item), data: { confirm: t("item.confirm_delete") }, method: :delete, class: "btn btn-danger btn-xs"
+            %tr
+              %th{colspan: 2}= t("shop.cart.total")
+              %th.text-center= euros(cart.total_cost)
               - if cart.unpaid?
-                %td.text-center= link_to t("symbol.delete"), item.becomes(Item), data: { confirm: t("item.confirm_delete") }, method: :delete, class: "btn btn-danger btn-xs"
-          %tr
-            %th{colspan: 2}= t("shop.cart.total")
-            %th.text-center= euros(cart.total_cost)
-            - if cart.unpaid?
-              %th
-      - if all_notes.any?
-        %hr
-        - all_notes.each do |note, number|
-          %p.small= "[#{number}] #{note}"
-  - else
-    .col-md-3
-    .col-md-6
-      .alert.alert-warning.text-center= t("shop.cart.empty")
+                %th
+        - if all_notes.any?
+          %hr
+          - all_notes.each do |note, number|
+            %p.small= "[#{number}] #{note}"
+    - else
+      .col-md-3
+      .col-md-6
+        .alert.alert-warning.text-center= t("shop.cart.empty")

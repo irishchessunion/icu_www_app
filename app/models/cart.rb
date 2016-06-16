@@ -50,19 +50,27 @@ class Cart < ActiveRecord::Base
   def purchase(params, user)
     token, name, email = %i[stripe_token payment_name confirmation_email].map { |n| params[n].presence }
     total = total_cost
-    charge = Stripe::Charge.create(
-      amount: cents(total),
-      currency: "eur",
-      card: token,
-      description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),
-      # receipt_email: email, # Stripe's confirmations are particularly helpful
-    )
+    if total == 0
+      charge = nil
+    else
+      charge = Stripe::Charge.create(
+        amount: cents(total),
+        currency: "eur",
+        card: token,
+        description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),
+        # receipt_email: email, # Stripe's confirmations are particularly helpful
+      )
+    end
   rescue Stripe::CardError => e
     add_payment_error(e, name, email)
   rescue => e
     add_payment_error(e, name, email, "Something went wrong, please contact webmaster@icu.ie")
   else
-    successful_payment("stripe", charge.id, Cart.current_payment_account)
+    if charge
+      successful_payment("stripe", charge.id, Cart.current_payment_account)
+    else
+      successful_payment("free", nil, Cart.current_payment_account)
+    end
   ensure
     update_cart(total, name, email, user)
     send_receipt

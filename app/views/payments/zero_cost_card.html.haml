@@ -1,0 +1,25 @@
+- content_for :title, t("shop.cart.checkout")
+- add_help("privacy", anchor: "payments")
+
+= form_tag charge_path(format: "js"), id: "icu_form", remote: true do
+  = hidden_field_tag :payment_name
+  = hidden_field_tag :confirmation_email
+
+= form_tag charge_path, id: "icu_form", class: "form-horizontal", role: "form" do
+  - locals = { col: "sm", pad: 5, width: 3, param: nil}
+  .row
+    .col-sm-12.text-center
+      = link_to cart_path, class: "btn btn-info btn-md" do
+        = succeed(":") do
+          = t("shop.payment.card.amount_due")
+        = euros(current_cart.total_cost)
+  %hr
+  .row
+    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: :payment_name)
+    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.confirmation_email"), param: "confirmation_email", type: 'email')
+  %hr
+  .row
+    .col-sm-5
+    .col-sm-7
+      = button_tag t("shop.payment.card.pay"), type: "submit", class: "btn btn-success btn-md"
+      = link_to t("cancel"), cart_path, class: "btn btn-info btn-md", id: "cancel_button"
