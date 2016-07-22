@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526153340) do
+ActiveRecord::Schema.define(version: 20160722151127) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -167,7 +167,7 @@ ActiveRecord::Schema.define(version: 20160526153340) do
     t.string   "source",             limit: 8,                            default: "www2"
     t.date     "start_date"
     t.date     "end_date"
-    t.string   "url",                limit: 75
+    t.string   "url",                limit: 255
     t.integer  "user_id",            limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
