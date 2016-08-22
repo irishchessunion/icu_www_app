@@ -19,6 +19,18 @@ class Sponsor < ActiveRecord::Base
 
   scope :active, -> { where("valid_until is null or valid_until >= ?", Date.today) }
 
+  def self.random_pair
+    active_sponsors = active.to_a
+    if active_sponsors.length < 2
+      return active_sponsors
+    end
+
+    first = weighted_random(active_sponsors)
+    active_sponsors.delete(first)
+    second = weighted_random(active_sponsors)
+    [first, second]
+  end
+
   def self.random
     weighted_random(active.to_a)
   end

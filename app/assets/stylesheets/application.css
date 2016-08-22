@@ -276,3 +276,6 @@ ol.nested-numbering > li:before {
     padding-right: 0.6em;
 }
 
+.sponsor img {
+    width: 45%;
+}

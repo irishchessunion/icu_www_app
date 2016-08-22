@@ -1,0 +1,6 @@
+.panel.panel-primary
+  .panel-heading
+    .text-center Sponsors
+  .panel-body
+    - Sponsor.active.each do |sponsor|
+      = image_link_to_sponsor(sponsor)

@@ -8,7 +8,7 @@ module SponsorsHelper
 
   # @param sponsor [Sponsor]
   def image_link_to_sponsor(sponsor)
-    link_to click_on_sponsor_path(sponsor), target: '_blank', title: sponsor.name do
+    link_to click_on_sponsor_path(sponsor), target: '_blank', title: sponsor.name, class: 'sponsor' do
       sponsor.record_eyeball
       image_tag sponsor.logo.url
     end
@@ -16,9 +16,9 @@ module SponsorsHelper
 
   def image_link_to_random_sponsor
     sponsor = Sponsor.random
-    link_to click_on_sponsor_path(sponsor), target: '_blank', title: sponsor.name do
+    link_to click_on_sponsor_path(sponsor), target: '_blank', title: sponsor.name, class: 'sponsor' do
       sponsor.record_eyeball
-      image_tag sponsor.logo.url, class: 'center-block'
+      image_tag sponsor.logo.url
     end
   end
 end
