@@ -75,7 +75,7 @@ class Event < ActiveRecord::Base
 
   # @return [Array<Item::Entry>] belonging to this event
   def items
-    Item::Entry.joins(:fee).joins(:player).where("fees.event_id=?", id).order("players.latest_rating desc")
+    Item::Entry.joins(:fee).joins(:player).where("fees.event_id=?", id).order("coalesce(players.latest_rating, players.legacy_rating) desc")
   end
 
   # @return [Array<String>] A collection of section names for this event. Mostly "Minor", "Intermediate", "Major", "Masters"
