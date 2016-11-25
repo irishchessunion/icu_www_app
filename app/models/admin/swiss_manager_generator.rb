@@ -25,7 +25,7 @@ module Admin
       # Swiss manager doesn't like IDs of less than 4 digits, so pad them.
       id = '%04d' % id if id < 1000
       title = Player::TITLES_TO_SWISSMANAGER_FMT.fetch(player.player_title, '')
-      yob = player.dob.year.to_s
+      yob = player.dob ? player.dob.year.to_s : "19??"
       # Add gender (if female) and club (if there is one) but replace any occurrences of "w" in club.
       # Also add a something to indicate subscription (lifetime, this season or last season).
       flag = "#{player.gender == 'F' ? 'w' : ''}#{subscription_type(player)}"
