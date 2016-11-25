@@ -49,17 +49,23 @@ class Failure < ActiveRecord::Base
         exception = details.delete(:exception)
         details[:name] = exception.first
         details[:message] = exception.last
+        details[:backtrace] = extract_backtrace($!) # $! is the last exception raised.
       elsif details[:exception].is_a?(Exception)
         exception = details.delete(:exception)
         details[:name] = exception.class.to_s
         details[:message] = exception.message
-        details[:backtrace] = exception.backtrace[0..3].join("\n") if exception.backtrace.present?
+        details[:backtrace] = extract_backtrace(exception)
       end
       details.map{ |key,val| "#{key}: #{val}" }.sort.join("\n")
     else
       details.to_s
     end
   end
-  
-  private_class_method :normalize
+
+  def self.extract_backtrace(exception)
+    backtrace = exception ? exception.backtrace : []
+    "\n" + backtrace[0..3].join("\n") # The \n at the start of the string ensures that when it is displayed the lines are all aligned in the view.
+  end
+
+  private_class_method :normalize, :extract_backtrace
 end
