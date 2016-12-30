@@ -12,7 +12,7 @@ module Util
       result.to_h["is_valid"]
     end
 
-    def self.routes(min_expected=20)
+    def self.routes(min_expected=1)
       routes = client.get("routes").to_h["items"].each_with_object({}) do |route, hash|
         raise "no expression found in #{route}" unless route["expression"].present?
         next if route["expression"].match(NOT_APPLICABLE)
