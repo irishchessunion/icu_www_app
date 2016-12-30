@@ -50,7 +50,7 @@ module Util
     def self.update_route(id, forwards, enabled)
       mm = []
       mm.push ["action", STOP] unless enabled
-      forwards.each { |email| mm.push ["action", "forward('#{email}')"] }
+      forwards.each { |email| mm.push ["action", "forward('#{email.strip}')"] }
       mm.push ["action", STOP]
       client.put "routes/#{id}", mm.map{ |key,val| "#{CGI.escape(key)}=#{CGI.escape(val)}" }.join('&')
     end
