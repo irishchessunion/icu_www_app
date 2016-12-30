@@ -43,7 +43,7 @@ module Util
         end
         hash[from] = { id: id, forwards: forwards, enabled: enabled }
       end
-      raise "unexpectedly low number of routes" unless routes.size >= min_expected
+      raise "unexpectedly low number of routes #{routes.size}, expected at least #{min_expected}" unless routes.size >= min_expected
       routes
     end
 
