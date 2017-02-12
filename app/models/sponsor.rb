@@ -14,14 +14,14 @@ class Sponsor < ActiveRecord::Base
   validates_attachment :logo, content_type: { content_type: /\Aimage\/(#{Image::TYPES})\z/, file_name: /\.(#{Image::TYPES})\z/i }
   validates_presence_of :name, :weblink, :weight
   validates :contact_email, email: true, allow_nil: true, allow_blank: true
-  validates :valid_until, date: { on_or_after: :today }, allow_nil: true
+  validates :valid_until, date: { on_or_after: 3.months.ago }, allow_nil: true
   before_create :init_clicks
 
   scope :active, -> { where("valid_until is null or valid_until >= ?", Date.today) }
 
   def self.random_pair
     active_sponsors = active.to_a
-    if active_sponsors.length < 2
+    if active_sponsors.length <= 2
       return active_sponsors
     end
 

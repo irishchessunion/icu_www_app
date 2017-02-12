@@ -56,7 +56,9 @@ module Admin
 
       # Only allow a trusted parameter "white list" through.
       def sponsor_params
-        params.require(:sponsor).permit(:name, :weight, :weblink, :logo, :contact_name, :contact_email, :contact_phone, :notes)
+        params.require(:sponsor).
+            permit(:name, :weight, :weblink, :logo, :contact_name, :contact_email,
+                   :contact_phone, :notes, :valid_until)
       end
   end
 end

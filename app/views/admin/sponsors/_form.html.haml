@@ -15,5 +15,6 @@
         = render "utils/text_field_for", locals.merge(param: :contact_name, text: t("sponsor.contact_name"), width: 3)
         = render "utils/text_field_for", locals.merge(param: :contact_email, text: t("sponsor.contact_email"), width: 3)
         = render "utils/text_field_for", locals.merge(param: :contact_phone, text: t("sponsor.contact_phone"), width: 3)
+        = render "utils/text_field_for", locals.merge(param: :valid_until, text: t("sponsor.valid_until"), width: 3, placeholder: t("date_format"))
         = render "utils/text_area_for", locals.merge(param: :notes, text: t("notes"), width: 10, rows: 10)
       = render "utils/form_buttons", form: f, object: @sponsor, admin: "show"
