@@ -17,5 +17,7 @@
         = render "utils/text_field_for", locals.merge(param: :contact, text: t("contact"))
         = render "utils/text_field_for", locals.merge(param: :email, text: t("email"))
         = render "utils/text_field_for", locals.merge(param: :phone, text: t("club.phone"))
+        = render "utils/check_box_for", locals.merge(param: :junior_only, text: t("club.junior_only"), width: 1)
+        = render "utils/check_box_for", locals.merge(param: :has_junior_section, text: t("club.has_junior_section"), width: 1)
         = render "utils/check_box_for", locals.merge(param: :active, text: t("active"), width: 1)
       = render "utils/form_buttons", form: f, object: @club

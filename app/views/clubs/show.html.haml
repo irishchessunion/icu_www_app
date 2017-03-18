@@ -47,6 +47,12 @@
         %th= t("club.phone")
         %td= @club.phone
       %tr
+        %th= t("club.junior_only")
+        %td= t(@club.junior_only ? "yes" : "no")
+      %tr
+        %th= t("club.has_junior_section")
+        %td= t(@club.has_junior_section ? "yes" : "no")
+      %tr
         %th= t("active")
         %td= t(@club.active ? "yes" : "no")
       %tr

@@ -17,4 +17,10 @@ module ClubsHelper
     provinces.unshift [t(default), ""]
     options_for_select(provinces, selected)
   end
+
+  def club_junior_menu(selected, default="club.juniors.any")
+    junior_options = %w(junior_only has_junior_section).map { |p| [t("club.juniors.#{p}"), p] }
+    junior_options.unshift [t(default), ""]
+    options_for_select(junior_options, selected)
+  end
 end

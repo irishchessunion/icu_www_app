@@ -10,7 +10,7 @@
     .panel-body
       - Sponsor.random_pair.each do |sponsor|
         = image_link_to_sponsor(sponsor)
-  - news_items[3..-1].each do |news|
+  - (news_items[3..-1] || []).each do |news|
     = render 'news/panel', news: news
 
   .panel-footer.text-center= link_to t('news.search'), news_index_path

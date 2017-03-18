@@ -5,7 +5,7 @@ class News < ActiveRecord::Base
   include Remarkable
   include Journalable
 
-  journalize %w[active date headline summary], "/news/%d"
+  journalize %w[active date headline summary category], "/news/%d"
 
   belongs_to :user
 
@@ -18,6 +18,7 @@ class News < ActiveRecord::Base
   scope :include_player, -> { includes(user: :player) }
   scope :ordered, -> { order(date: :desc, updated_at: :desc) }
   scope :linked_to_game, -> { where("headline like '%[GME:%' or summary like '%[GME:%'") }
+  scope :junior, -> { where(category: "juniors") }
 
   def self.search(params, path, opt={})
     matches = ordered.include_player
@@ -30,6 +31,7 @@ class News < ActiveRecord::Base
     end
     matches = matches.where(active: true) if params[:active] == "true"
     matches = matches.where(active: false) if params[:active] == "false"
+    matches = matches.where(category: params[:category]) if params[:category].present?
     paginate(matches, params, path, opt)
   end
 

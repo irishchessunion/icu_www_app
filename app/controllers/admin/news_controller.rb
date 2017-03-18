@@ -44,7 +44,7 @@ class Admin::NewsController < ApplicationController
   end
 
   def news_params(new_record=true)
-    atrs = [:active, :headline, :summary]
+    atrs = [:active, :headline, :summary, :category]
     atrs.push(:date) unless new_record
     params[:news].permit(*atrs)
   end

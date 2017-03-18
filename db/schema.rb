@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722151127) do
+ActiveRecord::Schema.define(version: 20170318230311) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -93,21 +93,23 @@ ActiveRecord::Schema.define(version: 20160722151127) do
   add_index "champions", ["year"], name: "index_champions_on_year", using: :btree
 
   create_table "clubs", force: :cascade do |t|
-    t.string   "name",       limit: 50
-    t.string   "district",   limit: 50
-    t.string   "city",       limit: 50
-    t.string   "contact",    limit: 50
-    t.string   "email",      limit: 50
-    t.string   "phone",      limit: 50
-    t.string   "web",        limit: 100
-    t.string   "address",    limit: 100
-    t.string   "meet",       limit: 255
-    t.string   "county",     limit: 20
-    t.decimal  "lat",                    precision: 10, scale: 7
-    t.decimal  "long",                   precision: 10, scale: 7
+    t.string   "name",               limit: 50
+    t.string   "district",           limit: 50
+    t.string   "city",               limit: 50
+    t.string   "contact",            limit: 50
+    t.string   "email",              limit: 50
+    t.string   "phone",              limit: 50
+    t.string   "web",                limit: 100
+    t.string   "address",            limit: 100
+    t.string   "meet",               limit: 255
+    t.string   "county",             limit: 20
+    t.decimal  "lat",                            precision: 10, scale: 7
+    t.decimal  "long",                           precision: 10, scale: 7
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "junior_only",                                             default: false
+    t.boolean  "has_junior_section",                                      default: false
   end
 
   add_index "clubs", ["active"], name: "index_clubs_on_active", using: :btree
@@ -368,6 +370,7 @@ ActiveRecord::Schema.define(version: 20160722151127) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nlikes",     limit: 4
+    t.string   "category",   limit: 20
   end
 
   add_index "news", ["active"], name: "index_news_on_active", using: :btree

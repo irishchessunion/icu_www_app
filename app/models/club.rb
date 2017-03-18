@@ -10,6 +10,8 @@ class Club < ActiveRecord::Base
 
   default_scope { order(:name) }
   scope :active, -> { where(active: true) }
+  scope :junior_only, -> { where(junior_only: true) }
+  scope :junior, -> { where("junior_only = true or has_junior_section = true") }
   scope :with_geocodes, -> { where.not(lat: nil).where.not(long: nil) }
 
   before_validation :normalize_attributes
@@ -46,6 +48,10 @@ class Club < ActiveRecord::Base
     case params[:active]
     when "true", nil then matches = matches.where(active: true)
     when "false"     then matches = matches.where(active: false)
+    end
+    case params[:junior]
+      when "junior_only" then matches = matches.where(junior_only: true)
+      when "has_junior_section" then matches = matches.where(has_junior_section: true)
     end
     paginate(matches, params, path)
   end

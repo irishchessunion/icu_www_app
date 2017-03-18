@@ -1,0 +1,30 @@
+.row
+  .col-sm-3
+    .panel.panel-primary.junior-events
+      .panel-heading
+        .text-center= t('junior.events')
+      - @junior_events.each do |event|
+        .panel-body
+          = link_to event.name, event
+          %br
+          = event.dates
+          %br
+          = ((event.note || '').strip.split("\n").first || '').strip
+    .panel.panel-primary.junior-events
+      .panel-heading
+        .text-center= t('junior.international_events')
+      - @international_events.each do |event|
+        .panel-body
+          = link_to event.name, event
+          %br
+          = event.dates
+          %br
+          = ((event.note || '').strip.split("\n").first || '').strip
+      .panel-footer.text-center= link_to "Junior Eligibility Criteria", icu_junior_eligibility_criteria_path
+  .col-sm-6
+    = render 'news'
+  .col-sm-3
+    = render 'junior_clubs'
+.row
+  .col-sm-12
+    = render 'layouts/sponsors'

@@ -8,6 +8,7 @@
         = render "utils/text_field_for", locals.merge(param: :headline, text: t("news.headline"), width: 7)
         - unless @news.new_record?
           = render "utils/text_field_for", locals.merge(param: :date, text: t("date"), width: 3)
+        = render "utils/select_for", locals.merge(param: :category, text: t("category"), menu: article_category_menu(@news.category, "please_select"), width: 3)
         = render "utils/check_box_for", locals.merge(param: :active, text: t("active"), width: 1, mark: "none")
         .form-group{class: @news.errors[:text].any? ? "has-error" : ""}
           .row
