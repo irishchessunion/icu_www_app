@@ -13,7 +13,7 @@ class PagesController < ApplicationController
     @results = Result.recent
   end
 
-  def junior_home
+  def juniors
     @news = News.search({ active: "true", category: "juniors" }, news_index_path, per_page: 8)
     @junior_events = Event.active.junior.where('end_date >= ?', Date.today).ordered.limit(4)
     @international_events = Event.active.junint.where('end_date >= ?', Date.today).ordered.limit(4)
