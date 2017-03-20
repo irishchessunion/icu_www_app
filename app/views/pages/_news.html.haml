@@ -1,8 +1,7 @@
 .panel.panel-primary.news
   .panel-heading
     .text-center Latest News
-  - news_items = @news.matches
-  - news_items[0..2].each do |news|
+  - (@news[0..2] || []).each do |news|
     = render 'news/panel', news: news
   .panel-default
     .panel-heading
@@ -10,7 +9,7 @@
     .panel-body
       - Sponsor.random_pair.each do |sponsor|
         = image_link_to_sponsor(sponsor)
-  - (news_items[3..-1] || []).each do |news|
+  - (@news[3..-1] || []).each do |news|
     = render 'news/panel', news: news
 
   .panel-footer.text-center= link_to t('news.search'), news_index_path

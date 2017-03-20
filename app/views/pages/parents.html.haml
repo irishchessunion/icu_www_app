@@ -1,6 +1,6 @@
-- content_for :title, t("junior.chess")
+- content_for :title, t("parents.title")
 
-%h3.text-center= t("junior.chess")
+%h3.text-center= t("parents.title")
 .row
   .col-sm-3
     .panel.panel-primary.junior-events
@@ -28,6 +28,7 @@
   .col-sm-6
     = render 'news'
   .col-sm-3
+    = render "child_protection_policy"
     = render 'junior_clubs'
     = render("junior_organisations")
     = render("disclaimer")

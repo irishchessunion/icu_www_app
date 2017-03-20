@@ -279,3 +279,8 @@ ol.nested-numbering > li:before {
 .sponsor img {
     width: 45%;
 }
+
+.clubs .panel-body {
+    height: 250px;
+    overflow-y: scroll;
+}

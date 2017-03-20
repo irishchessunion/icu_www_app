@@ -19,6 +19,8 @@ class News < ActiveRecord::Base
   scope :ordered, -> { order(date: :desc, updated_at: :desc) }
   scope :linked_to_game, -> { where("headline like '%[GME:%' or summary like '%[GME:%'") }
   scope :junior, -> { where(category: "juniors") }
+  scope :nonjunior, -> { where("category is null or category <> ?", "juniors") }
+  scope :active, -> { where(active: true) }
 
   def self.search(params, path, opt={})
     matches = ordered.include_player

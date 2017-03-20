@@ -3,44 +3,9 @@
     .text-center
       = link_to "ICU Junior Ratings", "http://ratings.icu.ie/icu_ratings/juniors", target: "ratings"
 
-.panel.panel-primary.junior-events
+.panel.panel-primary.clubs
   .panel-heading
     .text-center= t('junior.clubs')
-  - @junior_clubs.each do |club|
-    .panel-body
-      = link_to club.name, club
-
-.panel.panel-primary
-  .panel-heading
-    .text-center= t('junior.organisations')
   .panel-body
-    %ul
-      %li= link_to "ChessInSchools", "http://cis.fide.com/", target: "external"
-      %li= link_to "Community Games", "http://www.communitygames.ie/", target: "external"
-      %li= link_to "Leinster Schools Chess Association", "http://www.leinsterschoolschess.com/", target: "external"
-      %li= link_to "Logic NI Limited", "http://www.logicni.com/", target: "external"
-      %li= link_to "MovesForLife", "http://www.movesforlife.ie/", target: "external"
-      %li= link_to "Chess for All", "http://www.chessforall.net/", target: "external"
-
-.panel.panel-primary
-  .panel-heading
-    .text-center= t('junior.learners')
-  .panel-body
-    %ul
-      %li= link_to "The Benefits of Learning Chess", article_path(95)
-      %li= link_to "Junior Chess Corner", downloads_path(description: "junior chess corner")
-      %li= link_to "Focloir Fichille (Chess Dictionary)", download_path(188), target: "pdf"
-      %li= link_to "Conas Ficheall a Imirt (How to Play Chess)", download_path(189), target: "pdf"
-      %li= link_to "How to Play Chess", downloads_path(description: "How to Play Chess Part")
-
-.panel.panel-primary
-  .panel-body
-    .text-center.small
-      Apart from its two websites,
-      %strong www.icu.ie
-      ,
-      = succeed(",") do
-        %strong ratings.icu.ie
-      and a <a href="https://www.facebook.com/IrishChess">Facebook page</a>
-      the ICU is not responsible for any other internet media relating to Irish chess.
-
+    - @junior_clubs.each do |club|
+      %p= link_to club.name, club
