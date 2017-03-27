@@ -284,3 +284,7 @@ ol.nested-numbering > li:before {
     height: 250px;
     overflow-y: scroll;
 }
+
+.clubs .panel-body ul, .organisations .panel-body ul {
+    padding-left: 15px;
+}

@@ -3,27 +3,8 @@
 %h3.text-center= t("parents.title")
 .row
   .col-sm-3
-    .panel.panel-primary.junior-events
-      .panel-heading
-        .text-center= t('junior.events')
-      - @junior_events.each do |event|
-        .panel-body
-          = link_to event.name, event
-          %br
-          = event.dates
-          %br
-          = ((event.note || '').strip.split("\n").first || '').strip
-    .panel.panel-primary.junior-events
-      .panel-heading
-        .text-center= t('junior.international_events')
-      - @international_events.each do |event|
-        .panel-body
-          = link_to event.name, event
-          %br
-          = event.dates
-          %br
-          = ((event.note || '').strip.split("\n").first || '').strip
-      .panel-footer.text-center= link_to "Junior Eligibility Criteria", icu_junior_eligibility_criteria_path
+    = render 'junior_events'
+    = render 'junior_international_events'
     = render "home_page_links"
   .col-sm-6
     = render 'news'

@@ -7,5 +7,6 @@
   .panel-heading
     .text-center= t('junior.clubs')
   .panel-body
-    - @junior_clubs.each do |club|
-      %p= link_to club.name, club
+    %ul
+      - @junior_clubs.each do |club|
+        %li= link_to club.name, club

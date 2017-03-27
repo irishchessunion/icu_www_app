@@ -5,6 +5,8 @@ en:
     co: Co.
     county: County
     district: District
+    junior: Junior
+    junior_only: Only Juniors
     lat: Latitude
     location: Location
     long: Longitude
