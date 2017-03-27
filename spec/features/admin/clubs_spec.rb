@@ -49,7 +49,7 @@ describe Club do
       click_link new_one
     end
 
-    it "sucessful creation with all attributes" do
+    it "successful creation with all attributes" do
       fill_in name, with: "Bangor"
       fill_in website, with: "www.ulsterchess.org/membership/Clubs/bangor"
       fill_in meetings, with: "Thursdays"
@@ -84,7 +84,7 @@ describe Club do
       expect(club.active).to eq true
     end
 
-    it "sucessful creation with minimal attributes" do
+    it "successful creation with minimal attributes" do
       fill_in name, with: "Millisle"
       fill_in city, with: "Millisle"
       select "Down", from: county
