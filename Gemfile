@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
-gem "rails", "4.2.5"
+gem "rake", "10.4.2"
+gem "rails", "4.2.8"
 gem "sprockets", "2.12.3" # Latest version of sprockets 2.*. 3.* causes a failure at startup
 gem "mysql2"
 gem "haml-rails"

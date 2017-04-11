@@ -5,7 +5,12 @@ en:
     co: Co.
     county: County
     district: District
+    has_junior_section: Has junior section?
     junior: Junior
+    juniors:
+      any: Any
+      has_junior_section: Has junior section?
+      junior_only: Junior Only?
     junior_only: Only Juniors
     lat: Latitude
     location: Location

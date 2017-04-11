@@ -32,7 +32,7 @@ describe Failure do
 
       it "name and details" do
         expect(@failure.name).to eq name
-        expect(@failure.details).to eq "message: message1\nname: Name1\nother: more"
+        expect(@failure.details).to eq "backtrace: \n\nmessage: message1\nname: Name1\nother: more"
       end
     end
 
@@ -41,7 +41,7 @@ describe Failure do
 
       it "name and details" do
         expect(@failure.name).to eq name
-        expect(@failure.details).to eq "another: extra\nmessage: message2\nname: RuntimeError"
+        expect(@failure.details).to eq "another: extra\nbacktrace: \n\nmessage: message2\nname: RuntimeError"
       end
     end
   end

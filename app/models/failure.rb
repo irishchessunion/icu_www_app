@@ -64,6 +64,7 @@ class Failure < ActiveRecord::Base
 
   def self.extract_backtrace(exception)
     backtrace = exception ? exception.backtrace : []
+    backtrace ||= []
     "\n" + backtrace[0..3].join("\n") # The \n at the start of the string ensures that when it is displayed the lines are all aligned in the view.
   end
 
