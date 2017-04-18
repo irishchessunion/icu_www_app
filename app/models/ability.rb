@@ -38,6 +38,7 @@ class Ability
 
     if user.inspector?
       can :show, Player
+      can :manage, Admin::EntryListCsvGenerator
     end
 
     # Most people can report results

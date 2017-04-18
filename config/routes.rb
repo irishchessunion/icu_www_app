@@ -7,7 +7,7 @@ IcuWwwApp::Application.routes.draw do
   get  "redirect" => "redirects#redirect"
   get  "header"   => "header#control"
 
-  %w[home home2 links juniors beginners parents].each do |page|
+  %w[home home2 links juniors beginners].each do |page|
     get page => "pages##{page}"
   end
   %w[clubs events].each do |page|
@@ -89,6 +89,7 @@ IcuWwwApp::Application.routes.draw do
     resources :items,           only: [:index, :edit, :update] do
       get :sales_ledger, on: :collection
     end
+    resources :junior_newsletters, only: [:index]
     resources :journal_entries, only: [:index, :show]
     resources :logins,          only: [:index, :show]
     resources :mail_events,     only: [:index]

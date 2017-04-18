@@ -19,10 +19,6 @@ class PagesController < ApplicationController
     @junior_clubs = Club.junior
   end
 
-  def parents
-    juniors
-  end
-
   def beginners
     @news = News.active.ordered.limit(8)
     @irish_events = Event.active.where('end_date >= ?', Date.today).ordered.limit(4)
