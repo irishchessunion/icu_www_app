@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170318230311) do
+ActiveRecord::Schema.define(version: 20170418201557) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -608,6 +608,8 @@ ActiveRecord::Schema.define(version: 20170318230311) do
     t.string   "reset_password_token",   limit: 255
     t.datetime "reset_password_sent_at"
     t.boolean  "disallow_reporting"
+    t.boolean  "junior_newsletter"
+    t.boolean  "newsletter"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree

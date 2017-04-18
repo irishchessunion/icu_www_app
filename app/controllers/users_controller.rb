@@ -64,7 +64,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.required(:user).permit(:theme, :locale, :hide_header)
+    params.required(:user).permit(:theme, :locale, :hide_header, :newsletter, :junior_newsletter)
   end
 
   def new_user_params

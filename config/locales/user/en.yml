@@ -13,11 +13,13 @@ en:
     forgot_password: Forgotten password
     hide_header: Hide header
     incomplete_registration: Already created but waiting for response to verification message
+    junior_newsletter: Would you like to receive a newsletter on junior chess by email?
     locale: Language
     new: New user account
     new_password_1: New password
     new_password_2: Confirm password
     new_password_mismatch: New password doesn't match confirmation
+    newsletter: Would you like to receive a newsletter by email?
     old_password: Old password
     password: Password
     preferences: Preferences

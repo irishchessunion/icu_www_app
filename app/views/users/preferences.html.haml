@@ -9,3 +9,5 @@
       - if irish_enabled?
         = render "utils/select_tag", locals.merge(param: "user[locale]", text: t("user.locale"), menu: user_locale_menu(@user.locale), auto: true)
       = render "utils/check_box_tag", locals.merge(param: "user[hide_header]", text: t("user.hide_header"), checked: @user.hide_header, auto: true)
+      = render "utils/check_box_tag", locals.merge(param: "user[newsletter]", text: t("user.newsletter"), checked: @user.newsletter, auto: true)
+      = render "utils/check_box_tag", locals.merge(param: "user[junior_newsletter]", text: t("user.junior_newsletter"), checked: @user.junior_newsletter, auto: true)
