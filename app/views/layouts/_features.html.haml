@@ -1,18 +1,5 @@
-- if sam = Image.where(id: 1331).first
-  .panel.panel-primary
-    .panel-heading
-      .text-center.small Stephen Jessel
-    .panel-body= sam.expand(type: "IMG", align: "center", responsive: "true", alt: "Stephen Jessel").html_safe
-    .panel-footer
-      .text-center.small 2016 Champion
-
-- if mg = Image.where(id: 1239).first
-  .panel.panel-primary
-    .panel-heading
-      .text-center.small Monika Gedvilaite
-    .panel-body= mg.expand(type: "IMG", align: "center", responsive: "true", alt: "Monika Gedvilaite").html_safe
-    .panel-footer
-      .text-center.small 2016 Women's Champion
+= render "champions/champion", champion: Champion.recent(:open).first
+= render "champions/champion", champion: Champion.recent(:women).first
 
 .panel.panel-primary
   .panel-body

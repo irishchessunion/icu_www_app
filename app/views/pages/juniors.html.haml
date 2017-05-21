@@ -8,6 +8,18 @@
     = render "home_page_links"
   .col-sm-6
     = render 'news'
+    = render "champions/champion", champion: Champion.recent(:u19).first
+    = render "champions/champion", champion: Champion.recent(:g19).first
+    = render "champions/champion", champion: Champion.recent(:u16).first
+    = render "champions/champion", champion: Champion.recent(:g16).first
+    = render "champions/champion", champion: Champion.recent(:u14).first
+    = render "champions/champion", champion: Champion.recent(:g14).first
+    = render "champions/champion", champion: Champion.recent(:u12).first
+    = render "champions/champion", champion: Champion.recent(:g12).first
+    = render "champions/champion", champion: Champion.recent(:u10).first
+    = render "champions/champion", champion: Champion.recent(:g10).first
+    = render "champions/champion", champion: Champion.recent(:u8).first
+    = render "champions/champion", champion: Champion.recent(:g8).first
   .col-sm-3
     = render "child_protection_policy"
     = render 'junior_clubs'

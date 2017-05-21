@@ -4,15 +4,18 @@ class Champion < ActiveRecord::Base
   include Normalizable
   include Pageable
 
-  journalize %w[category notes winners year], "/champions/%d"
+  belongs_to :image
 
-  CATEGORIES = %w[open women]
+  journalize %w[category notes winners year image_id], "/champions/%d"
+
+  CATEGORIES = %w[open women u19 g19 u16 g16 u14 g14 u12 g12 u10 g10 u8 g8]
   INITIALS = "([A-Z]\\. )+"
   SURNAME = "(O'|Mac|Mc)?[A-Z][a-z]+"
   SURNAMES = "#{SURNAME}([- ]#{SURNAME}){0,2}"
   WINNERS = /\A#{INITIALS}#{SURNAMES}(, #{INITIALS}#{SURNAMES})*\z/
 
   scope :ordered, -> { order(year: :desc, category: :asc) }
+  scope :recent, -> (category) { where(category: category).ordered.limit(1)}
 
   before_validation :normalize_attributes, :correct_winners
 

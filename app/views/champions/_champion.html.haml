@@ -1,0 +1,8 @@
+- if champion
+  .panel.panel-primary
+    .panel-heading
+      .text-center.small= champion.winners
+    - if champion.image
+      .panel-body= champion.image.expand(type: "IMG", align: "center", responsive: "true", alt: champion.winners).html_safe
+    .panel-footer
+      .text-center.small= "#{champion.year} #{champion_category(champion.category)}"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170418201557) do
+ActiveRecord::Schema.define(version: 20170516053351) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -86,9 +86,11 @@ ActiveRecord::Schema.define(version: 20170418201557) do
     t.integer  "year",       limit: 2
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "image_id",   limit: 4
   end
 
   add_index "champions", ["category"], name: "index_champions_on_category", using: :btree
+  add_index "champions", ["image_id"], name: "fk_rails_4b4d78bb46", using: :btree
   add_index "champions", ["winners"], name: "index_champions_on_winners", using: :btree
   add_index "champions", ["year"], name: "index_champions_on_year", using: :btree
 
@@ -620,5 +622,6 @@ ActiveRecord::Schema.define(version: 20170418201557) do
   add_index "users", ["status"], name: "index_users_on_status", using: :btree
   add_index "users", ["verified_at"], name: "index_users_on_verified_at", using: :btree
 
+  add_foreign_key "champions", "images"
   add_foreign_key "fees", "events"
 end
