@@ -9,10 +9,6 @@ class Champion < ActiveRecord::Base
   journalize %w[category notes winners year image_id], "/champions/%d"
 
   CATEGORIES = %w[open women u19 g19 u16 g16 u14 g14 u12 g12 u10 g10 u8 g8]
-  INITIALS = "([A-Z]\\. )+"
-  SURNAME = "(O'|Mac|Mc)?[A-Z][a-z]+"
-  SURNAMES = "#{SURNAME}([- ]#{SURNAME}){0,2}"
-  WINNERS = /\A#{INITIALS}#{SURNAMES}(, #{INITIALS}#{SURNAMES})*\z/
 
   scope :ordered, -> { order(year: :desc, category: :asc) }
   scope :recent, -> (category) { where(category: category).ordered.limit(1)}
@@ -20,7 +16,7 @@ class Champion < ActiveRecord::Base
   before_validation :normalize_attributes, :correct_winners
 
   validates :category, inclusion: { in: CATEGORIES }, uniqueness: { scope: :year, message: "one category per year" }
-  validates :winners, format: { with: WINNERS }, length: { maximum: 140 }
+  validates :winners, length: { maximum: 140 }
   validates :notes, length: { maximum: 256 }, allow_nil: true
   validates :year, numericality: { integer_only: true, greater_than_or_equal_to: Global::MIN_YEAR, less_than_or_equal_to: Date.today.year }
   validate :expansions
