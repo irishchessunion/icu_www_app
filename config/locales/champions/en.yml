@@ -2,9 +2,18 @@ en:
   champion:
     champion: Irish Champion
     champions: Irish Champions
+    image_id: Photo id
     winner: Winner
     winners: Winner(s)
     category:
       any: Any category
       open: Irish Champion
       women: Irish Women's Champion
+      u12: Irish U-12's Champion
+      u14: Irish U-14's Champion
+      u16: Irish U-16's Champion
+      u19: Irish U-19's Champion
+      g12: Irish U-12 Girl's Champion
+      g14: Irish U-14 Girl's Champion
+      g16: Irish U-16 Girl's Champion
+      g19: Irish U-19 Girl's Champion

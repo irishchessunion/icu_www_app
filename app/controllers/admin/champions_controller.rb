@@ -40,6 +40,6 @@ class Admin::ChampionsController < ApplicationController
   end
 
   def champion_params
-    params[:champion].permit(:category, :notes, :winners, :year)
+    params[:champion].permit(:category, :notes, :winners, :year, :image_id)
   end
 end

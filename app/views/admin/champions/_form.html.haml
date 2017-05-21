@@ -7,6 +7,7 @@
         - locals = { form: f, object: @champion, col: "sm", pad: 2, width: 6, mark: "required" }
         = render "utils/text_field_for", locals.merge(param: :year, text: t("year"), width: 2)
         = render "utils/text_field_for", locals.merge(param: :winners, text: t("champion.winners"))
+        = render "utils/text_field_for", locals.merge(param: :image_id, text: t("champion.image_id"), mark: "none")
         = render "utils/select_for", locals.merge(param: :category, text: t("category"), menu: champion_category_menu(@champion.category, "please_select"))
         = render "utils/text_field_for", locals.merge(param: :notes, text: t("notes"), width: 8, mark: "none")
       = render "utils/form_buttons", form: f, object: @champion

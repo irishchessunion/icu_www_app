@@ -3,7 +3,7 @@
 = render "utils/prev_next", prev_next: @prev_next
 
 .row
-  .col-md-8.col-md-offset-2
+  .col-md-8
     %table.table.table-bordered
       %tr
         %th= t("year")
@@ -13,11 +13,13 @@
         %td= @champion.winners
       %tr
         %th= t("category")
-        %td= t("champion.category.#{@champion.category}")
+        %td= champion_category(@champion.category)
       %tr
         %th= t("notes")
         %td= @champion.html_notes
       = render "utils/timestamps", object: @champion, ability: :create
     = render "utils/show_buttons", object: @champion
+  .col-md-4
+    = render "champion", champion: @champion
 
 = render "admin/journal_entries/changes", entries: @entries
