@@ -21,7 +21,7 @@ class Event < ActiveRecord::Base
 
   scope :active, -> { where(active: true) }
   scope :with_geocodes, -> { where.not(lat: nil).where.not(long: nil) }
-  scope :upcoming, -> { active.where("start_date > ?", Date.today).order(:start_date).limit(10) }
+  scope :upcoming, -> { active.where("start_date > ?", Date.today).order(:start_date) }
 
   scope :junior, -> { where(category: "junior") }
   scope :junint, -> { where(category: "junint") }
