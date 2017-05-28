@@ -21,6 +21,7 @@ module EventsHelper
 
   # @param entry_item [Item::Entry]
   def event_entry_item_description(entry_item)
+    desc = ""
     if entry_item.player_id
       if entry_item.player.latest_rating
         desc = "#{entry_item.player.latest_rating} "
