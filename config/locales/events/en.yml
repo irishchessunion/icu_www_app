@@ -1,6 +1,7 @@
 en:
   event:
     contact: Contact name
+    create_entry_fee: New Entry Fee
     calendar: Calendar
     flyer: Flyer
     email: Contact email
