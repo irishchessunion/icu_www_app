@@ -39,27 +39,6 @@ describe Champion do
       end
     end
 
-    context "invalid" do
-      let(:champion) { build(:champion) }
-
-      it "initials only with full stops" do
-        champion.winners = "MJLOrr"
-        expect(champion).to_not be_valid
-        champion.winners = "Mark Orr"
-        expect(champion).to_not be_valid
-      end
-
-      it "apostrophes" do
-        champion.winners = "D. O\"Siochru"
-        expect(champion).to_not be_valid
-      end
-
-      it "double barelled" do
-        champion.winners = "A. Astaneh/Lopez"
-        expect(champion).to_not be_valid
-      end
-    end
-
     context "correct" do
       let(:champion) { build(:champion) }
 

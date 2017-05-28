@@ -25,7 +25,7 @@ describe Event do
   context "authorization" do
     let(:level1) { ["admin", user] }
     let(:level2) { ["editor"] }
-    let(:level3) { User::ROLES.reject { |r| r.match(/\A(admin|editor|calendar)\z/) }.append("guest") }
+    let(:level3) { User::ROLES.reject { |r| r.match(/\A(admin|editor|calendar|organiser)\z/) }.append("guest") }
     let(:user)   { create(:user, roles: "calendar") }
     let(:event)  { create(:event, user: user) }
     let(:header) { "h1" }

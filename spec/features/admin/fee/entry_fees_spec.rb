@@ -255,7 +255,7 @@ describe Fee::Entry do
       fee.reload
       expect(fee.amount).to eq 99.0
 
-      expect(JournalEntry.where(journalable_type: "Fee", action: "update").count).to eq 1
+      expect(JournalEntry.where(journalable_type: "Fee", action: "update").count).to eq 2
     end
 
     it "active" do
@@ -267,7 +267,7 @@ describe Fee::Entry do
       fee.reload
       expect(fee.active).to be false
 
-      expect(JournalEntry.where(journalable_type: "Fee", action: "update").count).to eq 1
+      expect(JournalEntry.where(journalable_type: "Fee", action: "update").count).to eq 2
     end
   end
 

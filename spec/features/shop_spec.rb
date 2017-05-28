@@ -29,12 +29,12 @@ describe "Shop" do
 
   context "empty cart" do
     it "create before viewing" do
-      expect(Cart.count).to eq 0
+      cart_count = Cart.count
 
       visit cart_path
       expect(page).to have_css(warning, text: empty)
 
-      expect(Cart.count).to eq 1
+      expect(Cart.count).to eq cart_count + 1
     end
   end
 
@@ -122,6 +122,7 @@ describe "Shop" do
       subscription = Item::Subscription.last
 
       expect(page).to have_xpath(xpath("th", item, member, cost))
+      sleep(1) # Extra pause to allow page to catch up.
       expect(page).to have_xpath(xpath("td", subscription.description, newbie.name, subscription.cost))
       expect(page).to have_xpath(xpath("th", total, standard_sub.amount))
 
@@ -172,6 +173,7 @@ describe "Shop" do
       select newbie_fed, from: fed
 
       click_button save
+      sleep(1)
       expect(page).to have_css(failure, text: /matches.*#{player.id}/)
       expect(page).to_not have_button(add_to_cart)
     end
@@ -335,6 +337,7 @@ describe "Shop" do
     end
 
     it "delete from other cart" do
+      cart_count = Cart.count
       visit shop_path
       click_link standard_sub.description
       click_button select_member
@@ -343,7 +346,7 @@ describe "Shop" do
       click_link player.id
       click_button add_to_cart
 
-      expect(Cart.count).to eq 1
+      expect(Cart.count).to eq cart_count + 1
       expect(Item::Subscription.inactive.count).to eq 1
 
       cart = Cart.include_items.first
