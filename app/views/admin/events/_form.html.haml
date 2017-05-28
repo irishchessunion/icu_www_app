@@ -22,6 +22,7 @@
         = render "utils/text_field_for", locals.merge(param: :prize_fund, text: t("event.prize_fund"), width: 2, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :lat, text: t("latitude"), width: 3, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :long, text: t("longitude"), width: 3, mark: "none")
+        = render "utils/select_for",     locals.merge(param: :user_id, text: t("event.user"), width: 4, menu: user_menu(@event.user_id))
         = render "utils/check_box_for",  locals.merge(param: :active, text: t("active"), width: 1)
         = render "utils/text_area_for",  locals.merge(param: :note, text: t("notes"), width: 9, rows: 10)
       = render "utils/form_buttons", form: f, object: @event

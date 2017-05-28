@@ -57,6 +57,10 @@ class Ability
     # Useful for tournament organizers
     if user.organiser?
       can [:index, :show], [Fee, Item]
+      can :manage, Event, user_id: user.id
+      can :manage, Fee do |fee|
+        fee.event && fee.event.user_id == user.id
+      end
     end
 
     if user.reporter?
