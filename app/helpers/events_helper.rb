@@ -22,12 +22,12 @@ module EventsHelper
   # @param entry_item [Item::Entry]
   def event_entry_item_description(entry_item)
     if entry_item.player_id
-      desc = entry_item.player.name
       if entry_item.player.latest_rating
-        desc += " (#{entry_item.player.latest_rating})"
+        desc = "#{entry_item.player.latest_rating} "
       elsif entry_item.player.legacy_rating
-        desc += " (#{entry_item.player.legacy_rating})"
+        desc = "#{entry_item.player.legacy_rating} "
       end
+      desc += entry_item.player.name
     else
       desc = "Unknown Player"
     end
@@ -36,10 +36,10 @@ module EventsHelper
 
 
   # @param fee_entry [Fee::Entry]
-  def event_entry_fee_button(fee_entry)
+  def event_entry_fee_description(fee_entry)
     descr = fee_entry.name
     extras = []
-    if fee_entry.sections.present?
+    if fee_entry.sections.present? && fee_entry.event && fee_entry.event.section_names.size > 1
       extras << "Sections: #{fee_entry.sections}"
     end
     if fee_entry.min_age.present?
@@ -50,14 +50,13 @@ module EventsHelper
     end
 
     if fee_entry.min_rating.present?
-      extras << "rated at least #{fee_entry.min_rating}"
+      extras << "rated >= #{fee_entry.min_rating}"
     end
 
     if fee_entry.max_rating.present?
-      extras << "rated at most #{fee_entry.max_rating}"
+      extras << "rated <= #{fee_entry.max_rating}"
     end
 
-    link_to(euros(fee_entry.amount), new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm') +
-        content_tag(:span, " #{descr} #{extras.join(', ')}")
+    "#{descr} #{extras.join(', ')}"
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516053351) do
+ActiveRecord::Schema.define(version: 20170527230326) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 20170516053351) do
     t.datetime "updated_at"
     t.integer  "event_id",          limit: 4
     t.string   "sections",          limit: 255
+    t.boolean  "organizer_only"
   end
 
   add_index "fees", ["active"], name: "index_fees_on_active", using: :btree

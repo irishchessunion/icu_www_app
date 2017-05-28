@@ -6,9 +6,31 @@ en:
     discounted_amount: Discounted amount
     discount_deadline: Discount deadline
     end: End date
+    entry:
+      end:
+        label: End date of event
+      organizer_only:
+        hint: Only the organizer can enter this fee
+        label: Only organizers
+      ref_date:
+        hint: The date to use in calculating the age of a participant.
+        label: Age reference date
+      sale_end:
+        hint: Normally the last day before the event
+        label: Sale end
+      sections:
+        hint: A comma separated list of event sections appropriate to this fee, e.g. Masters, Major, Minor
+        label: Sections
+      start:
+        label: Start date of event
     event: Event
+    event_id:
+      hint: Setting the event will set the start and end dates
+      label: Event
     fees: Fees
     name: Name
+    everybody: Everyone
+    organizer_only: Only organizers
     player_required: Player required
     rollover: Rollover
     sale_start: Sale start

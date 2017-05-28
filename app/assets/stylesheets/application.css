@@ -288,3 +288,12 @@ ol.nested-numbering > li:before {
 .clubs .panel-body ul, .organisations .panel-body ul {
     padding-left: 15px;
 }
+
+.table-spaced {
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+
+.fees-table a.btn {
+    width: 80px;
+}

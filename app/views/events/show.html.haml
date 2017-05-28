@@ -67,22 +67,27 @@
         %tr
           %td{colspan: 2}= @event.note_html
 
-    = render "utils/show_buttons", object: @event
+    - extras = can?(:create, Fee) ? {t("event.create_entry_fee") => new_admin_fee_path(type: "Fee::Entry", event_id: @event.id)}: {}
+    = render "utils/show_buttons", object: @event, extras: extras
 
     - unless @event.fee_entries.on_sale.empty?
       %h2.text-center Enter Tournament
-      - @event.fee_entries.on_sale.each do |fee_entry|
-        %p
-          = event_entry_fee_button(fee_entry)
+      %table.table-spaced.fees-table
+        - @event.fee_entries.on_sale.each do |fee_entry|
+          - if can?(:show, fee_entry)
+            %tr
+              %td= link_to(euros(fee_entry.amount), new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm')
+              %td= event_entry_fee_description(fee_entry)
+              %td= link_to(t("edit"), edit_admin_fee_path(fee_entry), class: 'btn btn-danger btn-sm') if can?(:edit, fee_entry)
 
     - unless @event.items.empty?
       %h2.text-center Entries
+      - section_names = @event.section_names
       - @event.items.paid.where(section: nil).each do |entry_item|
         %p
-          - if admin
+          - if admin && section_names.size > 0
             = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
           = can?(:show, Player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
-          = entry_item.fee.description
       - @event.section_names.each do |section|
         %h3
           = section
@@ -91,7 +96,7 @@
             = link_to "CSV file", csv_list_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
         - @event.items.paid.where(section: section).each do |entry_item|
           %p
-            - if admin
+            - if admin && section_names.size > 1
               = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
             = can?(:show, Player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
 = render "admin/journal_entries/changes", entries: @entries

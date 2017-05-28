@@ -2,7 +2,12 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    return if user.guest?
+    if user.guest?
+      can :show, Fee::Entry do |entry|
+        !entry.organizer_only
+      end
+      return
+    end
 
     if user.admin?
       can :manage, :all
@@ -69,6 +74,13 @@ class Ability
       can :manage, [Cart, Fee, Sponsor, UserInput]
     end
 
+    can :show, Fee::Entry do |entry|
+      if entry.organizer_only && entry.event
+        user.treasurer? || user.organiser? || (user.member? && user.id == entry.event.user_id)
+      else
+        true
+      end
+    end
     can :manage_preferences, User, id: user.id
     can [:manage_profile, :show], Player, id: user.player_id
     can :sales_ledger, Item

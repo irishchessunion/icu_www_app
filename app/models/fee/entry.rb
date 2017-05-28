@@ -48,23 +48,35 @@ class Fee::Entry < Fee
     true
   end
 
-  private
+  def self.init_default_attributes(fee)
+    if fee.event_id
+      event = Event.find(fee.event_id)
+      fee.start_date ||= event.start_date
+      fee.end_date ||= event.end_date
+      fee.sections ||= event.sections
+    end
 
-  def default_attributes
-    if start_date.present?
-      self.sale_end = start_date.days_ago(1) if sale_end.blank?
-      self.sale_start = start_date.months_ago(3) if sale_start.blank?
-      if end_date.present?
-        if start_date.year == end_date.year
-          self.year = start_date.year
-          self.years = nil
+    if fee.start_date.present?
+      fee.sale_end = fee.start_date.days_ago(1) if fee.sale_end.blank?
+      fee.sale_start = fee.start_date.months_ago(3) if fee.sale_start.blank?
+      if fee.end_date.present?
+        if fee.start_date.year == fee.end_date.year
+          fee.year = fee.start_date.year
+          fee.years = nil
         else
-          season = Season.new("#{start_date.year} #{end_date.year}")
-          self.years = season.to_s unless season.error
-          self.year = nil
+          season = Season.new("#{fee.start_date.year} #{fee.end_date.year}")
+          fee.years = season.to_s unless season.error
+          fee.year = nil
         end
       end
     end
+
+  end
+
+  private
+
+  def default_attributes
+    Fee::Entry.init_default_attributes(self)
   end
 
   def sale_end_date

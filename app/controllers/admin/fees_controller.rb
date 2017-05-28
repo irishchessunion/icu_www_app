@@ -14,6 +14,10 @@ class Admin::FeesController < ApplicationController
   def new
     @fee = Fee.new
     @fee.type = params[:type] if Fee::TYPES.include?(params[:type])
+    if params[:event_id]
+      @fee.event_id = params[:event_id]
+      Fee::Entry.init_default_attributes(@fee)
+    end
   end
 
   def clone
@@ -85,7 +89,7 @@ class Admin::FeesController < ApplicationController
   def fee_params(new_record=false)
     attrs = case params[:fee][:type]
       when "Fee::Subscription" then %i[years]
-      when "Fee::Entry"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url event_id sections]
+      when "Fee::Entry"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url event_id sections organizer_only]
       when "Fee::Other"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url days player_required]
       else []
     end
