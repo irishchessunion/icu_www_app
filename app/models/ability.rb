@@ -58,7 +58,7 @@ class Ability
     if user.organiser?
       can [:index, :show], [Fee, Item]
       can :manage, Event, user_id: user.id
-      can :manage, Fee do |fee|
+      can :manage, Fee::Entry do |fee|
         fee.event && fee.event.user_id == user.id
       end
     end
