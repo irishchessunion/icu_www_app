@@ -8,6 +8,7 @@ class NewPlayer
   validates :fed, format: { with: /\A[A-Z]{3}\z/ }
   validates :gender, inclusion: { in: Player::GENDERS }
   validates :club_id, numericality: { greater_than: 0 }, allow_nil: true
+  validates :email, presence: true, if: :junior?
   validates :email, email: true, allow_nil: true
   validates :dob, date: { on_or_after: Global::MIN_DOB, on_or_before: :today }
   validates :joined, date: { on_or_after: "2014-01-01", on_or_before: :today }
@@ -44,6 +45,10 @@ class NewPlayer
   def ==(other)
     return false unless other.is_a?(NewPlayer) || other.is_a?(Player)
     dob == other.dob && icu_name.match(other.first_name, other.last_name)
+  end
+
+  def junior?
+    18.years.ago < dob
   end
 
   private

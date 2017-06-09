@@ -64,6 +64,7 @@ module ApplicationHelper
     case mark.to_s
     when "required"  then "*"
     when "defaulted" then "†"
+    when "encouraged" then "**"
     else ""
     end
   end

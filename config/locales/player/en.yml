@@ -5,11 +5,17 @@ en:
     any_federation: Any federation
     any_gender: Any gender
     any_title: Any title
+    birthdate:
+      label: Date of birth
+      hint: Your date of birth is used by the rating system and is not displayed publicly.
     dob: Date of birth
     duplicate: Duplicate
     duplicates: Duplicates
     duplicate_of: Duplicate of
     edit_profile: Edit Profile
+    email:
+      label: Email
+      hint: Juniors must give a contact email address. A parent's address is preferred. It is optional for adult members.
     federation: Federation
     first_name: First name
     foreign: Foreign
