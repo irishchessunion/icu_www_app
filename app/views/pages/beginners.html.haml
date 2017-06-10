@@ -3,12 +3,14 @@
 %h3.text-center= t("beginners.title")
 .row
   .col-sm-3
-    = render "irish"
     = render "home_page_links"
+    = render "child_protection_policy"
   .col-sm-6
-    = render 'news'
-  .col-sm-3
+    = render "articles"
     = render 'learner_docs'
+  .col-sm-3
+    = render 'junior_clubs'
+    = render 'clubs'
 .row
   .col-sm-12
     = render 'layouts/sponsors'

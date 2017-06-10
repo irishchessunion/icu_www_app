@@ -8,7 +8,7 @@ class Article < ActiveRecord::Base
 
   journalize %w[access active author category text title year], "/article/%d"
 
-  CATEGORIES = %w[bulletin tournament biography obituary coaching juniors general]
+  CATEGORIES = %w[bulletin tournament biography obituary coaching juniors beginners general]
 
   belongs_to :user
   has_many :episodes, dependent: :destroy
@@ -26,6 +26,7 @@ class Article < ActiveRecord::Base
   scope :include_series, -> { includes(episodes: :series) }
   scope :ordered, -> { order(year: :desc, created_at: :desc) }
   scope :linked_to_game, -> { where("text like '%[GME:%' or title like '%[GME:%'") }
+  scope :beginners, -> { where(category: "beginners") }
 
   def self.search(params, path, user, opt={})
     matches = ordered.include_player

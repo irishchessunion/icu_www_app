@@ -8,6 +8,7 @@ en:
     title: Article Title
     category:
       any: Any category
+      beginners: New to chess
       biography: Biography
       bulletin: ICU Bulletin
       coaching: Coaching
@@ -15,6 +16,7 @@ en:
       juniors: Juniors
       obituary: Obituary
       tournament: Tournament Report
+    search: All articles
     series:
       add: Add article
       empty: No articles have been added to this series yet

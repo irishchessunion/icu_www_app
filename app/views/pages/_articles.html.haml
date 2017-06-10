@@ -1,0 +1,7 @@
+.panel.panel-primary
+  .panel-heading
+    .text-center Articles
+  .panel-body
+    %ul
+    - (@articles || []).each do |article|
+      %li=link_to article.title, article

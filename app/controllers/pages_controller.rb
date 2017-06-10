@@ -20,8 +20,9 @@ class PagesController < ApplicationController
   end
 
   def beginners
-    @news = News.active.ordered.limit(8)
-    @irish_events = Event.active.where('end_date >= ?', Date.today).ordered.limit(4)
+    @articles = Article.beginners
+    @junior_clubs = Club.active.junior
+    @clubs = Club.active
   end
 
   def not_found
