@@ -15,19 +15,24 @@ en:
     incomplete_registration: Already created but waiting for response to verification message
     junior_newsletter: Would you like to receive a newsletter on junior chess by email?
     locale: Language
-    new: New user account
+    need_to_sign_up: Register if you have never had an account and are a member
+    new: Register for website account
     new_password_1: New password
     new_password_2: Confirm password
     new_password_mismatch: New password doesn't match confirmation
     newsletter: Would you like to receive a newsletter by email?
     old_password: Old password
     password: Password
+    player_id:
+      label: ICU ID
+      hint: You should have received an email with your ICU id
     preferences: Preferences
     role_denied: This member is denied any role
     status: Status
     sign_up: Sign up
     theme: Theme
     ticket: Season ticket
+    ticket_hint: You should have received an email when you paid your subscription.
     updated: Preferences successfully updated
     user: User
     verified: Verified

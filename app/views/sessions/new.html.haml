@@ -10,6 +10,8 @@
       %fieldset
         - locals = { col: "sm", pad: 4, width: 4 }
         = render "utils/text_field_tag", locals.merge(param: :email, text: t("email"))
+      %p.small.text-center
+        = link_to t("user.need_to_sign_up"), switch_to_tls(:sign_up)
         = render "utils/text_field_tag", locals.merge(param: :password, text: t("user.password"), type: "password")
       %p.small.text-center
         = link_to t("user.forgot_password"), new_password_path

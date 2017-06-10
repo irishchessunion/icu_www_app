@@ -5,9 +5,9 @@ en:
     enter_password: Please enter a password
     invalid_email: Invalid email or password
     invalid_password: Invalid email or password
-    sign_in: Sign in
-    sign_out: Sign out
-    signed_in_as: Signed in as
-    signed_out: Signed out!
+    sign_in: Login
+    sign_out: Logout
+    signed_in_as: Logged in as
+    signed_out: Logged out!
     subscription_expired: Subscription expired
     unverified_email: Unverified email
