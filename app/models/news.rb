@@ -18,6 +18,7 @@ class News < ActiveRecord::Base
   scope :include_player, -> { includes(user: :player) }
   scope :ordered, -> { order(date: :desc, updated_at: :desc) }
   scope :linked_to_game, -> { where("headline like '%[GME:%' or summary like '%[GME:%'") }
+  scope :beginners, -> { where(category: "beginners") }
   scope :junior, -> { where(category: "juniors") }
   scope :nonjunior, -> { where("category is null or category <> ?", "juniors") }
   scope :active, -> { where(active: true) }

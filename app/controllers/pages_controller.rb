@@ -20,7 +20,7 @@ class PagesController < ApplicationController
   end
 
   def beginners
-    @articles = Article.beginners
+    @news = News.active.beginners
     @junior_clubs = Club.active.junior
     @clubs = Club.active
   end
