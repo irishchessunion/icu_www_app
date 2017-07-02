@@ -3,9 +3,9 @@
 %h3.text-center= t("junior.chess")
 .row
   .col-sm-3
+    = render "home_page_links"
     = render "junior_events"
     = render 'junior_international_events'
-    = render "home_page_links"
   .col-sm-6
     = render 'news'
     = render "champions/champion", champion: Champion.recent(:u19).first
