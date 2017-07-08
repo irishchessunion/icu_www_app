@@ -280,6 +280,10 @@ ol.nested-numbering > li:before {
     width: 45%;
 }
 
+.panel-body p {
+    margin-bottom: 20px;
+}
+
 .clubs .panel-body {
     height: 250px;
     overflow-y: scroll;
