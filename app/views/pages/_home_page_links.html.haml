@@ -9,3 +9,8 @@
         = link_to "For Juniors", juniors_path
       %li
         = link_to t("beginners.title"),  beginners_path
+-if @donate_fee
+  .panel
+    .panel-body
+      .text-center
+        = link_to "Donate", new_item_path(fee_id: @donate_fee), class: "btn btn-danger btn-sm"

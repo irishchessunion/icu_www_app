@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  before_action :load_donate_fee, except: :not_found
+
   def home
     @news = News.active.ordered.limit(8)
     @junior_events = Event.active.junior.where('end_date >= ?', Date.today).ordered.limit(3)
@@ -27,5 +29,11 @@ class PagesController < ApplicationController
 
   def not_found
     render file: "#{Rails.root}/public/404", formats: [:html], layout: false, status: 404
+  end
+
+  private
+
+  def load_donate_fee
+    @donate_fee = Fee.where(name: "Donation").first
   end
 end
