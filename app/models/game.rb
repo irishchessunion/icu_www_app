@@ -28,7 +28,7 @@ class Game < ActiveRecord::Base
   validates :result, inclusion: { in: RESULTS }, allow_nil: true
   validates :round, format: { with: /\A[0-9]\d{0,2}([-.\/][0-9]\d{0,2})?\z/ }, allow_nil: true
   validates :signature, length: { is: 32 }
-  validate :unique_signature
+  validate :unique_signature, on: :create
 
   scope :ordered, -> { order(date: :desc) }
 
@@ -86,6 +86,8 @@ class Game < ActiveRecord::Base
     value.markoff!
     if name.match(/\A(Annotator|Black|Date|ECO|Event|FEN|Result|Round|Site|White)\z/i)
       send("#{name.underscore}=", value)
+    elsif name == "ICUid"
+      self.id = value.gsub(/[^\d]/, "").to_i
     elsif name.match(/\A(BlackElo|Ply|WhiteElo)\z/i)
       int_val = value.gsub(/[^\d]/, "").to_i
       send("#{name.underscore}=", int_val > 0 ? int_val : nil)

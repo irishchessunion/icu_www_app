@@ -5,7 +5,7 @@ class Pgn < ActiveRecord::Base
 
   journalize %w[comment], "/admin/pgns/%d"
 
-  attr_accessor :file, :import
+  attr_accessor :file, :import, :overwrite
 
   belongs_to :user
   has_many :games, dependent: :delete_all
@@ -46,6 +46,7 @@ class Pgn < ActiveRecord::Base
   rescue PGNError => e
     self.problem = e.message
   rescue => e
+    Rails.logger.info "Error parsing file\n#{e.backtrace.join("\n")}"
     self.problem = "#{e.message} #{e.backtrace.first}"
   ensure
     file.close!
@@ -103,9 +104,14 @@ class Pgn < ActiveRecord::Base
   end
 
   def check_game_but_dont_raise_error_for_a_duplicate
-    if @game.valid?
+    if overwrite == "T"
+      refresh_game_from_db
+    end
+    validation_context = overwrite == "T" ? :overwrite : :create
+    Rails.logger.info "Validation context is #{validation_context}"
+    if @game.valid?(validation_context)
       if import?
-        @game.save!
+        @game.save!(validate: false) # Don't run validations a second time
         self.imports += 1
       end
     else
@@ -115,5 +121,18 @@ class Pgn < ActiveRecord::Base
         raise PGNError.new("line #{lines}: #{@game.errors.full_messages.first || 'Unknown error'}")
       end
     end
+    @game.new_record?
+  end
+
+  def refresh_game_from_db
+    return unless @game.id
+    game_in_db = Game.where(id: @game.id).limit(1).first
+    unless game_in_db
+      raise PGNError.new("No existing game found for ICUid = #{@game.id}")
+    end
+    [:annotator, :black, :date, :eco, :event, :fen, :result, :round, :site, :white, :black_elo, :ply, :white_elo, :moves, :pgn_id].each do |attr|
+      game_in_db.send("#{attr}=", @game.send(attr))
+    end
+    @game = game_in_db
   end
 end

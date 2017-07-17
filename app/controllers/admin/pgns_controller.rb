@@ -1,5 +1,5 @@
 class Admin::PgnsController < ApplicationController
-  before_action :set_pgn, only: [:show, :edit, :update, :destroy]
+  before_action :set_pgn, only: [:edit, :update, :destroy]
   authorize_resource
 
   def index
@@ -28,6 +28,8 @@ class Admin::PgnsController < ApplicationController
       @pgn.content_type = `file -b --mime-type #{file.path}`.strip
     end
 
+    # We need to get a pgn id to save in any imported games
+    # The second save then updates the statistics for this pgn record.
     if @pgn.save
       @pgn.parse(file.tempfile)
       @pgn.save
@@ -63,9 +65,9 @@ class Admin::PgnsController < ApplicationController
   end
 
   def pgn_params(new_record=false)
-    atrs = [:comment]
-    atrs += [:file, :import] if new_record
-    params[:pgn].permit(atrs.compact)
+    attrs = [:comment]
+    attrs += [:file, :import, :overwrite] if new_record
+    params[:pgn].permit(attrs.compact)
   end
 
   def flash_feedback
