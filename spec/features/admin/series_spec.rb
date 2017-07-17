@@ -217,6 +217,7 @@ describe Series do
       find(keep(2)).set(false)
 
       click_button save
+      wait_a_second(0.1)
 
       series.reload
       expect(series.episodes.count).to eq 2

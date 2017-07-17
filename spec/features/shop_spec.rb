@@ -7,7 +7,7 @@ describe "Shop" do
   let(:cart_link)       { I18n.t("shop.cart.current") + ":" }
   let(:continue)        { I18n.t("shop.cart.continue") }
   let(:cost)            { I18n.t("item.cost") }
-  let(:dob)             { I18n.t("player.abbrev.dob") }
+  let(:dob)             { I18n.t("player.birthdate.label") }
   let(:empty)           { I18n.t("shop.cart.empty") }
   let(:fed)             { I18n.t("player.federation") }
   let(:first_name)      { I18n.t("player.first_name") }

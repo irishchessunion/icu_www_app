@@ -14,7 +14,7 @@ describe "Pay", js: true do
   let(:completed)             { I18n.t("shop.payment.completed") }
   let(:confirmation_email_to) { I18n.t("shop.payment.confirmation_sent.success") }
   let(:current)               { I18n.t("shop.cart.current") }
-  let(:dob)                   { I18n.t("player.abbrev.dob") }
+  let(:dob)                   { I18n.t("player.birthdate.label") }
   let(:fed)                   { I18n.t("player.federation") }
   let(:first_name)            { I18n.t("player.first_name") }
   let(:gateway)               { I18n.t("shop.payment.error.gateway") }

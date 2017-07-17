@@ -18,7 +18,7 @@
             %tr.episode
               %td.text-center= episode.number
               %td
-                - if article.accessible_to?(current_user)
+                - if article && article.accessible_to?(current_user)
                   = link_to article.title, article
                 - else
                   = t("article.inaccessible")

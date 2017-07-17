@@ -48,7 +48,7 @@ class NewPlayer
   end
 
   def junior?
-    18.years.ago < dob
+    dob && 18.years.ago < dob
   end
 
   private
