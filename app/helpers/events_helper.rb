@@ -32,6 +32,7 @@ module EventsHelper
       elsif entry_item.player.legacy_rating
         desc = "#{entry_item.player.legacy_rating} "
       end
+      desc += "#{entry_item.player.player_title} " if entry_item.player.player_title
       desc += entry_item.player.name
     else
       desc = "Unknown Player"
