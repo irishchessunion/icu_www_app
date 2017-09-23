@@ -110,6 +110,9 @@ class Item < ActiveRecord::Base
     end
   end
 
+  def email
+    cart.confirmation_email
+  end
   def note_references(all_notes)
     notes.each_with_object([]) do |note, refs|
       number = all_notes[note]

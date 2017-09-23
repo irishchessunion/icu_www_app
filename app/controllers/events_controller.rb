@@ -13,7 +13,7 @@ class EventsController < ApplicationController
 
   def swiss_manager
     event = Event.find(params[:id])
-    items = Item::Entry.joins(:fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
+    items = Item::Entry.joins(:cart, :fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::SwissManagerGenerator.new
 
     send_data generator.generate_from_items(items), filename: download_filename(event, params[:section], 'txt'), type: 'text/txt'
