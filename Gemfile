@@ -17,11 +17,13 @@ gem "redcarpet"
 gem "stripe"
 gem "mailgun-ruby", require: "mailgun"
 gem "paperclip", "~> 4.1"
+# gem "colorize", "0.7.4" # To avoid capistrano error using ruby 2.4.0 -- https://github.com/Mixd/wp-deploy/issues/130
 gem "colored"
 gem "whenever", :require => false
 gem "quiet_assets"
 
 group :development do
+  gem "capistrano", "3.4.1" # For same reason as colorize comment above
   gem "capistrano-rails", "~> 1.1"
   gem "wirble"
 end
