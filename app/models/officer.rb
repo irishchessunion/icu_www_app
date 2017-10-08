@@ -7,7 +7,8 @@ class Officer < ActiveRecord::Base
   has_many :relays
 
   ROLES = %w[
-    arbitration chairperson connaught development ecu fide fide_ecu juniors leinster membership munster president
+    arbitration chairperson connaught development ecu fide fide_ecu juniors leinster membership
+    membership-connaught membership-leinster membership-munster munster president
     publicrelations ratings secretary selections tournaments treasurer ulster vicechairperson webmaster women
   ]
 

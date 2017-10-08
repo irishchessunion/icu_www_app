@@ -17,6 +17,9 @@
         %th Active
         %td= @officer.active ? t("yes") : t("no")
       %tr
+        %th= t("officer.exec")
+        %td= @officer.executive ? t("yes") : t("no")
+      %tr
         %th Rank
         %td= @officer.rank
       - @officer.relays.each do |relay|

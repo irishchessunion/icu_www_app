@@ -15,6 +15,7 @@
         = render "utils/text_field_for", locals.merge(param: :player_id, text: t("player.id"))
         = render "utils/text_field_for", locals.merge(param: :rank, text: t("officer.rank"))
         = render "utils/check_box_for", locals.merge(param: :active, text: t("active"))
+        = render "utils/check_box_for", locals.merge(param: :executive, text: t("officer.exec"))
       %hr
       .text-center
         = render "player_ids_button"
