@@ -18,7 +18,7 @@ class PagesController < ApplicationController
     @news = News.active.junior.ordered.limit(8)
     @junior_events = Event.active.junior.where('end_date >= ?', Date.today).ordered.limit(4)
     @international_events = Event.active.junint.where('end_date >= ?', Date.today).ordered.limit(4)
-    @junior_clubs = Club.junior
+    @junior_clubs = Club.active.junior
   end
 
   def beginners
