@@ -37,6 +37,6 @@ class Admin::OfficersController < ApplicationController
   end
 
   def officer_params
-    params[:officer].permit(:player_id, :rank, :active)
+    params[:officer].permit(:player_id, :rank, :active, :executive)
   end
 end
