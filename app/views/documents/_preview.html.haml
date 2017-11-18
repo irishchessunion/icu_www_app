@@ -1,0 +1,14 @@
+%h1.text-center= @document.title
+
+%p
+  Changed on
+  = @document.created_at
+  by
+  = @document.changed_by.player.first_name
+  = @document.changed_by.player.last_name
+  authorized by
+  = @document.authorized_by
+
+%p= @document.reason_changed
+
+= @document.to_html

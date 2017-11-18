@@ -1,0 +1,12 @@
+en:
+  document:
+    authorized_by: Authorized by
+    content: Content
+    content_type: Format
+    format:
+      HAML: HAML for content from old source code
+      HTML: HTML for raw HTML (not advised)
+      MARKDOWN: Markdown
+    preview: Preview
+    reason_changed: Reason for change
+    subtitle: Subtitle
