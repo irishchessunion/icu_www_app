@@ -45,6 +45,7 @@ en:
       roles: Roles
       admin: Administrator
       calendar: Calendar Editor
+      documenter: ICU Document keeper
       editor: Editor
       gameskeeper: Games keeper
       inspector: Inspector

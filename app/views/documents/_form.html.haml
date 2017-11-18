@@ -1,0 +1,21 @@
+.row
+  .col-sm-1
+  .col-sm-10
+    = form_for [@document], html: { class: "form-horizontal", role: "form" } do |f|
+      %fieldset
+        = render "utils/form_header", object: @document, atr: :title
+        - locals = { form: f, object: @document, col: "sm", pad: 2, width: 10 }
+        = render "utils/text_field_for", locals.merge(param: :title, text: t("title"))
+        = render "utils/text_field_for", locals.merge(param: :subtitle, text: t("document.subtitle"))
+        = render "utils/text_field_for", locals.merge(param: :authorized_by, text: t("document.authorized_by"))
+        = render "utils/text_field_for", locals.merge(param: :reason_changed, text: t("document.reason_changed"))
+        = render "utils/select_for", locals.merge(param: :content_type, text: t("document.content_type"), menu: document_content_type_menu(@document.content_type), width: 3)
+        = render "utils/text_area_for", locals.merge(param: :content, text: t("document.content"))
+      %hr
+      .text-center
+        = f.submit t("document.preview"), class: "btn btn-info"
+        = f.submit t("save"), class: "btn btn-primary"
+        = link_to t("cancel"), documents_path, class: "btn btn-default"
+
+%hr Preview
+= render 'preview'

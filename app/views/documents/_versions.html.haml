@@ -1,0 +1,17 @@
+%table.table.table-bordered
+  %thead
+    %th Version
+    %th= t('created_at')
+    %th= t('document.authorized_by')
+    %th= t('document.changed_by')
+    %th
+  %tbody
+    - @document.versions.each_with_index do |version, i|
+      %tr
+        %td= "#{i + 1}#{version.is_current? ? '*' : ''}"
+        %td= version.created_at
+        %td= version.authorized_by
+        %td
+          = version.changed_by.player.first_name
+          = version.changed_by.player.last_name
+        %td= link_to "View", version

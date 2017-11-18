@@ -32,6 +32,7 @@ IcuWwwApp::Application.routes.draw do
   resources :likes, only: [:create, :destroy]
   resources :champions,   only: [:index, :show]
   resources :clubs,       only: [:index, :show]
+  resources :documents,   only: [:index, :show, :new, :create, :edit, :update]
   resources :downloads,   only: [:index, :show]
   resources :events,      only: [:index, :show] do
     member do

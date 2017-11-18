@@ -1,0 +1,10 @@
+- content_for :title, t(@document.title)
+
+= render 'preview'
+
+.text-center
+  - if can?(:update, @document) && @document.is_current?
+    = link_to t("edit"), edit_document_path(@document), class: "btn btn-primary"
+
+%hr
+= render 'versions'

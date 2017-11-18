@@ -14,6 +14,10 @@ class Ability
       return
     end
 
+    if user.documenter?
+      can :manage, Document
+    end
+
     if user.tester?
       can :manage, Admin::Statistic
     end

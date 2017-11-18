@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171008111251) do
+ActiveRecord::Schema.define(version: 20171114214423) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -118,6 +118,23 @@ ActiveRecord::Schema.define(version: 20171008111251) do
   add_index "clubs", ["city"], name: "index_clubs_on_city", using: :btree
   add_index "clubs", ["county"], name: "index_clubs_on_county", using: :btree
   add_index "clubs", ["name"], name: "index_clubs_on_name", using: :btree
+
+  create_table "documents", force: :cascade do |t|
+    t.string   "title",               limit: 255
+    t.string   "subtitle",            limit: 255
+    t.string   "content",             limit: 255
+    t.string   "content_type",        limit: 255
+    t.integer  "changed_by_id",       limit: 4
+    t.string   "authorized_by",       limit: 255
+    t.string   "reason_changed",      limit: 255
+    t.boolean  "is_current"
+    t.integer  "previous_version_id", limit: 4
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "documents", ["changed_by_id"], name: "fk_rails_a07bebd5fe", using: :btree
+  add_index "documents", ["previous_version_id"], name: "fk_rails_0fa5b3f041", using: :btree
 
   create_table "downloads", force: :cascade do |t|
     t.string   "access",            limit: 20
@@ -624,5 +641,7 @@ ActiveRecord::Schema.define(version: 20171008111251) do
   add_index "users", ["verified_at"], name: "index_users_on_verified_at", using: :btree
 
   add_foreign_key "champions", "images"
+  add_foreign_key "documents", "documents", column: "previous_version_id"
+  add_foreign_key "documents", "users", column: "changed_by_id"
   add_foreign_key "fees", "events"
 end
