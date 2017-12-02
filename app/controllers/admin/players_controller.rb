@@ -30,6 +30,7 @@ class Admin::PlayersController < ApplicationController
       @player.journal(:update, current_user, request.remote_ip)
       redirect_to [:admin, @player], notice: "Player was successfully updated"
     else
+      Rails.logger.info @player.errors.inspect
       flash_first_error(@player, base_only: true)
       render action: "edit"
     end
@@ -47,6 +48,7 @@ class Admin::PlayersController < ApplicationController
       %i[email address home_phone mobile_phone work_phone] +
       %i[player_title arbiter_title trainer_title] +
       %i[player_id note source status]
+    attrs << %i[legacy_rating legacy_rating_type legacy_games] if current_user.admin?
     params[:player].permit(*attrs, privacy: [])
   end
 end

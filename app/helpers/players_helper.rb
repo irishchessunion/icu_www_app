@@ -20,6 +20,12 @@ module PlayersHelper
     options_for_select(genders, selected)
   end
 
+  def player_legacy_rating_type_menu(selected, default = "any")
+    types = Player::RATING_TYPES.map { |rt| [t("player.rating.type.#{rt}"), rt] }
+    types.unshift [t(default), ""]
+    options_for_select(types, selected)
+  end
+
   def player_order_menu(selected)
     orders = %w[last_name first_name].map { |col| [t("player.#{col}"), col] }
     orders.unshift [t("player.id_order"), "id"]

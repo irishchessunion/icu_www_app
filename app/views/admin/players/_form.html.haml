@@ -22,6 +22,10 @@
         = render "utils/select_for", locals.merge(param: :club_id, text: t("club.club"), width: 2, menu: club_menu(@player.club_id, none: true))
         = render "utils/select_for", locals.merge(param: :status, text: t("player.status.status"), width: 2, menu: player_status_menu(@player.status))
         = render "utils/select_for", locals.merge(param: :privacy, text: t("player.privacy"), menu: player_privacy_menu(@player.privacy), multiple: true, width: 2, size: Player::PRIVACIES.size)
+        - if current_user.admin? && @player.unrated?
+          = render "utils/text_field_for", locals.merge(param: :legacy_rating, text: t("player.legacy.rating"), width: 4)
+          = render "utils/text_field_for", locals.merge(param: :legacy_games, text: t("player.legacy.games"), width: 4)
+          = render "utils/select_for", locals.merge(param: :legacy_rating_type, text: t("player.legacy.rating_type"), menu: player_legacy_rating_type_menu(@player.legacy_rating_type), width: 2, size: Player::RATING_TYPES.size)
         - if @player.new_record?
           = hidden_field :player, :player_id
         - else
