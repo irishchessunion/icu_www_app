@@ -1,4 +1,4 @@
-- content_for :title, t(@document.title)
+- content_for :title, t("icu.#{@document.title.downcase}")
 
 = render 'preview'
 
