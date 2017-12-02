@@ -79,6 +79,10 @@ class Player < ActiveRecord::Base
     status == "deceased"
   end
 
+  def unrated?
+    latest_rating.nil? && legacy_rating.nil? && legacy_rating_type.nil?
+  end
+
   # @return [Item::Subscription]
   # This code handles the problem of lifetime members properly.
   def most_recent_subscription
