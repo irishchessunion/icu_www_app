@@ -89,12 +89,16 @@
             = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
           = can?(:show, Player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
       - @event.section_names.each do |section|
+        - paid_entries = @event.items.paid.where(section: section)
         %h3
           = section
+          %span.small
+            = paid_entries.size
+            entries
           - if admin
             = link_to "Swiss Perfect file", swiss_manager_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
             = link_to "CSV file", csv_list_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
-        - @event.items.paid.where(section: section).each do |entry_item|
+        - paid_entries.each do |entry_item|
           %p
             - if admin && section_names.size > 1
               = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
