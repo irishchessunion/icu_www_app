@@ -21,6 +21,7 @@ module Global
     affiliation_byelaws: "rules for bodies such as the Connaught, Leinster and Munster Chess Unions",
     officer_roles: "descriptions of the various roles within the ICU committee",
     allegro_rules: "rules for all-moves-in-X type time controls",
+    rules_discipline: "Rules for discipline of members",
   }
 
   # A list of other ICU page names (which don't have notes).

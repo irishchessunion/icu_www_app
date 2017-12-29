@@ -7,7 +7,7 @@
         - locals = { form: f, object: @document, col: "sm", pad: 2, width: 10 }
         = render "utils/text_field_for", locals.merge(param: :title, text: t("title"))
         = render "utils/text_field_for", locals.merge(param: :subtitle, text: t("document.subtitle"))
-        = render "utils/text_field_for", locals.merge(param: :url, text: t("document.url"))
+        = render "utils/select_for", locals.merge(param: :url, text: t("document.url"), menu: document_url_menu(@document.url), width: 3)
         = render "utils/text_field_for", locals.merge(param: :authorized_by, text: t("document.authorized_by"))
         = render "utils/text_field_for", locals.merge(param: :reason_changed, text: t("document.reason_changed"))
         = render "utils/select_for", locals.merge(param: :content_type, text: t("document.content_type"), menu: document_content_type_menu(@document.content_type), width: 3)

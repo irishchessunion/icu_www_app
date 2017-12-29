@@ -8,15 +8,10 @@ class Document < ActiveRecord::Base
 
   scope :current, -> { where(is_current: true)}
 
-  # we define scopes for specific documents.
-  # TODO COme up with a better way of doing this
-  scope :constitution, -> { where(url: "constitution") }
-  scope :code_of_conduct, -> { where(url: "code_of_conduct") }
-  scope :rules_discipline, -> { where(url: "rules_discipline") }
-  scope :ncc_rules, -> { where(url: "ncc_rules") }
-  scope :eligibility, -> { where(url: "eligibility") }
-  scope :junior_eligibility, -> { where(url: "junior_eligibility") }
-
+  # we define scopes for all the ICU documents.
+  Global::ICU_DOCS.each_key do |page|
+    scope page, -> { where(url: page.to_s) }
+  end
 
   def to_html
     case content_type

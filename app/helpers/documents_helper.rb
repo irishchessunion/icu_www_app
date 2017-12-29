@@ -4,6 +4,11 @@ module DocumentsHelper
     options_for_select(cats, selected)
   end
 
+  def document_url_menu(selected)
+    urls = Global::ICU_DOCS.map { |page, _| [page, page] }
+    options_for_select(urls, selected)
+  end
+
   def document_link(document_url)
     doc = Document.current.send(document_url).first
     ret = link_to(doc.title, doc)

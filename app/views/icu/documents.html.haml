@@ -10,4 +10,3 @@
           = succeed(Global::ICU_DOCS[page].present? ? ":" : "") do
             = link_to t("icu.#{page}"), send("icu_#{page}_path")
           = Global::ICU_DOCS[page]
-      %li= document_link("rules_discipline")
