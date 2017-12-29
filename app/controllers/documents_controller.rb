@@ -62,12 +62,12 @@ class DocumentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_document
-      @document = Document.find(params[:id])
+      @document = Document.includes(changed_by: :player).find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def document_params
-      params.require(:document).permit(:title, :subtitle, :content, :content_type, :authorized_by, :reason_changed)
+      params.require(:document).permit(:title, :subtitle, :content, :content_type, :authorized_by, :reason_changed, :url)
     end
 
     def prepare_document_for_saving(doc, prev_doc_id)

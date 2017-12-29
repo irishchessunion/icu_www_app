@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171114214423) do
+ActiveRecord::Schema.define(version: 20171228231403) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(version: 20171114214423) do
     t.integer  "previous_version_id", limit: 4
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.string   "url",                 limit: 255
   end
 
   add_index "documents", ["changed_by_id"], name: "fk_rails_a07bebd5fe", using: :btree
