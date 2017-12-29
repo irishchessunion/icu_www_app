@@ -4,7 +4,7 @@ class Document < ActiveRecord::Base
   belongs_to :previous_version, class_name: "Document"
 
   validates_inclusion_of :content_type, in: FORMATS
-  validates_presence_of :title
+  validates_presence_of :title, :url
 
   scope :current, -> { where(is_current: true)}
 

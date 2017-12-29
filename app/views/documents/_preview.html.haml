@@ -2,7 +2,7 @@
 
 %p
   Changed on
-  = @document.created_at
+  = @document.created_at.strftime("%d-%b-%Y %H:%M:%S")
   by
   = @document.changed_by.player.first_name
   = @document.changed_by.player.last_name
