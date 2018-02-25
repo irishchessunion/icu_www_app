@@ -8,6 +8,8 @@
       = event.dates
       %br
       = ((event.note || '').strip.split("\n").first || '').strip
+  .panel-footer.text-center
+    = link_to "See more events", events_path(category: "junior")
   - if can?(:manage, Admin::JuniorNewsletter)
     .panel-footer.text-center
       = link_to "Junior Newsletter.csv", admin_junior_newsletters_path
