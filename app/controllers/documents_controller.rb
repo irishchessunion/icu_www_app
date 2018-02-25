@@ -29,6 +29,7 @@ class DocumentsController < ApplicationController
     if params[:commit] != 'Preview' && @document.save
       redirect_to @document, notice: 'Document was successfully created.'
     else
+      @document.valid?
       render :new
     end
   end
@@ -39,6 +40,7 @@ class DocumentsController < ApplicationController
     if params[:commit] == 'Preview'
       @document.assign_attributes(document_params)
       edit
+      @document.valid?
       render :edit
       return
     end
@@ -49,6 +51,7 @@ class DocumentsController < ApplicationController
       redirect_to new_document, notice: 'Document was successfully updated.'
     else
       @document.assign_attributes(document_params)
+      @document.valid?
       render :edit
     end
   end
