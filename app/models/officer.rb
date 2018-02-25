@@ -9,7 +9,7 @@ class Officer < ActiveRecord::Base
   ROLES = %w[
     arbitration chairperson connaught development ecu fide fide_ecu juniors leinster membership
     membership-connaught membership-leinster membership-munster munster president
-    publicrelations ratings secretary selections tournaments treasurer ulster vicechairperson webmaster women
+    publicrelations ratings secretary selections tournaments treasurer ulster vicechairperson webmaster women gameskeeper
   ]
 
   scope :active, -> { where(active: true) }
