@@ -10,4 +10,6 @@
     - unless hint.blank?
       %br
       .help-block= hint
-  %div{class: "col-#{col}-#{12-pad-width} help-block"}= object.errors[param].first
+  - unless object.errors[param].empty?
+    %div{class: "col-#{col}-#{pad}"}
+    %div{class: "col-#{col}-#{width} help-block"}= object.errors[param].first
