@@ -27,6 +27,22 @@ class PagesController < ApplicationController
     @clubs = Club.active
   end
 
+  # this method can't be called parents as this is already a ruby method
+  def for_parents
+    @news = News.active.beginners
+    @junior_clubs = Club.active.junior
+  end
+
+  def primary_schools
+    @news = News.active.beginners
+    @junior_clubs = Club.active.junior
+  end
+
+  def secondary_schools
+    @news = News.active.beginners
+    @junior_clubs = Club.active.junior
+  end
+
   def not_found
     render file: "#{Rails.root}/public/404", formats: [:html], layout: false, status: 404
   end

@@ -172,7 +172,7 @@ class Translation < ActiveRecord::Base
   end
 
   def self.yaml_files
-    Dir.glob(File.join(Rails.root, "config", "locales", "**", "en.yml"))
+    Dir.glob(File.join(Rails.root, "config", "locales", "**", "primary_schools.yml"))
   end
 
   def self.load_yamls(files)

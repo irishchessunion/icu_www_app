@@ -1,0 +1,15 @@
+- content_for :title, t("primary_schools.title")
+
+%h3.text-center= t("primary_schools.title")
+.row
+  .col-sm-3
+    = render "home_page_links"
+    = render "child_protection_policy"
+  .col-sm-6
+    = render "news"
+    = render 'learner_docs'
+  .col-sm-3
+    = render 'junior_clubs'
+.row
+  .col-sm-12
+    = render 'layouts/sponsors'
