@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   before_action :load_donate_fee, except: :not_found
 
   def home
-    @news = News.active.ordered.limit(8)
+    @news = News.nonjunior.ordered.limit(8)
     @junior_events = Event.active.junior.where('end_date >= ?', Date.today).ordered.limit(3)
     @irish_events = Event.active.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
     @results = Result.recent
@@ -29,17 +29,17 @@ class PagesController < ApplicationController
 
   # this method can't be called parents as this is already a ruby method
   def for_parents
-    @news = News.active.beginners
+    @news = News.active.for_parents
     @junior_clubs = Club.active.junior
   end
 
   def primary_schools
-    @news = News.active.beginners
+    @news = News.active.primary
     @junior_clubs = Club.active.junior
   end
 
   def secondary_schools
-    @news = News.active.beginners
+    @news = News.active.secondary
     @junior_clubs = Club.active.junior
   end
 

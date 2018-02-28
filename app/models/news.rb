@@ -20,10 +20,10 @@ class News < ActiveRecord::Base
   scope :linked_to_game, -> { where("headline like '%[GME:%' or summary like '%[GME:%'") }
   scope :beginners, -> { where(category: "beginners") }
   scope :junior, -> { where(category: "juniors") }
-  #scope :for_parents, -> { where(category: "for_parents") }
+  scope :for_parents, -> { where(category: "for_parents") }
   scope :primary, -> { where(category: "primary") }
   scope :secondary, -> { where(category: "secondary") }
-  scope :nonjunior, -> { where("category is null or category <> ?", "juniors") }
+  scope :nonjunior, -> { where("category is null or category not in (?)", ["juniors", "for_parents", "primary", "secondary", "beginners"]) }
   scope :active, -> { where(active: true) }
 
   def self.search(params, path, opt={})
