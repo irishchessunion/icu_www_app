@@ -36,6 +36,8 @@ class Item < ActiveRecord::Base
     matches = matches.where("players.last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
     matches = matches.where("players.first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
     matches = matches.where("description LIKE ?", "%#{params[:description]}%") if params[:description].present?
+    matches = matches.where("items.created_at >= ?", params[:from_date]) if params[:from_date].present?
+    matches = matches.where("items.created_at <= ?", params[:to_date]) if params[:to_date].present?
     if params[:format] == 'csv'
       matches
     else

@@ -4,11 +4,18 @@ class Admin::ItemsController < ApplicationController
 
   def index
     authorize! :index, Item
+    params[:format] = 'csv' if generating_csv?
     @items = Item.search(params, admin_items_path)
     flash.now[:warning] = t("no_matches") if @items.count == 0
 
     respond_to do |format|
-      format.html
+      format.html do
+        if generating_csv?
+          send_data csv_data, filename: "items.csv", type: 'text/csv'
+        else
+          render :index
+        end
+      end
       format.csv do
         send_data csv_data, filename: "#{params[:description]}.csv", type: 'text/csv'
       end
@@ -40,6 +47,10 @@ class Admin::ItemsController < ApplicationController
   end
 
   private
+
+  def generating_csv?
+    params[:commit] == "Generate CSV"
+  end
 
   def item_params
     params.require(:item).permit(:section)

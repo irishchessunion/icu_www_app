@@ -5,7 +5,7 @@ module Admin
     def generate_from_items(items, description = nil)
       CSV.generate do |csv|
         csv << ["Items for #{description} generated on #{Time.now}", '', '', '', '']
-        csv << %w(Description Player ICU# Rating Fee Status Section Email Cart-Email Notes)
+        csv << %w(Date Description Player ICU# Rating Fee Status Section Email Cart-Email Notes)
         items.each do |item|
           if item.player.present?
             name, id, rating, email = item.player.name, item.player.id, item.player.latest_rating, item.player.email
@@ -14,7 +14,7 @@ module Admin
           else
             name, id, rating, email = nil, nil, nil, ''
           end
-          csv << [item.description, name, id, rating, item.cost, item.status, item.section, email, item.email, *item.notes]
+          csv << [item.created_at.strftime("%Y-%m-%d"), item.description, name, id, rating, item.cost, item.status, item.section, email, item.email, *item.notes]
         end
       end
     end
