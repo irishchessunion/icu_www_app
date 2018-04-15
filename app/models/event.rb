@@ -44,11 +44,11 @@ class Event < ActiveRecord::Base
   validates :long, numericality: { greater_than_or_equal_to: -180.0, less_than_or_equal_to: 180.0, message: "must be between ±180.0" }, allow_nil: true
   validates :prize_fund, numericality: { greater_than: 0.0 }, allow_nil: true
   validates :start_date, :end_date, presence: true
-  validates :url, url: true, allow_nil: true
-  validates :pairings_url, url: true, allow_nil: true
-  validates :live_games_url, url: true, allow_nil: true
-  validates :results_url, url: true, allow_nil: true
-  validates :report_url, url: true, allow_nil: true
+  validates :url, url: true, allow_blank: true
+  validates :pairings_url, url: true, allow_blank: true
+  validates :live_games_url, url: true, allow_blank: true
+  validates :results_url, url: true, allow_blank: true
+  validates :report_url, url: true, allow_blank: true
   validates :start_date, date: { on_or_after: :today }, on: :create, unless: Proc.new { |e| e.source == "www1" }
   validates :end_date, date: { on_or_after: :today }, unless: Proc.new { |e| e.source == "www1" }
 
