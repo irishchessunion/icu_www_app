@@ -42,6 +42,22 @@
         %tr
           %th= t("event.url")
           %td= link_to simple_url(@event.url), @event.url, target: "event"
+      - if @event.pairings_url.present?
+        %tr
+          %th= t("event.pairings_url")
+          %td= link_to simple_url(@event.pairings_url), @event.pairings_url, target: "event"
+      - if @event.live_games_url.present?
+        %tr
+          %th= t("event.live_games_url")
+          %td= link_to simple_url(@event.live_games_url), @event.live_games_url, target: "event"
+      - if @event.results_url.present?
+        %tr
+          %th= t("event.results_url")
+          %td= link_to simple_url(@event.results_url), @event.results_url, target: "event"
+      - if @event.report_url.present?
+        %tr
+          %th= t("event.report_url")
+          %td= link_to simple_url(@event.report_url), @event.report_url, target: "event"
       - if @event.flyer.present?
         %tr
           %th= t("event.flyer")

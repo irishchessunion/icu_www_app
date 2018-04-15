@@ -5,7 +5,8 @@ class Event < ActiveRecord::Base
   include Pageable
   include Remarkable
 
-  journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date active category contact email phone url prize_fund note sections], "/events/%d"
+  journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date
+              active category contact email phone url pairings_url results_url report_url live_games_url prize_fund note sections], "/events/%d"
 
   MIN_SIZE = 1.kilobyte
   MAX_SIZE = 3.megabytes
@@ -44,6 +45,10 @@ class Event < ActiveRecord::Base
   validates :prize_fund, numericality: { greater_than: 0.0 }, allow_nil: true
   validates :start_date, :end_date, presence: true
   validates :url, url: true, allow_nil: true
+  validates :pairings_url, url: true, allow_nil: true
+  validates :live_games_url, url: true, allow_nil: true
+  validates :results_url, url: true, allow_nil: true
+  validates :report_url, url: true, allow_nil: true
   validates :start_date, date: { on_or_after: :today }, on: :create, unless: Proc.new { |e| e.source == "www1" }
   validates :end_date, date: { on_or_after: :today }, unless: Proc.new { |e| e.source == "www1" }
 

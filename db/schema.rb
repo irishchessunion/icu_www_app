@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171228231403) do
+ActiveRecord::Schema.define(version: 20180415122643) do
 
   create_table "article_likes", force: :cascade do |t|
     t.integer  "article_id", limit: 4
@@ -194,6 +194,10 @@ ActiveRecord::Schema.define(version: 20171228231403) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "sections",           limit: 255
+    t.string   "pairings_url",       limit: 255
+    t.string   "results_url",        limit: 255
+    t.string   "live_games_url",     limit: 255
+    t.string   "report_url",         limit: 255
   end
 
   add_index "events", ["active"], name: "index_events_on_active", using: :btree
