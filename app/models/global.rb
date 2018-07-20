@@ -22,6 +22,7 @@ module Global
     officer_roles: "descriptions of the various roles within the ICU committee",
     allegro_rules: "rules for all-moves-in-X type time controls",
     rules_discipline: "Rules for discipline of members",
+    privacy_policy: "Privacy policy",
   }
 
   # A list of other ICU page names (which don't have notes).
