@@ -1,5 +1,6 @@
 class PlayersController < ApplicationController
   before_action :set_player, only: [:edit, :update]
+  authorize_resource
 
   def index
     params.delete(:status) if current_user.guest? # guests don't get to search by status

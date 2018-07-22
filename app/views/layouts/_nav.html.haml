@@ -41,10 +41,10 @@
           %li{class: active("games")}= link_to t("game.games"), games_path
           %li{class: active("images")}= link_to t("image.images"), images_path
           %li{class: active("champions")}= link_to t("champion.champions"), champions_path
-          %li{class: active("pages", "juniors")}= link_to t("junior.juniors"), juniors_path
           %li{class: active("pages", "links")}= link_to t("links.links"), links_path
           %li{class: active("news")}= link_to t("news.news"), news_index_path
-          %li{class: active("players")}= link_to t("player.players"), players_path
+          - if can?(:index, Player)
+            %li{class: active("players")}= link_to t("player.players"), players_path
           %li{class: active("sponsors")}= link_to t("sponsor.sponsors"), sponsors_path
           %li{class: active("tournaments")}= link_to t("tournament.tournaments"), tournaments_path
       - if content_for?(:help)

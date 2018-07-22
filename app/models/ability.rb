@@ -93,5 +93,6 @@ class Ability
     can [:manage_profile, :show], Player, id: user.player_id
     can :sales_ledger, Item
     can :download, Game
+    can :index, Player
   end
 end
