@@ -22,8 +22,9 @@
           %li{class: active("icu")}= link_to t("icu.ICU"), icu_index_path
           %li{class: active("icu.documents")}= link_to t("icu.documents"), icu_documents_path
           %li{class: active("icu.officers")}= link_to t("icu.officers"), icu_officers_path
-          %li{class: active("icu.subscribers")}= link_to t("icu.subscribers"), icu_subscribers_path
-          %li{class: active("icu.life_members")}= link_to t("icu.life_members"), icu_life_members_path
+          - if can?(:view, :special_membership)
+            %li{class: active("icu.subscribers")}= link_to t("icu.subscribers"), icu_subscribers_path
+            %li{class: active("icu.life_members")}= link_to t("icu.life_members"), icu_life_members_path
           - if can?(:sales_ledger, Item)
             %li{class: active("item.sales_ledger")}= link_to t("item.sales_ledger"), sales_ledger_admin_items_path
           - if can?(:manage, Document)

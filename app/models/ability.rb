@@ -9,6 +9,8 @@ class Ability
       return
     end
 
+    can :view, :special_membership # Used in IcuController to hide life members and current members
+
     if user.admin?
       can :manage, :all
       return

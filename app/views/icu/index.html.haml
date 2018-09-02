@@ -10,7 +10,8 @@
           %td.text-center{colspan: 2}= link_to t("icu.documents"), icu_documents_path
         %tr
           %td.text-center{width: "50%"}= link_to t("icu.officers"), icu_officers_path
-          %td.text-center{width: "50%"}= link_to t("icu.subscribers"), icu_subscribers_path
+          - if can?(:view, :special_membership)
+            %td.text-center{width: "50%"}= link_to t("icu.subscribers"), icu_subscribers_path
         %tr
           %td.text-center
             - if can?(:sales_ledger, Item)
@@ -18,4 +19,5 @@
             - else
               %strong= t("item.sales_ledger")
               %span.small= t("unauthorized.sign_in")
-          %td.text-center= link_to t("icu.life_members"), icu_life_members_path
+          - if can?(:view, :special_membership)
+            %td.text-center= link_to t("icu.life_members"), icu_life_members_path
