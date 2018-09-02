@@ -1,4 +1,6 @@
 class TournamentsController < ApplicationController
+  authorize_resource
+
   def index
     params[:active] = "true" unless can?(:manage, Tournament)
     @tournaments = Tournament.search(params, tournaments_path)

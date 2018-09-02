@@ -10,6 +10,8 @@ class Ability
     end
 
     can :view, :special_membership # Used in IcuController to hide life members and current members
+    can :index, [Article, Download, Game, Image, Series, Tournament]
+    can :show, [Article, Game, Series, Tournament]
 
     if user.admin?
       can :manage, :all

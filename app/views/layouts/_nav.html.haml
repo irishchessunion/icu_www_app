@@ -34,20 +34,26 @@
           = t("more")
           %b.caret
         %ul.dropdown-menu
-          %li{class: active("articles")}= link_to t("article.articles"), articles_path
-          %li{class: active("series")}= link_to t("article.series.series"), series_index_path
+          - if can?(:index, Article)
+            %li{class: active("articles")}= link_to t("article.articles"), articles_path
+          - if can?(:index, Series)
+            %li{class: active("series")}= link_to t("article.series.series"), series_index_path
           - unless active("pages", "home")
             %li= link_to t("event.calendar"), events_path
-          %li{class: active("downloads")}= link_to t("download.downloads"), downloads_path
-          %li{class: active("games")}= link_to t("game.games"), games_path
-          %li{class: active("images")}= link_to t("image.images"), images_path
+          - if can?(:index, Download)
+            %li{class: active("downloads")}= link_to t("download.downloads"), downloads_path
+          - if can?(:index, Game)
+            %li{class: active("games")}= link_to t("game.games"), games_path
+          - if can?(:index, Image)
+            %li{class: active("images")}= link_to t("image.images"), images_path
           %li{class: active("champions")}= link_to t("champion.champions"), champions_path
           %li{class: active("pages", "links")}= link_to t("links.links"), links_path
           %li{class: active("news")}= link_to t("news.news"), news_index_path
           - if can?(:index, Player)
             %li{class: active("players")}= link_to t("player.players"), players_path
           %li{class: active("sponsors")}= link_to t("sponsor.sponsors"), sponsors_path
-          %li{class: active("tournaments")}= link_to t("tournament.tournaments"), tournaments_path
+          - if can?(:index, Tournament)
+            %li{class: active("tournaments")}= link_to t("tournament.tournaments"), tournaments_path
       - if content_for?(:help)
         %li.dropdown
           = link_to "#", class: "dropdown-toggle", data: { toggle: "dropdown" } do

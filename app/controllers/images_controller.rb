@@ -1,5 +1,6 @@
 class ImagesController < ApplicationController
   def index
+    authorize! :index, Image
     @images = Image.search(params, images_path)
     flash.now[:warning] = t("no_matches") if @images.count == 0
     save_last_search(@images, :images)

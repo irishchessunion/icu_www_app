@@ -1,5 +1,6 @@
 class GamesController < ApplicationController
   def index
+    authorize! :index, Game
     @games = Game.search(params, games_path)
     @download = download_games_path(params) if count_ok?(@games.count) && can?(:download, Game)
     @db_path, @db_text, @db_details = Game.db_link

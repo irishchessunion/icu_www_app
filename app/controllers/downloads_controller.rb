@@ -1,5 +1,6 @@
 class DownloadsController < ApplicationController
   def index
+    authorize! :index, Download
     @downloads = Download.search(params, downloads_path, current_user)
     flash.now[:warning] = t("no_matches") if @downloads.count == 0
     save_last_search(@downloads, :downloads)
