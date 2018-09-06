@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   before_action :load_donate_fee, except: :not_found
 
   def home
-    @news = News.nonjunior.ordered.limit(8)
+    @news = News.active.nonjunior.ordered.limit(8)
     @junior_events = Event.active.junior.where('end_date >= ?', Date.today).ordered.limit(3)
     @irish_events = Event.active.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
     @results = Result.recent
