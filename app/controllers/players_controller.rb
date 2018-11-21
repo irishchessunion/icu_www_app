@@ -1,8 +1,8 @@
 class PlayersController < ApplicationController
   before_action :set_player, only: [:edit, :update]
-  authorize_resource
 
   def index
+    authorize! :index, Player
     params.delete(:status) if current_user.guest? # guests don't get to search by status
     @players = Player.search(params, players_path)
     flash.now[:warning] = t("no_matches") if @players.count == 0
