@@ -11,8 +11,8 @@ gem "jquery-rails"
 gem "cancan", "~> 1.6"
 gem "redis"
 gem "therubyracer", platforms: :ruby
-gem "icu_name"
-gem "icu_utils", "1.3.1", git: 'https://github.com/ninkibah/icu_utils.git'
+gem "icu_name", "1.2.5"
+gem "icu_utils", "1.3.2"
 gem "redcarpet"
 gem "stripe"
 gem "mailgun-ruby", require: "mailgun"
