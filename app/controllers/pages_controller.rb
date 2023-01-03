@@ -44,7 +44,7 @@ class PagesController < ApplicationController
   end
 
   def not_found
-    render file: "#{Rails.root}/public/404", formats: [:html], layout: false, status: 404
+    render file: "#{Rails.root}/public/404.html", formats: [:html], layout: false, status: 404
   end
 
   private

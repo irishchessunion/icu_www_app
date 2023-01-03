@@ -5,7 +5,7 @@ class DateValidator < ActiveModel::EachValidator
     end
     date = ICU::Date.new(value, constraints)
     unless date.valid?
-      record.errors[attribute] << (options[:message] || I18n.t(*date.reasons));
+      record.errors.add attribute, :invalid_date, message: (options[:message] || I18n.t(date.reasons[0], **date.reasons[1]))
     end
   end
 end

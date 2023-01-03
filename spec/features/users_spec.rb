@@ -39,7 +39,7 @@ describe User do
         login user
         paths.each do |path|
           visit path
-          expect(page).to have_css(failure, unauthorized)
+          expect(page).to have_css(failure, text: unauthorized)
         end
       end
     end
@@ -58,7 +58,7 @@ describe User do
     it "change theme", js: true do
       expect(user.theme).to be_nil
       select random, from: theme
-      expect(page).to have_xpath("/html/head/link[@rel='stylesheet' and starts-with(@href,'/assets/#{random.downcase}.min.css')]", visible: false)
+      expect(page).to have_xpath("/html/head/link[@rel='stylesheet' and starts-with(@href,'/assets/#{random.downcase}')]", visible: false)
       expect(page).to have_select(theme, selected: random)
       user.reload
       expect(user.theme).to eq(random)

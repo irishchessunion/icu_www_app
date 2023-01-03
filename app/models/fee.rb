@@ -150,20 +150,24 @@ class Fee < ActiveRecord::Base
   def valid_age_limits
     if min_age || max_age
       unless age_ref_date.present?
-        %i[min_age max_age].each { |m| errors[m] << "Age reference date required" if self.send(m) }
+        # %i[min_age max_age].each { |m| errors[m] << "Age reference date required" if self.send(m) }
+        %i[min_age max_age].each { |m| errors.add(m, "Age reference date required") if self.send(m) }
       end
     end
     if min_age && max_age && min_age > max_age
-      errors[:base] << "Age minimum is greater than maximum"
+    #   errors[:base] << "Age minimum is greater than maximum"
+      errors.add(:base, "Age minimum is greater than maximum")
     end
   end
 
   def valid_rating_limits
     return unless min_rating && max_rating
     if min_rating > max_rating
-      errors[:base] << "Rating minimum is greater than maximum"
+    #   errors[:base] << "Rating minimum is greater than maximum"
+      errors.add(:base, "Rating minimum is greater than maximum")
     elsif min_rating + 100 > max_rating
-      errors[:base] << "Rating limits are too close"
+        #   errors[:base] << "Rating limits are too close"
+      errors.add(:base, "Rating limits are too close")
     end
   end
 end

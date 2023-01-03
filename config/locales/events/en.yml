@@ -9,13 +9,17 @@ en:
     event: Event
     events: Forthcoming Events
     lat: Latitude
+    live_games_url: Live Games URL
     location: Location
     long: Longitude
     map: Forthcoming Events Map
     name: Event name
     start: Start date
+    pairings_url: Pairings URL
     phone: Contact phone
     prize_fund: Prize fund
+    report_url: Report URL
+    results_url: Results URL
     sections: Sections
     url: Event website
     user: Organizer

@@ -17,7 +17,8 @@ module Userinput
         if note.blank?
           error = I18n.t("item.error.user_input.amount.invalid", label: user_input.label)
         else
-          amount = BigDecimal.new(note).round(2)
+          # amount = BigDecimal.new(note).round(2)
+          amount = BigDecimal(note).round(2) # fixes BigDecimal.new deprecation error
           if amount < user_input.min_amount
             error = I18n.t("item.error.user_input.amount.too_small", label: user_input.label, min: user_input.min_amount)
           elsif amount >= Cart::MAX_AMOUNT

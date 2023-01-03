@@ -30,6 +30,6 @@
 
 = render "admin/article_ids/modal", title: t("article.series.add")
 %script
-  = render "article_ids_callback.js"
+  = render(:partial => "article_ids_callback", :handlers => [:erb], :formats => [:js])
 
 

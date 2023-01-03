@@ -1,5 +1,5 @@
 - content_for :javascript do
-  = render "change_type.js"
+  = render(:partial => "change_type", :handlers => [:erb], :formats => [:js])
 
 .row
   .col-sm-2

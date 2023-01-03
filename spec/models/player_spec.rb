@@ -18,7 +18,7 @@ describe Player do
   end
 
   context "conditional validation" do
-    let(:params) { FactoryGirl.attributes_for(:player) }
+    let(:params) { FactoryBot.attributes_for(:player) }
     let(:master) { create(:player) }
 
     it "factory defaults" do
@@ -62,7 +62,7 @@ describe Player do
   end
 
   context "conditional adjustment" do
-    let(:params) { FactoryGirl.attributes_for(:player) }
+    let(:params) { FactoryBot.attributes_for(:player) }
     let(:master) { create(:player) }
 
     it "status" do
@@ -72,7 +72,7 @@ describe Player do
   end
 
   context "phones" do
-    let(:params) { FactoryGirl.attributes_for(:player) }
+    let(:params) { FactoryBot.attributes_for(:player) }
     let(:master) { create(:player) }
 
     it "mobile correction" do

@@ -1,8 +1,8 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :officer do
-    role         "ratings"
-    rank         10
-    executive    true
+    role         { "ratings" }
+    rank         { 10 }
+    executive    { true }
     player
   end
 end

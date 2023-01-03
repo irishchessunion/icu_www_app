@@ -51,6 +51,7 @@ class User < ActiveRecord::Base
 
   def valid_password?(password)
     encrypted_password == User.encrypt_password(password, salt)
+    # true
   end
 
   def status_ok?
@@ -86,7 +87,7 @@ class User < ActiveRecord::Base
 
   # Updates the last_used_at attribute with the current time.
   def used_site_now
-    self.update_attributes(last_used_at: Time.now)
+    self.update(last_used_at: Time.now)
   end
 
   # Cater for a theme getting removed, as Ameila was in Aug 2014 after Bootswatch announced they were dropping it.
@@ -103,7 +104,7 @@ class User < ActiveRecord::Base
   def human_roles(options={})
     return "" if roles.blank?
     roles.split(" ").map do |role|
-      ROLES.include?(role) ? I18n.t("user.role.#{role}", options) : role
+      ROLES.include?(role) ? I18n.t("user.role.#{role}", **options) : role
     end.join(" ")
   end
 
@@ -157,7 +158,7 @@ class User < ActiveRecord::Base
   end
 
   def self.encrypt_password(password, salt)
-    eval(Rails.application.secrets.crypt["password"])
+    eval(Rails.application.secrets.crypt[:password])
   end
 
   def self.random_salt
@@ -234,7 +235,7 @@ class User < ActiveRecord::Base
   end
 
   def verification_param
-    eval(Rails.application.secrets.crypt["verifier"])
+    eval(Rails.application.secrets.crypt[:verifier])
   end
 
   def change_password(old, new_1, new_2)

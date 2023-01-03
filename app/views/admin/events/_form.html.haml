@@ -1,5 +1,5 @@
 - content_for :javascript do
-  = render "utils/file_field.js", param: "flyer"
+  = render(:partial => "utils/file_field", :handlers => [:erb], :formats => [:js], :locals => { :param => "flyer" })
 
 .row
   .col-md-1
@@ -20,7 +20,7 @@
         = render "utils/text_field_for", locals.merge(param: :phone, text: t("event.phone"), width: 4, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :url, text: t("event.url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :pairings_url, text: t("event.pairings_url"), width: 6, mark: "none")
-        = render "utils/text_field_for", locals.merge(param: :live_games_url, text: t("live_games_url"), width: 6, mark: "none")
+        = render "utils/text_field_for", locals.merge(param: :live_games_url, text: t("event.live_games_url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :results_url, text: t("event.results_url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :report_url, text: t("event.report_url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :prize_fund, text: t("event.prize_fund"), width: 2, mark: "none")

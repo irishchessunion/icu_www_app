@@ -189,6 +189,8 @@ describe Player do
       @p << create(:player, first_name: "Robert", last_name: "Zysk", dob: nil, status: "foreign")
       @p << create(:player, first_name: "Magomed", last_name: "Zulfugarli", dob: nil, status: "foreign", fed: "AZE")
       @p << create(:player, first_name: "Jure", last_name: "Zorko", dob: nil, status: "foreign")
+      user = create(:user, player: @p[0])
+      login user
       visit players_path
     end
 

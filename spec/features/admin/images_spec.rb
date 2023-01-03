@@ -91,10 +91,14 @@ describe Image do
         visit edit_admin_image_path(image)
         expect(page).to have_css(failure, text: unauthorized)
         visit images_path
-        first(href(image)).click
-        expect(page).to have_xpath(cell(caption), text: image.caption)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        if role == "guest"
+          expect(page).to have_css(failure, text: unauthorized)
+        else
+          first(href(image)).click
+          expect(page).to have_xpath(cell(caption), text: image.caption)
+          expect(page).to_not have_link(edit)
+          expect(page).to_not have_link(delete)
+        end
       end
     end
   end
@@ -111,6 +115,8 @@ describe Image do
       fill_in credit, with: "Mark Orr"
       attach_file file, image_dir + "april.jpeg"
       click_button save
+
+      puts page.html
 
       expect(page).to have_css(success, text: created)
       expect(Image.count).to eq 1

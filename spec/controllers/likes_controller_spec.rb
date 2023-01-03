@@ -20,11 +20,11 @@ require 'rails_helper'
 
 RSpec.describe LikesController, type: :controller do
 
-  let(:user) { FactoryGirl.create :user }
+  let(:user) { FactoryBot.create :user }
 
-  let(:news) { FactoryGirl.create :news }
+  let(:news) { FactoryBot.create :news }
 
-  let(:article) { FactoryGirl.create :article }
+  let(:article) { FactoryBot.create :article }
 
   # This should return the minimal set of attributes required to create a valid
   # Like. As you add validations to Like, be sure to
@@ -39,7 +39,7 @@ RSpec.describe LikesController, type: :controller do
     context "with valid params" do
       it "creates a new Like" do
         expect {
-          post :create, {news_id: news.id}, valid_session
+          post :create, params: {news_id: news.id}, session: valid_session
         }.to change(NewsLike, :count).by(1)
       end
     end
@@ -49,7 +49,7 @@ RSpec.describe LikesController, type: :controller do
     context "with valid params" do
       it "creates a new Like" do
         expect {
-          post :create, {article_id: article.id}, valid_session
+          post :create, params: {article_id: article.id}, session: valid_session
         }.to change(ArticleLike, :count).by(1)
       end
     end
@@ -59,7 +59,7 @@ RSpec.describe LikesController, type: :controller do
     it "destroys the requested like" do
       like = NewsLike.create!(user: user, news: news)
       expect {
-        delete :destroy, {id: like.to_param, news_id: news.id}, valid_session
+        delete :destroy, params: {id: like.to_param, news_id: news.id}, session: valid_session
       }.to change(NewsLike, :count).by(-1)
     end
   end
@@ -68,7 +68,7 @@ RSpec.describe LikesController, type: :controller do
     it "destroys the requested like" do
       like = ArticleLike.create!(user: user, article: article)
       expect {
-        delete :destroy, {id: like.to_param, article_id: article.id}, valid_session
+        delete :destroy, params: {id: like.to_param, article_id: article.id}, session: valid_session
       }.to change(ArticleLike, :count).by(-1)
     end
   end

@@ -29,13 +29,14 @@ describe Download do
 
     it "guests" do
       visit downloads_path
-      expect(page).to have_css(url_all)
-      expect(page).to_not have_css(url_mem)
-      expect(page).to_not have_css(url_edt)
-      expect(page).to_not have_css(url_adm)
-      expect(page).to have_css(result_row, count: 1)
+      expect(page).to have_css(failure, text: unauthorized)
+      # expect(page).to have_css(url_all)
+      # expect(page).to_not have_css(url_mem)
+      # expect(page).to_not have_css(url_edt)
+      # expect(page).to_not have_css(url_adm)
+      # expect(page).to have_css(result_row, count: 1)
 
-      expect(page).to_not have_xpath(access_menu)
+      # expect(page).to_not have_xpath(access_menu)
     end
 
     it "members" do

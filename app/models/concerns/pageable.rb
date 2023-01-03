@@ -87,7 +87,7 @@ module Pageable
     def query_params(page)
       params = @params.dup
       [:action, :controller, :button, :utf8].each { |key| params.delete(key) }
-      params.merge(page: page).to_query
+      params.permit!.merge(page: page).to_query # WARNING!!! Security risk. Must create a whitelist of possible search params and manually whitelist them
     end
   end
 end

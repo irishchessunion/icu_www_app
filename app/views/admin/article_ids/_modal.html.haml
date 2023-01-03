@@ -8,4 +8,4 @@
         = render "admin/article_ids/search_form"
         #article_ids_results
 %script
-  = render "admin/article_ids/attach_callbacks.js"
+  = render(:partial => "admin/article_ids/attach_callbacks", :handlers => [:erb], :formats => [:js])

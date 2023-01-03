@@ -4,7 +4,7 @@
   = javascript_include_tag "spin.js"
   = javascript_include_tag "payment.js"
 - content_for :javascript do
-  = render "card.js"
+  = render(:partial => "card", :handlers => [:erb], :formats => [:js])
 - if Rails.env.production?
   - content_for :includes do
     = javascript_include_tag "switch_from_tls.js"

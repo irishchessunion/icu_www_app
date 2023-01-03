@@ -1,6 +1,6 @@
 - content_for :title, "Edit Officer"
 - content_for :javascript do
-  = render "player_ids_callback.js"
+  = render(:partial => "player_ids_callback", :handlers => [:erb], :formats => [:js])
 
 = render "player_ids/modal", title: t("officer.select_incumbent")
 

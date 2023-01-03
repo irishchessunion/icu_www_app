@@ -15,4 +15,4 @@
 %hr
 
 %script
-  = render "player_ids/onchange.js", form_id: "player_ids_form"
+  = render(:partial => "player_ids/onchange", :handlers => [:erb], :formats => [:js], :locals => { :form_id => "player_ids_form" })

@@ -1,5 +1,5 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cart do
-    status "unpaid"
+    status { "unpaid" }
   end
 end

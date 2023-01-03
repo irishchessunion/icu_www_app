@@ -74,7 +74,8 @@ class Club < ActiveRecord::Base
 
   def has_contact_method
     if active && !contactable?
-      errors[:base] << "An active club must have at least one contact method (phone, email or web)"
+    #   errors[:base] << "An active club must have at least one contact method (phone, email or web)"
+      errors.add(:base, "An active club must have at least one contact method (phone, email or web)")
     end
   end
 

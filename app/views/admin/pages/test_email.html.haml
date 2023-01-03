@@ -1,6 +1,6 @@
 - content_for :title, "Test Email"
 - content_for :javascript do
-  = render "test_email.js"
+  = render(:partial => "test_email", :handlers => [:erb], :formats => [:js])
 
 #message_container.row{style: "display: none"}
   .col-sm-12

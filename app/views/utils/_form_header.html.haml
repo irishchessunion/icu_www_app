@@ -5,8 +5,12 @@
     - type = object.class.to_s.underscore.titleize
   - if object.new_record?
     - header = "New #{type}"
+  - elsif not atr
+    - header = "Edit #{type}"
+  - elsif atr.class == String or atr.class == Symbol
+    - header = "Edit #{object.send(atr)}"
   - else
-    - header = "Edit #{atr ? object.send(*atr) : type}"
+    - header = "Edit #{object.send(atr[0], **atr[1])}"
 
 %h3.text-center= header
 %hr

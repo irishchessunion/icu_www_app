@@ -11,7 +11,7 @@ describe GamesController do
     end
 
     it "one game" do
-      get :show, id: game.id, format: "pgn"
+      get :show, params: { id: game.id, format: "pgn" }
       expect(response).to_not be_redirect
       expect(response.body).to eq game.to_pgn
       expect(response.content_type).to eq "application/x-chess-pgn"

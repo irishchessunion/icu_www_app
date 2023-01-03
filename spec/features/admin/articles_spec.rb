@@ -13,7 +13,8 @@ describe Article do
     let!(:header)  { "h1" }
     let(:level1)   { ["admin", user] }
     let(:level2)   { ["editor"] }
-    let(:level3)   { User::ROLES.reject { |r| level1.include?(r) || level2.include?(r) }.append("guest") }
+    let(:level3)   { User::ROLES.reject { |r| level1.include?(r) || level2.include?(r) } }
+    let(:level4)   { %w[guest] }
     let(:user)     { create(:user, roles: "editor") }
 
     it "level 1 can update and delete as well as create and show" do
@@ -58,6 +59,18 @@ describe Article do
         expect(page).to have_css(header, text: article.title)
         expect(page).to_not have_link(edit)
         expect(page).to_not have_link(delete)
+      end
+    end
+    
+    it "level 4 cannot see anything" do
+      level4.each do |role|
+        login role
+        visit new_admin_article_path
+        expect(page).to have_css(failure, text: unauthorized)
+        visit edit_admin_article_path(article)
+        expect(page).to have_css(failure, text: unauthorized)
+        visit articles_path
+        expect(page).to have_css(failure, text: unauthorized)
       end
     end
   end

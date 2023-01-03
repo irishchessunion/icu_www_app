@@ -40,14 +40,14 @@ RSpec.describe Admin::SponsorsController, type: :controller do
   describe "GET #show" do
     it "assigns the requested sponsor as @sponsor" do
       sponsor = Sponsor.create! valid_attributes
-      get :show, {:id => sponsor.to_param}, valid_session
+      get :show, params: {:id => sponsor.to_param}, session: valid_session
       expect(assigns(:sponsor)).to eq(sponsor)
     end
   end
 
   describe "GET #new" do
     it "assigns a new sponsor as @sponsor" do
-      get :new, {}, valid_session
+      get :new, params: {}, session: valid_session
       expect(assigns(:sponsor)).to be_a_new(Sponsor)
     end
   end
@@ -55,7 +55,7 @@ RSpec.describe Admin::SponsorsController, type: :controller do
   describe "GET #edit" do
     it "assigns the requested sponsor as @sponsor" do
       sponsor = Sponsor.create! valid_attributes
-      get :edit, {:id => sponsor.to_param}, valid_session
+      get :edit, params: {:id => sponsor.to_param}, session: valid_session
       expect(assigns(:sponsor)).to eq(sponsor)
     end
   end
@@ -64,30 +64,30 @@ RSpec.describe Admin::SponsorsController, type: :controller do
     context "with valid params" do
       it "creates a new Sponsor" do
         expect {
-          post :create, {:sponsor => valid_attributes}, valid_session
+          post :create, params: {:sponsor => valid_attributes}, session: valid_session
         }.to change(Sponsor, :count).by(1)
       end
 
       it "assigns a newly created sponsor as @sponsor" do
-        post :create, {:sponsor => valid_attributes}, valid_session
+        post :create, params: {:sponsor => valid_attributes}, session: valid_session
         expect(assigns(:sponsor)).to be_a(Sponsor)
         expect(assigns(:sponsor)).to be_persisted
       end
 
       it "redirects to the created sponsor" do
-        post :create, {:sponsor => valid_attributes}, valid_session
+        post :create, params: {:sponsor => valid_attributes}, session: valid_session
         expect(response).to redirect_to([:admin, Sponsor.last])
       end
     end
 
     context "with invalid params" do
       it "assigns a newly created but unsaved sponsor as @sponsor" do
-        post :create, {:sponsor => invalid_attributes}, valid_session
+        post :create, params: {:sponsor => invalid_attributes}, session: valid_session
         expect(assigns(:sponsor)).to be_a_new(Sponsor)
       end
 
       it "re-renders the 'new' template" do
-        post :create, {:sponsor => invalid_attributes}, valid_session
+        post :create, params: {:sponsor => invalid_attributes}, session: valid_session
         expect(response).to render_template("new")
       end
     end
@@ -101,7 +101,7 @@ RSpec.describe Admin::SponsorsController, type: :controller do
 
       it "updates the requested sponsor" do
         sponsor = Sponsor.create! valid_attributes
-        put :update, {:id => sponsor.to_param, :sponsor => new_attributes}, valid_session
+        put :update, params: {:id => sponsor.to_param, :sponsor => new_attributes}, session: valid_session
         sponsor.reload
         expect(sponsor.weight).to eq(200)
         expect(sponsor.contact_email).to eq('another_bloke@gmail.com')
@@ -110,13 +110,13 @@ RSpec.describe Admin::SponsorsController, type: :controller do
 
       it "assigns the requested sponsor as @sponsor" do
         sponsor = Sponsor.create! valid_attributes
-        put :update, {:id => sponsor.to_param, :sponsor => valid_attributes}, valid_session
+        put :update, params: {:id => sponsor.to_param, :sponsor => valid_attributes}, session: valid_session
         expect(assigns(:sponsor)).to eq(sponsor)
       end
 
       it "redirects to the sponsor" do
         sponsor = Sponsor.create! valid_attributes
-        put :update, {:id => sponsor.to_param, :sponsor => valid_attributes}, valid_session
+        put :update, params: {:id => sponsor.to_param, :sponsor => valid_attributes}, session: valid_session
         expect(response).to redirect_to([:admin, sponsor])
       end
     end
@@ -124,13 +124,13 @@ RSpec.describe Admin::SponsorsController, type: :controller do
     context "with invalid params" do
       it "assigns the sponsor as @sponsor" do
         sponsor = Sponsor.create! valid_attributes
-        put :update, {:id => sponsor.to_param, :sponsor => invalid_attributes}, valid_session
+        put :update, params: {:id => sponsor.to_param, :sponsor => invalid_attributes}, session: valid_session
         expect(assigns(:sponsor)).to eq(sponsor)
       end
 
       it "re-renders the 'edit' template" do
         sponsor = Sponsor.create! valid_attributes
-        put :update, {:id => sponsor.to_param, :sponsor => invalid_attributes}, valid_session
+        put :update, params: {:id => sponsor.to_param, :sponsor => invalid_attributes}, session: valid_session
         expect(response).to render_template("edit")
       end
     end

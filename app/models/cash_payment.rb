@@ -31,6 +31,7 @@ class CashPayment
       self.last_name = icu_name.last
     end
     self.email = email.present? ? email.gsub(/\s+/, "") : nil
-    self.amount = BigDecimal.new(amount).round(2) if amount.present?
+    # fixed BigDecimal error
+    self.amount = BigDecimal(amount).round(2) if amount.present?
   end
 end

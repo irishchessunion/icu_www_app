@@ -4,6 +4,7 @@ require File.expand_path('../boot', __FILE__)
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
+# require "active_support"
 require "sprockets/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -29,7 +30,15 @@ module IcuWwwApp
     # Enable locale fallbacks for I18n for all environments.
     config.i18n.fallbacks = true
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
+    # Do not swallow errors in after_commit/after_rollback callbacks. (no longer a valid option)
+    # config.active_record.raise_in_transactional_callbacks = true
+
+    # Removes deprecation warning
+    config.active_record.legacy_connection_handling = false
+
+    # Rails 6.1.6.1 fix as serialisation changed, better fix in the future is to move to JSON
+    # config.active_record.yaml_column_permitted_classes = [Regexp]
+    # slightly unsecure fix
+    config.active_record.use_yaml_unsafe_load
   end
 end

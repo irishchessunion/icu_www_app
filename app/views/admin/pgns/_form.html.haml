@@ -1,5 +1,5 @@
 - content_for :javascript do
-  = render "utils/file_field.js", param: "file"
+  = render(:partial => "utils/file_field", :handlers => [:erb], :formats => [:js], :locals => { :param => "file" })
 
 - new_record = @pgn.new_record?
 

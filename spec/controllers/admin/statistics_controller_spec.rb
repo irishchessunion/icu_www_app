@@ -27,7 +27,7 @@ RSpec.describe Admin::StatisticsController, type: :controller do
 
   describe "GET #index" do
     it "assigns all admin_statistics as @admin_statistics" do
-      get :index, {}, valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:statistics).length).to eq(3)
     end
   end

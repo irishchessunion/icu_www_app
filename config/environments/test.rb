@@ -32,14 +32,15 @@ IcuWwwApp::Application.configure do
   config.action_mailer.delivery_method = :test
   config.action_mailer.default_url_options = { :host => "www.icu.ie" }
 
-  # Randomize the order test cases are executed (see also spec_helper.rb).
+  # Randomize the order test cases are executed (see also rails_helper.rb).
   # config.active_support.test_order = :random
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
   # Raises error for missing translations
-  config.action_view.raise_on_missing_translations = true
+  config.i18n.raise_on_missing_translations = true
+#   config.action_view.raise_on_missing_translations = true
 end
 
 # The new (in 4.1) "config.action_view.raise_on_missing_translations" doesn't seem to work, so we keep this.

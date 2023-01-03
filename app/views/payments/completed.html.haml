@@ -1,6 +1,6 @@
 - content_for :title, t("shop.cart.completed")
 - content_for :javascript do
-  = render "toggle_cart.js"
+  = render(:partial => "toggle_cart", :handlers => [:erb], :formats => [:js])
 
 %h3.text-center= t("shop.cart.completed")
 %hr

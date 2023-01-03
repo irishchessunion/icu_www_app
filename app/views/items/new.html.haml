@@ -1,6 +1,6 @@
 - content_for :title, t("fee.type.#{@fee.subtype}")
 - content_for :javascript do
-  = render "utils.js"
+  = render(:partial => "utils", :handlers => [:erb], :formats => [:js])
 
 = form_for @item do |form|
   = form.hidden_field :type
@@ -35,8 +35,8 @@
 - if @fee.player_required
   = render "player_ids/modal", title: t("item.member.select")
   %script
-    = render "player_ids_callback.js"
+    = render(:partial => "player_ids_callback", :handlers => [:erb], :formats => [:js])
   - if @fee.new_player_allowed?
     = render "new_players/modal", title: t("item.member.new")
     %script
-      = render "new_player_callback.js"
+      = render(:partial => "new_player_callback", :handlers => [:erb], :formats => [:js])

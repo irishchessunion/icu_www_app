@@ -25,14 +25,14 @@ RSpec.describe PasswordsController, type: :controller do
 
   describe "GET #new" do
     it "doesnt throw exceptions" do
-      get :new, {}, {}
+      get :new, params: {}, session: {}
     end
   end
 
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Password" do
-        post :create, {:email => user.email}, {}
+        post :create, params: {:email => user.email}, session: {}
 
         user.reload
 
@@ -41,14 +41,14 @@ RSpec.describe PasswordsController, type: :controller do
       end
 
       it "redirects to the created password" do
-        post :create, {:email => user.email}, {}
+        post :create, params: {:email => user.email}, session: {}
         expect(response).to redirect_to(root_path)
       end
     end
 
     context "with invalid params" do
       it "re-renders the 'new' template" do
-        post :create, {:email => 'bademail@abc.com'}, {}
+        post :create, params: {:email => 'bademail@abc.com'}, session: {}
         expect(response).to redirect_to(new_password_path)
       end
     end
@@ -56,16 +56,16 @@ RSpec.describe PasswordsController, type: :controller do
 
   describe "GET #edit" do
     it "doesnt throw exceptions" do
-      user.update_attributes(reset_password_token: '123', reset_password_sent_at: Time.now)
-      get :edit, {reset_password_token: '123'}, {}
+      user.update(reset_password_token: '123', reset_password_sent_at: Time.now)
+      get :edit, params: {reset_password_token: '123'}, session: {}
     end
   end
 
   describe "PUT #update" do
     context "with valid params" do
       it "sets a new Password" do
-        user.update_attributes(reset_password_token: '123', reset_password_sent_at: Time.now)
-        put :update, {new_password: '123456', new_password_confirmation: '123456', token: '123'}, {}
+        user.update(reset_password_token: '123', reset_password_sent_at: Time.now)
+        put :update, params: {new_password: '123456', new_password_confirmation: '123456', token: '123'}, session: {}
         user.reload
         expect(user.reset_password_token).to be nil
         expect(user.reset_password_sent_at).to be nil

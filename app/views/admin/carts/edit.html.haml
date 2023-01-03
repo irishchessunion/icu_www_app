@@ -1,6 +1,6 @@
 - content_for :title, "Refund"
 - content_for :javascript do
-  = render "refund.js"
+  = render(:partial => "refund", :handlers => [:erb], :formats => [:js])
 - content_for :includes do
   = javascript_include_tag "spin.js"
 

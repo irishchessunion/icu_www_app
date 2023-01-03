@@ -266,7 +266,7 @@ describe User do
       expect(page).to have_xpath(@xpath, count: @total - 2)
       select "Not OK", from: status
       click_button search
-      expect(page).to have_xpath(@xpath, 2)
+      expect(page).to have_xpath(@xpath, count: 2)
     end
 
     it "verified" do

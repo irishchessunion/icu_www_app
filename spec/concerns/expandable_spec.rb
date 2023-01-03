@@ -14,7 +14,7 @@ describe Expandable do
 
   context "articles" do
     let(:article) { create(:article) }
-    let(:title) { Faker::Lorem.sentence(4) }
+    let(:title) { Faker::Lorem.sentence(word_count: 4) }
     let(:link)  { '<a href="/articles/%d">%s</a>' }
 
     it "default title" do

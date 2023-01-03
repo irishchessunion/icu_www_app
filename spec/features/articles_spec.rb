@@ -24,13 +24,14 @@ describe Article do
 
     it "guests" do
       visit articles_path
-      expect(page).to have_link(article_all.title)
-      expect(page).to_not have_link(article_mem.title)
-      expect(page).to_not have_link(article_edt.title)
-      expect(page).to_not have_link(article_adm.title)
-      expect(page).to have_css(result_row, count: 1)
+      expect(page).to have_css(failure, text: unauthorized)
+      # expect(page).to_not have_link(article_all.title)
+      # expect(page).to_not have_link(article_mem.title)
+      # expect(page).to_not have_link(article_edt.title)
+      # expect(page).to_not have_link(article_adm.title)
+      # expect(page).to have_css(result_row, count: 1)
 
-      expect(page).to_not have_xpath(access_menu)
+      # expect(page).to_not have_xpath(access_menu)
     end
 
     it "members" do

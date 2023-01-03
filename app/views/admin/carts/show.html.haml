@@ -1,7 +1,7 @@
 - content_for :title, "Cart"
 - add_help("treasurer")
 - content_for :javascript do
-  = render "modal_control.js"
+  = render(:partial => "modal_control", :handlers => [:erb], :formats => [:js])
 - if @cart.payment_ref.present?
   - content_for :includes do
     = javascript_include_tag "spin.js"

@@ -23,8 +23,9 @@ class SeasonTicket
 
   def self.standard_config?
     return @standard_config unless @icu_config.nil?
+    # changed k.to_s to k as it requires a symbol not a string now
     @standard_config = { base: "af1d3f65fe9dd2b10739ae81a846bd8e", shuffle: "395d57908a4ffffca42f04a1db5af010" }.inject(true) do |m, (k,v)|
-      m && Digest::MD5.hexdigest(Rails.application.secrets.season_ticket[k.to_s]) == v
+      m && Digest::MD5.hexdigest(Rails.application.secrets.season_ticket[k]) == v
     end
   end
 
@@ -35,7 +36,7 @@ class SeasonTicket
   private
 
   def base
-    Rails.application.secrets.season_ticket["base"]
+    Rails.application.secrets.season_ticket[:base]
   end
 
   def encode
@@ -50,7 +51,7 @@ class SeasonTicket
   end
 
   def shuffle(str)
-    eval(Rails.application.secrets.season_ticket["shuffle"])
+    eval(Rails.application.secrets.season_ticket[:shuffle])
   end
 
   def to_decimal(str)

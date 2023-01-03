@@ -36,7 +36,7 @@ RSpec.describe SponsorsController, type: :controller do
   describe "GET #index" do
     it "assigns all sponsors as @sponsors" do
       sponsor = Sponsor.create! valid_attributes
-      get :index, {}, valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:sponsors).matches).to eq([sponsor])
     end
   end

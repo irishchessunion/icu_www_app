@@ -196,7 +196,7 @@ class Game < ActiveRecord::Base
 
   def self.db_link
     path, text, details = nil, nil
-    if File.exists?(ZIP_FILE)
+    if File.exist?(ZIP_FILE)
       path = "/#{ZIP_FILE.relative_path_from(Rails.root + 'public')}"
       text = I18n.t("game.pgn.download.db")
       last_mod, count = get_last_pgn_db

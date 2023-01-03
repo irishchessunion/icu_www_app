@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Result do
-  let(:user) {FactoryGirl.create :user}
+  let(:user) {FactoryBot.create :user}
 
   context "normal reporter" do
     it "can create Result" do

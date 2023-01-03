@@ -1,15 +1,14 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :news do
-    active   true
-    summary  { Faker::Lorem.sentence(2) }
-    headline { Faker::Lorem.sentence(4) }
+    active   { true }
+    summary  { Faker::Lorem.sentence(word_count: 2) }
+    headline { Faker::Lorem.sentence(word_count: 4) }
     user
     date     { Date.today }
 
     factory :news_extra do
-      summary do
-        <<-EON
-Womens Officer Gearóidín Uí Laighléis has news of upcoming events both at
+      summary do 
+        "Womens Officer Gearóidín Uí Laighléis has news of upcoming events both at
 home and abroad.
 
 #### Galway Blitz
@@ -22,9 +21,7 @@ in The Bridge Club. This will take place at the same time as John Alfred's
 
 Also, there will be a [Ladies Open](http://www.scandinavian-chess.se/index.asp)
 in Täby, Sweden from 20-25 March. Some Irish ladies have already expressed an interest.
-I'm working on it &#9786;. It would be lovely if a crowd of us could go over.
-
-EON
+I'm working on it &#9786;. It would be lovely if a crowd of us could go over."
       end
     end
   end

@@ -41,7 +41,7 @@ describe Login do
       @user[:expired]    = login create(:user, expires_on: Date.today.years_ago(2).end_of_year)
       @user[:unverified] = login create(:user, verified_at: nil)
       @user[:status]     = login create(:user, status: "Undesirable")
-      @user[:password]   = login create(:user), password: "wrong password"
+      @user[:password]   = login create(:user), :password => "wrong password"
       @user[:ip]         = create(:user)
       @login             = create(:login, user: @user[:ip], ip: "198.168.0.1")
       @user[:admin]      = login "admin"
