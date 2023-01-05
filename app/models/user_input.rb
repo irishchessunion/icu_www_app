@@ -1,4 +1,4 @@
-class UserInput < ActiveRecord::Base
+class UserInput < ApplicationRecord
   include Pageable # for journal entries, not UserInputs
   include Journalable
 

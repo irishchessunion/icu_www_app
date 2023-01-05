@@ -1,4 +1,4 @@
-class Pgn < ActiveRecord::Base
+class Pgn < ApplicationRecord
   include Journalable
   include Normalizable
   include Pageable

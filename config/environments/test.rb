@@ -57,3 +57,5 @@ module I18n
   end
 end
 I18n.exception_handler = I18n::JustRaiseExceptionHandler.new
+
+Paperclip::Attachment.default_options[:path] = "#{Rails.root}/spec/test_files/:class/:id_partition/:style.:extension"

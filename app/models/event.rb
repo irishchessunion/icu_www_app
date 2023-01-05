@@ -1,4 +1,4 @@
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
   include Geocodable
   include Journalable
   include Normalizable
@@ -82,7 +82,8 @@ class Event < ActiveRecord::Base
 
   # @return [Array<Item::Entry>] belonging to this event
   def items
-    Item::Entry.joins(:fee).joins(:player).where("fees.event_id=?", id).order("coalesce(players.latest_rating, players.legacy_rating) desc")
+    # should be safe since ID is not a user entered value and using the normal syntax throws errors
+    Item::Entry.joins(:fee).joins(:player).where("fees.event_id=?", id).order(Arel.sql("coalesce(players.latest_rating, players.legacy_rating) desc"))
   end
 
   # @return [Array<String>] A collection of section names for this event. Mostly "Minor", "Intermediate", "Major", "Masters"

@@ -1,3 +1,5 @@
+require 'mail'
+
 module Global
   # Indicates whether data comes from the legacy database and website (www1) or this one (www2).
   SOURCES = %w[www1 www2]

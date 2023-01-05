@@ -1,4 +1,4 @@
-class Cart < ActiveRecord::Base
+class Cart < ApplicationRecord
   include Pageable
   include Payable
 

@@ -35,10 +35,5 @@ module IcuWwwApp
 
     # Removes deprecation warning
     config.active_record.legacy_connection_handling = false
-
-    # Rails 6.1.6.1 fix as serialisation changed, better fix in the future is to move to JSON
-    # config.active_record.yaml_column_permitted_classes = [Regexp]
-    # slightly unsecure fix
-    config.active_record.use_yaml_unsafe_load
   end
 end

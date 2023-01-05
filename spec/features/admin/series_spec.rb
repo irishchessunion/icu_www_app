@@ -13,7 +13,8 @@ describe Series do
   context "authorization" do
     let!(:header)  { "h1" }
     let(:level1)   { %w[admin editor] }
-    let(:level2)   { User::ROLES.reject { |r| level1.include?(r) }.append("guest") }
+    let(:level2)   { User::ROLES.reject { |r| level1.include?(r) } }
+    let(:level3)   { %w[guest] }
     let!(:series)  { create(:series) }
 
     it "level 1 can manage" do
@@ -43,6 +44,18 @@ describe Series do
         expect(page).to have_css(header, text: series.title)
         expect(page).to_not have_link(edit)
         expect(page).to_not have_link(delete)
+      end
+    end
+
+    it "level 3 cannot view anything" do
+      level3.each do |role|
+        login role
+        visit new_admin_series_path
+        expect(page).to have_css(failure, text: unauthorized)
+        visit edit_admin_series_path(series)
+        expect(page).to have_css(failure, text: unauthorized)
+        visit series_index_path
+        expect(page).to have_css(failure, text: unauthorized)
       end
     end
   end
@@ -179,7 +192,7 @@ describe Series do
 
     it "title" do
       new_title = "New Series Title"
-      fill_in series_title, with: new_title
+      fill_in series_title, with: new_title, fill_options: { clear: :backspace }
       click_button save
 
       wait_a_second(0.4)

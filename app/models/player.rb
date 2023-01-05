@@ -1,4 +1,4 @@
-class Player < ActiveRecord::Base
+class Player < ApplicationRecord
   extend Util::Params
   extend ICU::Util::AlternativeNames
   include Journalable

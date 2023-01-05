@@ -18,7 +18,7 @@ module Util
 
     def to_s(obj)
       case obj
-      when DateTime then obj.to_s(:db)
+      when DateTime then obj.to_fs(:db)
       else obj.to_s
       end
     end

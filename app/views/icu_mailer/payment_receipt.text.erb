@@ -1,1 +1,1 @@
-<%= render "payment_receipt.text", cart: @cart %>
+<%= render :partial => "payment_receipt", :handlers => [:erb], :formats => [:text], :locals => { :cart => @cart } %>

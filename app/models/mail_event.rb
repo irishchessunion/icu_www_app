@@ -1,4 +1,4 @@
-class MailEvent < ActiveRecord::Base
+class MailEvent < ApplicationRecord
   include Pageable
 
   CODES = {

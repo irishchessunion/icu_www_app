@@ -61,7 +61,8 @@ class Admin::SeriesController < ApplicationController
   end
 
   def add_episodes
-    article_ids = @series.articles(true).map(&:id)
+    # article_ids = @series.articles(true).map(&:id)
+    article_ids = @series.articles.map(&:id)
     new_ids = id_num_pairs.reject{ |pair| article_ids.include?(pair[:id]) }
     new_ids.each do |pair|
       article = Article.find_by(id: pair[:id])

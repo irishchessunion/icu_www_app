@@ -7,6 +7,7 @@ class Admin::EventsController < ApplicationController
   end
 
   def create
+    puts event_params
     @event = Event.new(event_params)
     @event.user_id = current_user.id
 

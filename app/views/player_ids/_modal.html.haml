@@ -7,5 +7,5 @@
       .modal-body
         = render "player_ids/search_form"
         #player_ids_results
--# %script
--#   = render(:partial => "player_ids/onchange", :handlers => [:erb], :formats => [:js], :locals => { :form_id => "player_ids_form" })
+%script
+  = render(:partial => "player_ids/attach_callbacks", :formats => [:js])

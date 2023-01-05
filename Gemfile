@@ -16,7 +16,7 @@ gem "jquery-rails"
 gem "cancancan" # cancan is no longer maintained, newer version is cancancan
 gem "redis"
 # gem "therubyracer", platforms: :ruby # (no longer needed)
-gem "icu_name", "1.2.6"
+gem "icu_name", "1.3.0"
 gem "icu_utils", "1.3.3"
 gem "redcarpet"
 gem "stripe"

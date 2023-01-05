@@ -1,4 +1,4 @@
-class Club < ActiveRecord::Base
+class Club < ApplicationRecord
   include Geocodable
   include Journalable
   include Normalizable

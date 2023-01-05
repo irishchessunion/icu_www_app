@@ -1,11 +1,11 @@
-class Series < ActiveRecord::Base
+class Series < ApplicationRecord
   include Journalable
   include Pageable
 
   journalize %w[title], "/series/%d"
 
-  has_many :articles, through: :episodes
   has_many :episodes, dependent: :delete_all
+  has_many :articles, through: :episodes
 
   validates :title, presence: true, uniqueness: true
 

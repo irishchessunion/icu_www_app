@@ -120,19 +120,20 @@ describe Item::Subscription do
 
   context "player data" do
     let(:new_player_json) { build(:new_player).to_json }
+    let(:subscription_fee) { create(:subscription_fee) }
 
     it "blank" do
-      item = build(:subscription_item, player_data: "")
+      item = build(:subscription_item, fee: subscription_fee, player_data: "")
       expect(item).to be_valid
       expect(item.player_data).to be_nil
     end
 
     it "present with player" do
-      expect(build(:subscription_item, player_data: new_player_json)).to be_valid
+      expect(build(:subscription_item, fee: subscription_fee, player_data: new_player_json)).to be_valid
     end
 
     it "present without player" do
-      expect(build(:subscription_item, player_data: new_player_json, player: nil)).to be_valid
+      expect(build(:subscription_item, fee: subscription_fee, player_data: new_player_json, player: nil)).to be_valid
     end
   end
 end

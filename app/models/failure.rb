@@ -1,4 +1,4 @@
-class Failure < ActiveRecord::Base
+class Failure < ApplicationRecord
   include Pageable
 
   scope :ordered, -> { order(created_at: :desc) }

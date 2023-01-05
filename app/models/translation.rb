@@ -1,4 +1,4 @@
-class Translation < ActiveRecord::Base
+class Translation < ApplicationRecord
   include Journalable
   include Pageable
 

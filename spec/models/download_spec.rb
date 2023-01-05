@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe Download do
   context "years in description" do
-    let(:download) { build(:download, year: 2014) }
+    let(:user)     { create(:user, id: 10) }
+    let(:download) { build(:download, year: 2014, user: user) }
 
     it "no numbers" do
       download.description = "No numbers"

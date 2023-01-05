@@ -3,7 +3,7 @@ class EmailListValidator < ActiveModel::EachValidator
     emails = value.to_s.split(", ")
     valids = emails.select { |email| Global.valid_email?(email) }
     unless emails.any? && emails.size == valids.size
-      record.errors[attribute] << (options[:message] || I18n.t("errors.messages.invalid"));
+      record.errors.add attribute, message: (options[:message] || I18n.t("errors.messages.invalid"));
     end
   end
 end

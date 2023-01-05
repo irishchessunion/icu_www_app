@@ -1,4 +1,4 @@
-class Game < ActiveRecord::Base
+class Game < ApplicationRecord
   include Journalable
   include Normalizable
   include Pageable

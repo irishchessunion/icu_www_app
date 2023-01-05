@@ -1,4 +1,4 @@
-class Article < ActiveRecord::Base
+class Article < ApplicationRecord
   include Accessible
   include Expandable
   include Journalable

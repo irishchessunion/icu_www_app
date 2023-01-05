@@ -1,4 +1,4 @@
-class JournalEntry < ActiveRecord::Base
+class JournalEntry < ApplicationRecord
   include Pageable
 
   belongs_to :journalable, polymorphic: true

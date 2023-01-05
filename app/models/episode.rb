@@ -1,4 +1,4 @@
-class Episode < ActiveRecord::Base
+class Episode < ApplicationRecord
   belongs_to :article
   belongs_to :series
 

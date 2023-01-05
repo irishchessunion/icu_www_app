@@ -1,4 +1,4 @@
-class Sponsor < ActiveRecord::Base
+class Sponsor < ApplicationRecord
   include Journalable
   include Normalizable
   include Pageable

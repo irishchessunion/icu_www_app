@@ -1,4 +1,4 @@
-class PaymentError < ActiveRecord::Base
+class PaymentError < ApplicationRecord
   include Pageable
 
   belongs_to :cart

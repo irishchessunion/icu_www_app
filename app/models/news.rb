@@ -1,4 +1,4 @@
-class News < ActiveRecord::Base
+class News < ApplicationRecord
   include Expandable
   include Normalizable
   include Pageable

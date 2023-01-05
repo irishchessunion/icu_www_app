@@ -1,4 +1,4 @@
-class Champion < ActiveRecord::Base
+class Champion < ApplicationRecord
   include Expandable
   include Journalable
   include Normalizable

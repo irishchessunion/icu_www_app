@@ -1,4 +1,4 @@
-class BadLogin < ActiveRecord::Base
+class BadLogin < ApplicationRecord
   include Pageable
 
   validates_presence_of :email, :encrypted_password, :ip

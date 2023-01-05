@@ -1,4 +1,4 @@
-class Fee < ActiveRecord::Base
+class Fee < ApplicationRecord
   include Journalable
   include Normalizable
   include Pageable

@@ -1,4 +1,4 @@
-class Document < ActiveRecord::Base
+class Document < ApplicationRecord
   FORMATS = %w(MARKDOWN HAML HTML )
   belongs_to :changed_by, class_name: "User"
   belongs_to :previous_version, class_name: "Document"

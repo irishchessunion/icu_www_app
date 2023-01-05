@@ -21,8 +21,8 @@ describe "Sign up" do
   let(:ticket)      { I18n.t("user.ticket") }
   let(:unverified)  { I18n.t("session.unverified_email") }
 
-  let(:player) { create(:player, id: 10) }
-  let(:data)   { create(:user, id: 10, player: player) }
+  let(:player) { create(:player) }
+  let(:data)   { build(:user, player: player) }
 
   let(:season_ticket) { SeasonTicket.new(player.id, data.expires_on) }
 

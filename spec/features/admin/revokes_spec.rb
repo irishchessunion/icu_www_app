@@ -41,7 +41,7 @@ describe "Revoke", js: true do
       click_button select_member
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
-      click_link player.id
+      click_link player.id.to_s
       click_button add_to_cart
 
       click_link continue
@@ -49,7 +49,7 @@ describe "Revoke", js: true do
       click_button select_member
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
-      click_link player.id
+      click_link player.id.to_s
       click_button add_to_cart
 
       click_link received
@@ -85,7 +85,7 @@ describe "Revoke", js: true do
       click_button revoke_button
       confirm_dialog
 
-      expect(page).to have_css(success, revoke_ok)
+      expect(page).to have_css(success, text: revoke_ok)
 
       cart.reload
       subscription.reload
@@ -111,7 +111,7 @@ describe "Revoke", js: true do
       click_button revoke_button
       confirm_dialog
 
-      expect(page).to have_css(success, revoke_ok)
+      expect(page).to have_css(success, text: revoke_ok)
       expect(page).to_not have_link(revoke_button)
       expect(page).to_not have_link(refund_button)
 
@@ -155,7 +155,7 @@ describe "Revoke", js: true do
       click_button revoke_button
       confirm_dialog
 
-      expect(page).to have_css(success, revoke_ok)
+      expect(page).to have_css(success, text: revoke_ok)
       expect(page).to_not have_link(revoke_button)
       expect(page).to_not have_link(refund_button)
 

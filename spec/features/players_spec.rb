@@ -278,6 +278,7 @@ describe Player do
     end
 
     it "status and duplicates" do
+      logout
       expect(page).to_not have_select(status)
       login "membership"
       visit players_path

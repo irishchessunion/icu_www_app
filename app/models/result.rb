@@ -1,4 +1,4 @@
-class Result < ActiveRecord::Base
+class Result < ApplicationRecord
   include Expandable
   include Journalable
   include Normalizable

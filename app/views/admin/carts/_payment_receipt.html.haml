@@ -15,4 +15,5 @@
 - if cart.confirmation_text.present?
   %pre= cart.confirmation_text
 - else
-  %pre= render "icu_mailer/payment_receipt.text", cart: cart
+  -# %pre= render "icu_mailer/payment_receipt.text", cart: cart
+  %pre= render(:partial => "icu_mailer/payment_receipt", :handlers => [:erb], :formats => [:text], :locals => { :cart => cart })

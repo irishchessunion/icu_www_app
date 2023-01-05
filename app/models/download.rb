@@ -1,4 +1,4 @@
-class Download < ActiveRecord::Base
+class Download < ApplicationRecord
   include Accessible
   include Journalable
   include Pageable
@@ -29,7 +29,8 @@ class Download < ActiveRecord::Base
   before_destroy :remember_directory
 
   # Note: need to add the callbacks Paperclip registers in the right order.
-  has_attached_file :data, url: "/system/:class/:id_partition/:hash.:extension", hash_secret: Rails.application.secrets.paperclip
+  # has_attached_file :data, url: "/system/:class/:id_partition/:hash.:extension", hash_secret: Rails.application.secrets.paperclip
+  has_attached_file :data
 
   after_save :manage_unobfuscated_version
   after_destroy :clean_up_directory

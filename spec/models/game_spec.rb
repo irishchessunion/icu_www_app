@@ -3,6 +3,7 @@ require 'rails_helper'
 describe Game do
   context "#signature" do
     let!(:default)  { create(:game) }
+    let(:pgn)       { create(:pgn) }
 
     it "factory defaults" do
       expect(default.black).to eq "Orr, M"
@@ -21,31 +22,31 @@ describe Game do
     end
 
     it "moves are significant" do
-      game = build(:game, moves: default.moves.sub(/17\.Kd5/, "17.Kc5"))
+      game = build(:game, pgn: pgn, moves: default.moves.sub(/17\.Kd5/, "17.Kc5"))
       expect(game).to be_valid
       expect(game.signature).to_not eq default.signature
     end
 
     it "date is significant" do
-      game = build(:game, date: "1998.??.??")
+      game = build(:game, pgn: pgn, date: "1998.??.??")
       expect(game).to be_valid
       expect(game.signature).to_not eq default.signature
     end
 
     it "first names are ignored" do
-      game = build(:game, black: "Orr, Malcolm")
+      game = build(:game, pgn: pgn, black: "Orr, Malcolm")
       expect(game).to_not be_valid
       expect(game.signature).to eq default.signature
     end
 
     it "last name is significant" do
-      game = build(:game, black: "Tal, Mark")
+      game = build(:game, pgn: pgn, black: "Tal, Mark")
       expect(game).to be_valid
       expect(game.signature).to_not eq default.signature
     end
 
     it "result is significant" do
-      game = build(:game, result: "1-0")
+      game = build(:game, pgn: pgn, result: "1-0")
       expect(game).to be_valid
       expect(game.signature).to_not eq default.signature
     end

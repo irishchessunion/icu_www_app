@@ -1,4 +1,4 @@
-class Relay < ActiveRecord::Base
+class Relay < ApplicationRecord
   belongs_to :officer
 
   default_scope { order(:from) }
