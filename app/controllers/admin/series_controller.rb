@@ -55,14 +55,13 @@ class Admin::SeriesController < ApplicationController
     article_ids = @series.articles.map(&:id)
     old_ids = article_ids - (params[:keep] || []).map(&:to_i)
     old_ids.each do |id|
-      episode = Episode.find_by(article_id: id, series_id: @series.id)
+      episode = @series.episodes.find_by(article: id)
       episode.destroy if episode
     end
   end
 
   def add_episodes
-    # article_ids = @series.articles(true).map(&:id)
-    article_ids = @series.articles.map(&:id)
+    article_ids = @series.articles.all.map(&:id)
     new_ids = id_num_pairs.reject{ |pair| article_ids.include?(pair[:id]) }
     new_ids.each do |pair|
       article = Article.find_by(id: pair[:id])

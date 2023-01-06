@@ -72,7 +72,7 @@ class NewPlayer
     if dob.present? && first_name.present? && last_name.present?
       duplicates = Player.non_duplicates.where(dob: dob).select { |player| self == player }
       if duplicates.any?
-        errors[:base] << I18n.t("item.error.subscription.new_player_duplicate.db", matches: duplicates.map{ |p| p.name(id: true) }.join(", "))
+        errors.add :base, I18n.t("item.error.subscription.new_player_duplicate.db", matches: duplicates.map{ |p| p.name(id: true) }.join(", "))
       end
     end
   end
