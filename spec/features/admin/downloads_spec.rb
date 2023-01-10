@@ -52,12 +52,12 @@ describe Download do
   end
 
   context "authorization" do
-    let(:level1)  { ["admin", user] }
+    let(:user)    { create(:user, roles: "editor") }
+    let(:level1)  { ["admin"] }
     let(:level2)  { ["editor"] }
     let(:level3)  { User::ROLES.reject { |r| level1.include?(r) || level2.include?(r) } }
     let(:level4)  { ["guest"] }
-    let!(:download) { create(:download, user: user) }
-    let(:user)    { create(:user, roles: "editor") }
+    let(:download) { create(:download, user: user) }
 
     def cell(label)
       "//th[.='#{label}']/following-sibling::td"

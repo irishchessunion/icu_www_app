@@ -29,6 +29,7 @@ gem "whenever", :require => false
 # gem "quiet_assets" # (deprecated in favour of sprockets-rails)
 
 gem 'bigdecimal', '>= 2.5.5' # To avoid BigDecimal.new error
+gem 'terrapin'
 
 group :development do
   gem "capistrano" # For same reason as colorize comment above

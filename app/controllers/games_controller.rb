@@ -2,8 +2,9 @@ class GamesController < ApplicationController
   def index
     authorize! :index, Game
     @games = Game.search(params, games_path)
-    # fix later (security later)
-    @download = download_games_path(params.permit!) if count_ok?(@games.count) && can?(:download, Game)
+    @download = download_games_path(
+      params.permit(:date, :eco, :name, :white, :black, :result, :event, :pgn_id)
+    ) if count_ok?(@games.count) && can?(:download, Game)
     @db_path, @db_text, @db_details = Game.db_link
     flash.now[:warning] = t("no_matches") if @games.count == 0
     save_last_search(@games, :games)

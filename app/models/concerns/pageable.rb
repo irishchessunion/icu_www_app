@@ -87,7 +87,8 @@ module Pageable
     def query_params(page)
       params = @params.dup
       [:action, :controller, :button, :utf8].each { |key| params.delete(key) }
-      params.permit!.merge(page: page).to_query # WARNING!!! Security risk. Must create a whitelist of possible search params and manually whitelist them
+      # Using permit! here since it allows each individual controller to permit its own params
+      params.permit!.merge(page: page).to_query
     end
   end
 end

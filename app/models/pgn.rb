@@ -11,7 +11,7 @@ class Pgn < ApplicationRecord
   has_many :games, dependent: :delete_all
 
   MAX_SIZE = 2.megabytes
-  TYPES = %w[text/plain application/x-chess-pgn]
+  TYPES = %w[text/plain application/x-chess-pgn application/octet-stream]
   class PGNError < StandardError; end
 
   before_validation :normalize_attributes

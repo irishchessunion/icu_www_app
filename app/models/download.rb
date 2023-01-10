@@ -29,8 +29,7 @@ class Download < ApplicationRecord
   before_destroy :remember_directory
 
   # Note: need to add the callbacks Paperclip registers in the right order.
-  # has_attached_file :data, url: "/system/:class/:id_partition/:hash.:extension", hash_secret: Rails.application.secrets.paperclip
-  has_attached_file :data
+  has_attached_file :data, url: "/system/:class/:id_partition/:hash.:extension", hash_secret: Rails.application.secrets.paperclip
 
   after_save :manage_unobfuscated_version
   after_destroy :clean_up_directory
