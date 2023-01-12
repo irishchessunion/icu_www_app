@@ -15,7 +15,7 @@
         = euros(current_cart.total_cost)
   %hr
   .row
-    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: :payment_name)
+    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: :payment_name)
     = render "utils/text_field_tag", locals.merge(text: t("shop.payment.confirmation_email"), param: "confirmation_email", type: 'email')
   %hr
   .row

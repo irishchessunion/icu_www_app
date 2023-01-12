@@ -1,1 +1,1 @@
-Stripe.api_key = Rails.application.secrets.stripe["secret"]
+Stripe.api_key = Rails.application.secrets.stripe[:secret]

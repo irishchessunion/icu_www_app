@@ -1,6 +1,6 @@
 - content_for :title, t("shop.cart.checkout")
 - content_for :includes do
-  = javascript_include_tag "https://js.stripe.com/v2/"
+  = javascript_include_tag "https://js.stripe.com/v3/"
   = javascript_include_tag "spin.js"
   = javascript_include_tag "payment.js"
 - content_for :javascript do
@@ -10,12 +10,7 @@
     = javascript_include_tag "switch_from_tls.js"
 - add_help("privacy", anchor: "payments")
 
-= form_tag charge_path(format: "js"), id: "icu_form", remote: true do
-  = hidden_field_tag :stripe_token
-  = hidden_field_tag :payment_name
-  = hidden_field_tag :confirmation_email
-
-= form_tag "", id: "stripe_form", class: "form-horizontal", role: "form" do
+= form_tag charge_path(format: "js"), id: "stripe_form", class: "form-horizontal", role: "form", :data => {:secret => @intent.client_secret} do
   - locals = { col: "sm", pad: 5, width: 3, param: nil}
   .row
     .col-sm-12.text-center
@@ -25,18 +20,24 @@
         = euros(current_cart.total_cost)
   %hr
   .row
-    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.number"), extra: { id: "number", data: { stripe: "number" } })
-    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.expiration"), width: 2, extra: { id: "expiry" })
-    = hidden_field_tag nil, nil, data: { stripe: "exp-month" }, id: "exp-month"
-    = hidden_field_tag nil, nil, data: { stripe: "exp-year" }, id: "exp-year"
-    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.security_code"), width: 2, extra: { id: "cvc", data: { stripe: "cvc" } })
-    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: "payment_name", extra: { id: "name", data: { stripe: "name" } })
+    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.number"), extra: { id: "number", data: { stripe: "number" } })
+    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.expiration"), width: 2, extra: { id: "expiry" })
+    -# = hidden_field_tag nil, nil, data: { stripe: "exp-month" }, id: "exp-month"
+    -# = hidden_field_tag nil, nil, data: { stripe: "exp-year" }, id: "exp-year"
+    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.security_code"), width: 2, extra: { id: "cvc", data: { stripe: "cvc" } })
+    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: "payment_name", extra: { id: "name", data: { stripe: "name" } })
+    #payment-element
+    #error-message
+  %hr
+  .row
+    = hidden_field_tag :confirmation_email
+    = hidden_field_tag :payment_intent_id
     = render "utils/text_field_tag", locals.merge(text: t("shop.payment.confirmation_email"), param: "confirmation_email", extra: { id: "email" })
   %hr
   .row
     .col-sm-5
     .col-sm-7
-      = button_tag t("shop.payment.card.pay"), type: "submit", class: "btn btn-success btn-md"
+      = button_tag t("shop.payment.card.pay"), type: "submit", class: "btn btn-success btn-md", id: "submit-btn"
       = link_to t("cancel"), cart_path, class: "btn btn-info btn-md", id: "cancel_button"
   %hr
   .row

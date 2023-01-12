@@ -16,4 +16,4 @@
 - unless @cart.payment_errors.empty?
   = render "errors", cart: @cart
 - unless @cart.unpaid?
-  = render(:partial => "payment_receipt", :handlers => [:erb], :formats => [:text], :locals => { :cart => cart })
+  = render "payment_receipt", cart: @cart

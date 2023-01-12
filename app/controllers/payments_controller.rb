@@ -20,6 +20,7 @@ class PaymentsController < ApplicationController
     if @cart.total_cost == 0
       render "zero_cost_card"
     end
+    @intent = @cart.create_intent if @cart.total_cost > 0
   end
 
   def charge
@@ -27,7 +28,7 @@ class PaymentsController < ApplicationController
     if @cart && !@cart.items.empty?
       @cart.purchase(params, current_user)
       complete_cart(@cart.id) if @cart.paid?
-      redirect_to shop_path unless request.xhr?
+      redirect_to confirm_path
     else
       if request.xhr?
         render nothing: true
