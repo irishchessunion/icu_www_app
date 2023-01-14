@@ -136,6 +136,20 @@ class Cart < ApplicationRecord
     end
   end
 
+  def add_payment_error(error, name, email, message=nil)
+    message ||= error[:message] || "Unknown error"
+    details = error.try(:json_body)
+    if details.nil?
+      details = "Code: #{error[:code]}, Type: #{error[:type]}, Message: #{error[:message]}"
+    else
+      details = details.fetch(:error) { details } if details.is_a?(Hash)
+      details.delete(:message) if details.is_a?(Hash) && details[:message] == message
+      details = details.to_s
+    end
+    error = payment_errors.build(message: message.truncate(255), details: details.truncate(255), payment_name: name.to_s.truncate(100), confirmation_email: email.to_s.truncate(50))
+    error.save
+  end
+
   private
 
   def successful_payment(payment_method, charge_id=nil, payment_account=nil)
@@ -169,19 +183,6 @@ class Cart < ApplicationRecord
 
   def cents(euros)
     (euros * 100).to_i
-  end
-
-  def add_payment_error(error, name, email, message=nil)
-    message ||= error.message || "Unknown error"
-    details = error.try(:json_body)
-    if details.nil?
-      details = ""
-    else
-      details = details.fetch(:error) { details } if details.is_a?(Hash)
-      details.delete(:message) if details.is_a?(Hash) && details[:message] == message
-      details = details.to_s
-    end
-    payment_errors.build(message: message.truncate(255), details: details.truncate(255), payment_name: name.to_s.truncate(100), confirmation_email: email.to_s.truncate(50))
   end
 
   def refund_amount(item_ids, intent)

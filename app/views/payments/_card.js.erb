@@ -28,6 +28,9 @@ $(function() {
     }).then(function(result) {
       if (result.error) {
         // Inform the customer that there was an error.
+        // sendError(result.error);
+        // console.log(result.error);
+        sendError(result.error);
         showError(result.error.message);
         stopSpinner();
         $('#submit-btn').prop('disabled', false).text('Pay');
@@ -56,6 +59,13 @@ function showError(message) {
   } else {
     el.show();
   }
+}
+
+function sendError(error) {
+  $.post("/new_payment_error", {
+    error: error,
+    email: $('#email').val()
+  });
 }
 
 

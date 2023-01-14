@@ -13,8 +13,8 @@ IcuWwwApp::Application.routes.draw do
   %w[clubs events].each do |page|
     get "maps/#{page}(/:id)" => "maps##{page}", as: "#{page}_map"
   end
-  %w[shop cart card charge confirm completed].each do |page|
-    match page => "payments##{page}", via: page == "charge" ? :post : :get
+  %w[shop cart card charge confirm completed new_payment_error].each do |page|
+    match page => "payments##{page}", via: page == "charge" || page == "new_payment_error" ? :post : :get
   end
   %w[account preferences update_preferences].each do |page|
     match "#{page}/:id" => "users##{page}", via: page.match(/^update/) ? :post : :get, as: page

@@ -177,12 +177,12 @@ describe "Pay", js: true do
       cart = Cart.include_errors.last
       expect(cart).to be_unpaid
       expect(cart.user).to be_nil
-      # expect(cart.payment_errors.count).to eq 1
-      # payment_error = cart.payment_errors.last
-      # expect(payment_error.message).to eq card_declined
-      # expect(payment_error.details).to be_present
+      expect(cart.payment_errors.count).to eq 1
+      payment_error = cart.payment_errors.last
+      expect(payment_error.message).to eq card_declined
+      expect(payment_error.details).to be_present
       # expect(payment_error.payment_name).to eq player.name
-      # expect(payment_error.confirmation_email).to eq player.email
+      expect(payment_error.confirmation_email).to eq player.email
       expect(ActionMailer::Base.deliveries).to be_empty
       
       fill_in_number_and_click_pay(number: "4000000000000069")
@@ -193,12 +193,12 @@ describe "Pay", js: true do
       cart.reload
       expect(cart).to be_unpaid
       expect(cart.user).to be_nil
-      # expect(cart.payment_errors.count).to eq 2
-      # payment_error = cart.payment_errors.last
-      # expect(payment_error.message).to eq expired_card
-      # expect(payment_error.details).to be_present
+      expect(cart.payment_errors.count).to eq 2
+      payment_error = cart.payment_errors.last
+      expect(payment_error.message).to eq expired_card
+      expect(payment_error.details).to be_present
       # expect(payment_error.payment_name).to eq player.name
-      # expect(payment_error.confirmation_email).to eq player.email
+      expect(payment_error.confirmation_email).to eq player.email
       expect(ActionMailer::Base.deliveries).to be_empty
       
       login(user)
@@ -214,12 +214,13 @@ describe "Pay", js: true do
       cart.reload
       expect(cart).to be_unpaid
       # expect(cart.user).to eq user
-      # expect(cart.payment_errors.count).to eq 3
-      # payment_error = cart.payment_errors.last
-      # expect(payment_error.message).to eq incorrect_cvc
-      # expect(payment_error.details).to be_present
+      expect(cart.user).to be_nil
+      expect(cart.payment_errors.count).to eq 3
+      payment_error = cart.payment_errors.last
+      expect(payment_error.message).to eq incorrect_cvc
+      expect(payment_error.details).to be_present
       # expect(payment_error.payment_name).to eq player.name
-      # expect(payment_error.confirmation_email).to eq player.email
+      expect(payment_error.confirmation_email).to eq player.email
       expect(ActionMailer::Base.deliveries).to be_empty
     end
 
@@ -278,7 +279,7 @@ describe "Pay", js: true do
       # click_button pay
       # expect(page).to have_css(failure, text: bad_name)
 
-      expect(PaymentError.count).to eq 0
+      expect(PaymentError.count).to eq 6
       expect(ActionMailer::Base.deliveries).to be_empty
     end
   end

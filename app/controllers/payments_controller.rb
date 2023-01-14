@@ -47,6 +47,21 @@ class PaymentsController < ApplicationController
     @completed_carts = completed_carts
   end
 
+  def new_payment_error
+    load_cart
+    if @cart.nil? || @cart.items.empty?
+      redirect_to shop_path
+      return
+    end
+    @cart.add_payment_error(params[:error], current_user.name || 'Anonymous', params[:email])
+    
+    if request.xhr?
+      render json: nil, status: :ok
+    else
+      redirect_to shop_path
+    end
+  end
+
   private
 
   def load_cart(option = nil)
