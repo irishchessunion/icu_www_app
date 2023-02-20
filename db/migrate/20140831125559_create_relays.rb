@@ -1,4 +1,4 @@
-class CreateRelays < ActiveRecord::Migration
+class CreateRelays < ActiveRecord::Migration[7.0]
   def change
     create_table :relays do |t|
       t.string   :from, :to, :provider_id, limit: 50

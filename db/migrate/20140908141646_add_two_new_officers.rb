@@ -1,4 +1,4 @@
-class AddTwoNewOfficers < ActiveRecord::Migration
+class AddTwoNewOfficers < ActiveRecord::Migration[7.0]
   def up
     Officer.create!(role: "fide", rank: 13, executive: true, active: false)
     Officer.create!(role: "ecu", rank: 13, executive: true, active: false)

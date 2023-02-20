@@ -1,4 +1,4 @@
-class IncreaseRelayToFieldSize < ActiveRecord::Migration
+class IncreaseRelayToFieldSize < ActiveRecord::Migration[7.0]
   def change
     change_column :relays, :to, :string
   end

@@ -1,4 +1,4 @@
-class CreateUserInputs < ActiveRecord::Migration
+class CreateUserInputs < ActiveRecord::Migration[7.0]
   def change
     create_table :user_inputs do |t|
       t.integer  :fee_id

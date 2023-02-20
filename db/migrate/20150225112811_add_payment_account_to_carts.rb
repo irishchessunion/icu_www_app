@@ -1,4 +1,4 @@
-class AddPaymentAccountToCarts < ActiveRecord::Migration
+class AddPaymentAccountToCarts < ActiveRecord::Migration[7.0]
   def up
     add_column :carts, :payment_account, :string, limit: 32
     Cart.where(payment_method: "stripe").each do |cart|

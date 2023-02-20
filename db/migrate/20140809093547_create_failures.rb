@@ -1,4 +1,4 @@
-class CreateFailures < ActiveRecord::Migration
+class CreateFailures < ActiveRecord::Migration[7.0]
   def change
     create_table :failures do |t|
       t.string   :name

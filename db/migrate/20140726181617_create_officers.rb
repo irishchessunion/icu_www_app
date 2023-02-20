@@ -1,4 +1,4 @@
-class CreateOfficers < ActiveRecord::Migration
+class CreateOfficers < ActiveRecord::Migration[7.0]
   def up
     create_table :officers do |t|
       t.string  :role, limit: 20

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :other_fee, class: Fee::Other do
+  factory :other_fee, class: "Fee::Other" do
     active          { true }
     name            { "Something" }
     amount          { 12.34 }

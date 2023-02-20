@@ -28,8 +28,6 @@ $(function() {
     }).then(function(result) {
       if (result.error) {
         // Inform the customer that there was an error.
-        // sendError(result.error);
-        // console.log(result.error);
         sendError(result.error);
         showError(result.error.message);
         stopSpinner();

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :subscription_item, class: Item::Subscription do
+  factory :subscription_item, class: "Item::Subscription" do
     player
     association    :fee, factory: :subscription_fee
     status         { "unpaid" }

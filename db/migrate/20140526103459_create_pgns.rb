@@ -1,4 +1,4 @@
-class CreatePgns < ActiveRecord::Migration
+class CreatePgns < ActiveRecord::Migration[7.0]
   def change
     create_table :pgns do |t|
       t.string   :comment

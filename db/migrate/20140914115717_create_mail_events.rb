@@ -1,4 +1,4 @@
-class CreateMailEvents < ActiveRecord::Migration
+class CreateMailEvents < ActiveRecord::Migration[7.0]
   def change
     create_table :mail_events do |t|
       t.integer   :accepted, :rejected, :delivered, :failed, :opened, :clicked, :unsubscribed, :complained, :stored, :total, :other, default: 0

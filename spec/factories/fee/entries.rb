@@ -1,6 +1,6 @@
 FactoryBot.define do
-  factory :entry_fee, class: Fee::Entry do
-    active      { true }
+  factory :entry_fee, class: "Fee::Entry" do
+  active      { true }
     name        { "Bunratty Masters" }
     amount      { 50.0 }
     start_date  { Date.today.next_year.beginning_of_year.days_since(35) }

@@ -1,4 +1,4 @@
-class CreateSponsors < ActiveRecord::Migration
+class CreateSponsors < ActiveRecord::Migration[7.0]
   def up
     create_table :sponsors do |t|
       t.string :name

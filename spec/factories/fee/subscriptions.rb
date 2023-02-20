@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :subscription_fee, class: Fee::Subscription do
+  factory :subscription_fee, class: "Fee::Subscription" do
     active      { true }
     name        { "Standard" }
     amount      { 35.0 }

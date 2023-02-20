@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :entry_item, class: Item::Entry do
+  factory :entry_item, class: "Item::Entry" do
     player
     association :fee, factory: :entry_fee
     status         { "unpaid" }

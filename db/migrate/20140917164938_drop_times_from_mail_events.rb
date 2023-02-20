@@ -1,4 +1,4 @@
-class DropTimesFromMailEvents < ActiveRecord::Migration
+class DropTimesFromMailEvents < ActiveRecord::Migration[7.0]
   def up
     remove_column :mail_events, :page
     remove_column :mail_events, :first_time

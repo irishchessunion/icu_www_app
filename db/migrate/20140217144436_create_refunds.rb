@@ -1,4 +1,4 @@
-class CreateRefunds < ActiveRecord::Migration
+class CreateRefunds < ActiveRecord::Migration[7.0]
   def change
     create_table :refunds do |t|
       t.integer  :cart_id, :user_id

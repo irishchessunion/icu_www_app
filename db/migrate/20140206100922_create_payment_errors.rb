@@ -1,4 +1,4 @@
-class CreatePaymentErrors < ActiveRecord::Migration
+class CreatePaymentErrors < ActiveRecord::Migration[7.0]
   def change
     create_table :payment_errors do |t|
       t.integer  :cart_id

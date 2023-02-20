@@ -1,4 +1,4 @@
-class AddReportingFieldsToEventsTable < ActiveRecord::Migration
+class AddReportingFieldsToEventsTable < ActiveRecord::Migration[7.0]
   def change
     add_column :events, :pairings_url, :string
     add_column :events, :results_url, :string

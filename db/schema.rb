@@ -1,650 +1,640 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180415122643) do
-
-  create_table "article_likes", force: :cascade do |t|
-    t.integer  "article_id", limit: 4
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at"
+ActiveRecord::Schema[7.0].define(version: 2023_02_14_102332) do
+  create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  add_index "article_likes", ["article_id", "user_id"], name: "index_article_likes_on_article_id_and_user_id", unique: true, using: :btree
-
-  create_table "articles", force: :cascade do |t|
-    t.string   "access",     limit: 20
-    t.boolean  "active"
-    t.string   "author",     limit: 100
-    t.string   "category",   limit: 20
-    t.text     "text",       limit: 65535
-    t.string   "title",      limit: 100
-    t.boolean  "markdown",                 default: true
-    t.integer  "user_id",    limit: 4
-    t.integer  "year",       limit: 2
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "nlikes",     limit: 4
+  create_table "active_storage_blobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  add_index "articles", ["access"], name: "index_articles_on_access", using: :btree
-  add_index "articles", ["active"], name: "index_articles_on_active", using: :btree
-  add_index "articles", ["author"], name: "index_articles_on_author", using: :btree
-  add_index "articles", ["category"], name: "index_articles_on_category", using: :btree
-  add_index "articles", ["title"], name: "index_articles_on_title", using: :btree
-  add_index "articles", ["user_id"], name: "index_articles_on_user_id", using: :btree
-  add_index "articles", ["year"], name: "index_articles_on_year", using: :btree
-
-  create_table "bad_logins", force: :cascade do |t|
-    t.string   "email",              limit: 255
-    t.string   "encrypted_password", limit: 32
-    t.string   "ip",                 limit: 50
-    t.datetime "created_at"
+  create_table "active_storage_variant_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  add_index "bad_logins", ["created_at"], name: "index_bad_logins_on_created_at", using: :btree
-  add_index "bad_logins", ["email"], name: "index_bad_logins_on_email", using: :btree
-  add_index "bad_logins", ["ip"], name: "index_bad_logins_on_ip", using: :btree
-
-  create_table "carts", force: :cascade do |t|
-    t.string   "status",             limit: 20,                            default: "unpaid"
-    t.decimal  "total",                            precision: 9, scale: 2
-    t.decimal  "original_total",                   precision: 9, scale: 2
-    t.string   "payment_method",     limit: 20
-    t.string   "payment_ref",        limit: 50
-    t.string   "confirmation_email", limit: 50
-    t.string   "confirmation_error", limit: 255
-    t.text     "confirmation_text",  limit: 65535
-    t.boolean  "confirmation_sent",                                        default: false
-    t.string   "payment_name",       limit: 100
-    t.integer  "user_id",            limit: 4
-    t.datetime "payment_completed"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "payment_account",    limit: 32
+  create_table "article_likes", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "article_id"
+    t.integer "user_id"
+    t.datetime "created_at", precision: nil
+    t.index ["article_id", "user_id"], name: "index_article_likes_on_article_id_and_user_id", unique: true
   end
 
-  add_index "carts", ["confirmation_email"], name: "index_carts_on_confirmation_email", using: :btree
-  add_index "carts", ["payment_method"], name: "index_carts_on_payment_method", using: :btree
-  add_index "carts", ["payment_name"], name: "index_carts_on_payment_name", using: :btree
-  add_index "carts", ["status"], name: "index_carts_on_status", using: :btree
-  add_index "carts", ["user_id"], name: "index_carts_on_user_id", using: :btree
-
-  create_table "champions", force: :cascade do |t|
-    t.string   "category",   limit: 20
-    t.string   "notes",      limit: 140
-    t.string   "winners",    limit: 255
-    t.integer  "year",       limit: 2
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "image_id",   limit: 4
+  create_table "articles", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "access", limit: 20
+    t.boolean "active"
+    t.string "author", limit: 100
+    t.string "category", limit: 20
+    t.text "text"
+    t.string "title", limit: 100
+    t.boolean "markdown", default: true
+    t.integer "user_id"
+    t.integer "year", limit: 2
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "nlikes"
+    t.index ["access"], name: "index_articles_on_access"
+    t.index ["active"], name: "index_articles_on_active"
+    t.index ["author"], name: "index_articles_on_author"
+    t.index ["category"], name: "index_articles_on_category"
+    t.index ["title"], name: "index_articles_on_title"
+    t.index ["user_id"], name: "index_articles_on_user_id"
+    t.index ["year"], name: "index_articles_on_year"
   end
 
-  add_index "champions", ["category"], name: "index_champions_on_category", using: :btree
-  add_index "champions", ["image_id"], name: "fk_rails_4b4d78bb46", using: :btree
-  add_index "champions", ["winners"], name: "index_champions_on_winners", using: :btree
-  add_index "champions", ["year"], name: "index_champions_on_year", using: :btree
-
-  create_table "clubs", force: :cascade do |t|
-    t.string   "name",               limit: 50
-    t.string   "district",           limit: 50
-    t.string   "city",               limit: 50
-    t.string   "contact",            limit: 50
-    t.string   "email",              limit: 50
-    t.string   "phone",              limit: 50
-    t.string   "web",                limit: 100
-    t.string   "address",            limit: 100
-    t.string   "meet",               limit: 255
-    t.string   "county",             limit: 20
-    t.decimal  "lat",                            precision: 10, scale: 7
-    t.decimal  "long",                           precision: 10, scale: 7
-    t.boolean  "active"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "junior_only",                                             default: false
-    t.boolean  "has_junior_section",                                      default: false
+  create_table "bad_logins", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "email"
+    t.string "encrypted_password", limit: 32
+    t.string "ip", limit: 50
+    t.datetime "created_at", precision: nil
+    t.index ["created_at"], name: "index_bad_logins_on_created_at"
+    t.index ["email"], name: "index_bad_logins_on_email"
+    t.index ["ip"], name: "index_bad_logins_on_ip"
   end
 
-  add_index "clubs", ["active"], name: "index_clubs_on_active", using: :btree
-  add_index "clubs", ["city"], name: "index_clubs_on_city", using: :btree
-  add_index "clubs", ["county"], name: "index_clubs_on_county", using: :btree
-  add_index "clubs", ["name"], name: "index_clubs_on_name", using: :btree
-
-  create_table "documents", force: :cascade do |t|
-    t.string   "title",               limit: 255
-    t.string   "subtitle",            limit: 255
-    t.string   "content",             limit: 255
-    t.string   "content_type",        limit: 255
-    t.integer  "changed_by_id",       limit: 4
-    t.string   "authorized_by",       limit: 255
-    t.string   "reason_changed",      limit: 255
-    t.boolean  "is_current"
-    t.integer  "previous_version_id", limit: 4
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.string   "url",                 limit: 255
+  create_table "carts", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "status", limit: 20, default: "unpaid"
+    t.decimal "total", precision: 9, scale: 2
+    t.decimal "original_total", precision: 9, scale: 2
+    t.string "payment_method", limit: 20
+    t.string "payment_ref", limit: 50
+    t.string "confirmation_email", limit: 50
+    t.string "confirmation_error"
+    t.text "confirmation_text"
+    t.boolean "confirmation_sent", default: false
+    t.string "payment_name", limit: 100
+    t.integer "user_id"
+    t.datetime "payment_completed", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.string "payment_account", limit: 32
+    t.index ["confirmation_email"], name: "index_carts_on_confirmation_email"
+    t.index ["payment_method"], name: "index_carts_on_payment_method"
+    t.index ["payment_name"], name: "index_carts_on_payment_name"
+    t.index ["status"], name: "index_carts_on_status"
+    t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
-  add_index "documents", ["changed_by_id"], name: "fk_rails_a07bebd5fe", using: :btree
-  add_index "documents", ["previous_version_id"], name: "fk_rails_0fa5b3f041", using: :btree
-
-  create_table "downloads", force: :cascade do |t|
-    t.string   "access",            limit: 20
-    t.string   "data_file_name",    limit: 255
-    t.string   "data_content_type", limit: 255
-    t.integer  "data_file_size",    limit: 4
-    t.datetime "data_updated_at"
-    t.string   "description",       limit: 150
-    t.string   "www1_path",         limit: 128
-    t.integer  "user_id",           limit: 4
-    t.integer  "year",              limit: 2
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "champions", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "category", limit: 20
+    t.string "notes", limit: 140
+    t.string "winners"
+    t.integer "year", limit: 2
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "image_id"
+    t.index ["category"], name: "index_champions_on_category"
+    t.index ["image_id"], name: "fk_rails_4b4d78bb46"
+    t.index ["winners"], name: "index_champions_on_winners"
+    t.index ["year"], name: "index_champions_on_year"
   end
 
-  add_index "downloads", ["access"], name: "index_downloads_on_access", using: :btree
-  add_index "downloads", ["data_content_type"], name: "index_downloads_on_data_content_type", using: :btree
-  add_index "downloads", ["description"], name: "index_downloads_on_description", using: :btree
-  add_index "downloads", ["user_id"], name: "index_downloads_on_user_id", using: :btree
-  add_index "downloads", ["www1_path"], name: "index_downloads_on_www1_path", using: :btree
-  add_index "downloads", ["year"], name: "index_downloads_on_year", using: :btree
-
-  create_table "episodes", force: :cascade do |t|
-    t.integer  "article_id", limit: 4
-    t.integer  "series_id",  limit: 4
-    t.integer  "number",     limit: 2
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "clubs", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", limit: 50
+    t.string "district", limit: 50
+    t.string "city", limit: 50
+    t.string "contact", limit: 50
+    t.string "email", limit: 50
+    t.string "phone", limit: 50
+    t.string "web", limit: 100
+    t.string "address", limit: 100
+    t.string "meet"
+    t.string "county", limit: 20
+    t.decimal "lat", precision: 10, scale: 7
+    t.decimal "long", precision: 10, scale: 7
+    t.boolean "active"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.boolean "junior_only", default: false
+    t.boolean "has_junior_section", default: false
+    t.index ["active"], name: "index_clubs_on_active"
+    t.index ["city"], name: "index_clubs_on_city"
+    t.index ["county"], name: "index_clubs_on_county"
+    t.index ["name"], name: "index_clubs_on_name"
   end
 
-  add_index "episodes", ["article_id"], name: "index_episodes_on_article_id", using: :btree
-  add_index "episodes", ["number"], name: "index_episodes_on_number", using: :btree
-  add_index "episodes", ["series_id"], name: "index_episodes_on_series_id", using: :btree
-
-  create_table "events", force: :cascade do |t|
-    t.boolean  "active"
-    t.string   "category",           limit: 25
-    t.string   "contact",            limit: 50
-    t.string   "email",              limit: 50
-    t.string   "flyer_file_name",    limit: 255
-    t.string   "flyer_content_type", limit: 255
-    t.integer  "flyer_file_size",    limit: 4
-    t.datetime "flyer_updated_at"
-    t.decimal  "lat",                            precision: 10, scale: 7
-    t.string   "location",           limit: 100
-    t.decimal  "long",                           precision: 10, scale: 7
-    t.string   "name",               limit: 75
-    t.string   "note",               limit: 512
-    t.string   "phone",              limit: 25
-    t.decimal  "prize_fund",                     precision: 8,  scale: 2
-    t.string   "source",             limit: 8,                            default: "www2"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.string   "url",                limit: 255
-    t.integer  "user_id",            limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "sections",           limit: 255
-    t.string   "pairings_url",       limit: 255
-    t.string   "results_url",        limit: 255
-    t.string   "live_games_url",     limit: 255
-    t.string   "report_url",         limit: 255
+  create_table "documents", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title"
+    t.string "subtitle"
+    t.text "content"
+    t.string "content_type"
+    t.integer "changed_by_id"
+    t.string "authorized_by"
+    t.text "reason_changed"
+    t.boolean "is_current"
+    t.integer "previous_version_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "url"
+    t.index ["changed_by_id"], name: "fk_rails_a07bebd5fe"
+    t.index ["previous_version_id"], name: "fk_rails_0fa5b3f041"
   end
 
-  add_index "events", ["active"], name: "index_events_on_active", using: :btree
-  add_index "events", ["category"], name: "index_events_on_category", using: :btree
-  add_index "events", ["end_date"], name: "index_events_on_end_date", using: :btree
-  add_index "events", ["location"], name: "index_events_on_location", using: :btree
-  add_index "events", ["name"], name: "index_events_on_name", using: :btree
-  add_index "events", ["start_date"], name: "index_events_on_start_date", using: :btree
-  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
-
-  create_table "failures", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.text     "details",    limit: 65535
-    t.datetime "created_at"
-    t.boolean  "active",                   default: true
+  create_table "downloads", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "access", limit: 20
+    t.string "data_file_name"
+    t.string "data_content_type"
+    t.integer "data_file_size"
+    t.datetime "data_updated_at", precision: nil
+    t.string "description", limit: 150
+    t.string "www1_path", limit: 128
+    t.integer "user_id"
+    t.integer "year", limit: 2
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["access"], name: "index_downloads_on_access"
+    t.index ["data_content_type"], name: "index_downloads_on_data_content_type"
+    t.index ["description"], name: "index_downloads_on_description"
+    t.index ["user_id"], name: "index_downloads_on_user_id"
+    t.index ["www1_path"], name: "index_downloads_on_www1_path"
+    t.index ["year"], name: "index_downloads_on_year"
   end
 
-  create_table "fees", force: :cascade do |t|
-    t.string   "type",              limit: 40
-    t.string   "name",              limit: 100
-    t.decimal  "amount",                        precision: 9, scale: 2
-    t.decimal  "discounted_amount",             precision: 9, scale: 2
-    t.string   "years",             limit: 7
-    t.integer  "year",              limit: 2
-    t.integer  "days",              limit: 2
-    t.date     "start_date"
-    t.date     "end_date"
-    t.date     "sale_start"
-    t.date     "sale_end"
-    t.date     "age_ref_date"
-    t.date     "discount_deadline"
-    t.integer  "min_age",           limit: 1
-    t.integer  "max_age",           limit: 1
-    t.integer  "min_rating",        limit: 2
-    t.integer  "max_rating",        limit: 2
-    t.string   "url",               limit: 255
-    t.boolean  "active",                                                default: false
-    t.boolean  "player_required",                                       default: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "event_id",          limit: 4
-    t.string   "sections",          limit: 255
-    t.boolean  "organizer_only"
+  create_table "episodes", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "article_id"
+    t.integer "series_id"
+    t.integer "number", limit: 2
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["article_id"], name: "index_episodes_on_article_id"
+    t.index ["number"], name: "index_episodes_on_number"
+    t.index ["series_id"], name: "index_episodes_on_series_id"
   end
 
-  add_index "fees", ["active"], name: "index_fees_on_active", using: :btree
-  add_index "fees", ["end_date"], name: "index_fees_on_end_date", using: :btree
-  add_index "fees", ["event_id"], name: "index_fees_on_event_id", using: :btree
-  add_index "fees", ["name"], name: "index_fees_on_name", using: :btree
-  add_index "fees", ["sale_end"], name: "index_fees_on_sale_end", using: :btree
-  add_index "fees", ["sale_start"], name: "index_fees_on_sale_start", using: :btree
-  add_index "fees", ["start_date"], name: "index_fees_on_start_date", using: :btree
-  add_index "fees", ["type"], name: "index_fees_on_type", using: :btree
-
-  create_table "games", force: :cascade do |t|
-    t.string   "annotator",  limit: 50
-    t.string   "black",      limit: 50
-    t.integer  "black_elo",  limit: 2
-    t.string   "date",       limit: 10
-    t.string   "eco",        limit: 3
-    t.string   "event",      limit: 50
-    t.string   "fen",        limit: 100
-    t.text     "moves",      limit: 65535
-    t.integer  "pgn_id",     limit: 4
-    t.integer  "ply",        limit: 2
-    t.string   "result",     limit: 3
-    t.string   "round",      limit: 7
-    t.string   "signature",  limit: 32
-    t.string   "site",       limit: 50
-    t.string   "white",      limit: 50
-    t.integer  "white_elo",  limit: 2
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "in_link"
+  create_table "events", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.boolean "active"
+    t.string "category", limit: 25
+    t.string "contact", limit: 50
+    t.string "email", limit: 50
+    t.string "flyer_file_name"
+    t.string "flyer_content_type"
+    t.integer "flyer_file_size"
+    t.datetime "flyer_updated_at", precision: nil
+    t.decimal "lat", precision: 10, scale: 7
+    t.string "location", limit: 100
+    t.decimal "long", precision: 10, scale: 7
+    t.string "name", limit: 75
+    t.string "note", limit: 512
+    t.string "phone", limit: 25
+    t.decimal "prize_fund", precision: 8, scale: 2
+    t.string "source", limit: 8, default: "www2"
+    t.date "start_date"
+    t.date "end_date"
+    t.string "url"
+    t.integer "user_id"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.string "sections"
+    t.string "pairings_url"
+    t.string "results_url"
+    t.string "live_games_url"
+    t.string "report_url"
+    t.index ["active"], name: "index_events_on_active"
+    t.index ["category"], name: "index_events_on_category"
+    t.index ["end_date"], name: "index_events_on_end_date"
+    t.index ["location"], name: "index_events_on_location"
+    t.index ["name"], name: "index_events_on_name"
+    t.index ["start_date"], name: "index_events_on_start_date"
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
-  add_index "games", ["black"], name: "index_games_on_black", using: :btree
-  add_index "games", ["date"], name: "index_games_on_date", using: :btree
-  add_index "games", ["eco"], name: "index_games_on_eco", using: :btree
-  add_index "games", ["event"], name: "index_games_on_event", using: :btree
-  add_index "games", ["result"], name: "index_games_on_result", using: :btree
-  add_index "games", ["signature"], name: "index_games_on_signature", using: :btree
-  add_index "games", ["white"], name: "index_games_on_white", using: :btree
-
-  create_table "images", force: :cascade do |t|
-    t.string   "data_file_name",    limit: 255
-    t.string   "data_content_type", limit: 255
-    t.integer  "data_file_size",    limit: 4
-    t.datetime "data_updated_at"
-    t.string   "caption",           limit: 255
-    t.string   "dimensions",        limit: 255
-    t.string   "credit",            limit: 100
-    t.string   "source",            limit: 8,   default: "www2"
-    t.integer  "year",              limit: 2
-    t.integer  "user_id",           limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "failures", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "details"
+    t.datetime "created_at", precision: nil
+    t.boolean "active", default: true
   end
 
-  add_index "images", ["caption"], name: "index_images_on_caption", using: :btree
-  add_index "images", ["credit"], name: "index_images_on_credit", using: :btree
-  add_index "images", ["user_id"], name: "index_images_on_user_id", using: :btree
-  add_index "images", ["year"], name: "index_images_on_year", using: :btree
-
-  create_table "items", force: :cascade do |t|
-    t.string   "type",           limit: 40
-    t.integer  "player_id",      limit: 4
-    t.integer  "fee_id",         limit: 4
-    t.integer  "cart_id",        limit: 4
-    t.string   "description",    limit: 255
-    t.string   "player_data",    limit: 255
-    t.date     "start_date"
-    t.date     "end_date"
-    t.decimal  "cost",                        precision: 9, scale: 2
-    t.string   "status",         limit: 20,                           default: "unpaid"
-    t.string   "source",         limit: 8,                            default: "www2"
-    t.string   "payment_method", limit: 20
-    t.string   "notes",          limit: 1000,                         default: "--- []\n"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "section",        limit: 255
+  create_table "fees", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "type", limit: 40
+    t.string "name", limit: 100
+    t.decimal "amount", precision: 9, scale: 2
+    t.decimal "discounted_amount", precision: 9, scale: 2
+    t.string "years", limit: 7
+    t.integer "year", limit: 2
+    t.integer "days", limit: 2
+    t.date "start_date"
+    t.date "end_date"
+    t.date "sale_start"
+    t.date "sale_end"
+    t.date "age_ref_date"
+    t.date "discount_deadline"
+    t.integer "min_age", limit: 1
+    t.integer "max_age", limit: 1
+    t.integer "min_rating", limit: 2
+    t.integer "max_rating", limit: 2
+    t.string "url"
+    t.boolean "active", default: false
+    t.boolean "player_required", default: true
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "event_id"
+    t.string "sections"
+    t.boolean "organizer_only"
+    t.index ["active"], name: "index_fees_on_active"
+    t.index ["end_date"], name: "index_fees_on_end_date"
+    t.index ["event_id"], name: "index_fees_on_event_id"
+    t.index ["name"], name: "index_fees_on_name"
+    t.index ["sale_end"], name: "index_fees_on_sale_end"
+    t.index ["sale_start"], name: "index_fees_on_sale_start"
+    t.index ["start_date"], name: "index_fees_on_start_date"
+    t.index ["type"], name: "index_fees_on_type"
   end
 
-  add_index "items", ["cart_id"], name: "index_items_on_cart_id", using: :btree
-  add_index "items", ["end_date"], name: "index_items_on_end_date", using: :btree
-  add_index "items", ["fee_id"], name: "index_items_on_fee_id", using: :btree
-  add_index "items", ["payment_method"], name: "index_items_on_payment_method", using: :btree
-  add_index "items", ["player_id"], name: "index_items_on_player_id", using: :btree
-  add_index "items", ["source"], name: "index_items_on_source", using: :btree
-  add_index "items", ["start_date"], name: "index_items_on_start_date", using: :btree
-  add_index "items", ["status"], name: "index_items_on_status", using: :btree
-  add_index "items", ["type"], name: "index_items_on_type", using: :btree
-
-  create_table "journal_entries", force: :cascade do |t|
-    t.integer  "journalable_id",   limit: 4
-    t.string   "journalable_type", limit: 50
-    t.string   "action",           limit: 50
-    t.string   "column",           limit: 50
-    t.string   "by",               limit: 255
-    t.string   "ip",               limit: 50
-    t.string   "from",             limit: 255
-    t.string   "to",               limit: 255
-    t.datetime "created_at"
-    t.string   "source",           limit: 8,   default: "www2"
+  create_table "games", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "annotator", limit: 50
+    t.string "black", limit: 50
+    t.integer "black_elo", limit: 2
+    t.string "date", limit: 10
+    t.string "eco", limit: 3
+    t.string "event", limit: 50
+    t.string "fen", limit: 100
+    t.text "moves"
+    t.integer "pgn_id"
+    t.integer "ply", limit: 2
+    t.string "result", limit: 3
+    t.string "round", limit: 7
+    t.string "signature", limit: 32
+    t.string "site", limit: 50
+    t.string "white", limit: 50
+    t.integer "white_elo", limit: 2
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.boolean "in_link"
+    t.index ["black"], name: "index_games_on_black"
+    t.index ["date"], name: "index_games_on_date"
+    t.index ["eco"], name: "index_games_on_eco"
+    t.index ["event"], name: "index_games_on_event"
+    t.index ["result"], name: "index_games_on_result"
+    t.index ["signature"], name: "index_games_on_signature"
+    t.index ["white"], name: "index_games_on_white"
   end
 
-  add_index "journal_entries", ["action"], name: "index_journal_entries_on_action", using: :btree
-  add_index "journal_entries", ["by"], name: "index_journal_entries_on_by", using: :btree
-  add_index "journal_entries", ["column"], name: "index_journal_entries_on_column", using: :btree
-  add_index "journal_entries", ["ip"], name: "index_journal_entries_on_ip", using: :btree
-  add_index "journal_entries", ["journalable_id", "journalable_type"], name: "index_journal_entries_on_journalable_id_and_journalable_type", using: :btree
-  add_index "journal_entries", ["journalable_id"], name: "index_journal_entries_on_journalable_id", using: :btree
-  add_index "journal_entries", ["journalable_type"], name: "index_journal_entries_on_journalable_type", using: :btree
-
-  create_table "logins", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.string   "error",      limit: 255
-    t.string   "roles",      limit: 255
-    t.string   "ip",         limit: 50
-    t.datetime "created_at"
+  create_table "images", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "data_file_name"
+    t.string "data_content_type"
+    t.integer "data_file_size"
+    t.datetime "data_updated_at", precision: nil
+    t.string "caption"
+    t.string "dimensions"
+    t.string "credit", limit: 100
+    t.string "source", limit: 8, default: "www2"
+    t.integer "year", limit: 2
+    t.integer "user_id"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["caption"], name: "index_images_on_caption"
+    t.index ["credit"], name: "index_images_on_credit"
+    t.index ["user_id"], name: "index_images_on_user_id"
+    t.index ["year"], name: "index_images_on_year"
   end
 
-  add_index "logins", ["created_at", "user_id"], name: "index_logins_on_created_at_and_user_id", using: :btree
-  add_index "logins", ["created_at"], name: "index_logins_on_created_at", using: :btree
-  add_index "logins", ["error"], name: "index_logins_on_error", using: :btree
-  add_index "logins", ["ip"], name: "index_logins_on_ip", using: :btree
-  add_index "logins", ["user_id"], name: "index_logins_on_user_id", using: :btree
-
-  create_table "mail_events", force: :cascade do |t|
-    t.integer  "accepted",     limit: 4, default: 0
-    t.integer  "rejected",     limit: 4, default: 0
-    t.integer  "delivered",    limit: 4, default: 0
-    t.integer  "failed",       limit: 4, default: 0
-    t.integer  "opened",       limit: 4, default: 0
-    t.integer  "clicked",      limit: 4, default: 0
-    t.integer  "unsubscribed", limit: 4, default: 0
-    t.integer  "complained",   limit: 4, default: 0
-    t.integer  "stored",       limit: 4, default: 0
-    t.integer  "total",        limit: 4, default: 0
-    t.integer  "other",        limit: 4, default: 0
-    t.date     "date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "pages",        limit: 1
+  create_table "items", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "type", limit: 40
+    t.integer "player_id"
+    t.integer "fee_id"
+    t.integer "cart_id"
+    t.string "description"
+    t.string "player_data"
+    t.date "start_date"
+    t.date "end_date"
+    t.decimal "cost", precision: 9, scale: 2
+    t.string "status", limit: 20, default: "unpaid"
+    t.string "source", limit: 8, default: "www2"
+    t.string "payment_method", limit: 20
+    t.string "notes", limit: 1000, default: "--- []\n"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.string "section"
+    t.index ["cart_id"], name: "index_items_on_cart_id"
+    t.index ["end_date"], name: "index_items_on_end_date"
+    t.index ["fee_id"], name: "index_items_on_fee_id"
+    t.index ["payment_method"], name: "index_items_on_payment_method"
+    t.index ["player_id"], name: "index_items_on_player_id"
+    t.index ["source"], name: "index_items_on_source"
+    t.index ["start_date"], name: "index_items_on_start_date"
+    t.index ["status"], name: "index_items_on_status"
+    t.index ["type"], name: "index_items_on_type"
   end
 
-  add_index "mail_events", ["date"], name: "index_mail_events_on_date", using: :btree
-
-  create_table "news", force: :cascade do |t|
-    t.boolean  "active"
-    t.date     "date"
-    t.string   "headline",   limit: 100
-    t.text     "summary",    limit: 65535
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "nlikes",     limit: 4
-    t.string   "category",   limit: 20
+  create_table "journal_entries", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "journalable_id"
+    t.string "journalable_type", limit: 50
+    t.string "action", limit: 50
+    t.string "column", limit: 50
+    t.string "by"
+    t.string "ip", limit: 50
+    t.string "from"
+    t.string "to"
+    t.datetime "created_at", precision: nil
+    t.string "source", limit: 8, default: "www2"
+    t.index ["action"], name: "index_journal_entries_on_action"
+    t.index ["by"], name: "index_journal_entries_on_by"
+    t.index ["column"], name: "index_journal_entries_on_column"
+    t.index ["ip"], name: "index_journal_entries_on_ip"
+    t.index ["journalable_id", "journalable_type"], name: "index_journal_entries_on_journalable_id_and_journalable_type"
+    t.index ["journalable_id"], name: "index_journal_entries_on_journalable_id"
+    t.index ["journalable_type"], name: "index_journal_entries_on_journalable_type"
   end
 
-  add_index "news", ["active"], name: "index_news_on_active", using: :btree
-  add_index "news", ["date"], name: "index_news_on_date", using: :btree
-  add_index "news", ["headline"], name: "index_news_on_headline", using: :btree
-  add_index "news", ["user_id"], name: "index_news_on_user_id", using: :btree
-
-  create_table "news_likes", force: :cascade do |t|
-    t.integer  "news_id",    limit: 4
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at"
+  create_table "logins", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "error"
+    t.string "roles"
+    t.string "ip", limit: 50
+    t.datetime "created_at", precision: nil
+    t.index ["created_at", "user_id"], name: "index_logins_on_created_at_and_user_id"
+    t.index ["created_at"], name: "index_logins_on_created_at"
+    t.index ["error"], name: "index_logins_on_error"
+    t.index ["ip"], name: "index_logins_on_ip"
+    t.index ["user_id"], name: "index_logins_on_user_id"
   end
 
-  add_index "news_likes", ["news_id", "user_id"], name: "index_news_likes_on_news_id_and_user_id", unique: true, using: :btree
-
-  create_table "officers", force: :cascade do |t|
-    t.string   "role",       limit: 20
-    t.integer  "player_id",  limit: 4
-    t.integer  "rank",       limit: 1
-    t.boolean  "executive",             default: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "active",                default: true
+  create_table "mail_events", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "accepted", default: 0
+    t.integer "rejected", default: 0
+    t.integer "delivered", default: 0
+    t.integer "failed", default: 0
+    t.integer "opened", default: 0
+    t.integer "clicked", default: 0
+    t.integer "unsubscribed", default: 0
+    t.integer "complained", default: 0
+    t.integer "stored", default: 0
+    t.integer "total", default: 0
+    t.integer "other", default: 0
+    t.date "date"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "pages", limit: 1
+    t.index ["date"], name: "index_mail_events_on_date"
   end
 
-  create_table "partners", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "url",        limit: 255
-    t.integer  "image_id",   limit: 4
-    t.boolean  "active"
-    t.integer  "clicks",     limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+  create_table "news", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.boolean "active"
+    t.date "date"
+    t.string "headline", limit: 100
+    t.text "summary"
+    t.integer "user_id"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "nlikes"
+    t.string "category", limit: 20
+    t.index ["active"], name: "index_news_on_active"
+    t.index ["date"], name: "index_news_on_date"
+    t.index ["headline"], name: "index_news_on_headline"
+    t.index ["user_id"], name: "index_news_on_user_id"
   end
 
-  create_table "payment_errors", force: :cascade do |t|
-    t.integer  "cart_id",            limit: 4
-    t.string   "message",            limit: 255
-    t.string   "details",            limit: 255
-    t.string   "payment_name",       limit: 100
-    t.string   "confirmation_email", limit: 50
-    t.datetime "created_at"
+  create_table "news_likes", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "news_id"
+    t.integer "user_id"
+    t.datetime "created_at", precision: nil
+    t.index ["news_id", "user_id"], name: "index_news_likes_on_news_id_and_user_id", unique: true
   end
 
-  add_index "payment_errors", ["cart_id"], name: "index_payment_errors_on_cart_id", using: :btree
-  add_index "payment_errors", ["confirmation_email"], name: "index_payment_errors_on_confirmation_email", using: :btree
-
-  create_table "pgns", force: :cascade do |t|
-    t.string   "comment",      limit: 255
-    t.string   "content_type", limit: 255
-    t.integer  "duplicates",   limit: 4,   default: 0
-    t.string   "file_name",    limit: 255
-    t.integer  "file_size",    limit: 4,   default: 0
-    t.integer  "game_count",   limit: 4,   default: 0
-    t.integer  "imports",      limit: 4,   default: 0
-    t.integer  "lines",        limit: 4,   default: 0
-    t.string   "problem",      limit: 255
-    t.integer  "user_id",      limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "officers", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "role", limit: 20
+    t.integer "player_id"
+    t.integer "rank", limit: 1
+    t.boolean "executive", default: true
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.boolean "active", default: true
   end
 
-  add_index "pgns", ["comment"], name: "index_pgns_on_comment", using: :btree
-  add_index "pgns", ["file_name"], name: "index_pgns_on_file_name", using: :btree
-  add_index "pgns", ["user_id"], name: "index_pgns_on_user_id", using: :btree
-
-  create_table "players", force: :cascade do |t|
-    t.string   "first_name",         limit: 50
-    t.string   "last_name",          limit: 50
-    t.string   "status",             limit: 25
-    t.string   "source",             limit: 25
-    t.integer  "player_id",          limit: 4
-    t.string   "gender",             limit: 1
-    t.date     "dob"
-    t.date     "joined"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "club_id",            limit: 4
-    t.string   "fed",                limit: 3
-    t.string   "player_title",       limit: 3
-    t.string   "arbiter_title",      limit: 3
-    t.string   "trainer_title",      limit: 3
-    t.string   "email",              limit: 50
-    t.string   "address",            limit: 255
-    t.string   "home_phone",         limit: 30
-    t.string   "mobile_phone",       limit: 30
-    t.string   "work_phone",         limit: 30
-    t.text     "note",               limit: 65535
-    t.integer  "legacy_rating",      limit: 2
-    t.string   "legacy_rating_type", limit: 20
-    t.integer  "legacy_games",       limit: 2
-    t.integer  "latest_rating",      limit: 2
-    t.string   "privacy",            limit: 255
+  create_table "payment_errors", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "cart_id"
+    t.string "message"
+    t.string "details"
+    t.string "payment_name", limit: 100
+    t.string "confirmation_email", limit: 50
+    t.datetime "created_at", precision: nil
+    t.index ["cart_id"], name: "index_payment_errors_on_cart_id"
+    t.index ["confirmation_email"], name: "index_payment_errors_on_confirmation_email"
   end
 
-  add_index "players", ["club_id"], name: "index_players_on_club_id", using: :btree
-  add_index "players", ["dob"], name: "index_players_on_dob", using: :btree
-  add_index "players", ["fed"], name: "index_players_on_fed", using: :btree
-  add_index "players", ["first_name", "last_name"], name: "index_players_on_first_name_and_last_name", using: :btree
-  add_index "players", ["first_name"], name: "index_players_on_first_name", using: :btree
-  add_index "players", ["gender"], name: "index_players_on_gender", using: :btree
-  add_index "players", ["joined"], name: "index_players_on_joined", using: :btree
-  add_index "players", ["last_name"], name: "index_players_on_last_name", using: :btree
-  add_index "players", ["player_id"], name: "index_players_on_player_id", using: :btree
-  add_index "players", ["source"], name: "index_players_on_source", using: :btree
-  add_index "players", ["status"], name: "index_players_on_status", using: :btree
-
-  create_table "refunds", force: :cascade do |t|
-    t.integer  "cart_id",    limit: 4
-    t.integer  "user_id",    limit: 4
-    t.string   "error",      limit: 255
-    t.decimal  "amount",                 precision: 9, scale: 2
-    t.datetime "created_at"
-    t.boolean  "automatic",                                      default: true
+  create_table "pgns", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "comment"
+    t.string "content_type"
+    t.integer "duplicates", default: 0
+    t.string "file_name"
+    t.integer "file_size", default: 0
+    t.integer "game_count", default: 0
+    t.integer "imports", default: 0
+    t.integer "lines", default: 0
+    t.string "problem"
+    t.integer "user_id"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["comment"], name: "index_pgns_on_comment"
+    t.index ["file_name"], name: "index_pgns_on_file_name"
+    t.index ["user_id"], name: "index_pgns_on_user_id"
   end
 
-  add_index "refunds", ["cart_id"], name: "index_refunds_on_cart_id", using: :btree
-  add_index "refunds", ["created_at"], name: "index_refunds_on_created_at", using: :btree
-  add_index "refunds", ["user_id"], name: "index_refunds_on_user_id", using: :btree
-
-  create_table "relays", force: :cascade do |t|
-    t.string   "from",        limit: 50
-    t.string   "to",          limit: 255
-    t.string   "provider_id", limit: 50
-    t.integer  "officer_id",  limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "enabled",                 default: true
+  create_table "players", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "first_name", limit: 50
+    t.string "last_name", limit: 50
+    t.string "status", limit: 25
+    t.string "source", limit: 25
+    t.integer "player_id"
+    t.string "gender", limit: 1
+    t.date "dob"
+    t.date "joined"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "club_id"
+    t.string "fed", limit: 3
+    t.string "player_title", limit: 3
+    t.string "arbiter_title", limit: 3
+    t.string "trainer_title", limit: 3
+    t.string "email", limit: 50
+    t.string "address"
+    t.string "home_phone", limit: 30
+    t.string "mobile_phone", limit: 30
+    t.string "work_phone", limit: 30
+    t.text "note"
+    t.integer "legacy_rating", limit: 2
+    t.string "legacy_rating_type", limit: 20
+    t.integer "legacy_games", limit: 2
+    t.integer "latest_rating", limit: 2
+    t.string "privacy"
+    t.index ["club_id"], name: "index_players_on_club_id"
+    t.index ["dob"], name: "index_players_on_dob"
+    t.index ["fed"], name: "index_players_on_fed"
+    t.index ["first_name", "last_name"], name: "index_players_on_first_name_and_last_name"
+    t.index ["first_name"], name: "index_players_on_first_name"
+    t.index ["gender"], name: "index_players_on_gender"
+    t.index ["joined"], name: "index_players_on_joined"
+    t.index ["last_name"], name: "index_players_on_last_name"
+    t.index ["player_id"], name: "index_players_on_player_id"
+    t.index ["source"], name: "index_players_on_source"
+    t.index ["status"], name: "index_players_on_status"
   end
 
-  create_table "results", force: :cascade do |t|
-    t.string   "competition", limit: 255
-    t.string   "player1",     limit: 255
-    t.string   "player2",     limit: 255
-    t.string   "score",       limit: 255
-    t.integer  "reporter_id", limit: 4
-    t.boolean  "active"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.string   "message",     limit: 255
+  create_table "refunds", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "cart_id"
+    t.integer "user_id"
+    t.string "error"
+    t.decimal "amount", precision: 9, scale: 2
+    t.datetime "created_at", precision: nil
+    t.boolean "automatic", default: true
+    t.index ["cart_id"], name: "index_refunds_on_cart_id"
+    t.index ["created_at"], name: "index_refunds_on_created_at"
+    t.index ["user_id"], name: "index_refunds_on_user_id"
   end
 
-  create_table "series", force: :cascade do |t|
-    t.string   "title",      limit: 100
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "relays", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "from", limit: 50
+    t.string "to"
+    t.string "provider_id", limit: 50
+    t.integer "officer_id"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.boolean "enabled", default: true
   end
 
-  add_index "series", ["title"], name: "index_series_on_title", using: :btree
-
-  create_table "sponsors", force: :cascade do |t|
-    t.string   "name",              limit: 255
-    t.integer  "weight",            limit: 4
-    t.string   "weblink",           limit: 255
-    t.string   "contact_email",     limit: 255
-    t.string   "contact_name",      limit: 255
-    t.string   "contact_phone",     limit: 255
-    t.integer  "clicks",            limit: 4
-    t.date     "valid_until"
-    t.text     "notes",             limit: 65535
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.string   "logo_file_name",    limit: 255
-    t.string   "logo_content_type", limit: 255
-    t.integer  "logo_file_size",    limit: 4
-    t.datetime "logo_updated_at"
-    t.integer  "eyeballs",          limit: 4
+  create_table "results", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "competition"
+    t.string "player1"
+    t.string "player2"
+    t.string "score"
+    t.integer "reporter_id"
+    t.boolean "active"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "message"
   end
 
-  create_table "tournaments", force: :cascade do |t|
-    t.boolean  "active"
-    t.string   "category",   limit: 20
-    t.string   "city",       limit: 50
-    t.text     "details",    limit: 65535
-    t.string   "format",     limit: 20
-    t.string   "name",       limit: 80
-    t.integer  "year",       limit: 2
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "series", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title", limit: 100
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["title"], name: "index_series_on_title"
   end
 
-  add_index "tournaments", ["active"], name: "index_tournaments_on_active", using: :btree
-  add_index "tournaments", ["category"], name: "index_tournaments_on_category", using: :btree
-  add_index "tournaments", ["city"], name: "index_tournaments_on_city", using: :btree
-  add_index "tournaments", ["format"], name: "index_tournaments_on_format", using: :btree
-  add_index "tournaments", ["name"], name: "index_tournaments_on_name", using: :btree
-  add_index "tournaments", ["year"], name: "index_tournaments_on_year", using: :btree
-
-  create_table "translations", force: :cascade do |t|
-    t.string   "locale",      limit: 2
-    t.string   "key",         limit: 255
-    t.string   "value",       limit: 255
-    t.string   "english",     limit: 255
-    t.string   "old_english", limit: 255
-    t.string   "user",        limit: 255
-    t.boolean  "active"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "sponsors", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "weight"
+    t.string "weblink"
+    t.string "contact_email"
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.integer "clicks"
+    t.date "valid_until"
+    t.text "notes"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "logo_file_name"
+    t.string "logo_content_type"
+    t.integer "logo_file_size"
+    t.datetime "logo_updated_at", precision: nil
+    t.integer "eyeballs"
   end
 
-  add_index "translations", ["active"], name: "index_translations_on_active", using: :btree
-  add_index "translations", ["english"], name: "index_translations_on_english", using: :btree
-  add_index "translations", ["key"], name: "index_translations_on_key", using: :btree
-  add_index "translations", ["user"], name: "index_translations_on_user", using: :btree
-  add_index "translations", ["value"], name: "index_translations_on_value", using: :btree
-
-  create_table "user_inputs", force: :cascade do |t|
-    t.integer "fee_id",          limit: 4
-    t.string  "type",            limit: 40
-    t.string  "label",           limit: 100
-    t.boolean "required",                                            default: true
-    t.integer "max_length",      limit: 2
-    t.decimal "min_amount",                  precision: 6, scale: 2, default: 1.0
-    t.string  "date_constraint", limit: 30,                          default: "none"
+  create_table "tournaments", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.boolean "active"
+    t.string "category", limit: 20
+    t.string "city", limit: 50
+    t.text "details"
+    t.string "format", limit: 20
+    t.string "name", limit: 80
+    t.integer "year", limit: 2
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["active"], name: "index_tournaments_on_active"
+    t.index ["category"], name: "index_tournaments_on_category"
+    t.index ["city"], name: "index_tournaments_on_city"
+    t.index ["format"], name: "index_tournaments_on_format"
+    t.index ["name"], name: "index_tournaments_on_name"
+    t.index ["year"], name: "index_tournaments_on_year"
   end
 
-  add_index "user_inputs", ["fee_id"], name: "index_user_inputs_on_fee_id", using: :btree
-  add_index "user_inputs", ["type"], name: "index_user_inputs_on_type", using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "email",                  limit: 255
-    t.string   "roles",                  limit: 255
-    t.string   "encrypted_password",     limit: 32
-    t.string   "salt",                   limit: 32
-    t.string   "status",                 limit: 255, default: "OK"
-    t.integer  "player_id",              limit: 4
-    t.date     "expires_on"
-    t.datetime "verified_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "theme",                  limit: 16
-    t.string   "locale",                 limit: 2,   default: "en"
-    t.boolean  "hide_header",                        default: false
-    t.datetime "last_used_at"
-    t.string   "reset_password_token",   limit: 255
-    t.datetime "reset_password_sent_at"
-    t.boolean  "disallow_reporting"
-    t.boolean  "junior_newsletter"
-    t.boolean  "newsletter"
+  create_table "translations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "locale", limit: 2
+    t.string "key"
+    t.string "value"
+    t.string "english"
+    t.string "old_english"
+    t.string "user"
+    t.boolean "active"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["active"], name: "index_translations_on_active"
+    t.index ["english"], name: "index_translations_on_english"
+    t.index ["key"], name: "index_translations_on_key"
+    t.index ["user"], name: "index_translations_on_user"
+    t.index ["value"], name: "index_translations_on_value"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", using: :btree
-  add_index "users", ["expires_on"], name: "index_users_on_expires_on", using: :btree
-  add_index "users", ["last_used_at"], name: "index_users_on_last_used_at", using: :btree
-  add_index "users", ["player_id"], name: "index_users_on_player_id", using: :btree
-  add_index "users", ["roles"], name: "index_users_on_roles", using: :btree
-  add_index "users", ["status"], name: "index_users_on_status", using: :btree
-  add_index "users", ["verified_at"], name: "index_users_on_verified_at", using: :btree
+  create_table "user_inputs", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "fee_id"
+    t.string "type", limit: 40
+    t.string "label", limit: 100
+    t.boolean "required", default: true
+    t.integer "max_length", limit: 2
+    t.decimal "min_amount", precision: 6, scale: 2, default: "1.0"
+    t.string "date_constraint", limit: 30, default: "none"
+    t.index ["fee_id"], name: "index_user_inputs_on_fee_id"
+    t.index ["type"], name: "index_user_inputs_on_type"
+  end
 
+  create_table "users", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "email"
+    t.string "roles"
+    t.string "encrypted_password", limit: 32
+    t.string "salt", limit: 32
+    t.string "status", default: "OK"
+    t.integer "player_id"
+    t.date "expires_on"
+    t.datetime "verified_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.string "theme", limit: 16
+    t.string "locale", limit: 2, default: "en"
+    t.boolean "hide_header", default: false
+    t.datetime "last_used_at", precision: nil
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.boolean "disallow_reporting"
+    t.boolean "junior_newsletter"
+    t.boolean "newsletter"
+    t.index ["email"], name: "index_users_on_email"
+    t.index ["expires_on"], name: "index_users_on_expires_on"
+    t.index ["last_used_at"], name: "index_users_on_last_used_at"
+    t.index ["player_id"], name: "index_users_on_player_id"
+    t.index ["roles"], name: "index_users_on_roles"
+    t.index ["status"], name: "index_users_on_status"
+    t.index ["verified_at"], name: "index_users_on_verified_at"
+  end
+
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "champions", "images"
   add_foreign_key "documents", "documents", column: "previous_version_id"
   add_foreign_key "documents", "users", column: "changed_by_id"
