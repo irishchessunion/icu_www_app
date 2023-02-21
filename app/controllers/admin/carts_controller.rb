@@ -12,10 +12,12 @@ class Admin::CartsController < ApplicationController
     @prev_next = Util::PrevNext.new(session, Cart, params[:id], admin: true)
   end
 
-  def show_charge
+  def show_intent
     @cart = Cart.find(params[:id])
-    @charge = Stripe::Charge.retrieve(@cart.payment_ref)
-    @json = JSON.pretty_generate(@charge.as_json)
+    # @charge = Stripe::Charge.retrieve(@cart.payment_ref)
+    # @json = JSON.pretty_generate(@charge.as_json)
+    @intent = Stripe::PaymentIntent.retrieve(@cart.payment_ref)
+    @json = JSON.pretty_generate(@intent.as_json)
   rescue => e
     @error = e.message
   end

@@ -74,7 +74,7 @@ IcuWwwApp::Application.routes.draw do
     resources :article_ids,     only: [:index]
     resources :bad_logins,      only: [:index]
     resources :carts,           only: [:index, :show, :edit, :update] do
-      get :show_charge, on: :member
+      get :show_intent, on: :member
     end
     resources :cash_payments,   only: [:new, :create]
     resources :champions,       only: [:new, :create, :edit, :update, :destroy]

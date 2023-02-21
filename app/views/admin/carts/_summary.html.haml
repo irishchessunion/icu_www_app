@@ -34,7 +34,7 @@
       - if cart.payment_ref.present?
         %tr
           %th Payment reference
-          %td= link_to_if cart.purchased_with_current_payment_account?, cart.payment_ref, show_charge_admin_cart_path(cart), remote: true, id: "charge_modal_link"
+          %td= link_to_if cart.purchased_with_current_payment_account?, cart.payment_ref, show_intent_admin_cart_path(cart), remote: true, id: "charge_modal_link"
       - if cart.payment_completed.present?
         %tr
           %th Payment completed

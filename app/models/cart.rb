@@ -77,12 +77,12 @@ class Cart < ApplicationRecord
   def refund(item_ids, user)
     automatic = refundable?
     refund = Refund.new(user: user, cart: self, automatic: automatic)
-    intent = Stripe::PaymentIntent.retrieve(payment_ref)
+    intent = Stripe::PaymentIntent.retrieve(payment_ref) if automatic
     # charge = Stripe::Charge.retrieve(intent.latest_charge)
     amount = refund_amount(item_ids, intent)
     refund.amount = amount
-    stripe_refund_object = Stripe::Refund.create({payment_intent: intent.id, amount: cents(amount)})
-    if stripe_refund_object.status == "failed"
+    stripe_refund_object = Stripe::Refund.create({payment_intent: intent.id, amount: cents(amount)}) if automatic
+    if automatic and stripe_refund_object.status == "failed"
       refund.error = "Stripe refund transaction failed"
     else
       items.each do |item|

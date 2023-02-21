@@ -51,7 +51,6 @@ class User < ApplicationRecord
 
   def valid_password?(password)
     encrypted_password == User.encrypt_password(password, salt)
-    # true
   end
 
   def status_ok?
