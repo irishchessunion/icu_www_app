@@ -4,9 +4,11 @@ class Admin::ItemsController < ApplicationController
 
   def index
     authorize! :index, Item
+    @params = params.permit(:description, :type, :status, :payment_method, :player_id, :first_name, :last_name, :from_date, :to_date, :format)
     params[:format] = 'csv' if generating_csv?
     @items = Item.search(params, admin_items_path)
     flash.now[:warning] = t("no_matches") if @items.count == 0
+
 
     respond_to do |format|
       format.html do

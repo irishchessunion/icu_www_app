@@ -86,7 +86,7 @@ class Player < ApplicationRecord
   # @return [Item::Subscription]
   # This code handles the problem of lifetime members properly.
   def most_recent_subscription
-    Item::Subscription.where(player_id: id).order("coalesce(start_date, CURRENT_DATE) DESC").limit(1).first
+    Item::Subscription.where(player_id: id).order(Arel.sql("coalesce(start_date, CURRENT_DATE) DESC")).limit(1).first
   end
 
   def age(ref=Date.today)

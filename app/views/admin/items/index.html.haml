@@ -29,5 +29,5 @@
               %td.text-center= link_to item.cart_id, [:admin, item.cart] if item.cart
           = render "utils/pagination_links", pager: @items, columns: 8
       .text-center
-        = link_to t("item.csv"), admin_items_path(params.merge(format: :csv)), class: "btn btn-info" if params[:description].present?
-        = link_to t("item.txt"), admin_items_path(params.merge(format: :txt)), class: "btn btn-info" if params[:description].present?
+        = link_to t("item.csv"), admin_items_path(@params.merge(format: :csv)), class: "btn btn-info" if params[:description].present?
+        = link_to t("item.txt"), admin_items_path(@params.merge(format: :txt)), class: "btn btn-info" if params[:description].present?

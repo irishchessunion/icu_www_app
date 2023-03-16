@@ -46,7 +46,7 @@ describe "Pay", js: true do
   let(:cvc)     { "123" }
   let(:expiry)  { "01 / #{((Date.today.year + 2).to_s)[2..4]}" }
   # let(:number)  { "4242 4242 4242 4242" }
-  let(:number)  { "4000 0025 0000 3155" }
+  let(:number)  { "4000 0027 6000 3184" }
   let(:stripe)  { "stripe" }
   let(:account) { Cart.current_payment_account }
 
@@ -81,13 +81,17 @@ describe "Pay", js: true do
     # fill_in name_id, with: opt[:name]     if opt[:name]
     fill_in email_id, with: opt[:email]   if opt[:email]
     click_button pay
-    if opt[:number] == "4000 0025 0000 3155"
+    if opt[:number] == number
       # 3D secure, the button is in 3 nested iframes
-      wait_a_second(10)
+      wait_a_second(5)
       within_frame(0) do
         within_frame(0) do
           within_frame(0) do
-            click_button "test-source-authorize-3ds"
+            # page.find('.source-actions-3ds :first-child #test-source-authorize-3ds').native.send_key(:enter)
+            page.find('#test-source-authorize-3ds').native.send_key(:enter)
+            # element = page.find('.source-actions-3ds :first-child')
+            # Capybara::RackTest::Form.new(page.driver, element.native).submit :name => nil
+            # click_button "test-source-authorize-3ds"
           end
         end
       end
@@ -113,6 +117,7 @@ describe "Pay", js: true do
     before(:each) do
       add_something_to_cart
       click_link checkout
+      wait_a_second(2)
     end
 
     it "successful" do
@@ -171,6 +176,8 @@ describe "Pay", js: true do
     it "stripe errors" do
       fill_in_all_and_click_pay(number: "4000000000000002")
       # expect(page).to have_css(failure, text: gateway_error(card_declined))
+      # save_and_open_page
+      wait_a_second(2)
       expect(page).to have_css(failure, text: card_declined)
       subscription = Item::Subscription.last
       expect(subscription).to be_unpaid
@@ -187,6 +194,7 @@ describe "Pay", js: true do
       
       fill_in_number_and_click_pay(number: "4000000000000069")
       # expect(page).to have_css(failure, text: gateway_error(expired_card))
+      wait_a_second(2)
       expect(page).to have_css(failure, text: expired_card)
       subscription.reload
       expect(subscription).to be_unpaid
@@ -207,6 +215,7 @@ describe "Pay", js: true do
       click_link checkout
       
       fill_in_all_and_click_pay(number: "4000000000000127")
+      wait_a_second(2)
       # expect(page).to have_css(failure, text: gateway_error(incorrect_cvc))
       expect(page).to have_css(failure, text: incorrect_cvc)
       subscription.reload
@@ -428,7 +437,7 @@ describe "Pay", js: true do
       click_button select_member
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
-      click_link player.id
+      click_link player.id.to_s
       click_button add_to_cart
     end
 

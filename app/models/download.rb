@@ -15,6 +15,7 @@ class Download < ApplicationRecord
     docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     pdf:  "application/pdf",
     pgn:  ["application/x-chess-pgn", "application/octet-stream"],
+    rtf:  ["application/rtf", "text/rtf"],
     txt:  "text/plain",
     wav:  "audio/x-wav",
     xls:  ["application/vnd.ms-excel", "application/vnd.ms-office"],
