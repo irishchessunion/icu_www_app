@@ -1,6 +1,6 @@
 - content_for :title, t("fee.type.#{@fee.subtype}")
 - content_for :javascript do
-  = render "items/utils.js"
+  = render(:partial => "items/utils", :formats => [:js])
 
 = form_for @item, url: admin_item_path(@item.id), method: 'put' do |form|
   .row

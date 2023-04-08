@@ -38,7 +38,7 @@ class Admin::ItemsController < ApplicationController
   end
 
   def update
-    @item.update_attributes(item_params)
+    @item.update(item_params)
     redirect_to event_path(@item.fee.event_id) if @item.fee.event_id
   end
 

@@ -18,7 +18,7 @@
         %tbody
           - @refunds.matches.each do |refund|
             %tr
-              %td= link_to refund.cart_id, [:admin, refund.cart]
+              %td= link_to refund.cart_id, admin_cart_path(refund.cart_id)
               %td= euros(refund.amount)
               %td= t("shop.payment.#{refund.automatic ? 'refund' : 'revoke'}")
               %td= refund.user.player.name
