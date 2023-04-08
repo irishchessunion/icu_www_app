@@ -43,10 +43,6 @@ class PagesController < ApplicationController
     @junior_clubs = Club.active.junior
   end
 
-  def not_found
-    render file: "#{Rails.root}/public/404.html", formats: [:html], layout: false, status: 404
-  end
-
   private
 
   def load_donate_fee
