@@ -3,7 +3,7 @@ class Admin::JournalEntriesController < ApplicationController
     authorize! :index, JournalEntry
     @entries = JournalEntry.search(params, admin_journal_entries_path, remote: request.xhr?)
     if request.xhr?
-      render "changes.js"
+      render "changes", format: :js
     else
       flash.now[:warning] = t("no_matches") if @entries.count == 0
       save_last_search(@entries, :journal_entries)
