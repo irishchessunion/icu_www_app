@@ -10,6 +10,7 @@
  *
  *= require_self
  *= require board-min
+ *= require boards
  */
 
 /* Text styling. */

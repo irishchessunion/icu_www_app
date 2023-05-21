@@ -140,7 +140,7 @@ module Util
     private
 
     def self.client(key="secret")
-      ::Mailgun::Client.new Rails.application.secrets.mailgun[key]
+      ::Mailgun::Client.new Rails.application.secrets.mailgun[key.to_sym]
     end
 
     def self.get_count(item)

@@ -26,7 +26,7 @@
               %td= t("shop.payment.method.#{item.payment_method}") if item.payment_method
               %td= to_date(item.created_at)
               %td= item.abbreviated_notes
-              %td.text-center= link_to item.cart_id, [:admin, item.cart] if item.cart
+              %td.text-center= can?(:show, Cart) ? (link_to item.cart_id, [:admin, item.cart] if item.cart) : item.cart_id
           = render "utils/pagination_links", pager: @items, columns: 8
       .text-center
         = link_to t("item.csv"), admin_items_path(@params.merge(format: :csv)), class: "btn btn-info" if params[:description].present?

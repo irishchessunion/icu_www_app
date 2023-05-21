@@ -1,5 +1,5 @@
 - content_for :javascript do
-  = render "utils/file_field.js", param: "logo"
+  = render(:partial => "utils/file_field", :formats => [:js], :handlers => [:erb], :locals => { :param => "logo" })
 
 .row
   .col-sm-1

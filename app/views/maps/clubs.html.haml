@@ -1,5 +1,5 @@
 - content_for :includes do
-  = javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Rails.application.secrets.google['simple_api_key']}"
+  = javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Rails.application.secrets.google[:simple_api_key]}"
 - content_for :javascript do
   = render(:partial => "clubs", :handlers => [:erb], :formats => [:js])
 - content_for :title, t("club.map")

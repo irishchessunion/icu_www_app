@@ -22,7 +22,7 @@ class Admin::PagesController < ApplicationController
         @message = e.message
         @error = true
       end
-      render "test_email.js"
+      render "test_email", format: :js
     end
   end
 
