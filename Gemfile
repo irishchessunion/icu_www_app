@@ -33,6 +33,7 @@ gem 'terrapin'
 
 group :development do
   gem "capistrano" # For same reason as colorize comment above
+  gem "capistrano-rvm"
   gem "capistrano-rails"
   gem "wirble"
 end
