@@ -72,7 +72,8 @@ class Cart < ApplicationRecord
   def create_intent
     intent = Stripe::PaymentIntent.create({
       amount: cents(self.total_cost),
-      currency: 'eur'
+      currency: 'eur',
+      description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),
     })
     intent
   end
