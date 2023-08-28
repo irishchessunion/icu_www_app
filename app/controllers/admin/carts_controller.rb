@@ -14,9 +14,11 @@ class Admin::CartsController < ApplicationController
 
   def show_intent
     @cart = Cart.find(params[:id])
-    # @charge = Stripe::Charge.retrieve(@cart.payment_ref)
-    # @json = JSON.pretty_generate(@charge.as_json)
-    @intent = Stripe::PaymentIntent.retrieve(@cart.payment_ref)
+    if @cart.payment_ref.start_with?("pi_")
+      @intent = Stripe::PaymentIntent.retrieve(@cart.payment_ref)
+    elsif @cart.payment_ref.start_with?("ch_")
+      @intent = Stripe::Charge.retrieve(@cart.payment_ref)
+    end
     @json = JSON.pretty_generate(@intent.as_json)
   rescue => e
     @error = e.message

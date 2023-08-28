@@ -52,6 +52,9 @@ class Cart < ApplicationRecord
     intent = Stripe::PaymentIntent.retrieve(params[:payment_intent_id]) if params[:payment_intent_id]
     if intent and intent.status == 'succeeded'
       successful_payment("stripe", intent.id, Cart.current_payment_account)
+    elsif intent and not intent.status == 'succeeded'
+      add_payment_error(intent, user.name, email, "Something went wrong, please contact webmaster@icu.ie")
+      return
     else
       successful_payment("free", nil, Cart.current_payment_account)
     end
