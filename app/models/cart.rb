@@ -81,12 +81,24 @@ class Cart < ApplicationRecord
   def refund(item_ids, user)
     automatic = refundable?
     refund = Refund.new(user: user, cart: self, automatic: automatic)
-    intent = Stripe::PaymentIntent.retrieve(payment_ref) if automatic
-    # charge = Stripe::Charge.retrieve(intent.latest_charge)
-    amount = refund_amount(item_ids, intent)
+    intent = nil
+    charge = nil
+    is_old_charge = payment_ref.start_with?("ch_") and automatic
+    is_pi = payment_ref.start_with?("pi_") and automatic
+    intent = Stripe::PaymentIntent.retrieve(payment_ref) if is_pi # new object
+    charge = Stripe::Charge.retrieve(payment_ref) if is_old_charge # old object
+
+    amount = refund_amount(item_ids, is_pi ? intent : charge, is_old_charge)
     refund.amount = amount
-    stripe_refund_object = Stripe::Refund.create({payment_intent: intent.id, amount: cents(amount)}) if automatic
-    if automatic and stripe_refund_object.status == "failed"
+
+    # new refund method
+    stripe_refund_object = Stripe::Refund.create({payment_intent: intent.id, amount: cents(amount)}) if is_pi
+
+    # old refund method
+    stripe_refund_object = Stripe::Refund.create({charge: charge.id, amount: cents(amount)}) if is_old_charge
+
+    if (is_pi or is_old_charge) and stripe_refund_object.status == "failed"
+      # catch refund failure
       refund.error = "Stripe refund transaction failed"
     else
       items.each do |item|
@@ -189,7 +201,7 @@ class Cart < ApplicationRecord
     (euros * 100).to_i
   end
 
-  def refund_amount(item_ids, intent)
+  def refund_amount(item_ids, intent, is_old_charge)
     # Check that the cart_items to be refunded all belong to this cart and have "paid" status.
     refund_amount = 0.0
     item_ids.each do |item_id|
@@ -208,7 +220,8 @@ class Cart < ApplicationRecord
 
       # Check any previous refund amounts are consistent.
       cart_refund = cents(original_total) - cents(total)
-      charge = Stripe::Charge.retrieve(intent.latest_charge)
+      charge = intent
+      charge = Stripe::Charge.retrieve(intent.latest_charge) unless is_old_charge
       unless cart_refund == charge.amount_refunded
         raise "Previous cart refund (#{cart_refund}) is inconsistent with previous Stripe refund (#{charge.amount_refunded})"
       end
