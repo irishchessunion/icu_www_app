@@ -83,8 +83,8 @@ class Cart < ApplicationRecord
     refund = Refund.new(user: user, cart: self, automatic: automatic)
     intent = nil
     charge = nil
-    is_old_charge = payment_ref.start_with?("ch_") and automatic
-    is_pi = payment_ref.start_with?("pi_") and automatic
+    is_old_charge = payment_ref&.start_with?("ch_") and automatic
+    is_pi = payment_ref&.start_with?("pi_") and automatic
     intent = Stripe::PaymentIntent.retrieve(payment_ref) if is_pi # new object
     charge = Stripe::Charge.retrieve(payment_ref) if is_old_charge # old object
 
