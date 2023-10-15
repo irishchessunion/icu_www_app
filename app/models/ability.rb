@@ -80,6 +80,12 @@ class Ability
       can :show, JournalEntry, journalable_type: "Translation"
     end
 
+    if user.auditor?
+      can :index, [Item, Cart]
+      can :show, Cart
+      can :show_intent, Cart
+    end
+
     if user.treasurer?
       can :create, CashPayment
       can :index, [Item, PaymentError, Refund]

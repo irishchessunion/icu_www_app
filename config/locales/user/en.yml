@@ -44,6 +44,7 @@ en:
       role: Role
       roles: Roles
       admin: Administrator
+      auditor: Auditor
       calendar: Calendar Editor
       documenter: ICU Document keeper
       editor: Editor
