@@ -19,7 +19,7 @@ class Document < ApplicationRecord
       when "HTML"
         return content.html_safe
       when "HAML"
-        return haml_to_html
+        return haml_to_html.html_safe
       when "MARKDOWN"
         return markdown_to_html
     end
@@ -35,7 +35,7 @@ class Document < ApplicationRecord
   private
 
   def haml_to_html
-    engine = Haml::Engine.new(content)
+    engine = Haml::Template.new { content }
     return engine.render
   end
 
