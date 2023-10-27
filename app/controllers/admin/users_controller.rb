@@ -1,5 +1,5 @@
 class Admin::UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update, :destroy, :login, :show]
+  before_action :set_user, only: [:edit, :update, :destroy, :login, :show, :verify]
   authorize_resource
 
   def index
@@ -63,6 +63,16 @@ class Admin::UsersController < ApplicationController
       session[:user_id] = @user.id
       redirect_to home_path, notice: "#{t('session.signed_in_as')} #{@user.email}"
     end
+  end
+
+  def verify
+    if @user.verified?
+      redirect_to admin_user_path(@user), alert: "User is already verified"
+      return
+    end
+    @user.update(verified_at: Time.now)
+    @user.journal(:update, current_user, request.remote_ip)
+    redirect_to admin_user_path(@user), notice: "User was successfully verified"
   end
 
   private

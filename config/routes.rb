@@ -117,6 +117,7 @@ IcuWwwApp::Application.routes.draw do
     resources :user_inputs,     only: [:show, :new, :create, :edit, :update, :destroy]
     resources :users do
       get :login, on: :member
+      get :verify, on: :member
     end
   end
 

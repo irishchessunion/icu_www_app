@@ -34,6 +34,9 @@
         %td
           - if @user.verified?
             %time{datetime: @user.verified_at.to_s(:html5)}= @user.verified_at.to_s(:nosec)
+          - else
+            Unverified -
+            = link_to 'Click to verify', verify_admin_user_path
       = render "utils/timestamps", object: @user
     = render "utils/show_buttons", object: @user, admin: "search", extras: { "Login" => login_admin_user_path(@user) }
 
