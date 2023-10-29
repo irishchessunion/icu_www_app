@@ -6,6 +6,7 @@ module Util
     MAX_EVENTS_PAGES = 10
     MAX_EVENTS_PER_PAGE = 300
     PROFILE = ChargeProfile.new(24, 10000, 0.0005, "USD")
+    STAT_EVENTS = %w[accepted delivered failed] # for now
 
     def self.validate(address)
       result = client("public").get "address/validate", { address: address }
@@ -74,11 +75,17 @@ module Util
 
     def self.stats(start_date)
       stats = Hash.new { |h, k| h[k] = Hash.new(0) }
-      client.get("icu.ie/stats", "start-date" => start_date.to_s, "limit" => 300).to_h["items"].each do |item|
-        date = get_date(item)
-        event = get_event(item)
-        count = get_count(item)
-        stats[date][event] = count
+      client.get("icu.ie/stats/total", {start: start_date.to_time.to_i, event: STAT_EVENTS}).to_h["stats"].each do |item|
+        STAT_EVENTS.each do |event|
+          time = Date.parse(item["time"]).to_s
+          if event == "failed"
+            # to account for the two failure cases
+            stats[time]["temporary-failed"] = item["failed"]["temporary"]["total"]
+            stats[time]["permanent-failed"] = item["failed"]["permanent"]["total"]
+          else
+            stats[time][event] = item[event]["total"]
+          end
+        end
       end
       stats
     end
