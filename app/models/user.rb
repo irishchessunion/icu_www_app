@@ -194,7 +194,7 @@ class User < ApplicationRecord
   def reason_to_not_delete
     case
     when roles.present?   then "has special roles"
-    when logins.count > 0 then "has recorded logins"
+    # when logins.count > 0 then "has recorded logins"
     else false
     end
   end
