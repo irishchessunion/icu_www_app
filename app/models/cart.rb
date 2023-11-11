@@ -242,7 +242,7 @@ class Cart < ApplicationRecord
       end
     else
       unless refund_amount < total
-        raise "Refund amount (#{refund_amount}) should be less than total (#{total})"
+        raise "Refund amount (#{refund_amount}) should be less than total (#{total})" unless total == 0.0
       end
     end
 
