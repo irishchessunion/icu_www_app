@@ -20,18 +20,14 @@
         = euros(current_cart.total_cost)
   %hr
   .row
-    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.number"), extra: { id: "number", data: { stripe: "number" } })
-    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.expiration"), width: 2, extra: { id: "expiry" })
-    -# = hidden_field_tag nil, nil, data: { stripe: "exp-month" }, id: "exp-month"
-    -# = hidden_field_tag nil, nil, data: { stripe: "exp-year" }, id: "exp-year"
-    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.security_code"), width: 2, extra: { id: "cvc", data: { stripe: "cvc" } })
-    -# = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: "payment_name", extra: { id: "name", data: { stripe: "name" } })
     #payment-element
     #error-message
   %hr
   .row
     = hidden_field_tag :confirmation_email
+    = hidden_field_tag :payment_name
     = hidden_field_tag :payment_intent_id
+    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: "payment_name", extra: { id: "name", data: { stripe: "name" } })
     = render "utils/text_field_tag", locals.merge(text: t("shop.payment.confirmation_email"), param: "confirmation_email", extra: { id: "email" })
   %hr
   .row

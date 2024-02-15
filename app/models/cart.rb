@@ -49,18 +49,19 @@ class Cart < ApplicationRecord
 
   def purchase(params, user)
     email = params[:confirmation_email]
+    name = params[:payment_name]
     intent = Stripe::PaymentIntent.retrieve(params[:payment_intent_id]) if params[:payment_intent_id]
     if intent and intent.status == 'succeeded'
-      Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", user.name, email].reject { |d| d.nil? }.join(", "),})
+      Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),})
       successful_payment("stripe", intent.id, Cart.current_payment_account)
     elsif intent and not intent.status == 'succeeded'
-      add_payment_error(intent, user.name, email, "Something went wrong, please contact webmaster@icu.ie")
+      add_payment_error(intent, name, email, "Something went wrong, please contact webmaster@icu.ie")
       return
     else
       successful_payment("free", nil, Cart.current_payment_account)
     end
 
-    update_cart(total_cost, user.name, email, user)
+    update_cart(total_cost, name, email, user)
     send_receipt
   end
 
