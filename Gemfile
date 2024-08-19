@@ -28,6 +28,8 @@ gem "colored"
 gem "whenever", :require => false
 # gem "quiet_assets" # (deprecated in favour of sprockets-rails)
 
+gem "mail", "2.7.1" # latest version of mail does not work with rails 7.0.4 at the moment
+
 gem 'bigdecimal', '>= 2.5.5' # To avoid BigDecimal.new error
 gem 'terrapin'
 
@@ -35,6 +37,7 @@ group :development do
   gem "capistrano" # For same reason as colorize comment above
   gem "capistrano-rvm"
   gem "capistrano-rails"
+  gem 'capistrano-maintenance', '~> 1.2', require: false
   gem "wirble"
 end
 
