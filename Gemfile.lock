@@ -80,6 +80,8 @@ GEM
       sshkit (>= 1.9.0)
     capistrano-bundler (2.1.0)
       capistrano (~> 3.1)
+    capistrano-maintenance (1.2.1)
+      capistrano (>= 3.0)
     capistrano-rails (1.6.2)
       capistrano (~> 3.1)
       capistrano-bundler (>= 1.1, < 3)
@@ -123,7 +125,7 @@ GEM
     ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    haml (6.1.1)
+    haml (6.1.2)
       temple (>= 0.8.2)
       thor
       tilt
@@ -154,11 +156,8 @@ GEM
     loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    mail (2.8.0)
+    mail (2.7.1)
       mini_mime (>= 0.1.1)
-      net-imap
-      net-pop
-      net-smtp
     mailgun-ruby (1.2.6)
       rest-client (>= 2.0.2)
     marcel (1.0.2)
@@ -182,7 +181,7 @@ GEM
       net-ssh (>= 2.6.5, < 8.0.0)
     net-smtp (0.3.3)
       net-protocol
-    net-ssh (7.0.1)
+    net-ssh (7.2.0)
     netrc (0.11.0)
     nio4r (2.5.8)
     nokogiri (1.13.10)
@@ -277,15 +276,15 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sshkit (1.21.3)
+    sshkit (1.21.5)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     stripe (8.0.0)
-    temple (0.9.1)
+    temple (0.10.2)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
-    thor (1.2.1)
-    tilt (2.0.11)
+    thor (1.2.2)
+    tilt (2.2.0)
     timeout (0.3.1)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
@@ -319,6 +318,7 @@ DEPENDENCIES
   bigdecimal (>= 2.5.5)
   cancancan
   capistrano
+  capistrano-maintenance (~> 1.2)
   capistrano-rails
   capistrano-rvm
   capybara
@@ -332,6 +332,7 @@ DEPENDENCIES
   jquery-rails
   kt-paperclip
   launchy
+  mail (= 2.7.1)
   mailgun-ruby
   mysql2
   puma
