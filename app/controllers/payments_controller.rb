@@ -53,7 +53,7 @@ class PaymentsController < ApplicationController
       redirect_to shop_path
       return
     end
-    @cart.add_payment_error(params[:error], current_user.name || 'Anonymous', params[:email])
+    @cart.add_payment_error(params[:error], params[:name], params[:email])
     
     if request.xhr?
       render json: nil, status: :ok

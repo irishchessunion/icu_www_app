@@ -10,6 +10,12 @@
     = javascript_include_tag "switch_from_tls.js"
 - add_help("privacy", anchor: "payments")
 
+#payment_error.voffset3.row{style: "display: none"}
+  .col-sm-12
+    .text-center{class: "alert alert-danger"}
+      %button.close{"type" => "button", "data-dismiss" => "alert"} ×
+      %span{id: "payment_error_message"}
+
 = form_tag charge_path(format: "js"), id: "stripe_form", class: "form-horizontal", role: "form", :data => {:secret => @intent.client_secret} do
   - locals = { col: "sm", pad: 5, width: 3, param: nil}
   .row
@@ -24,10 +30,8 @@
     #error-message
   %hr
   .row
-    = hidden_field_tag :confirmation_email
-    = hidden_field_tag :payment_name
     = hidden_field_tag :payment_intent_id
-    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: "payment_name", extra: { id: "name", data: { stripe: "name" } })
+    = render "utils/text_field_tag", locals.merge(text: t("shop.payment.card.name"), param: "payment_name", extra: { id: "name" })
     = render "utils/text_field_tag", locals.merge(text: t("shop.payment.confirmation_email"), param: "confirmation_email", extra: { id: "email" })
   %hr
   .row
@@ -41,9 +45,3 @@
     .col-sm-7
       = link_to "https://stripe.com/ie", target: "stripe" do
         = image_tag "misc/stripe.png", alt: "Stripe", title: "Stripe", size: "119x26"
-
-  #payment_error.voffset3.row{style: "display: none"}
-    .col-sm-12
-      .text-center{class: "alert alert-danger"}
-        %button.close{"type" => "button", "data-dismiss" => "alert"} ×
-        %span{id: "payment_error_message"}

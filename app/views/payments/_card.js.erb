@@ -15,7 +15,12 @@ $(function() {
     $('#submit-btn').prop('disabled', true).text('Processing...');
     startSpinner();
 
-    if (!validEmail()) {
+    if (!validName()) {
+      $('#submit-btn').prop('disabled', false).text('Pay');
+      showError('<%= escape_single_quoted(t("shop.payment.error.name")) %>');
+      stopSpinner();
+      return false
+    } else if (!validEmail()) {
       $('#submit-btn').prop('disabled', false).text('Pay');
       showError('<%= escape_single_quoted(t("shop.payment.error.email")) %>');
       stopSpinner();
@@ -41,6 +46,12 @@ $(function() {
   });
 });
 
+function validName() {
+  var el = $('#name');
+  var name = el.val().trim();
+  el.val(name);
+  return name.length > 0;
+}
 
 function validEmail() {
   var el = $('#email');
@@ -62,6 +73,7 @@ function showError(message) {
 function sendError(error) {
   $.post("/new_payment_error", {
     error: error,
+    name: $('#name').val(),
     email: $('#email').val()
   });
 }
