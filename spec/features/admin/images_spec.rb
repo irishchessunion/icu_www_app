@@ -116,8 +116,6 @@ describe Image do
       attach_file file, image_dir + "april.jpeg"
       click_button save
 
-      puts page.html
-
       expect(page).to have_css(success, text: created)
       expect(Image.count).to eq 1
       image = Image.first

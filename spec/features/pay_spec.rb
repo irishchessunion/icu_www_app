@@ -5,10 +5,10 @@ describe "Pay", js: true do
 
   let(:add_to_cart)           { I18n.t("item.add") }
   # let(:bad_cvc)               { I18n.t("shop.payment.error.cvc") }
-  let(:bad_cvc)               { "Your card's security code is incomplete" }
+  let(:bad_cvc)               { "Your card’s security code is incomplete." }
   let(:bad_email)             { I18n.t("shop.payment.error.email") }
   # let(:bad_expiry)            { I18n.t("shop.payment.error.expiry") }
-  let(:bad_expiry)            { "Your card's expiration date is incomplete" }
+  let(:bad_expiry)            { "Your card’s expiration date is incomplete" }
   let(:bad_name)              { I18n.t("shop.payment.error.name") }
   # let(:bad_number)            { I18n.t("shop.payment.error.number") }
   let(:bad_number)            { "Your card number is incomplete" }
@@ -40,19 +40,18 @@ describe "Pay", js: true do
   let(:cvc_id)    { "Field-cvcInput" }
   let(:email_id)  { "confirmation_email" }
   let(:expiry_id) { "Field-expiryInput" }
-  let(:name_id)   { "payment_name" }
+  let(:name_id)   { "name" }
   let(:number_id) { "Field-numberInput" }
 
   let(:cvc)     { "123" }
   let(:expiry)  { "01 / #{((Date.today.year + 2).to_s)[2..4]}" }
-  # let(:number)  { "4242 4242 4242 4242" }
   let(:number)  { "4000 0027 6000 3184" }
   let(:stripe)  { "stripe" }
   let(:account) { Cart.current_payment_account }
 
   let(:card_declined) { "Your card has been declined." }
-  let(:expired_card)  { "Your card has expired." }
-  let(:incorrect_cvc) { "Your card's security code is incorrect." }
+  let(:expired_card)  { "Your card is expired. Try a different card." }
+  let(:incorrect_cvc) { "Your card’s CVC is incorrect." }
 
   let(:item)    { "li" }
   let(:title)   { "h3" }
@@ -78,21 +77,15 @@ describe "Pay", js: true do
       fill_in expiry_id, with: opt[:expiry] if opt[:expiry]
       fill_in cvc_id, with: opt[:cvc]       if opt[:cvc]
     end
-    # fill_in name_id, with: opt[:name]     if opt[:name]
+    fill_in name_id, with: opt[:name]     if opt[:name]
     fill_in email_id, with: opt[:email]   if opt[:email]
     click_button pay
     if opt[:number] == number
-      # 3D secure, the button is in 3 nested iframes
+      # 3D secure, the button is in 2 nested iframes
       wait_a_second(5)
       within_frame(0) do
         within_frame(0) do
-          within_frame(0) do
-            # page.find('.source-actions-3ds :first-child #test-source-authorize-3ds').native.send_key(:enter)
-            page.find('#test-source-authorize-3ds').native.send_key(:enter)
-            # element = page.find('.source-actions-3ds :first-child')
-            # Capybara::RackTest::Form.new(page.driver, element.native).submit :name => nil
-            # click_button "test-source-authorize-3ds"
-          end
+          page.find('#test-source-authorize-3ds').native.send_key(:enter)
         end
       end
     end
@@ -175,12 +168,11 @@ describe "Pay", js: true do
 
     it "stripe errors" do
       fill_in_all_and_click_pay(number: "4000000000000002")
-      # expect(page).to have_css(failure, text: gateway_error(card_declined))
-      # save_and_open_page
       wait_a_second(2)
       expect(page).to have_css(failure, text: card_declined)
       subscription = Item::Subscription.last
       expect(subscription).to be_unpaid
+      wait_a_second(0.5)
       cart = Cart.include_errors.last
       expect(cart).to be_unpaid
       expect(cart.user).to be_nil
@@ -188,12 +180,11 @@ describe "Pay", js: true do
       payment_error = cart.payment_errors.last
       expect(payment_error.message).to eq card_declined
       expect(payment_error.details).to be_present
-      # expect(payment_error.payment_name).to eq player.name
+      expect(payment_error.payment_name).to eq player.name
       expect(payment_error.confirmation_email).to eq player.email
       expect(ActionMailer::Base.deliveries).to be_empty
       
       fill_in_number_and_click_pay(number: "4000000000000069")
-      # expect(page).to have_css(failure, text: gateway_error(expired_card))
       wait_a_second(2)
       expect(page).to have_css(failure, text: expired_card)
       subscription.reload
@@ -205,7 +196,7 @@ describe "Pay", js: true do
       payment_error = cart.payment_errors.last
       expect(payment_error.message).to eq expired_card
       expect(payment_error.details).to be_present
-      # expect(payment_error.payment_name).to eq player.name
+      expect(payment_error.payment_name).to eq player.name
       expect(payment_error.confirmation_email).to eq player.email
       expect(ActionMailer::Base.deliveries).to be_empty
       
@@ -216,7 +207,6 @@ describe "Pay", js: true do
       
       fill_in_all_and_click_pay(number: "4000000000000127")
       wait_a_second(2)
-      # expect(page).to have_css(failure, text: gateway_error(incorrect_cvc))
       expect(page).to have_css(failure, text: incorrect_cvc)
       subscription.reload
       expect(subscription).to be_unpaid
@@ -228,7 +218,7 @@ describe "Pay", js: true do
       payment_error = cart.payment_errors.last
       expect(payment_error.message).to eq incorrect_cvc
       expect(payment_error.details).to be_present
-      # expect(payment_error.payment_name).to eq player.name
+      expect(payment_error.payment_name).to eq player.name
       expect(payment_error.confirmation_email).to eq player.email
       expect(ActionMailer::Base.deliveries).to be_empty
     end
@@ -238,8 +228,9 @@ describe "Pay", js: true do
       iframe = find('iframe')
       wait_a_second(3)
 
+      fill_in name_id, with: player.name
+
       # Email.
-      # fill_in name_id, with: player.name
       click_button pay
       expect(page).to have_css(failure, text: bad_email)
       fill_in email_id, with: "rubbish"
@@ -282,11 +273,14 @@ describe "Pay", js: true do
       expect(page).to have_css(failure, text: bad_cvc)
 
       # Name.
-      # within_frame(iframe) do
-      #   fill_in cvc_id, with: cvc
-      # end
-      # click_button pay
-      # expect(page).to have_css(failure, text: bad_name)
+      within_frame(iframe) do
+        fill_in cvc_id, with: cvc
+      end
+      find("#%s" % [name_id]).native.clear
+      click_button pay
+      expect(page).to have_css(failure, text: bad_name)
+
+      wait_a_second(0.01) # allows time for ActiveRecord to populate the last PaymentError
 
       expect(PaymentError.count).to eq 6
       expect(ActionMailer::Base.deliveries).to be_empty

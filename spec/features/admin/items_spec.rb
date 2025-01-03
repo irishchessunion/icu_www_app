@@ -4,7 +4,7 @@ describe Item do
   include_context "features"
 
   context "authorization" do
-    let(:level1) { %w(admin treasurer organiser) }
+    let(:level1) { %w(admin auditor treasurer organiser) }
     let(:level2) { User::ROLES.reject { |r| level1.include?(r) } }
     let(:level3) { ["guest"] }
 
