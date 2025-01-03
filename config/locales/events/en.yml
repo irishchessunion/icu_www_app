@@ -20,7 +20,9 @@ en:
     prize_fund: Prize fund
     report_url: Report URL
     results_url: Results URL
-    sections: Sections
+    sections:
+      hint: When editing this, please ensure to also edit the sections field for any relevant fees.
+      label: Sections
     url: Event website
     user: Organizer
     category:

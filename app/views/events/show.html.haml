@@ -24,7 +24,7 @@
           %td= euros(@event.prize_fund, precision: 0)
       - if @event.sections.present?
         %tr
-          %th= t("event.sections")
+          %th= t("event.sections.label")
           %td= @event.sections
       - if @event.contact.present? || @event.email.present? || @event.phone.present?
         %tr
@@ -103,7 +103,16 @@
         %p
           - if admin && section_names.size > 0
             = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
-          = can?(:show, Player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
+          = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
+      - paid_invalid_section = @event.items.paid.where("section NOT IN (?)", section_names)
+      - if can?(:edit, @event) and paid_invalid_section.size > 0 
+        %h3
+          %i
+            Paid Entries with an Invalid Section
+        - paid_invalid_section.each do |entry_item|
+          %p
+            = link_to "Change Section from #{entry_item.section}", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
+            = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
       - @event.section_names.each do |section|
         - paid_entries = @event.items.paid.where(section: section)
         %h3
@@ -118,5 +127,5 @@
           %p
             - if admin && section_names.size > 1
               = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
-            = can?(:show, Player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
+            = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
 = render "admin/journal_entries/changes", entries: @entries
