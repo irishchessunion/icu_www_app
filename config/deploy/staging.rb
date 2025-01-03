@@ -7,8 +7,10 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-server "icu_www_app", user: "ben", roles: %w{app db web}
-# set :maintenance_template_path, File.expand_path("../../../app/views/layouts/maintenance.html.erb", __FILE__)
+server "icu_uat", user: "webmaster", roles: %w{app db web}
+set :stage, "production"
+set :deploy_to, "/var/apps/www"
+
 
 # role-based syntax
 # ==================

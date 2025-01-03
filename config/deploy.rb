@@ -1,7 +1,7 @@
 set :application, "icu_www_app"
 
 set :scm, :git
-set :repo_url, "git://github.com/murrayben/icu_www_app.git"
+set :repo_url, "https://github.com/irishchessunion/icu_www_app.git"
 set :branch, "master"
 
 set :deploy_to, "/var/apps/www"
@@ -12,6 +12,7 @@ set :linked_dirs, %w{log tmp/pids public/system public/webalizer public/sm publi
 set :maintenance_file, "public/system/maintenance.html"
 
 set :log_level, :info
+set :rvm_custom_path, '/usr/share/rvm'
 
 # set :format, :pretty
 # set :pty, true
