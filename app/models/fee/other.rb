@@ -8,6 +8,7 @@ class Fee::Other < Fee
   def applies_to?(user)
     return false unless player_required
     return false unless user.player
+    return false unless user.player.active?
     true
   end
 end

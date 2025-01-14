@@ -44,6 +44,7 @@ class Fee::Entry < Fee
 
   def applies_to?(user)
     return false unless user.player
+    return false unless user.player.active?
     return false if Item::Entry.any_duplicates(self, user.player).exists?
     true
   end

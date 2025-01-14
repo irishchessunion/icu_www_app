@@ -30,6 +30,7 @@ class Fee::Subscription < Fee
   def applies_to?(user)
     return false if new_player_required?
     return false unless user.player
+    return false unless user.player.active?
     return false if Item::Subscription.any_duplicates(user.player, end_date).exists?
     true
   end
