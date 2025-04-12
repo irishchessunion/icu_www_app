@@ -40,7 +40,7 @@ class Club < ApplicationRecord
 
   def self.search(params, path)
     matches = all
-    matches = matches.where("name LIKE ?", "%#{params[:name]}%") if params[:name].present?
+    matches = matches.where("name LIKE ?", "%#{params[:name].squish}%") if params[:name].present?
     matches = matches.where("city LIKE ?", "%#{params[:city]}%") if params[:city].present?
     matches = matches.where(county: params[:county]) if Ireland.county?(params[:county])
     matches = matches.where("county IN (?)", Ireland.counties(params[:province])) if Ireland.province?(params[:province])
