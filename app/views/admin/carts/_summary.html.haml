@@ -35,6 +35,9 @@
         %tr
           %th Payment reference
           %td= link_to_if cart.purchased_with_current_payment_account?, cart.payment_ref, show_intent_admin_cart_path(cart), remote: true, id: "charge_modal_link"
+        %tr
+          %th Latest charge
+          %td= cart.latest_charge.present? ? cart.latest_charge : "(was not stored pre-update)"
       - if cart.payment_completed.present?
         %tr
           %th Payment completed

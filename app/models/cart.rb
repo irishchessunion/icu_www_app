@@ -51,14 +51,15 @@ class Cart < ApplicationRecord
     email = params[:confirmation_email]
     name = params[:payment_name]
     intent = Stripe::PaymentIntent.retrieve(params[:payment_intent_id]) if params[:payment_intent_id]
-    if intent and intent.status == 'succeeded'
+    if intent and intent.status == 'succeeded'  
+      latest_charge = intent.latest_charge
       Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),})
-      successful_payment("stripe", intent.id, Cart.current_payment_account)
+      successful_payment("stripe", intent.id, latest_charge, Cart.current_payment_account)
     elsif intent and not intent.status == 'succeeded'
       add_payment_error(intent, name, email, "Something went wrong, please contact webmaster@icu.ie")
       return
     else
-      successful_payment("free", nil, Cart.current_payment_account)
+      successful_payment("free", nil, nil, Cart.current_payment_account)
     end
 
     update_cart(total_cost, name, email, user)
@@ -169,11 +170,12 @@ class Cart < ApplicationRecord
 
   private
 
-  def successful_payment(payment_method, charge_id=nil, payment_account=nil)
+  def successful_payment(payment_method, payment_intent=nil, latest_charge=nil, payment_account=nil)
     self.status = "paid"
     self.payment_method = payment_method
     self.payment_account = payment_account
-    self.payment_ref = charge_id
+    self.payment_ref = payment_intent
+    self.latest_charge = latest_charge
     self.payment_completed = Time.now
     items.each { |item| item.complete(payment_method) }
   end
