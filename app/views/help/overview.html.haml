@@ -1318,21 +1318,21 @@
 - cmd = []
 - cmd << '%p This is a demo.'
 - cmd << '%ul'
-- cmd << '  %li= "The date is #{ Date.today.to_s(:db) }."'
+- cmd << '  %li= "The date is #{ Date.today.to_fs(:db) }."'
 - cmd << '  %li= "The number of players is #{ Player.count }."'
 %pre~ cmd.join("\n")
 %p Second, Erb:
 - cmd = []
 - cmd << '<p>This is a demo.</p>'
 - cmd << '<ul>'
-- cmd << '  <li>The date is <%= Date.today.to_s(:db)} %>.</li>'
+- cmd << '  <li>The date is <%= Date.today.to_fs(:db)} %>.</li>'
 - cmd << '  <li>The number of players is <%= Player.count %>."</li>'
 - cmd << '</ul>'
 %pre~ cmd.join("\n")
 %p Both examples produce the same output, namely:
 %p This is a demo.
 %ul
-  %li= "The date is #{Date.today.to_s(:db)}."
+  %li= "The date is #{Date.today.to_fs(:db)}."
   %li= "The number of players is #{Player.count}."
 
 = render "header", topic: "appendix.mailgun"

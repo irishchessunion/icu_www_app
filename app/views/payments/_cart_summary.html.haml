@@ -13,7 +13,7 @@
         - if cart.payment_completed
           %li
             = "#{t("shop.payment.time")}:"
-            %strong= "#{cart.payment_completed.to_s(:nosec)} GMT"
+            %strong= "#{cart.payment_completed.to_fs(:nosec)} GMT"
         - if cart.confirmation_email
           %li
             = t("shop.payment.confirmation_sent.#{cart.confirmation_sent ? 'success' : 'failure'}") + ":"

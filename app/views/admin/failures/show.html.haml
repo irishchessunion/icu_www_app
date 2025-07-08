@@ -3,7 +3,7 @@
 = render "utils/prev_next", prev_next: @prev_next
 
 %h1.text-center= @failure.name
-%p.text-center= @failure.created_at.to_s(:db)
+%p.text-center= @failure.created_at.to_fs(:db)
 %pre= @failure.details
 
 = render "utils/show_buttons", object: @failure, admin: "search", edit: false, confirm: false

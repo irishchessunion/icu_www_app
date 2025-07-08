@@ -12,7 +12,7 @@
       %tbody
         - cart.payment_errors.each do |error|
           %tr
-            %td{rowspan: 2}= error.created_at.to_s(:db)
+            %td{rowspan: 2}= error.created_at.to_fs(:db)
             %td= error.message || "(no message)"
             %td= error.payment_name
             %td= error.confirmation_email

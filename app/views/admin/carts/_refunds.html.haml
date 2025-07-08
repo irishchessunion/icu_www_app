@@ -17,5 +17,5 @@
             %td= euros(refund.amount)
             %td= t("shop.payment.#{refund.automatic ? 'refund' : 'revoke'}")
             %td= refund.user.player.name
-            %td= refund.created_at.to_s(:db)
+            %td= refund.created_at.to_fs(:db)
             %td= refund.error || "None"

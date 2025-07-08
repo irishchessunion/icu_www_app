@@ -38,7 +38,7 @@
       - if cart.payment_completed.present?
         %tr
           %th Payment completed
-          %td= cart.payment_completed.to_s(:db)
+          %td= cart.payment_completed.to_fs(:db)
       = render "utils/timestamps", object: cart, dt_format: :db
     - if can?(:edit, Cart) && cart.revokable?
       = link_to cart.refund_type + "...", edit_admin_cart_path(cart), class: "btn btn-danger"

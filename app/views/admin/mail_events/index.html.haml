@@ -35,7 +35,7 @@
                 %td.text-center= event.send(atr)
               %td.text-center= event.total
               %td.text-center= event.pages
-              %td.text-center= event.updated_at.to_s(:nosec)
+              %td.text-center= event.updated_at.to_fs(:nosec)
           = render "utils/pagination_links", pager: @events, columns: 16
 
 %hr

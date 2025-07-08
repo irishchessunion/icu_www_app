@@ -17,5 +17,5 @@
               %td= login.email
               %td= login.encrypted_password
               %td= login.ip
-              %td= "#{login.created_at.to_s(:db)} (#{time_ago_in_words(login.created_at, include_seconds: true)})"
+              %td= "#{login.created_at.to_fs(:db)} (#{time_ago_in_words(login.created_at, include_seconds: true)})"
           = render "utils/pagination_links", pager: @bad_logins, columns: 4

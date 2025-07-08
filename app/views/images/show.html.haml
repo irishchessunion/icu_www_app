@@ -34,7 +34,7 @@
         - unless @image.updated_at == @image.data_updated_at
           %tr
             %th= "Image last updated"
-            %td= @image.data_updated_at.to_s(:nosec)
+            %td= @image.data_updated_at.to_fs(:nosec)
     = render "utils/editing_details", object: @image
     %hr
     = render "utils/show_buttons", object: @image
