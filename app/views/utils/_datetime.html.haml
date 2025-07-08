@@ -1,7 +1,7 @@
 - defined?(done_by)   || done_by   = nil
 - defined?(dt_format) || dt_format = :nosec
 
-%time{datetime: datetime.to_s(:html5)}= datetime.to_s(dt_format)
+%time{datetime: datetime.to_fs(:html5)}= datetime.to_fs(dt_format)
 - if done_by
   = t("by")
   = done_by

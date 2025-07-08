@@ -19,7 +19,7 @@
               %td= error.message
               %td= error.payment_name
               %td= error.confirmation_email
-              %td= error.created_at.to_s(:db)
+              %td= error.created_at.to_fs(:db)
             %tr
               %td{colspan: 4}= error.details
           = render "utils/pagination_links", pager: @errors, columns: 5

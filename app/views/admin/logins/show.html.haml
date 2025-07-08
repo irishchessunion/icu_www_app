@@ -11,7 +11,7 @@
         %td= link_to @login.user.email, [:admin, @login.user]
       %tr
         %th Time
-        %td= @login.created_at.to_s(:db)
+        %td= @login.created_at.to_fs(:db)
       %tr
         %th IP
         %td= @login.ip

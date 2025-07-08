@@ -68,7 +68,7 @@
         - if admin && @event.flyer_updated_at != @event.updated_at
           %tr
             %th= "File last updated"
-            %td= @event.flyer_updated_at.to_s(:nosec)
+            %td= @event.flyer_updated_at.to_fs(:nosec)
       %tr
         %th= t("category")
         %td= t("event.category.#{@event.category}")

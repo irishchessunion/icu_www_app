@@ -19,5 +19,5 @@
               %td= link_to login.user.email, [:admin, login.user]
               %td= login.ip
               %td{class: "text-center"}= ok_ko(!login.error)
-              %td{title: login.created_at.to_s(:db)}= link_to time_ago_in_words(login.created_at, include_seconds: true), [:admin, login]
+              %td{title: login.created_at.to_fs(:db)}= link_to time_ago_in_words(login.created_at, include_seconds: true), [:admin, login]
           = render "utils/pagination_links", pager: @logins, columns: 5

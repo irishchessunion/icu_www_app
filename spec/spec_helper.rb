@@ -69,7 +69,18 @@ RSpec.configure do |config|
   end
 end
 
-Selenium::WebDriver::Chrome::Service.driver_path = "/usr/bin/chromedriver"
+if File.file?("/usr/bin/chromedriver")
+  Selenium::WebDriver::Chrome::Service.driver_path = "/usr/bin/chromedriver"
+elsif File.file?("/opt/homebrew/bin/chromedriver")
+  # Support macintosh development
+  Selenium::WebDriver::Chrome::Service.driver_path = "/opt/homebrew/bin/chromedriver"
+else
+  raise %Q{
+  I can't find a chromedriver for the Selenium specs.
+  You need to install one. It should be in either /usr/bin or /opt/homebrew/bin.
+  }
+end
+
 Capybara.javascript_driver = :selenium_chrome_headless
 Capybara.register_driver :selenium_chrome_headless do |app|
   options = ::Selenium::WebDriver::Chrome::Options.new
