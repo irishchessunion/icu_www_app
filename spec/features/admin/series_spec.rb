@@ -69,6 +69,7 @@ describe Series do
 
     before(:each) do
       login user
+      wait_a_second(0.2)
       visit new_admin_series_path
     end
 
@@ -186,6 +187,7 @@ describe Series do
 
     before(:each) do
       login user
+      wait_a_second(0.2)
       visit series_path(series)
       click_link edit
     end

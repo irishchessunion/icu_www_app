@@ -36,6 +36,7 @@ describe "Revoke", js: true do
     before(:each) do
       @treasurer = login("treasurer")
       visit shop_path
+      wait_a_second(0.2)
 
       click_link subscription_fee.description
       click_button select_member
