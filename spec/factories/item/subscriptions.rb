@@ -26,7 +26,7 @@ FactoryBot.define do
 
     factory :lifetime_subscription do
       fee            { nil }
-      description    { "Life Subscription" }
+      description    { "Lifetime ICU Subscription" }
       payment_method { "free" }
       status         { "paid" }
       source         { "www1" }

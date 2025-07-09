@@ -136,4 +136,20 @@ describe Item::Subscription do
       expect(build(:subscription_item, fee: subscription_fee, player_data: new_player_json, player: nil)).to be_valid
     end
   end
+
+  context "new lifetime member" do
+    it "invalid ICU id" do
+      expect{ Item::Subscription.new_lifetime_member(-1) }.to raise_error(ArgumentError, "invalid ICU ID")
+    end
+
+    it "blocked by existing lifetime membership" do
+      sub = create(:lifetime_subscription)
+      expect{ Item::Subscription.new_lifetime_member(sub.player_id) }.to raise_error(ArgumentError, "already a lifetime member")
+    end
+
+    it "successful" do
+      player = create(:player)
+      expect{ Item::Subscription.new_lifetime_member(player.id) }.to_not raise_error
+    end
+  end
 end
