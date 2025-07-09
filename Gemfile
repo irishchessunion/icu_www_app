@@ -39,6 +39,9 @@ group :development do
   gem "capistrano-rails"
   gem 'capistrano-maintenance', '~> 1.2', require: false
   gem "wirble"
+  # The following 2 gems are needed to support ed25519 encrypted keys for capistrano installs.
+  gem "bcrypt_pbkdf"
+  gem "ed25519"
 end
 
 group :development, :test do
