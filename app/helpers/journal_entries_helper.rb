@@ -1,6 +1,10 @@
 module JournalEntriesHelper
   def journal_entry_type_menu(selected)
-    types = JournalEntry.pluck("DISTINCT journalable_type").sort.map{|t| [t, t]}
+    types = JournalEntry.unscoped
+                     .order(:journalable_type)
+                     .distinct
+                     .pluck(:journalable_type)
+                     .map { |t| [t, t] }
     types.unshift(["Any type", ""])
     options_for_select(types, selected)
   end
