@@ -85,11 +85,26 @@ Capybara.javascript_driver = :selenium_chrome_headless
 Capybara.register_driver :selenium_chrome_headless do |app|
   options = ::Selenium::WebDriver::Chrome::Options.new
 
+  options.exclude_switches << "enable-automation"
+
+  # Disable Chrome's "Save address?" pop up
+  options.add_preference("autofill.profile_enabled", false)
+
+  # Disable Chrome's "Save password?" pop up
+  options.add_preference("credentials_enable_service", false)
+  options.add_preference("profile.password_manager_enabled", false)
+
+  # Disable Chrome's "Save card?" pop up
+  options.add_preference("autofill.credit_card_enabled", false)
+
+  # Disable Chrome's "Chrome found the password you just used in a data breach..."
+  options.add_preference('profile.password_manager_leak_detection', false)
+
   options.add_argument('--headless')
   # options.add_argument('--window-size=1280,800')
   # options.add_argument('--no-sandbox')
   # options.add_argument('--disable-dev-shm-usage')
   # options.add_argument("--remote-debugging-port=9222")
   Capybara::Selenium::Driver.new(app, :browser => :chrome, options: options)
-#   Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  # Capybara::Selenium::Driver.new(app, :browser => :chrome)
 end
