@@ -68,4 +68,10 @@ describe Article do
       expect(article).to_not be_valid
     end
   end
+
+  context "categories" do
+    it "includes women" do
+      Article::CATEGORIES.must_include "women"
+    end
+  end
 end
