@@ -2,7 +2,7 @@
 
 = render "utils/prev_next", prev_next: @prev_next
 
-- admin = can?(:create, Image)
+- admin = can?(:create, @event)
 
 %h1.text-center= @event.name
 
