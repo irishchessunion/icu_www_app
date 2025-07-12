@@ -36,8 +36,9 @@ class Ability
     end
 
     if user.calendar?
-      can [:create, :update], Event
-      can :destroy, Event, user_id: user.id
+      can :create, Event
+      # Event organisers can edit or delete their own events
+      can [:update, :destroy], Event, user_id: user.id
     end
 
     if user.membership?
