@@ -25,6 +25,7 @@ class News < ApplicationRecord
   scope :secondary, -> { where(category: "secondary") }
   scope :nonjunior, -> { where("category is null or category not in (?)", ["juniors", "for_parents", "primary", "secondary", "beginners"]) }
   scope :active, -> { where(active: true) }
+  scope :women, -> { where(category: "women") }
 
   def self.search(params, path, opt={})
     matches = ordered.include_player
