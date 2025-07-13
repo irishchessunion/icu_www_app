@@ -8,7 +8,7 @@ class Article < ApplicationRecord
 
   journalize %w[access active author category text title year], "/article/%d"
 
-  CATEGORIES = %w[bulletin tournament biography obituary coaching juniors beginners general for_parents primary secondary]
+  CATEGORIES = %w[bulletin tournament biography obituary coaching juniors beginners general for_parents primary secondary women]
 
   belongs_to :user
   has_many :episodes, dependent: :destroy
