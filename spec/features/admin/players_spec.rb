@@ -246,7 +246,7 @@ describe Player do
       expect(player.duplicate?).to be true
       expect(player.player_id).to eq master.id
       expect(player.status).to eq "inactive"
-      click_link master.id
+      click_link master.id.to_formatted_s
       expect(page).to have_css("h1", text: master.name)
     end
 
