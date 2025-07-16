@@ -8,7 +8,7 @@ describe "Pay", js: true do
   let(:bad_cvc)               { "Your card’s security code is incomplete." }
   let(:bad_email)             { I18n.t("shop.payment.error.email") }
   # let(:bad_expiry)            { I18n.t("shop.payment.error.expiry") }
-  let(:bad_expiry)            { "Your card’s expiration date is incomplete" }
+  let(:bad_expiry)            { "Your card’s expiry date is incomplete" }
   let(:bad_name)              { I18n.t("shop.payment.error.name") }
   # let(:bad_number)            { I18n.t("shop.payment.error.number") }
   let(:bad_number)            { "Your card number is incomplete" }
@@ -50,7 +50,7 @@ describe "Pay", js: true do
   let(:account) { Cart.current_payment_account }
 
   let(:card_declined) { "Your card has been declined." }
-  let(:expired_card)  { "Your card is expired. Try a different card." }
+  let(:expired_card)  { "Your card has expired. Try a different card." }
   let(:incorrect_cvc) { "Your card’s CVC is incorrect." }
 
   let(:item)    { "li" }
