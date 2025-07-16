@@ -48,6 +48,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "rails-controller-testing"
   gem "capybara"
+  gem 'capybara-lockstep' # Used to make capybara tests more robust.
   gem "selenium-webdriver"
 #   gem "chromedriver-helper" # (deprecated in favour of webdrivers)
   gem "webdrivers"

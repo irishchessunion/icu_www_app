@@ -41,6 +41,7 @@ IcuWwwApp::Application.configure do
   # Raises error for missing translations
   config.i18n.raise_on_missing_translations = true
 #   config.action_view.raise_on_missing_translations = true
+  config.middleware.insert_before 0, Capybara::Lockstep::Middleware
 end
 
 # The new (in 4.1) "config.action_view.raise_on_missing_translations" doesn't seem to work, so we keep this.
