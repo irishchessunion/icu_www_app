@@ -1,6 +1,6 @@
 class NewsController < ApplicationController
   def index
-    params[:active] = "true" unless can?(:create, News)
+    params[:active] = "true" unless can?(:manage, News)
     @news = News.search(params, news_index_path)
     flash.now[:warning] = t("no_matches") if @news.count == 0
     save_last_search(@news, :news)
@@ -8,6 +8,9 @@ class NewsController < ApplicationController
 
   def show
     @news = News.include_player.find(params[:id])
+    if !@news.active 
+      raise CanCan::AccessDenied.new(nil, :read, News) unless can?(:update, @news)
+    end
     @prev_next = Util::PrevNext.new(session, News, params[:id])
     @entries = @news.journal_search if can?(:create, News)
   end
