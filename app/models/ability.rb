@@ -2,12 +2,12 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    if user.guest?
-      can :show, Fee::Entry do |entry|
-        !entry.organizer_only
-      end
-      return
-    end
+    # if user.guest?
+    #   can :show, Fee::Entry do |entry|
+    #     !entry.organizer_only
+    #   end
+    #   return
+    # end
 
     can :view, :special_membership # Used in IcuController to hide life members and current members
     can :index, [Article, Download, Game, Image, Series, Tournament]
@@ -35,11 +35,11 @@ class Ability
       can :manage, [Champion, Club, Series, Tournament]
     end
 
-    if user.calendar?
-      can :create, Event
-      # Event organisers can edit or delete their own events
-      can [:update, :destroy], Event, user_id: user.id
-    end
+    # if user.calendar?
+    #   can :create, Event
+    #   # Event organisers can edit or delete their own events
+    #   can [:update, :destroy], Event, user_id: user.id
+    # end
 
     if user.membership?
       can :create, CashPayment
@@ -65,11 +65,14 @@ class Ability
 
     # Useful for tournament organizers
     if user.organiser?
-      can [:index, :show], [Fee, Item]
       can :manage, Event, user_id: user.id
-      can :manage, Fee::Entry do |fee|
-        fee.event && fee.event.user_id == user.id
+      can :manage, Fee, ["event_id IS NOT NULL"] do |fee|
+        fee.type == 'Fee::Entry' && fee.event.user_id == user.id
       end
+      can :manage, Item::Entry, :fee_entry => {:event => { :user_id => user.id }}
+      
+      can :create, [Article, News]
+      can [:destroy, :update], [Article, News], user_id: user.id
     end
 
     if user.reporter?
@@ -93,13 +96,13 @@ class Ability
       can :manage, [Cart, Fee, Sponsor, UserInput]
     end
 
-    can :show, Fee::Entry do |entry|
-      if entry.organizer_only && entry.event
-        user.treasurer? || user.organiser? || (user.member? && user.id == entry.event.user_id)
-      else
-        true
-      end
-    end
+    # can :show, Fee::Entry do |entry|
+    #   if entry.organizer_only && entry.event
+    #     user.treasurer? || user.organiser? || (user.member? && user.id == entry.event.user_id)
+    #   else
+    #     true
+    #   end
+    # end
     can :manage_preferences, User, id: user.id
     can [:manage_profile, :show], Player, id: user.player_id
     can :sales_ledger, Item
