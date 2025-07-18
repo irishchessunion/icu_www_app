@@ -35,12 +35,6 @@ class Ability
       can :manage, [Champion, Club, Series, Tournament]
     end
 
-    # if user.calendar?
-    #   can :create, Event
-    #   # Event organisers can edit or delete their own events
-    #   can [:update, :destroy], Event, user_id: user.id
-    # end
-
     if user.membership?
       can :create, CashPayment
       can :manage, Player
