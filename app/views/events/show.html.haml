@@ -83,8 +83,7 @@
         %tr
           %td{colspan: 2}= @event.note_html
 
-    - extras = can?(:create, Fee) ? {t("event.create_entry_fee") => new_admin_fee_path(type: "Fee::Entry", event_id: @event.id)}: {}
-    = render "utils/show_buttons", object: @event, extras: extras
+    = render "utils/show_buttons", object: @event, extras: @extras
 
     - unless @event.fee_entries.on_sale.empty?
       %h2.text-center Enter Tournament

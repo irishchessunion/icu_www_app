@@ -3,7 +3,7 @@ class Admin::NewsController < ApplicationController
   authorize_resource
 
   def new
-    @news = News.new
+    @news = News.new(headline: params[:headline], summary: params[:summary])
   end
 
   def create

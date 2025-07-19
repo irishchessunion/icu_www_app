@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
   def index
     authorize! :index, Article
-    params[:active] = "true" unless can?(:create, Article)
+    params[:active] = "true" unless can?(:manage, Article)
     @articles = Article.search(params, articles_path, current_user)
     flash.now[:warning] = t("no_matches") if @articles.count == 0
     save_last_search(@articles, :articles)

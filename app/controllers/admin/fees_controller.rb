@@ -3,7 +3,7 @@ class Admin::FeesController < ApplicationController
   authorize_resource
 
   def index
-    @fees = Fee.search(params, admin_fees_path)
+    @fees = Fee.accessible_by(current_ability).search(params, admin_fees_path)
     save_last_search(@fees, :fees)
   end
 
