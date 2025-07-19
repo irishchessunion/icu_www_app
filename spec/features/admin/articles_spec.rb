@@ -12,7 +12,7 @@ describe Article do
     let!(:article) { create(:article, user: user) }
     let!(:header)  { "h1" }
     let(:level1)   { ["admin", user] }
-    let(:level2)   { ["editor"] }
+    let(:level2)   { ["editor", "organiser"] }
     let(:level3)   { User::ROLES.reject { |r| level1.include?(r) || level2.include?(r) } }
     let(:level4)   { %w[guest] }
     let(:user)     { create(:user, roles: "editor") }
