@@ -104,6 +104,11 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   # Disable Chrome's "Chrome found the password you just used in a data breach..."
   options.add_preference('profile.password_manager_leak_detection', false)
 
+  # Some of the specs get text from stripe that needs to be compared. Different developers
+  # machines use different versions of English. The following line means that we should
+  # only get messages from UK English on all development machines.
+  options.add_preference("intl.accept_languages", 'en-GB')
+
   # Some machines will run the specs correctly in non-headless mode.
   # But to avoid flashing screens, leave the following line uncommented.
   options.add_argument('--headless')
