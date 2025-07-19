@@ -66,6 +66,7 @@ describe "Shop" do
 
       expect(page).to_not have_button(add_to_cart)
       click_button select_member
+      wait_a_second(0.1)
 
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
@@ -103,6 +104,7 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button new_member
+      wait_a_second(0.1)
 
       fill_in first_name, with: newbie.first_name
       fill_in last_name, with: newbie.last_name
@@ -168,6 +170,7 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button new_member
+      wait_a_second(0.1)
 
       fill_in first_name, with: player.first_name
       fill_in last_name, with: player.last_name
@@ -187,6 +190,8 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button select_member
+      wait_a_second(0.1)
+
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
       click_link player.id.to_s
@@ -205,6 +210,8 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button select_member
+      wait_a_second(0.1)
+
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
       click_link player.id.to_s
@@ -221,6 +228,7 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button select_member
+      wait_a_second(0.1)
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
       click_link player.id.to_s
@@ -251,6 +259,7 @@ describe "Shop" do
       visit shop_path
       click_link under_12_sub.description
       click_button select_member
+      wait_a_second(0.1)
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
       click_link player.id.to_s
@@ -279,6 +288,7 @@ describe "Shop" do
       visit shop_path
       click_link over_65_sub.description
       click_button select_member
+      wait_a_second(0.1)
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
       click_link player.id.to_s
@@ -307,6 +317,7 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button select_member
+      wait_a_second(0.1)
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
       click_link player.id.to_s
@@ -356,6 +367,7 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button select_member
+      wait_a_second(0.1)
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
       click_link player.id.to_s

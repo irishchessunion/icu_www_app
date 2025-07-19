@@ -77,7 +77,7 @@ describe "Revoke", js: true do
       expect(cart.total).to eq subscription.cost + entry.cost
 
       visit admin_carts_path
-      click_link cart.id
+      click_link cart.id.to_formatted_s
       click_link revoke_link
 
       expect(page).to have_xpath(total, text: "%.2f" % cart.total)
@@ -147,7 +147,7 @@ describe "Revoke", js: true do
       expect(cart.total).to eq subscription.cost + entry.cost
 
       visit admin_carts_path
-      click_link cart.id
+      click_link cart.id.to_formatted_s
       click_link revoke_link
 
       expect(page).to have_xpath(total, text: "%.2f" % cart.total)

@@ -8,7 +8,7 @@ describe "Pay", js: true do
   let(:bad_cvc)               { "Your card’s security code is incomplete." }
   let(:bad_email)             { I18n.t("shop.payment.error.email") }
   # let(:bad_expiry)            { I18n.t("shop.payment.error.expiry") }
-  let(:bad_expiry)            { "Your card’s expiration date is incomplete" }
+  let(:bad_expiry)            { "Your card’s expiry date is incomplete" }
   let(:bad_name)              { I18n.t("shop.payment.error.name") }
   # let(:bad_number)            { I18n.t("shop.payment.error.number") }
   let(:bad_number)            { "Your card number is incomplete" }
@@ -50,7 +50,7 @@ describe "Pay", js: true do
   let(:account) { Cart.current_payment_account }
 
   let(:card_declined) { "Your card has been declined." }
-  let(:expired_card)  { "Your card is expired. Try a different card." }
+  let(:expired_card)  { "Your card has expired. Try a different card." }
   let(:incorrect_cvc) { "Your card’s CVC is incorrect." }
 
   let(:item)    { "li" }
@@ -62,8 +62,10 @@ describe "Pay", js: true do
 
   def add_something_to_cart
     visit shop_path
+    wait_a_second(0.1)
     click_link subscription_fee.description
     click_button select_member
+    wait_a_second(0.1)
     fill_in last_name, with: player.last_name + force_submit
     fill_in first_name, with: player.first_name + force_submit
     click_link player.id.to_s
@@ -377,6 +379,7 @@ describe "Pay", js: true do
       visit shop_path
       click_link subscription_fee.description
       click_button new_member
+      wait_a_second(0.1)
       fill_in last_name, with: newbie.last_name
       fill_in first_name, with: newbie.first_name
       fill_in dob, with: newbie.dob.to_s
@@ -429,6 +432,7 @@ describe "Pay", js: true do
       visit shop_path
       click_link subscription_fee.description
       click_button select_member
+      wait_a_second(0.1)
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
       click_link player.id.to_s
