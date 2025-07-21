@@ -26,7 +26,7 @@ class Admin::CartsController < ApplicationController
 
   def edit
     @cart = Cart.include_items_plus.find(params[:id])
-    redirect_to [:admin, @cart] unless @cart.revokable?
+    redirect_to [:admin, @cart] if @cart.all_items_refunded?
   end
 
   def update

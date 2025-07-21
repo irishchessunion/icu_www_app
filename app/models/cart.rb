@@ -108,7 +108,7 @@ class Cart < ApplicationRecord
               item.refund
           end
       end
-      self.status = self.total == refund.amount ? "refunded" : "part_refunded"
+      self.status = all_items_refunded? ? "refunded" : "part_refunded"
       self.total -= refund.amount
     end
     save!
@@ -118,6 +118,14 @@ class Cart < ApplicationRecord
     refund
   ensure
     refund.save
+  end
+
+  def all_items_refunded?
+    items.all? &:refunded?
+  end
+
+  def any_items_refunded?
+    items.any? &:refunded?
   end
 
   def self.search(params, path)
