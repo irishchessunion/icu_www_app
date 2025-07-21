@@ -31,7 +31,7 @@ class EventsController < ApplicationController
     items = Item::Entry.joins(:fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::EntryListCsvGenerator.new
 
-    send_data generator.generate_from_items(items, event.name), filename: download_filename(event, params[:section], 'csv'), type: 'text/csv'
+    send_data generator.generate_from_items(items, event.name, can?(:show, Cart)), filename: download_filename(event, params[:section], 'csv'), type: 'text/csv'
   end
 
   private
