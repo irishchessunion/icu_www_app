@@ -60,9 +60,9 @@ class Ability
     # Useful for tournament organizers
     if user.organiser?
       can :manage, Event, user_id: user.id
-      can :manage, Fee, ["event_id IS NOT NULL"] do |fee|
-        fee.type == 'Fee::Entry' && fee.event.user_id == user.id
-      end
+
+      # Hash condition ensures that .accessible_by works as intended
+      can :manage, Fee::Entry, :event => { :user_id => user.id }
       can :manage, Item::Entry, :fee_entry => {:event => { :user_id => user.id }}
       
       can :create, [Article, News]
