@@ -3,7 +3,13 @@ class Admin::FeesController < ApplicationController
   authorize_resource
 
   def index
-    @fees = Fee.search(params, admin_fees_path)
+    # Not the nicest method, but accessible_by must be called from Fee::Entry, otherwise an 
+    # AssociationError is thrown. Events only have an association with Fee::Entry and not the other types
+    if can?(:manage, [Fee::Entry, Fee::Subscription, Fee::Other])
+      @fees = Fee.search(params, admin_fees_path)
+    else
+      @fees = Fee::Entry.accessible_by(current_ability).search(params, admin_fees_path)
+    end
     save_last_search(@fees, :fees)
   end
 

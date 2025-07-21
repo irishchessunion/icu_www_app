@@ -11,7 +11,7 @@ describe News do
   context "authorization" do
     let(:panel)  { ".panel-heading" }
     let(:level1) { ["admin", user] }
-    let(:level2) { ["editor"] }
+    let(:level2) { ["editor", "organiser"] }
     let(:level3) { User::ROLES.reject { |r| level1.include?(r) || level2.include?(r) }.append("guest") }
     let(:news)   { create(:news, user: user) }
 

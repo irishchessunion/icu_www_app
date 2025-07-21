@@ -25,8 +25,8 @@ describe Event do
   context "authorization" do
     let(:level1) { ["admin", user] }
     let(:level2) { ["editor"] }
-    let(:level3) { User::ROLES.reject { |r| r.match(/\A(admin|editor|calendar|organiser)\z/) }.append("guest") }
-    let(:user)   { create(:user, roles: "calendar") }
+    let(:level3) { User::ROLES.reject { |r| r.match(/\A(admin|editor|organiser)\z/) }.append("guest") }
+    let(:user)   { create(:user, roles: "organiser") }
     let(:event)  { create(:event, user: user) }
     let(:header) { "h1" }
 
@@ -88,7 +88,7 @@ describe Event do
     let(:finish)        { start.days_since(2) }
 
     before(:each) do
-      @user = login("calendar")
+      @user = login("organiser")
       visit new_admin_event_path
       fill_in end_date, with: finish.to_s
       fill_in location, with: location_text
@@ -207,7 +207,7 @@ describe Event do
 
       expect(event.flyer_file_name).to eq rtf
       expect(event.flyer_file_size).to eq 6846
-      expect(event.flyer_content_type).to match /\A(application|text)\/rtf\z/
+      expect(event.flyer_content_type).to match(/\A(application|text)\/rtf\z/)
     end
 
     it "invalid file type" do

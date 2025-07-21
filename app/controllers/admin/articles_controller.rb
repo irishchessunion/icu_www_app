@@ -3,7 +3,7 @@ class Admin::ArticlesController < ApplicationController
   authorize_resource
 
   def new
-    @article = Article.new
+    @article = Article.new(title: params[:title], text: params[:text])
   end
 
   def create

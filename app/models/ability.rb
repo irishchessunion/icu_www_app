@@ -35,12 +35,6 @@ class Ability
       can :manage, [Champion, Club, Series, Tournament]
     end
 
-    if user.calendar?
-      can :create, Event
-      # Event organisers can edit or delete their own events
-      can [:update, :destroy], Event, user_id: user.id
-    end
-
     if user.membership?
       can :create, CashPayment
       can :manage, Player
@@ -65,11 +59,14 @@ class Ability
 
     # Useful for tournament organizers
     if user.organiser?
-      can [:index, :show], [Fee, Item]
       can :manage, Event, user_id: user.id
-      can :manage, Fee::Entry do |fee|
-        fee.event && fee.event.user_id == user.id
-      end
+
+      # Hash condition ensures that .accessible_by works as intended
+      can :manage, Fee::Entry, :event => { :user_id => user.id }
+      can :manage, Item::Entry, :fee_entry => {:event => { :user_id => user.id }}
+      
+      can :create, [Article, News]
+      can [:destroy, :update], [Article, News], user_id: user.id
     end
 
     if user.reporter?

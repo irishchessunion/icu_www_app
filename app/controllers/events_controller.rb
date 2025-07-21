@@ -9,6 +9,13 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     @prev_next = Util::PrevNext.new(session, Event, params[:id])
     @entries = @event.journal_search if can?(:create, Event)
+    @extras = {}
+    if can?(:update, @event)
+      sample_text = "[EVT:#{params[:id]}] ..."
+      @extras[t("event.create_entry_fee")] = new_admin_fee_path(type: "Fee::Entry", event_id: @event.id)
+      @extras["Create Article"] = new_admin_article_path(title: @event.name, text: sample_text)
+      @extras["Create News Item"] = new_admin_news_path(headline: @event.name, summary: sample_text)
+    end
   end
 
   def swiss_manager
