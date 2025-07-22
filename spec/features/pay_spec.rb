@@ -347,6 +347,7 @@ describe "Pay", js: true do
     it "without email" do
       login("membership")
       visit cart_path
+      wait_a_second(0.2)
       click_link payment_received
 
       fill_in payer_first_name, with: player.first_name
