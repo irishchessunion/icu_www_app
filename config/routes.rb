@@ -88,6 +88,8 @@ IcuWwwApp::Application.routes.draw do
     resources :games,           only: [:edit, :update, :destroy]
     resources :images,          only: [:new, :create, :edit, :update, :destroy]
     resources :items,           only: [:index, :edit, :update] do
+      get :lifetime_form, on: :collection
+      post :lifetime_create, on: :collection
       get :sales_ledger, on: :collection
     end
     resources :junior_newsletters, only: [:index]

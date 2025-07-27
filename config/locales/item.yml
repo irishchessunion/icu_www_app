@@ -8,6 +8,7 @@ en:
     to_date: To
     item: Item
     items: Items
+    lifetime_create: New Lifetime Member
     sales_ledger: Sales Ledger
     search_csv: Generate CSV
     subs_breakdown: Subscriptions Breakdown

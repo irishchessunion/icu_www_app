@@ -34,6 +34,21 @@ class Admin::ItemsController < ApplicationController
       end
     end
   end
+
+  def lifetime_form
+    authorize! :manage, Player
+  end
+
+  def lifetime_create
+    authorize! :manage, Player
+    @params = params.permit(:item_player_id)
+    begin
+      Item::Subscription.new_lifetime_member(params[:item_player_id])
+      redirect_to icu_life_members_path
+    rescue ArgumentError => e
+      redirect_to lifetime_form_admin_items_path, alert: e
+    end
+  end
   
   def sales_ledger
     authorize! :sales_ledger, Item
