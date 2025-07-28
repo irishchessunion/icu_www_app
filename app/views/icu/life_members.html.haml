@@ -20,4 +20,4 @@
             %td= link_to player.club.name, player.club if player.club
 - if can?(:manage, Player)
   %div.text-center
-    = link_to t("new"), lifetime_form_admin_items_path, class: "btn btn-info"
+    = link_to t("new"), new_admin_life_member_path, class: "btn btn-info"

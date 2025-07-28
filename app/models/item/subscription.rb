@@ -43,6 +43,10 @@ class Item::Subscription < Item
 
     lifetime_sub = Item::Subscription.new(description: "Lifetime ICU Subscription", player_id: player_id, status: "paid", source: "www1", payment_method: "free")
     lifetime_sub.save!
+
+    for user in player.users
+      user.update!(expires_on: Date.new(Date.today.year) + 100.years)
+    end
   end
 
   private
