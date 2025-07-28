@@ -44,7 +44,7 @@ group :development do
   gem "ed25519"
 end
 
-group :development, :test do
+group :test do
   gem "rspec-rails"
   gem "rails-controller-testing"
   gem "capybara"
