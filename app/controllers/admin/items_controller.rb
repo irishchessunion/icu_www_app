@@ -33,7 +33,7 @@ class Admin::ItemsController < ApplicationController
         send_data txt_data, filename: "#{params[:description]}.txt", type: 'text/txt'
       end
     end
-  end
+  end  
   
   def sales_ledger
     authorize! :sales_ledger, Item

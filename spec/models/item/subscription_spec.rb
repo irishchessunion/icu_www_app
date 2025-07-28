@@ -139,17 +139,22 @@ describe Item::Subscription do
 
   context "new lifetime member" do
     it "invalid ICU id" do
-      expect{ Item::Subscription.new_lifetime_member(-1) }.to raise_error(ArgumentError, "invalid ICU ID")
+      expect{ Item::Subscription.new_lifetime_member(-1) }.to raise_error(ArgumentError, "Invalid ICU ID")
     end
 
     it "blocked by existing lifetime membership" do
       sub = create(:lifetime_subscription)
-      expect{ Item::Subscription.new_lifetime_member(sub.player_id) }.to raise_error(ArgumentError, "already a lifetime member")
+      expect{ Item::Subscription.new_lifetime_member(sub.player_id) }.to raise_error(ArgumentError, "Already a lifetime member")
     end
 
     it "successful" do
       player = create(:player)
+      create(:paid_subscription_item, player: player)
+      user = User.for_subscribed_player(player.email)
       expect{ Item::Subscription.new_lifetime_member(player.id) }.to_not raise_error
+      for user in player.users
+        expect(user.expires_on).to eq(Date.new(Date.today.year) + 100.years)
+      end
     end
   end
 end

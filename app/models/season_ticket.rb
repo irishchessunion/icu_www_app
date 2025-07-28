@@ -91,7 +91,7 @@ class SeasonTicket
   end
 
   def valid_date?(date)
-    date.to_s.match(/\A20\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\z/)
+    date.to_s.match(/\A2[01]\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\z/)
   end
 
   def valid_ticket?(ticket)
