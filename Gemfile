@@ -18,7 +18,7 @@ gem "redis"
 # gem "therubyracer", platforms: :ruby # (no longer needed)
 gem "icu_name", "1.3.0"
 gem "icu_utils", "1.3.3"
-gem "redcarpet"
+gem "redcarpet", "3.6.1"
 gem "stripe"
 gem "mailgun-ruby", require: "mailgun"
 # gem "paperclip"
