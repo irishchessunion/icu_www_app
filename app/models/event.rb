@@ -48,8 +48,10 @@ class Event < ApplicationRecord
   validates :url, url: true, allow_blank: true
   validates :pairings_url, url: true, allow_blank: true
   validates :live_games_url, url: true, allow_blank: true
+  validates :live_games_url2, url: true, allow_blank: true
   validates :results_url, url: true, allow_blank: true
   validates :report_url, url: true, allow_blank: true
+  validates :streaming_url, url: true, allow_blank: true
   validates :start_date, date: { on_or_after: :today }, on: :create, unless: Proc.new { |e| e.source == "www1" }
   validates :end_date, date: { on_or_after: :today }, unless: Proc.new { |e| e.source == "www1" }
 

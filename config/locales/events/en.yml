@@ -9,7 +9,8 @@ en:
     event: Event
     events: Forthcoming Events
     lat: Latitude
-    live_games_url: Live Games URL
+    live_games_url: livechesscloud.com broadcast URL
+    live_games_url2: lichess.org broadcast URL
     location: Location
     long: Longitude
     map: Forthcoming Events Map
@@ -23,6 +24,7 @@ en:
     sections:
       hint: When editing this, please ensure to also edit the sections field for any relevant fees.
       label: Sections
+    streaming_url: Live commentary URL
     url: Event website
     user: Organizer
     category:
