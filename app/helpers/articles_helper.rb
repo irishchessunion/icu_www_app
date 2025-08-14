@@ -5,6 +5,11 @@ module ArticlesHelper
     options_for_select(cats, selected)
   end
 
+  def article_categories_menu(selected)
+    cats = Article::CATEGORIES.map { |cat| [t("article.category.#{cat}"), cat] }
+    options_for_select(cats, selected)
+  end
+
   def article_user_menu(selected)
     players = Player.joins(users: :articles).order(:last_name, :first_name).select("DISTINCT players.*").all.map{ |p| [p.name(reversed: true), p.id] }
     players.unshift [t("user.any_editor"), ""]
