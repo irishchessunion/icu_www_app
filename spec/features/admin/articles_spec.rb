@@ -3,10 +3,11 @@ require 'rails_helper'
 describe Article do
   include_context "features"
 
-  let(:access)   { I18n.t("access.access") }
-  let(:author)   { I18n.t("article.author") }
-  let(:text)     { I18n.t("article.text") }
-  let(:title)    { I18n.t("article.title") }
+  let(:access)     { I18n.t("access.access") }
+  let(:author)     { I18n.t("article.author") }
+  let(:text)       { I18n.t("article.text") }
+  let(:title)      { I18n.t("article.title") }
+  let(:categories) { I18n.t("categories") }
 
   context "authorization" do
     let!(:article) { create(:article, user: user) }
@@ -140,7 +141,7 @@ describe Article do
       fill_in year, with: data.year
       fill_in author, with: data.author
       fill_in text, with: data.text
-      select I18n.t("article.category.#{data.category}"), from: category
+      select I18n.t("article.category.#{data.category}"), from: categories
       select I18n.t("access.#{data.access}"), from: access
       check active
       click_button save
@@ -152,7 +153,7 @@ describe Article do
       expect(article.access).to eq data.access
       expect(article.active).to eq data.active
       expect(article.author).to eq data.author
-      expect(article.category).to eq data.category
+      expect(article.categories).to eq data.categories
       expect(article.text).to eq data.text
       expect(article.title).to eq data.title
       expect(article.year).to eq data.year
@@ -166,7 +167,7 @@ describe Article do
       fill_in year, with: data.year
       fill_in author, with: data.author
       fill_in text, with: data.text + "\n\nSee also [ART:99], [DLD:99].\n"
-      select I18n.t("article.category.#{data.category}"), from: category
+      select I18n.t("article.category.#{data.category}"), from: categories
       select I18n.t("access.#{data.access}"), from: access
       check active
       click_button save
