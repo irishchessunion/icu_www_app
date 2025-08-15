@@ -111,7 +111,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
 
   # Some machines will run the specs correctly in non-headless mode.
   # But to avoid flashing screens, leave the following line uncommented.
-  #options.add_argument('--headless')
+  options.add_argument('--headless')
   options.add_argument('--window-size=1920,1080')
   options.add_argument('--no-sandbox')
   # options.add_argument('--disable-dev-shm-usage')
