@@ -32,6 +32,7 @@ gem "mail", "2.7.1" # latest version of mail does not work with rails 7.0.4 at t
 
 gem 'bigdecimal', '>= 2.5.5' # To avoid BigDecimal.new error
 gem 'terrapin'
+gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 
 group :development do
   gem "capistrano" # For same reason as colorize comment above

@@ -6,9 +6,11 @@ class Article < ApplicationRecord
   include Pageable
   include Remarkable
 
-  journalize %w[access active author category text title year], "/article/%d"
 
-  CATEGORIES = %w[bulletin tournament biography obituary coaching juniors beginners general for_parents primary secondary women]
+  include CategoriesOwner
+
+  journalize %w[access active author categories text title year], "/article/%d"
+
 
   belongs_to :user
   has_many :episodes, dependent: :destroy
@@ -16,7 +18,6 @@ class Article < ApplicationRecord
 
   before_validation :normalize_attributes
 
-  validates :category, inclusion: { in: CATEGORIES }
   validates :text, presence: true
   validates :title, presence: true, on: :create, length: { maximum: 150 }
   validates :year, numericality: { integer_only: true, greater_than_or_equal_to: Global::MIN_YEAR }
@@ -26,7 +27,7 @@ class Article < ApplicationRecord
   scope :include_series, -> { includes(episodes: :series) }
   scope :ordered, -> { order(year: :desc, created_at: :desc) }
   scope :linked_to_game, -> { where("text like '%[GME:%' or title like '%[GME:%'") }
-  scope :beginners, -> { where(category: "beginners") }
+  # The category specific scopes are automatically created by has_flags.
 
   def self.search(params, path, user, opt={})
     matches = ordered.include_player
@@ -50,7 +51,7 @@ class Article < ApplicationRecord
     matches = accessibility_matches(user, params[:access], matches)
     matches = matches.where(active: true) if params[:active] == "true"
     matches = matches.where(active: false) if params[:active] == "false"
-    matches = matches.where(category: params[:category]) if CATEGORIES.include?(params[:category])
+    matches = matches.where(sql_condition_for_flag(params[:category].to_sym, "categories")) if CategoriesOwner::CATEGORIES.include?(params[:category])
     paginate(matches, params, path, opt)
   end
 

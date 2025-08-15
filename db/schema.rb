@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_01_184431) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.integer "nlikes"
+    t.integer "categories", default: 0, null: false
     t.index ["access"], name: "index_articles_on_access"
     t.index ["active"], name: "index_articles_on_active"
     t.index ["author"], name: "index_articles_on_author"
@@ -485,6 +486,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_01_184431) do
     t.datetime "updated_at", precision: nil
     t.integer "nlikes"
     t.string "category", limit: 20
+    t.integer "categories", default: 0, null: false
     t.index ["active"], name: "index_news_on_active"
     t.index ["date"], name: "index_news_on_date"
     t.index ["headline"], name: "index_news_on_headline"

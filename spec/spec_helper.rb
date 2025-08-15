@@ -23,6 +23,7 @@ RSpec.configure do |config|
   #   # (e.g. via a command-line flag).
   #   config.default_formatter = 'doc'
   # end
+  config.example_status_persistence_file_path = "spec/examples.txt"
 
   # Print the 10 slowest examples and example groups at the
   # end of the spec run, to help surface which specs are running

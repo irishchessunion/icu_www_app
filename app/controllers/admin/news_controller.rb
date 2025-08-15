@@ -10,6 +10,7 @@ class Admin::NewsController < ApplicationController
     @news = News.new(news_params)
     @news.date = Date.today
     @news.user_id = current_user.id
+    set_selected_categories
 
     if @news.save
       @news.journal(:create, current_user, request.remote_ip)
@@ -22,6 +23,7 @@ class Admin::NewsController < ApplicationController
 
   def update
     normalize_newlines(:news, :summary)
+    set_selected_categories
     if @news.update(news_params(false))
       @news.journal(:update, current_user, request.remote_ip)
       redirect_to @news, notice: "News was successfully updated"
@@ -44,8 +46,16 @@ class Admin::NewsController < ApplicationController
   end
 
   def news_params(new_record=true)
-    atrs = [:active, :headline, :summary, :category]
+    atrs = [:active, :headline, :summary]
     atrs.push(:date) unless new_record
     params[:news].permit(*atrs)
+  end
+
+  def set_selected_categories
+    if params[:news][:selected_categories].present?
+      @news.selected_categories = params[:news][:selected_categories]
+      # We need to delete the selected_categories param to avoid warnings in the News update method.
+      params[:news].delete(:selected_categories)
+    end
   end
 end

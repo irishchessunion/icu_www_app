@@ -13,7 +13,7 @@
             %th= t("article.title")
             %th.col-sm-1= t("year")
             %th= t("article.author")
-            %th.col-sm-2= t("category")
+            %th.col-sm-2= t("categories")
             - if admin
               %th.col-sm-2= t("user.role.editor")
               %th.col-sm-1.text-center= t("active")
@@ -24,7 +24,7 @@
               %td= link_to article.title, article
               %td= article.year
               %td= article.author
-              %td= t("article.category.#{article.category}")
+              %td= article.selected_categories.map {|category| t("article.category.#{category}")}.join(", ")
               - if admin
                 %td= article.user.player.name
                 %td.text-center= ok_ko(article.active)
