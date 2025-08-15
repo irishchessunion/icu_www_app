@@ -6,26 +6,8 @@ class Article < ApplicationRecord
   include Pageable
   include Remarkable
 
-  include FlagShihTzu
 
-  CATEGORIES = %w[bulletin tournament biography obituary coaching juniors beginners general for_parents primary secondary women]
-  # Used to convert from string to symbol, without creating extra symbols from user input
-  CATEGORY_HASH = Hash[CATEGORIES.map(&:to_s).zip(0...CATEGORIES.size)]
-
-  has_flags 1 => :bulletin,
-            2 => :tournament,
-            3 => :biography,
-            4 => :obituary,
-            5 => :coaching,
-            6 => :juniors,
-            7 => :beginners,
-            8 => :general,
-            9 => :for_parents,
-            10 => :primary,
-            11 => :secondary,
-            12 => :women,
-            :column => 'categories',
-            :flag_query_mode => :bit_operator
+  include CategoriesOwner
 
   journalize %w[access active author categories text title year], "/article/%d"
 
@@ -69,7 +51,7 @@ class Article < ApplicationRecord
     matches = accessibility_matches(user, params[:access], matches)
     matches = matches.where(active: true) if params[:active] == "true"
     matches = matches.where(active: false) if params[:active] == "false"
-    matches = matches.where(sql_condition_for_flag(params[:category].to_sym, "categories")) if CATEGORIES.include?(params[:category])
+    matches = matches.where(sql_condition_for_flag(params[:category].to_sym, "categories")) if CategoriesOwner::CATEGORIES.include?(params[:category])
     paginate(matches, params, path, opt)
   end
 
@@ -97,33 +79,6 @@ class Article < ApplicationRecord
     [text.scan(re), title.scan(re)].flatten
   end
 
-  # @param categories An array of strings containing potentially correct Article categories
-  # @return An array of legitimate symbols
-  def self.valid_categories(categories)
-    valid = []
-    categories.each do |category|
-      index = Article::CATEGORY_HASH[category]
-      if index
-        valid << CATEGORIES[index]
-      end
-    end
-    valid
-  end
-
-  # The FlagShihTzu class adds a method selected_categories= that only handles arrays of symbols.
-  alias assign_selected_categories selected_categories=
-
-  # Sets the categories bitset by convertign the array of strings to the appropriate set of bits.
-  # Accepts an array of strings which should all be the string equivalent of the legal categories.
-  # Any invalid strings will be ignored.
-  def selected_categories=(categories)
-    assign_selected_categories(Article.valid_categories(categories))
-  end
-
-  # A temporary helper method before we remove category altogether
-  def category
-    selected_categories.first || :any
-  end
   private
 
   def normalize_attributes
