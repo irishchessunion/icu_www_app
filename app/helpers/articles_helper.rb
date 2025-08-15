@@ -1,12 +1,12 @@
 module ArticlesHelper
-  def article_category_menu(selected, default="article.category.any")
-    cats = Article::CATEGORIES.map { |cat| [t("article.category.#{cat}"), cat] }
+  def category_menu(selected, default="article.category.any")
+    cats = CategoriesOwner::CATEGORIES.map { |cat| [t("article.category.#{cat}"), cat] }
     cats.unshift [t(default), ""] if default
     options_for_select(cats, selected)
   end
 
-  def article_categories_menu(selected)
-    cats = Article::CATEGORIES.map { |cat| [t("article.category.#{cat}"), cat] }
+  def categories_menu(selected)
+    cats = CategoriesOwner::CATEGORIES.map { |cat| [t("article.category.#{cat}"), cat] }
     options_for_select(cats, selected)
   end
 
