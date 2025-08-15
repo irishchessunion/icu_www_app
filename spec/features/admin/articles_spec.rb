@@ -7,7 +7,7 @@ describe Article do
   let(:author)     { I18n.t("article.author") }
   let(:text)       { I18n.t("article.text") }
   let(:title)      { I18n.t("article.title") }
-  let(:categories) { I18n.t("categories") }
+  let(:categories) { "article_selected_categories" }
 
   context "authorization" do
     let!(:article) { create(:article, user: user) }
@@ -141,6 +141,8 @@ describe Article do
       fill_in year, with: data.year
       fill_in author, with: data.author
       fill_in text, with: data.text
+      puts(data.inspect)
+      puts(data.category.inspect)
       select I18n.t("article.category.#{data.category}"), from: categories
       select I18n.t("access.#{data.access}"), from: access
       check active

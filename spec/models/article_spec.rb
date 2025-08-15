@@ -71,7 +71,7 @@ describe Article do
 
   context "categories" do
     it "includes women" do
-      expect(Article::CATEGORIES.include?("women")).to be(true)
+      expect(CategoriesOwner::CATEGORIES.include?("women")).to be(true)
     end
   end
 end
