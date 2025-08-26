@@ -202,7 +202,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_01_184431) do
     t.string "location", limit: 100
     t.decimal "long", precision: 10, scale: 7
     t.string "name", limit: 75
-    t.string "note", limit: 512
+    t.text "note"
     t.string "phone", limit: 25
     t.decimal "prize_fund", precision: 8, scale: 2
     t.string "source", limit: 8, default: "www2"
