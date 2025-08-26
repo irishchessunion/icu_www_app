@@ -10,8 +10,8 @@ class IncreaseLengthOfEventsNoteField < ActiveRecord::Migration[7.0]
     # Copy data, truncating if longer than 255 characters
     Event.find_each do |event|
       temp_note = event.note
-      if event.note && event.note.length > 255
-        temp_note = event.note[0, 254]
+      if event.note && event.note.length > 511
+        temp_note = event.note[0, 511]
       end
       event.update_column(:temp_note, temp_note)
     end
