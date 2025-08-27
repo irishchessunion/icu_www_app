@@ -63,9 +63,9 @@ class Event < ApplicationRecord
   def self.search(params, path)
     matches = ordered.include_player
     case params[:active]
-    when "active", nil
+    when "true", nil
       matches = matches.where(active: true)
-    when "inactive"
+    when "false"
       matches = matches.where(active: false)
     end
     matches = matches.where("name LIKE ?", "%#{params[:name]}%") if params[:name].present?
