@@ -28,7 +28,7 @@ if seed_sample_data
       source: Player::SOURCES.sample
     )
     
-    User.create!(
+    admin_user = User.create!(
       email: "admin@icu.ie",
       roles: "admin",
       password: "password0",
@@ -191,16 +191,16 @@ if seed_sample_data
       )
     end
 
-    # Sample data for fees (for user_inputs)
-    Fee.all.each do |fee|
-      UserInput.create!(
-        fee_id: fee.id,
-        type: "Userinput::Text",
-        label: "Input for fee #{fee.id}",
-        required: true,
-        max_length: 50
-      )
-    end
+    # # Sample data for fees (for user_inputs)
+    # Fee.all.each do |fee|
+    #   UserInput.create!(
+    #     fee_id: fee.id,
+    #     type: "Userinput::Text",
+    #     label: "Input for fee #{fee.id}",
+    #     required: true,
+    #     max_length: 50
+    #   )
+    # end
 
     # Sample data for tournaments
     5.times do |i|
@@ -406,5 +406,49 @@ if seed_sample_data
         user_id: User.all.sample.id
       )
     end
+
+
+    # # Test partial refund with free items in cart
+    # test_cart = Cart.create!()
+
+    # Fee.all.each do |fee|
+    #   Item.create!(                                                                                   
+    #     player_id: admin_player.id,                                                                                        
+    #     fee_id: fee.id,
+    #     cart_id: test_cart.id,
+    #     description: "Item description",
+    #     cost: fee.amount,
+    #     status: "paid"
+    #     )
+    # end
+        
+    # free_fee = Fee.create!(
+    #   type: Fee::TYPES.sample,
+    #   name: "Free Fee",
+    #   amount: 0,
+    #   discounted_amount: 0,
+    #   years: "2025",
+    #   active: true,
+    #   start_date: Date.today - 1.days,
+    #   end_date: Date.today + 1.days
+    # )
+
+    # Item.create!(                                                                                   
+    #   player_id: admin_player.id,                                                                                        
+    #   fee_id: free_fee.id,
+    #   cart_id: test_cart.id,
+    #   description: "Free item",
+    #   cost: 0,
+    #   status: "paid"
+    # )
+
+    # intent = Stripe::PaymentIntent.create(
+    #   amount: Fee.all.map{ |fee| fee.amount*100 }.sum.round,
+    #   currency: "eur",
+    #   payment_method: "pm_card_visa",
+    #   confirm: true,
+    #   return_url: "https://www.icu.ie"
+    # )
+    # test_cart.purchase({:payment_intent_id => intent.id, :confirmation_email => "a@a.com", :payment_name => "Name"}, admin_user)
   end
 end
