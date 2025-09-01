@@ -112,15 +112,16 @@ class Cart < ApplicationRecord
                 item.refund
             end
         end
-        self.status = all_items_refunded? ? "refunded" : "part_refunded"
         self.total -= refund.amount
       end
     end
-
+    
     free_items.each do |item|
       item.refund
     end
-
+    
+    self.status = all_items_refunded? ? "refunded" : "part_refunded"
+    
     save!
     refund
   rescue => e
