@@ -18,7 +18,7 @@ gem "redis"
 # gem "therubyracer", platforms: :ruby # (no longer needed)
 gem "icu_name", "1.3.0"
 gem "icu_utils", "1.3.3"
-gem "redcarpet"
+gem "redcarpet", "3.6.1"
 gem "stripe"
 gem "mailgun-ruby", require: "mailgun"
 # gem "paperclip"
@@ -32,6 +32,7 @@ gem "mail", "2.7.1" # latest version of mail does not work with rails 7.0.4 at t
 
 gem 'bigdecimal', '>= 2.5.5' # To avoid BigDecimal.new error
 gem 'terrapin'
+gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 
 group :development do
   gem "capistrano" # For same reason as colorize comment above
@@ -44,7 +45,7 @@ group :development do
   gem "ed25519"
 end
 
-group :development, :test do
+group :test do
   gem "rspec-rails"
   gem "rails-controller-testing"
   gem "capybara"

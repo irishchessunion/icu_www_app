@@ -43,7 +43,7 @@ class Admin::EventsController < ApplicationController
 
   def event_params
     params[:event].permit(:flyer, :name, :category, :location, :start_date, :end_date, :contact, :phone, :email,
-                          :url, :pairings_url, :live_games_url, :results_url, :report_url,
+                          :url, :pairings_url, :live_games_url, :live_games_url2, :streaming_url, :results_url, :report_url,
                           :lat, :long, :prize_fund, :active, :note, :sections, :user_id)
   end
 end

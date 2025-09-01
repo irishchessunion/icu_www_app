@@ -9,7 +9,7 @@ class Admin::ItemsController < ApplicationController
 
     # A hash condition is used in ability.rb due to accessible_by not working with the nested joins
     # This is ugly but it prevents an AssocationError
-    if can?(:manage, [Item::Entry, Item::Subscription, Item::Other])
+    if can?(:index, Item::Entry) && can?(:index, Item::Subscription) && can?(:index, Item::Other)
       @items = Item.search(params, admin_items_path)
     else
       @items = Item::Entry.accessible_by(current_ability).search(params, admin_items_path)
@@ -33,7 +33,7 @@ class Admin::ItemsController < ApplicationController
         send_data txt_data, filename: "#{params[:description]}.txt", type: 'text/txt'
       end
     end
-  end
+  end  
   
   def sales_ledger
     authorize! :sales_ledger, Item

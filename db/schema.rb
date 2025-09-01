@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_06_154825) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_01_184431) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_06_154825) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.integer "nlikes"
+    t.integer "categories", default: 0, null: false
     t.index ["access"], name: "index_articles_on_access"
     t.index ["active"], name: "index_articles_on_active"
     t.index ["author"], name: "index_articles_on_author"
@@ -201,7 +202,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_06_154825) do
     t.string "location", limit: 100
     t.decimal "long", precision: 10, scale: 7
     t.string "name", limit: 75
-    t.string "note", limit: 512
+    t.text "note"
     t.string "phone", limit: 25
     t.decimal "prize_fund", precision: 8, scale: 2
     t.string "source", limit: 8, default: "www2"
@@ -216,6 +217,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_06_154825) do
     t.string "results_url"
     t.string "live_games_url"
     t.string "report_url"
+    t.string "streaming_url"
+    t.string "live_games_url2"
     t.index ["active"], name: "index_events_on_active"
     t.index ["category"], name: "index_events_on_category"
     t.index ["end_date"], name: "index_events_on_end_date"
@@ -483,6 +486,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_06_154825) do
     t.datetime "updated_at", precision: nil
     t.integer "nlikes"
     t.string "category", limit: 20
+    t.integer "categories", default: 0, null: false
     t.index ["active"], name: "index_news_on_active"
     t.index ["date"], name: "index_news_on_date"
     t.index ["headline"], name: "index_news_on_headline"

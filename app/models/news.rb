@@ -5,7 +5,9 @@ class News < ApplicationRecord
   include Remarkable
   include Journalable
 
-  journalize %w[active date headline summary category], "/news/%d"
+  include CategoriesOwner
+
+  journalize %w[active date headline summary categories], "/news/%d"
 
   belongs_to :user
 
@@ -18,14 +20,10 @@ class News < ApplicationRecord
   scope :include_player, -> { includes(user: :player) }
   scope :ordered, -> { order(date: :desc, updated_at: :desc) }
   scope :linked_to_game, -> { where("headline like '%[GME:%' or summary like '%[GME:%'") }
-  scope :beginners, -> { where(category: "beginners") }
-  scope :junior, -> { where(category: "juniors") }
-  scope :for_parents, -> { where(category: "for_parents") }
-  scope :primary, -> { where(category: "primary") }
-  scope :secondary, -> { where(category: "secondary") }
-  scope :nonjunior, -> { where("category is null or category not in (?)", ["juniors", "for_parents", "primary", "secondary", "beginners"]) }
+  scope :junior, -> { juniors }
+  scope :nonjunior, -> { where("categories = 0 or categories & #{bitset_for_categories([:juniors, :for_parents, :primary, :secondary, :beginners])} = 0")}
   scope :active, -> { where(active: true) }
-  scope :women, -> { where(category: "women") }
+  # The category specific scopes are automatically created by has_flags.
 
   def self.search(params, path, opt={})
     matches = ordered.include_player
@@ -38,7 +36,7 @@ class News < ApplicationRecord
     end
     matches = matches.where(active: true) if params[:active] == "true"
     matches = matches.where(active: false) if params[:active] == "false"
-    matches = matches.where(category: params[:category]) if params[:category].present?
+    matches = matches.where(sql_condition_for_flag(params[:category].to_sym, "categories")) if CategoriesOwner::CATEGORIES.include?(params[:category])
     paginate(matches, params, path, opt)
   end
 

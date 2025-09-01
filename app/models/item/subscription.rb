@@ -36,13 +36,17 @@ class Item::Subscription < Item
 
   def self.new_lifetime_member(player_id)
     player = Player.where(id: player_id).first
-    raise ArgumentError, "invalid ICU ID" unless not player.nil? # checks if the ICU ID is valid
+    raise ArgumentError, "Invalid ICU ID" unless not player.nil? # checks if the ICU ID is valid
       
     sub = Item::Subscription.where(["player_id = ? AND description LIKE 'Lifetime%'", player_id]).first
-    raise ArgumentError, "already a lifetime member" unless sub.nil? # checks if the player is already a lifetime member
+    raise ArgumentError, "Already a lifetime member" unless sub.nil? # checks if the player is already a lifetime member
 
     lifetime_sub = Item::Subscription.new(description: "Lifetime ICU Subscription", player_id: player_id, status: "paid", source: "www1", payment_method: "free")
     lifetime_sub.save!
+
+    for user in player.users
+      user.update!(expires_on: Date.new(Date.today.year) + 100.years)
+    end
   end
 
   private

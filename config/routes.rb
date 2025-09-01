@@ -92,6 +92,7 @@ IcuWwwApp::Application.routes.draw do
     end
     resources :junior_newsletters, only: [:index]
     resources :journal_entries, only: [:index, :show]
+    resources :life_members, only: [:new, :create]
     resources :logins,          only: [:index, :show]
     resources :mail_events,     only: [:index]
     resources :news,            only: [:new, :create, :edit, :update, :destroy]
