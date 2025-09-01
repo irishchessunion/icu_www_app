@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-seed_sample_data = true
+seed_sample_data = false
 
 if seed_sample_data
   # The following 3 lines allow for "type" to be a column that's set.
@@ -421,7 +421,7 @@ if seed_sample_data
     #     status: "paid"
     #     )
     # end
-        
+    
     # free_fee = Fee.create!(
     #   type: Fee::TYPES.sample,
     #   name: "Free Fee",
