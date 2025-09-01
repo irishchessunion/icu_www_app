@@ -6,7 +6,7 @@ class Event < ApplicationRecord
   include Remarkable
 
   journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date
-              active category contact email phone url pairings_url results_url report_url live_games_url prize_fund note sections], "/events/%d"
+              active category contact email phone url pairings_url results_url report_url live_games_url live_games_url2 prize_fund note sections streaming_url], "/events/%d"
 
   MIN_SIZE = 1.kilobyte
   MAX_SIZE = 3.megabytes
