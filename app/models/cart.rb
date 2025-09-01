@@ -252,8 +252,15 @@ class Cart < ApplicationRecord
         raise "Refund amount (#{refund_amount}) doesn't match total (#{total})"
       end
     else
-      unless refund_amount < total
-        raise "Refund amount (#{refund_amount}) should be less than total (#{total})" unless total == 0.0
+      free_items = items.select{ |item| item.cost == 0 and not item_ids.include? item.id }
+      if free_items.size == 0
+        unless refund_amount < total
+          raise "Refund amount (#{refund_amount}) should be less than total (#{total})" unless total == 0.0
+        end
+      else
+        unless refund_amount <= total
+          raise "Refund amount (#{refund_amount}) should be less than total (#{total})" unless total == 0.0
+        end
       end
     end
 
