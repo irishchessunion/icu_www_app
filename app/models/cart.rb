@@ -89,28 +89,38 @@ class Cart < ApplicationRecord
     is_pi = payment_ref&.start_with?("pi_") and automatic
     intent = Stripe::PaymentIntent.retrieve(payment_ref) if is_pi # new object
     charge = Stripe::Charge.retrieve(payment_ref) if is_old_charge # old object
+    
+    free_items = items.where(id: item_ids).where(cost: 0)
+    non_free_items_ids = items.where(id: item_ids).where.not(cost: 0).ids
+    
+    if non_free_items_ids.size > 0
+      amount = refund_amount(non_free_items_ids, is_pi ? intent : charge, is_old_charge)
+      refund.amount = amount
 
-    amount = refund_amount(item_ids, is_pi ? intent : charge, is_old_charge)
-    refund.amount = amount
+      # new refund method
+      stripe_refund_object = Stripe::Refund.create({payment_intent: intent.id, amount: cents(amount)}) if is_pi
 
-    # new refund method
-    stripe_refund_object = Stripe::Refund.create({payment_intent: intent.id, amount: cents(amount)}) if is_pi
+      # old refund method
+      stripe_refund_object = Stripe::Refund.create({charge: charge.id, amount: cents(amount)}) if is_old_charge
 
-    # old refund method
-    stripe_refund_object = Stripe::Refund.create({charge: charge.id, amount: cents(amount)}) if is_old_charge
-
-    if (is_pi or is_old_charge) and stripe_refund_object.status == "failed"
-      # catch refund failure
-      refund.error = "Stripe refund transaction failed"
-    else
-      items.each do |item|
-          if item_ids.include?(item.id)
-              item.refund
-          end
+      if (is_pi or is_old_charge) and stripe_refund_object.status == "failed"
+        # catch refund failure
+        refund.error = "Stripe refund transaction failed"
+      else
+        items.each do |item|
+            if non_free_items_ids.include?(item.id)
+                item.refund
+            end
+        end
+        self.status = all_items_refunded? ? "refunded" : "part_refunded"
+        self.total -= refund.amount
       end
-      self.status = all_items_refunded? ? "refunded" : "part_refunded"
-      self.total -= refund.amount
     end
+
+    free_items.each do |item|
+      item.refund
+    end
+
     save!
     refund
   rescue => e
