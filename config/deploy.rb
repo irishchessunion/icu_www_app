@@ -1,6 +1,5 @@
 set :application, "icu_www_app"
 
-set :scm, :git
 set :repo_url, "https://github.com/irishchessunion/icu_www_app.git"
 set :branch, "master"
 
