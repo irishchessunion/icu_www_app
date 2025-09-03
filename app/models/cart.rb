@@ -132,7 +132,10 @@ class Cart < ApplicationRecord
   end
 
   def all_items_refunded?
-    items.all? &:refunded?
+    items.all? do |i|
+      i.reload
+      i.refunded?
+    end
   end
 
   def any_items_refunded?
