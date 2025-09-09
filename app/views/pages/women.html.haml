@@ -1,0 +1,26 @@
+- content_for :title, t("woman.chess")
+
+%h3.text-center= t("woman.chess")
+%h4.text-center= t("Current Women’s Officer: Antonina Gora")
+%p.text-center For any enquiries please email women@icu.ie
+.row
+  .col-sm-3
+    = render "home_page_links"
+    = render "woman_events"
+    = render 'woman_international_events'
+  .col-sm-6
+    = render 'news'
+    = render "champions/champion", champion: Champion.recent(:women).first
+    = render "champions/champion", champion: Champion.recent(:g19).first
+    = render "champions/champion", champion: Champion.recent(:g19).first
+    = render "champions/champion", champion: Champion.recent(:g16).first
+    = render "champions/champion", champion: Champion.recent(:g14).first
+    = render "champions/champion", champion: Champion.recent(:g12).first
+    = render "champions/champion", champion: Champion.recent(:g10).first
+    = render "champions/champion", champion: Champion.recent(:g8).first
+  .col-sm-3
+    = render("woman_organisations")
+    = render("disclaimer")
+.row
+  .col-sm-12
+    = render 'layouts/sponsors'

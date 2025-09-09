@@ -1,0 +1,14 @@
+.panel.panel-primary.woman-events
+  .panel-heading
+    .text-center= t('woman.events')
+  - @woman_events.each do |event|
+    .panel-body
+      = link_to event.name, event
+      %br
+      = event.dates
+      %br
+      = ((event.note || '').strip.split("\n").first || '').strip
+
+  .panel-footer.text-center
+    = link_to "See more events", events_path(category: "women")
+
