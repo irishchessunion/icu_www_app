@@ -10,7 +10,7 @@ class Event < ApplicationRecord
 
   MIN_SIZE = 1.kilobyte
   MAX_SIZE = 3.megabytes
-  CATEGORIES = %w[irish junior "Women only" foreign junint wint]
+  CATEGORIES = %w[irish junior women foreign junint]
   TYPES = {
     pdf:  "application/pdf",
     doc:  "application/msword",
@@ -27,7 +27,7 @@ class Event < ApplicationRecord
   scope :junior, -> { where(category: "junior") }
   scope :junint, -> { where(category: "junint") }
   scope :wint, -> { where(category: "wint") }
-  scope :woman, -> { where(category: "Women only") }
+  scope :women, -> { where(category: "women") }
   has_attached_file :flyer, keep_old_files: true
 
   belongs_to :user

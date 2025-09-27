@@ -1,7 +1,9 @@
 - content_for :title, t("woman.chess")
 
 %h3.text-center= t("woman.chess")
-%h4.text-center= t("Current Women’s Officer: Antonina Gora")
+- officer = @officers.find { |officer| officer.role.eql? "women"  }
+- unless officer.nil?
+  %h4.text-center= t("Current Women’s Officer: #{officer.player.name}")
 %p.text-center For any enquiries please email women@icu.ie
 .row
   .col-sm-3

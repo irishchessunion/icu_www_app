@@ -24,7 +24,6 @@ class News < ApplicationRecord
   scope :nonjunior, -> { where("categories = 0 or categories & #{bitset_for_categories([:juniors, :for_parents, :primary, :secondary, :beginners])} = 0")}
   scope :active, -> { where(active: true) }
   # The category specific scopes are automatically created by has_flags.
-  scope :woman, -> { where(category: "woman") }
 
   def self.search(params, path, opt={})
     matches = ordered.include_player
