@@ -27,6 +27,14 @@ class PagesController < ApplicationController
     @clubs = Club.active
   end
 
+  def women
+    @news = News.active.women
+    @woman_events = Event.active.women.where('end_date >= ?', Date.today).ordered.limit(4)
+    @international_events = Event.active.wint.where('end_date >= ?', Date.today).ordered.limit(4)
+    @officers = Officer.active.ordered.include_players
+    @officer = @officers.find { |officer| officer.role == "women" }
+  end
+
   # this method can't be called parents as this is already a ruby method
   def for_parents
     @news = News.active.for_parents

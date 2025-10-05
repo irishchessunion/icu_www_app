@@ -26,6 +26,7 @@ class Event < ApplicationRecord
 
   scope :junior, -> { where(category: "junior") }
   scope :junint, -> { where(category: "junint") }
+  scope :wint, -> { where(category: "wint") }
   scope :women, -> { where(category: "women") }
   has_attached_file :flyer, keep_old_files: true
 
