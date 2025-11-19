@@ -3,21 +3,20 @@ class PagesController < ApplicationController
 
   def home
     @news = News.active.nonjunior.ordered.limit(8)
-    @junior_events = Event.active.junior.where('end_date >= ?', Date.today).ordered.limit(3)
-    @irish_events = Event.active.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
+    @irish_events = Event.active.short.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
     @results = Result.recent
   end
 
   def home2
     @news = News.active.nonjunior.ordered.limit(8)
-    @irish_events = Event.active.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
+    @irish_events = Event.active.short.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
     @results = Result.recent
   end
 
   def juniors
     @news = News.active.junior.ordered.limit(8)
-    @junior_events = Event.active.junior.where('end_date >= ?', Date.today).ordered.limit(4)
-    @international_events = Event.active.junint.where('end_date >= ?', Date.today).ordered.limit(4)
+    @junior_events = Event.active.short.junior.where('end_date >= ?', Date.today).ordered.limit(4)
+    @international_events = Event.active.short.junint.where('end_date >= ?', Date.today).ordered.limit(4)
     @junior_clubs = Club.active.junior
   end
 
@@ -29,8 +28,8 @@ class PagesController < ApplicationController
 
   def women
     @news = News.active.women
-    @woman_events = Event.active.women.where('end_date >= ?', Date.today).ordered.limit(4)
-    @international_events = Event.active.wint.where('end_date >= ?', Date.today).ordered.limit(4)
+    @woman_events = Event.active.short.women.where('end_date >= ?', Date.today).ordered.limit(4)
+    @international_events = Event.active.short.wint.where('end_date >= ?', Date.today).ordered.limit(4)
     @officers = Officer.active.ordered.include_players
     @officer = @officers.find { |officer| officer.role == "women" }
   end

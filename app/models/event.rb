@@ -21,6 +21,7 @@ class Event < ApplicationRecord
   CONTENT_TYPES = TYPES.values.flatten
 
   scope :active, -> { where(active: true) }
+  scope :short, -> { where(short_event: true) }
   scope :with_geocodes, -> { where.not(lat: nil).where.not(long: nil) }
   scope :upcoming, -> { active.where("start_date > ?", Date.today).order(:start_date) }
 

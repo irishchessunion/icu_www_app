@@ -9,6 +9,7 @@
         = render "utils/form_header", object: @event, atr: :name
         - locals = { form: f, object: @event, col: "md", pad: 3, mark: "required" }
         = render "utils/text_field_for", locals.merge(param: :name, text: t("event.name"), width: 5)
+        = render "utils/check_box_for",  locals.merge(param: :short_event, text: t("event.short_event"), width: 1)
         = render "utils/text_field_for", locals.merge(param: :location, text: t("event.location"), width: 6)
         = render "utils/text_field_for", locals.merge(param: :start_date, text: t("event.start"), width: 3, placeholder: t("date_format"))
         = render "utils/text_field_for", locals.merge(param: :end_date, text: t("event.end"), width: 3, placeholder: t("date_format"))

@@ -15,6 +15,7 @@ en:
     long: Longitude
     map: Forthcoming Events Map
     name: Event name
+    short_event: Short Playing Event
     start: Start date
     pairings_url: Pairings URL
     phone: Contact phone
