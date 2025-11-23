@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_01_184431) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_19_171413) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -219,6 +219,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_01_184431) do
     t.string "report_url"
     t.string "streaming_url"
     t.string "live_games_url2"
+    t.boolean "short_event", default: true
     t.index ["active"], name: "index_events_on_active"
     t.index ["category"], name: "index_events_on_category"
     t.index ["end_date"], name: "index_events_on_end_date"
