@@ -9,11 +9,11 @@
         = event.dates
         %br
         - if event.streaming_url
-          %span.label.label-stream
+          %span.label.label-danger
             %span.glyphicon.glyphicon-facetime-video
             Live Stream
         - elsif event.live_games_url || event.live_games_url2
-          %span.label.label-boards
+          %span.label.label-default
             %span.glyphicon.glyphicon-tower
             Live Boards
   .panel-heading.panel-heading-middle
