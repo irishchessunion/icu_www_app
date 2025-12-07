@@ -58,6 +58,14 @@
     margin-bottom: 0;
 }
 
+.panel .panel-heading-middle {
+    border-radius: 0;
+}
+
+.irish-events .panel-body.last-panel-body {
+    padding: 10px 15px;
+}
+
 .irish-events .panel-body, .junior-events .panel-body, .news .panel-body {
     padding: 10px 15px 0;
 }
