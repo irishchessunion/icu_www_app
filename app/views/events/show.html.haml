@@ -54,7 +54,8 @@
         %tr
           %th= t("event.live_games_url2")
           %td= link_to simple_url(@event.live_games_url2), @event.live_games_url2, target: "event"
-      - if @event.streaming_url.present?
+      -# Only if the streaming url isn't recognised as a valid YouTube / Twitch.tv URL for the embed
+      - if @event.streaming_url.present? && @youtube_video_id.blank? && @twitch_channel_id.blank?
         %tr
           %th= t("event.streaming_url")
           %td= link_to simple_url(@event.streaming_url), @event.streaming_url, target: "event"
@@ -90,6 +91,32 @@
           %th{colspan: 2, class: "text-center"}= t("notes")
         %tr
           %td{colspan: 2}= @event.note_html
+
+    - @event.streaming_url.present? && if @event.start_date <= Date.today && @event.end_date >= Date.today
+      %div
+        .inline-header
+          %h4=t("event.streaming_embed")
+          =link_to simple_url(@event.streaming_url), @event.streaming_url, target: "event"
+        .well
+          - if @youtube_video_id.present?
+            %iframe{
+              width: "100%",
+              src: "https://www.youtube-nocookie.com/embed/" + @youtube_video_id + "?controls=0",
+              title: "YouTube video player",
+              frameborder: "0",
+              allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+              referrerpolicy: "strict-origin-when-cross-origin",
+              allowfullscreen: true,
+              class: "video-embed"
+            }
+          - if @twitch_channel_id.present?
+            %iframe{
+              width: "100%",
+              src: "https://player.twitch.tv/?channel=" + @twitch_channel_id + "&parent=icu.ie&parent=www.icu.ie&autoplay=false",
+              title: "Twitch.tv video player",
+              allowfullscreen: true,
+              class: "video-embed"
+            }
 
     = render "utils/show_buttons", object: @event, extras: @extras
 

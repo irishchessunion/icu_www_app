@@ -1,3 +1,6 @@
+require 'uri'
+require 'cgi'
+
 class EventsController < ApplicationController
   def index
     @events = Event.search(params, events_path)
@@ -15,6 +18,23 @@ class EventsController < ApplicationController
       @extras[t("event.create_entry_fee")] = new_admin_fee_path(type: "Fee::Entry", event_id: @event.id)
       @extras["Create Article"] = new_admin_article_path(title: @event.name, text: sample_text)
       @extras["Create News Item"] = new_admin_news_path(headline: @event.name, summary: sample_text)
+    end
+    if @event.streaming_url.present?
+      uri = URI.parse(@event.streaming_url) rescue nil
+
+      if uri
+        case uri.host
+        when /youtube\.com/
+          params = CGI.parse(uri.query.to_s)
+          @youtube_video_id = params['v']&.first
+        when /youtu\.be/
+          @youtube_video_id = uri.path.split('/')[1]
+        when /twitch\.tv/
+          params = CGI.parse(uri.query.to_s)
+          @twitch_channel_id = uri.path.split('/')[1]
+        end
+      end
+
     end
   end
 
