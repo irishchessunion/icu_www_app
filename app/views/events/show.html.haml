@@ -92,7 +92,7 @@
         %tr
           %td{colspan: 2}= @event.note_html
 
-    - @event.streaming_url.present? && if @event.start_date <= Date.today && @event.end_date >= Date.today
+    - if @event.streaming_url.present? && @event.start_date <= Date.today && @event.end_date >= Date.today && (@youtube_video_id.present? || @twitch_channel_id.present?)
       %div
         .inline-header
           %h4=t("event.streaming_embed")
@@ -147,7 +147,7 @@
             | Cart ID:
             = link_to entry_item.cart_id, admin_cart_path(entry_item.cart_id)
       - paid_invalid_section = @event.items.paid.where("section NOT IN (?)", section_names)
-      - if can?(:edit, @event) and paid_invalid_section.size > 0 
+      - if can?(:edit, @event) and paid_invalid_section.size > 0
         %h3
           %i
             Paid Entries with an Invalid Section
