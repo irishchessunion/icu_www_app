@@ -75,6 +75,20 @@
     background: inherit;
 }
 
+.irish-events .panel-body .label .glyphicon {
+  margin-right: 4px;
+}
+
+.label.label-stream {
+  color: #450a0a;
+  background: #FEE2E2;
+}
+
+.label.label-boards {
+  color: #042f2e;
+  background: #ccfbf1;
+}
+
 /* Vertical offsets and centering. */
 .voffset1 { margin-top: 10px; }
 .voffset2 { margin-top: 15px; }
