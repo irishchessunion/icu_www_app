@@ -11,6 +11,7 @@ class Event < ApplicationRecord
   MIN_SIZE = 1.kilobyte
   MAX_SIZE = 3.megabytes
   CATEGORIES = %w[irish junior women foreign junint]
+  TIME_CONTROLS = %w[classical rapid blitz].freeze
   TYPES = {
     pdf:  "application/pdf",
     doc:  "application/msword",
@@ -20,10 +21,16 @@ class Event < ApplicationRecord
   EXTENSIONS = /\.(#{TYPES.values.join("|")})\z/i
   CONTENT_TYPES = TYPES.values.flatten
 
+
   scope :active, -> { where(active: true) }
   scope :short, -> { where(short_event: true) }
+  scope :is_fide_rated, -> { where(is_fide_rated: true) }
   scope :with_geocodes, -> { where.not(lat: nil).where.not(long: nil) }
   scope :upcoming, -> { active.where("start_date > ?", Date.today).order(:start_date) }
+
+  scope :classical, -> { where("JSON_CONTAINS(time_controls, ?)", '"classical"') }
+  scope :rapid, -> { where("JSON_CONTAINS(time_controls, ?)", '"rapid"') }
+  scope :blitz, -> { where("JSON_CONTAINS(time_controls, ?)", '"blitz"') }
 
   scope :junior, -> { where(category: "junior") }
   scope :junint, -> { where(category: "junint") }
@@ -33,7 +40,9 @@ class Event < ApplicationRecord
 
   belongs_to :user
   has_many :fee_entries, class_name: 'Fee::Entry'
+  attribute :time_controls, :json, default: -> { ["classical"] }
 
+  before_validation :ensure_time_controls_is_array
   before_validation :normalize_attributes
 
   validates_attachment :flyer, content_type: { file_name: EXTENSIONS, content_type: CONTENT_TYPES }, size: { in: MIN_SIZE..MAX_SIZE }
@@ -58,6 +67,7 @@ class Event < ApplicationRecord
   validates :end_date, date: { on_or_after: :today }, unless: Proc.new { |e| e.source == "www1" }
 
   validate :valid_dates
+  validate :time_controls_must_be_valid
 
   scope :include_player, -> { includes(user: :player) }
   scope :ordered, -> { order(:start_date, :end_date, :name) }
@@ -144,6 +154,11 @@ class Event < ApplicationRecord
     normalize_blanks(:contact, :phone, :email, :url, :note)
   end
 
+  # For old records with NULL value for time_controls
+  def ensure_time_controls_is_array
+    self.time_controls ||= []
+  end
+
   def valid_dates
     if start_date.present? && end_date.present?
       if start_date > end_date
@@ -152,5 +167,12 @@ class Event < ApplicationRecord
         errors.add(:end_date, "must end in the same or next year it starts")
       end
     end
+  end
+
+  def time_controls_must_be_valid
+    return if time_controls.blank?
+
+    invalid_values = time_controls - TIME_CONTROLS
+    errors.add(:time_controls, "contains invalid values: #{invalid_values.join(', ')}") if invalid_values.any?
   end
 end
