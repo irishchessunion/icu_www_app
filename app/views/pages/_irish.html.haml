@@ -1,8 +1,25 @@
 .panel.panel-primary.irish-events
-  .panel-heading
+  - if @ongoing_events.any?
+    .panel-heading
+      .text-center Ongoing Events
+    - @ongoing_events.each_with_index do |event, index|
+      %div{class: index == @ongoing_events.size - 1 ? "panel-body last-panel-body" : "panel-body"}
+        = link_to event.name, event
+        %br
+        = event.dates
+        %br
+        - if event.streaming_url
+          %span.label.label-danger
+            %span.glyphicon.glyphicon-facetime-video
+            Live Stream
+        - elsif event.live_games_url || event.live_games_url2
+          %span.label.label-default
+            %span.glyphicon.glyphicon-tower
+            Live Boards
+  .panel-heading.panel-heading-middle
     .text-center Upcoming Events
-  - @irish_events.each do |event|
-    .panel-body
+  - @upcoming_events.each_with_index do |event, index|
+    %div{class: index == @upcoming_events.size - 1 ? "panel-body last-panel-body" : "panel-body"}
       = link_to event.name, event
       %br
       = event.dates

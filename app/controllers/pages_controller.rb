@@ -3,13 +3,15 @@ class PagesController < ApplicationController
 
   def home
     @news = News.active.nonjunior.ordered.limit(8)
-    @irish_events = Event.active.short.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
+    @ongoing_events = Event.active.short.where(category: %w(irish women)).where('start_date <= ? AND end_date >= ?', Date.today, Date.today).ordered.limit(4)
+    @upcoming_events = Event.active.short.where(category: %w(irish women)).where('start_date >= ?', Date.today).ordered.limit(4)
     @results = Result.recent
   end
 
   def home2
     @news = News.active.nonjunior.ordered.limit(8)
-    @irish_events = Event.active.short.where(category: %w(irish women)).where('end_date >= ?', Date.today).ordered.limit(4)
+    @ongoing_events = Event.active.short.where(category: %w(irish women)).where('start_date <= ? AND end_date >= ?', Date.today, Date.today).ordered.limit(4)
+    @upcoming_events = Event.active.short.where(category: %w(irish women)).where('start_date >= ?', Date.today).ordered.limit(4)
     @results = Result.recent
   end
 

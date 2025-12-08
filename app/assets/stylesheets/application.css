@@ -58,6 +58,14 @@
     margin-bottom: 0;
 }
 
+.panel .panel-heading-middle {
+    border-radius: 0;
+}
+
+.irish-events .panel-body.last-panel-body {
+    padding: 10px 15px;
+}
+
 .irish-events .panel-body, .junior-events .panel-body, .news .panel-body {
     padding: 10px 15px 0;
 }
@@ -65,6 +73,20 @@
 .irish-events .panel-footer, .junior-events .panel-footer, .news .panel-footer {
     border-top: solid 1px;
     background: inherit;
+}
+
+.irish-events .panel-body .label .glyphicon {
+  margin-right: 4px;
+}
+
+.label.label-stream {
+  color: #450a0a;
+  background: #FEE2E2;
+}
+
+.label.label-boards {
+  color: #042f2e;
+  background: #ccfbf1;
 }
 
 /* Vertical offsets and centering. */
