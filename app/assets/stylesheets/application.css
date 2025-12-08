@@ -226,6 +226,13 @@ table.float-center { margin-left: auto; margin-right: auto; }
   width: 50% !important;
 }
 
+/* Forms */
+fieldset.time-controls > legend {
+  font-size: 15px;
+  font-weight: bold;
+  text-align: right;
+}
+
 /* From http://www.abeautifulsite.net/blog/2013/08/whipping-file-inputs-into-shape-with-bootstrap-3/. */
 .btn-file {
   position: relative;

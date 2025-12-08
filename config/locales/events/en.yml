@@ -29,6 +29,13 @@ en:
     streaming_embed: Live Commentary
     url: Event website
     user: Organizer
+    is_fide_rated: FIDE Rated?
+    time_controls:
+      label: Time Control(s)
+      hint: Select any that apply
+      classical: Classical
+      rapid: Rapid
+      blitz: Blitz
     category:
       any: Any type
       foreign: Foreign
