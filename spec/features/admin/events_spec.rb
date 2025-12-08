@@ -133,6 +133,13 @@ describe Event do
       fill_in phone, with: phone_text
       fill_in prize_fund, with: fund_text
       fill_in url, with: url_text
+
+      check I18n.t("event.is_fide_rated")
+      ["classical", "rapid"].each do |control|
+        label_text = I18n.t("event.time_controls.#{control}")
+        check label_text
+      end
+
       click_button save
 
       expect(page).to have_css(success, text: created)
@@ -140,6 +147,8 @@ describe Event do
       event = Event.first
 
       expect(event.active).to be true
+      expect(event.is_fide_rated).to be true
+      expect(event.time_controls).to match_array(["classical", "rapid"])
       expect(event.category).to eq Event::CATEGORIES[1]
       expect(event.contact).to eq contact_text
       expect(event.email).to eq email_text
