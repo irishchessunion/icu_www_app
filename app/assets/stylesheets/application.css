@@ -13,6 +13,10 @@
  *= require boards
  */
 
+:root {
+  --desktop-breakpoint: 1140px;
+}
+
 /* Text styling. */
 .text-done { text-decoration: line-through !important; }
 
@@ -52,6 +56,18 @@
 
 #header.jumbotron h1 {
     font-size: 34px;
+}
+
+.inline-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.video-embed {
+  aspect-ratio: 16/9;
+  border-radius: 0.25rem;
 }
 
 .panel.panel-default {
@@ -323,4 +339,13 @@ ol.nested-numbering > li:before {
 
 .fees-table a.btn {
     width: 80px;
+}
+
+/* Mobile-only */
+@media (max-width: 1140px) {
+  .inline-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 0 12px 0;
+  }
 }

@@ -26,6 +26,7 @@ en:
       hint: When editing this, please ensure to also edit the sections field for any relevant fees.
       label: Sections
     streaming_url: Live commentary URL
+    streaming_embed: Live Commentary
     url: Event website
     user: Organizer
     category:
