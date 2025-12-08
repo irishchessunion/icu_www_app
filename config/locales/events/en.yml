@@ -32,6 +32,7 @@ en:
     is_fide_rated: FIDE Rated?
     fide_true: 'Yes'
     fide_false: 'No'
+    fide_rated_event: FIDE-rated
     time_controls:
       label: Time Control(s)
       hint: Select any that apply

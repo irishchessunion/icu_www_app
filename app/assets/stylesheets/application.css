@@ -70,6 +70,23 @@
   border-radius: 0.25rem;
 }
 
+.event-metadata {
+  display: inline-flex;
+  align-items: center;
+  gap: 0 8px;
+}
+
+.event-metadata > span::after {
+  padding-left: 8px;
+  content: "•";
+  font-size: 12px;
+  vertical-align: text-top;
+}
+
+.event-metadata > span:last-child::after {
+  content: none;
+}
+
 .panel.panel-default {
     margin-bottom: 0;
 }
