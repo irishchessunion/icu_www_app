@@ -30,6 +30,8 @@ en:
     url: Event website
     user: Organizer
     is_fide_rated: FIDE Rated?
+    fide_true: 'Yes'
+    fide_false: 'No'
     time_controls:
       label: Time Control(s)
       hint: Select any that apply
