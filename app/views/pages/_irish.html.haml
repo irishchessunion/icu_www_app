@@ -8,11 +8,11 @@
         %br
         = event.dates
         %br
-        - if event.streaming_url
+        - if event.streaming_url.present?
           %span.label.label-danger
             %span.glyphicon.glyphicon-facetime-video
             Live Stream
-        - elsif event.live_games_url || event.live_games_url2
+        - elsif event.live_games_url.present? || event.live_games_url2.present?
           %span.label.label-default
             %span.glyphicon.glyphicon-tower
             Live Boards
