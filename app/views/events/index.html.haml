@@ -20,9 +20,10 @@
           - @events.matches.each do |event|
             %tr
               - if event.dates_as_spans.is_a?(Array)
-                %td.dates-as-spans
-                  - event.dates_as_spans.each do |span|
-                    %span= span
+                %td
+                  %span.dates-as-spans
+                    - event.dates_as_spans.each do |span|
+                      %span= span
               - else
                 %td.no-wrap.text-right= event.dates
               %td
