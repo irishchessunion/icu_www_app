@@ -144,41 +144,22 @@ class Event < ApplicationRecord
     parts.join(" ")
   end
 
-  def dates_as_spans
-    parts = []
-    if start_date.year == end_date.year
-      parts.unshift start_date.year
-      if start_date.month == end_date.month
-        parts.unshift I18n.t("month.s#{start_date.strftime('%m')}")
-        if start_date.mday == end_date.mday
-          parts.unshift start_date.mday
-        else
-          parts.unshift "#{start_date.mday}–#{end_date.mday}"
-        end
-      else
-        parts.unshift I18n.t("month.s#{end_date.strftime('%m')}")
-        parts.unshift "#{end_date.mday}"
-        parts.unshift "–"
-        parts.unshift I18n.t("month.s#{start_date.strftime('%m')}")
-        parts.unshift "#{start_date.mday}"
-      end
+  # @return [Array<String>] Example: ["30 Dec 2025", "–", "2 Jan 2026"]
+  # Purpose is that we can line-wrap after each span if required on smaller screens
+  def multiyear_dates_as_spans
+    start_str = [
+    start_date.mday,
+      I18n.t("month.s#{start_date.strftime('%m')}"),
+      start_date.year
+    ].join(" ")
 
-      parts.join(" ")
-    else
-      start_str = [
-      start_date.mday,
-        I18n.t("month.s#{start_date.strftime('%m')}"),
-        start_date.year
-      ].join(" ")
+    end_str = [
+      end_date.mday,
+      I18n.t("month.s#{end_date.strftime('%m')}"),
+      end_date.year
+    ].join(" ")
 
-      end_str = [
-        end_date.mday,
-        I18n.t("month.s#{end_date.strftime('%m')}"),
-        end_date.year
-      ].join(" ")
-
-      [start_str, "–", end_str]
-    end
+    [start_str, "–", end_str]
   end
 
   def geocodes?

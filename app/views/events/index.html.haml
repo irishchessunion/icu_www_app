@@ -19,13 +19,13 @@
         %tbody
           - @events.matches.each do |event|
             %tr
-              - if event.dates_as_spans.is_a?(Array)
+              - if event.start_date.year == event.end_date.year
+                %td.no-wrap.text-right= event.dates
+              - else
                 %td
                   %span.dates-as-spans
-                    - event.dates_as_spans.each do |span|
+                    - event.multiyear_dates_as_spans.each do |span|
                       %span= span
-              - else
-                %td.no-wrap.text-right= event.dates
               %td
                 = link_to event.name, event
                 %br
