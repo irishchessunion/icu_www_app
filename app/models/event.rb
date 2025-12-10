@@ -148,7 +148,7 @@ class Event < ApplicationRecord
   # Purpose is that we can line-wrap after each span if required on smaller screens
   def multiyear_dates_as_spans
     start_str = [
-    start_date.mday,
+      start_date.mday,
       I18n.t("month.s#{start_date.strftime('%m')}"),
       start_date.year
     ].join(" ")
