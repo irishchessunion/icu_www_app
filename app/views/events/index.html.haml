@@ -19,8 +19,26 @@
         %tbody
           - @events.matches.each do |event|
             %tr
-              %td.no-wrap.text-right= event.dates
-              %td= link_to event.name, event
+              - if event.start_date.year == event.end_date.year
+                %td.no-wrap.text-right= event.dates
+              - else
+                %td
+                  %span.dates-as-spans
+                    - event.multiyear_dates_as_spans.each do |span|
+                      %span= span
+              %td
+                = link_to event.name, event
+                %br
+                %span.event-metadata.text-muted
+                  - if event.time_controls.present?
+                    %span
+                      - event.time_controls.each_with_index do |control, i|
+                        = t("event.time_controls.#{control}")
+                        - if i < event.time_controls.size - 1
+                          = ", "
+                  - if event.is_fide_rated.present? && event.is_fide_rated
+                    %span
+                      =t("event.fide_rated_event")
               %td= link_to_if event.geocodes?, event.location, events_map_path(event)
               - if extra
                 %td.text-center= ok_ko(event.active)

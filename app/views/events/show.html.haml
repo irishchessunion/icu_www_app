@@ -81,6 +81,23 @@
       %tr
         %th= t("category")
         %td= t("event.category.#{@event.category}")
+      %tr
+        %th= t("event.is_fide_rated")
+        - if @event.is_fide_rated.present?
+          - if @event.is_fide_rated
+            %td= t("event.fide_true")
+          - else
+            %td= t("event.fide_false")
+        - else
+          %td= t("event.fide_false")
+      - if @event.time_controls.present?
+        %tr
+          %th= t("event.time_controls.label")
+          %td
+            - @event.time_controls.each_with_index do |control, i|
+              = t("event.time_controls.#{control}")
+              - if i < @event.time_controls.size - 1
+                = ", "
       = render "utils/timestamps", object: @event, ability: :create
       - if admin && @event.user.present?
         %tr

@@ -70,6 +70,33 @@
   border-radius: 0.25rem;
 }
 
+.dates-as-spans {
+  display: flex;
+  justify-content: end;
+  flex-direction: row;
+}
+
+.event-metadata {
+  display: inline-flex;
+  align-items: center;
+  gap: 0 8px;
+}
+
+.event-metadata > span {
+  white-space: nowrap;
+}
+
+.event-metadata > span::after {
+  padding-left: 8px;
+  content: "•";
+  font-size: 12px;
+  vertical-align: text-top;
+}
+
+.event-metadata > span:last-child::after {
+  content: none;
+}
+
 .panel.panel-default {
     margin-bottom: 0;
 }
@@ -226,6 +253,13 @@ table.float-center { margin-left: auto; margin-right: auto; }
   width: 50% !important;
 }
 
+/* Forms */
+fieldset.time-controls > legend {
+  font-size: 15px;
+  font-weight: bold;
+  text-align: right;
+}
+
 /* From http://www.abeautifulsite.net/blog/2013/08/whipping-file-inputs-into-shape-with-bootstrap-3/. */
 .btn-file {
   position: relative;
@@ -347,5 +381,10 @@ ol.nested-numbering > li:before {
     flex-direction: column;
     align-items: flex-start;
     margin: 0 0 12px 0;
+  }
+
+  .dates-as-spans {
+    flex-direction: column;
+    align-items: end;
   }
 }

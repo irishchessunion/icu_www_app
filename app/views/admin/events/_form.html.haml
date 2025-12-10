@@ -10,9 +10,22 @@
         - locals = { form: f, object: @event, col: "md", pad: 3, mark: "required" }
         = render "utils/text_field_for", locals.merge(param: :name, text: t("event.name"), width: 5)
         = render "utils/check_box_for",  locals.merge(param: :short_event, text: t("event.short_event"), width: 1)
+        = render "utils/check_box_for",  locals.merge(param: :is_fide_rated, text: t("event.is_fide_rated"), width: 1)
         = render "utils/text_field_for", locals.merge(param: :location, text: t("event.location"), width: 6)
         = render "utils/text_field_for", locals.merge(param: :start_date, text: t("event.start"), width: 3, placeholder: t("date_format"))
         = render "utils/text_field_for", locals.merge(param: :end_date, text: t("event.end"), width: 3, placeholder: t("date_format"))
+        %hr
+        %fieldset{"aria-label": "Select event time controls", class:"time-controls"}
+          %legend.col-md-3
+            =t("event.time_controls.label")
+            %br
+            ="[" + t("event.time_controls.hint") + "]"
+          - Event::TIME_CONTROLS.each do |control|
+            - checked = (@event.time_controls || []).include?(control) ? "on" : nil
+            %div
+              %input.form-check-input{ type: "checkbox", id: "time_controls_#{control}", name: "event[time_controls][]", value: control, checked: checked }
+              %label.form-check-label{ for: "time_controls_#{control}" }= t("event.time_controls.#{control}")
+        %hr
         = render "utils/text_field_for", locals.merge(param: :sections, ttext: "event.sections", width: 6)
         = render "utils/select_for",     locals.merge(param: :category, text: t("category"), width: 3, menu: event_category_menu(@event.category))
         = render "utils/file_field_for", locals.merge(param: :flyer, text: t("event.flyer"), width: 2, mark: "none")
