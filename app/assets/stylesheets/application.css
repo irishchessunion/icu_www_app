@@ -76,6 +76,10 @@
   flex-direction: row;
 }
 
+.dates-as-spans > span {
+  white-space: nowrap;
+}
+
 .event-metadata {
   display: inline-flex;
   align-items: center;
