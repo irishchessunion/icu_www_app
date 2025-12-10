@@ -105,6 +105,11 @@
   display: none;
 }
 
+.event-location-span .glyphicon {
+  font-size: 12px;
+  margin-right: 2px;
+}
+
 .panel.panel-default {
     margin-bottom: 0;
 }

@@ -49,7 +49,8 @@
                 -# Shows only when screen width <= 768px
                 %br.event-location-span
                 %span.event-location-span
-                  = link_to_if event.geocodes?, event.location, events_map_path(event)
+                  %span.glyphicon.glyphicon-map-marker
+                  =link_to_if event.geocodes?, event.location, events_map_path(event)
 
               -# Shows only when screen width > 768px
               %td.event-location-col= link_to_if event.geocodes?, event.location, events_map_path(event)
