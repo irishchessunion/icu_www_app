@@ -76,6 +76,10 @@
   flex-direction: row;
 }
 
+.dates-as-spans > span {
+  white-space: nowrap;
+}
+
 .event-metadata {
   display: inline-flex;
   align-items: center;
@@ -95,6 +99,15 @@
 
 .event-metadata > span:last-child::after {
   content: none;
+}
+
+.event-location-span {
+  display: none;
+}
+
+.event-location-span .glyphicon {
+  font-size: 12px;
+  margin-right: 2px;
 }
 
 .panel.panel-default {
@@ -375,7 +388,7 @@ ol.nested-numbering > li:before {
     width: 80px;
 }
 
-/* Mobile-only */
+/* Bootstrap MD Breakpoint */
 @media (max-width: 1140px) {
   .inline-header {
     flex-direction: column;
@@ -386,5 +399,26 @@ ol.nested-numbering > li:before {
   .dates-as-spans {
     flex-direction: column;
     align-items: end;
+  }
+}
+
+/* Bootstrap SM Breakpoint */
+@media (max-width: 768px) {
+  .event-metadata {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .event-metadata > span::after{
+    padding: 0;
+    content: none;
+  }
+
+  .event-location-col {
+    display: none;
+  }
+
+  .event-location-span {
+    display: inline;
   }
 }

@@ -13,7 +13,8 @@
           %tr
             %th.text-center= t("dates")
             %th= t("event.name")
-            %th= t("event.location")
+            -# Shows only when screen width > 768px
+            %th.event-location-col= t("event.location")
             - if extra
               %th.text-center= t("active")
         %tbody
@@ -30,16 +31,29 @@
                 = link_to event.name, event
                 %br
                 %span.event-metadata.text-muted
+                  -# Time Controls, if any
                   - if event.time_controls.present?
                     %span
                       - event.time_controls.each_with_index do |control, i|
                         = t("event.time_controls.#{control}")
                         - if i < event.time_controls.size - 1
                           = ", "
+                  -# Category, if any and not the default/assumed value
+                  - if event.category.present? && event.category != "irish"
+                    %span
+                      =t("event.category.#{event.category}")
+                  -# Event is FIDE-rated?
                   - if event.is_fide_rated.present? && event.is_fide_rated
                     %span
                       =t("event.fide_rated_event")
-              %td= link_to_if event.geocodes?, event.location, events_map_path(event)
+                -# Shows only when screen width <= 768px
+                %br.event-location-span
+                %span.event-location-span
+                  %span.glyphicon.glyphicon-map-marker
+                  =link_to_if event.geocodes?, event.location, events_map_path(event)
+
+              -# Shows only when screen width > 768px
+              %td.event-location-col= link_to_if event.geocodes?, event.location, events_map_path(event)
               - if extra
                 %td.text-center= ok_ko(event.active)
           = render "utils/pagination_links", pager: @events, columns: 3 + (extra ? 1 : 0)
