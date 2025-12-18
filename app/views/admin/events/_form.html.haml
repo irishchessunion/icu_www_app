@@ -1,19 +1,29 @@
 - content_for :javascript do
   = render(:partial => "utils/file_field", :handlers => [:erb], :formats => [:js], :locals => { :param => "flyer" })
 
+- has_started = @event.start_date.present? && @event.start_date <= Date.today
+- has_ended = @event.end_date.present? && @event.end_date <= Date.today
+
 .row
   .col-md-1
   .col-md-10
+
+    - if has_ended
+      .panel.panel-warning
+        .panel-body
+          %p{class: "text-warning text-center", style:"margin: 0"}
+            =t("event.admin.cannot_edit_past_fields")
+
     = form_for [:admin, @event], html: { class: "form-horizontal", role: "form" } do |f|
       %fieldset
         = render "utils/form_header", object: @event, atr: :name
         - locals = { form: f, object: @event, col: "md", pad: 3, mark: "required" }
-        = render "utils/text_field_for", locals.merge(param: :name, text: t("event.name"), width: 5)
-        = render "utils/check_box_for",  locals.merge(param: :short_event, text: t("event.short_event"), width: 1)
-        = render "utils/check_box_for",  locals.merge(param: :is_fide_rated, text: t("event.is_fide_rated"), width: 1)
-        = render "utils/text_field_for", locals.merge(param: :location, text: t("event.location"), width: 6)
-        = render "utils/text_field_for", locals.merge(param: :start_date, text: t("event.start"), width: 3, placeholder: t("date_format"))
-        = render "utils/text_field_for", locals.merge(param: :end_date, text: t("event.end"), width: 3, placeholder: t("date_format"))
+        = render "utils/text_field_for", locals.merge(param: :name, text: t("event.name"), width: 5, disabled: has_ended)
+        = render "utils/text_field_for", locals.merge(param: :start_date,text: t("event.start"), disabled: has_started, width: 3, placeholder: t("date_format"))
+        = render "utils/text_field_for", locals.merge(param: :end_date, text: t("event.end"), disabled: has_ended, width: 3, placeholder: t("date_format"))
+        = render "utils/text_field_for", locals.merge(param: :location, text: t("event.location"), width: 6, disabled: has_ended)
+        = render "utils/text_field_for", locals.merge(param: :lat, text: t("latitude"), width: 3, mark: "none", disabled: has_ended)
+        = render "utils/text_field_for", locals.merge(param: :long, text: t("longitude"), width: 3, mark: "none", disabled: has_ended)
         %hr
         %fieldset{"aria-label": "Select event time controls", class:"time-controls"}
           %legend.col-md-3
@@ -23,26 +33,30 @@
           - Event::TIME_CONTROLS.each do |control|
             - checked = (@event.time_controls || []).include?(control) ? "on" : nil
             %div
-              %input.form-check-input{ type: "checkbox", id: "time_controls_#{control}", name: "event[time_controls][]", value: control, checked: checked }
+              %input.form-check-input{ type: "checkbox", id: "time_controls_#{control}", name: "event[time_controls][]", value: control, checked: checked, disabled: has_ended }
               %label.form-check-label{ for: "time_controls_#{control}" }= t("event.time_controls.#{control}")
         %hr
-        = render "utils/text_field_for", locals.merge(param: :sections, ttext: "event.sections", width: 6)
-        = render "utils/select_for",     locals.merge(param: :category, text: t("category"), width: 3, menu: event_category_menu(@event.category))
-        = render "utils/file_field_for", locals.merge(param: :flyer, text: t("event.flyer"), width: 2, mark: "none")
-        = render "utils/text_field_for", locals.merge(param: :contact, text: t("event.contact"), width: 5, mark: "none")
-        = render "utils/text_field_for", locals.merge(param: :email, text: t("event.email"), width: 5, mark: "none")
-        = render "utils/text_field_for", locals.merge(param: :phone, text: t("event.phone"), width: 4, mark: "none")
+        = render "utils/select_for",     locals.merge(param: :category, text: t("category"), width: 3, menu: event_category_menu(@event.category), disabled: has_ended)
+        = render "utils/text_field_for", locals.merge(param: :sections, ttext: "event.sections", width: 6, disabled: has_ended)
+        = render "utils/check_box_for",  locals.merge(param: :short_event, text: t("event.short_event"), width: 1, disabled: has_ended)
+        = render "utils/check_box_for",  locals.merge(param: :is_fide_rated, text: t("event.is_fide_rated"), width: 1, disabled: has_ended)
+        = render "utils/text_field_for", locals.merge(param: :prize_fund, text: t("event.prize_fund"), width: 2, mark: "none", disabled: has_ended)
+        %hr
+        = render "utils/file_field_for", locals.merge(param: :flyer, text: t("event.flyer"), width: 2, mark: "none", disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :url, text: t("event.url"), width: 6, mark: "none")
+        = render "utils/text_field_for", locals.merge(param: :contact, text: t("event.contact"), width: 5, mark: "none", disabled: has_ended)
+        = render "utils/text_field_for", locals.merge(param: :email, text: t("event.email"), width: 5, mark: "none", disabled: has_ended)
+        = render "utils/text_field_for", locals.merge(param: :phone, text: t("event.phone"), width: 4, mark: "none", disabled: has_ended)
+        %hr
         = render "utils/text_field_for", locals.merge(param: :pairings_url, text: t("event.pairings_url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :live_games_url, text: t("event.live_games_url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :live_games_url2, text: t("event.live_games_url2"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :streaming_url, text: t("event.streaming_url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :results_url, text: t("event.results_url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :report_url, text: t("event.report_url"), width: 6, mark: "none")
-        = render "utils/text_field_for", locals.merge(param: :prize_fund, text: t("event.prize_fund"), width: 2, mark: "none")
-        = render "utils/text_field_for", locals.merge(param: :lat, text: t("latitude"), width: 3, mark: "none")
-        = render "utils/text_field_for", locals.merge(param: :long, text: t("longitude"), width: 3, mark: "none")
-        = render "utils/select_for",     locals.merge(param: :user_id, text: t("event.user"), width: 4, menu: user_menu(@event.user_id))
-        = render "utils/check_box_for",  locals.merge(param: :active, text: t("active"), width: 1)
+        %hr
         = render "utils/text_area_for",  locals.merge(param: :note, text: t("notes"), width: 9, rows: 10)
+        %hr
+        = render "utils/select_for",     locals.merge(param: :user_id, text: t("event.user"), width: 4, menu: user_menu(@event.user_id), disabled: has_ended)
+        = render "utils/check_box_for",  locals.merge(param: :active, text: t("active"), width: 1, disabled: has_ended)
       = render "utils/form_buttons", form: f, object: @event

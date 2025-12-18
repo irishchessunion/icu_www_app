@@ -1,5 +1,7 @@
 en:
   event:
+    admin:
+      cannot_edit_past_fields: This event has ended. Some fields can no longer be edited.
     contact: Contact name
     create_entry_fee: New Entry Fee
     calendar: Calendar
