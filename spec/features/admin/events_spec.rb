@@ -246,4 +246,40 @@ describe Event do
       expect(Event.count).to eq 0
     end
   end
+
+  context "edit a event thats ended" do
+    let(:user) { create(:user, roles: "organiser") }
+
+    let(:ended_event) do
+      ended_event = build(
+        :event,
+        user: user,
+        name: "Bunratty Congress",
+        location: "Bunratty, Limerick",
+        start_date: Date.today.days_ago(14),
+        end_date: Date.today.days_ago(7)
+      )
+      ended_event.save!(validate: false)
+      ended_event
+    end
+
+    before do
+      @user = login(user)
+      visit edit_admin_event_path(ended_event)
+    end
+
+    it "displays that fields cannot be edited" do
+      expect(page).to have_text(I18n.t("event.admin.cannot_edit_past_fields"))
+    end
+
+    it "disables name field" do
+      expect(page).to have_field(event_name, disabled: true)
+    end
+
+    it "disables start and end date fields" do
+      expect(page).to have_field(start_date, disabled: true)
+      expect(page).to have_field(end_date, disabled: true)
+    end
+
+  end
 end

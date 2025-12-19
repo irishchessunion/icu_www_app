@@ -1,3 +1,4 @@
+- defined?(disabled) || disabled = false
 - defined?(mark)     || mark     = "none"
 - defined?(btn_text) || btn_text = object.new_record? ? "Browse" : "Change"
 
@@ -6,5 +7,5 @@
   %div{class: "col-#{col}-#{width}"}
     %span.btn.btn-default.btn-file
       %span{id: "#{param}_change_filename"}= btn_text
-      = form.file_field param
+      = form.file_field param, disabled: disabled
   %div{class: "col-#{col}-#{12-pad-width} help-block"}= object.errors[param].first
