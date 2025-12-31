@@ -12,6 +12,10 @@ class Event < ApplicationRecord
   MAX_SIZE = 3.megabytes
   CATEGORIES = %w[irish junior women foreign junint]
   TIME_CONTROLS = %w[classical rapid blitz].freeze
+  EDIT_AFTER_STARTED = %w[name end_date location lat long
+                         time_controls category sections short_event is_fide_rated prize_fund flyer contact email phone
+                         url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note].freeze
+  EDIT_AFTER_ENDED = %w[url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note].freeze
   TYPES = {
     pdf:  "application/pdf",
     doc:  "application/msword",
@@ -67,6 +71,8 @@ class Event < ApplicationRecord
   validates :end_date, date: { on_or_after: :today }, on: :create, unless: Proc.new { |e| e.source == "www1" }
 
   validate :valid_dates
+  validate :restrict_edits_if_started, on: :update
+  validate :restrict_edits_if_ended, on: :update
   validate :time_controls_must_be_valid
 
   scope :include_player, -> { includes(user: :player) }
@@ -184,6 +190,26 @@ class Event < ApplicationRecord
       elsif end_date.year > start_date.year + 1
         errors.add(:end_date, "must end in the same or next year it starts")
       end
+    end
+  end
+
+  def restrict_edits_if_started
+    return if start_date.blank?
+    return if start_date > Date.today
+
+    disallowed_changes = changed - EDIT_AFTER_STARTED
+    if disallowed_changes.any?
+      errors.add(:start_date, "Trying to change a field that can no longer by edited as event has started")
+    end
+  end
+
+  def restrict_edits_if_ended
+    return if end_date.blank?
+    return if end_date > Date.today
+
+    disallowed_changes = changed - EDIT_AFTER_ENDED
+    if disallowed_changes.any?
+      errors.add(:end_date, "Trying to change a field that can no longer by edited as event has ended")
     end
   end
 
