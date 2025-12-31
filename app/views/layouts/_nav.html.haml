@@ -4,6 +4,13 @@
       %span.icon-bar
       %span.icon-bar
       %span.icon-bar
+    %ul.nav.navbar-nav
+      %li= link_to t("player.rating.ratings"), "http://ratings.icu.ie", target: "ratings"
+      - if current_user.guest?
+        %li= link_to t("shop.join_icu"), shop_path
+      - else
+        %li= link_to t("event.calendar"), events_path
+
   .collapse.navbar-collapse.navbar-ex1-collapse
     %ul.nav.navbar-nav
       - if active("pages", "home")

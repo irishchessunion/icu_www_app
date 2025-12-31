@@ -34,6 +34,7 @@
   border-top: 0;
 }
 
+/* NAVIGATION & HEADER */
 /* Button for header control. */
 #header_control {
   position: fixed;
@@ -50,12 +51,32 @@
     padding-bottom: 0;
 }
 
-.header-logo {
-    margin-top: 15px;
+#header.jumbotron .branding {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0 10px;
+  padding: 5px 0;
+}
+
+#header.jumbotron .branding>span.logo_clearfix {
+  width: 70px;
+}
+
+.logo {
+    /* margin-top: 15px; */
+    height: 70px;
+    width: 70px;
 }
 
 #header.jumbotron h1 {
     font-size: 34px;
+    margin: 15px 0;
+}
+
+.navbar-header > ul {
+  display: none
 }
 
 .inline-header {
@@ -64,6 +85,50 @@
   align-items: center;
   justify-content: space-between;
 }
+
+/* Bootstrap SM Breakpoint */
+@media (max-width: 768px) {
+  #header.jumbotron .branding {
+    justify-content: center;
+    padding: 0;
+    margin: 0 -30px;
+  }
+
+  #header.jumbotron h1 {
+    font-size: 28px;
+  }
+
+  #header .branding > .logo {
+    height: 40px;
+    width: 40px;
+  }
+
+  #header .branding > span.logo_clearfix {
+    display: none;
+  }
+
+  .navbar {
+    border-radius: 4px;
+  }
+
+  .navbar-header {
+    display: flex;
+    padding: 0 15px;
+  }
+
+  .navbar-default .navbar-toggle {
+    float: left;
+  }
+
+  .navbar-header > ul {
+    flex-grow: 1;
+    display: flex;
+    margin: 9.75px 0;
+    justify-content: flex-end;
+  }
+}
+
+/* //NAVIGATION & HEADER */
 
 .video-embed {
   aspect-ratio: 16/9;
