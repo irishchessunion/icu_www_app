@@ -179,6 +179,38 @@
     margin-bottom: 0;
 }
 
+/* Featured Results */
+.panel-info.featured-result {
+  display: none;
+}
+
+.result-icon {
+  display: none;
+}
+
+.result-date {
+  display: none;
+}
+
+.panel-info.featured-result .result-icon {
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.panel-info.featured-result .result-date {
+  display: inline-block;
+  white-space: white-space-no-wrap;
+}
+
+.panel-info.featured-result a {
+  display: none;
+}
+
+.panel-info.featured-result .result-metadata {
+  display: none;
+}
+/* // Featured Results */
+
 .panel.panel-champion .panel-body {
   padding: 0;
 }
@@ -488,6 +520,14 @@ ol.nested-numbering > li:before {
 
 /* Bootstrap SM Breakpoint */
 @media (max-width: 768px) {
+  .row.results {
+    display: none;
+  }
+
+  .panel-info.featured-result {
+    display: block;
+  }
+
   .champions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
