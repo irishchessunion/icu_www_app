@@ -2,7 +2,7 @@
   .panel-heading
     .text-center Latest News
   - if @results.present? && @results.length > 0
-    - @results.each do |result|
+    - (@results[0..4] || []).each do |result|
       .panel-info.featured-result
         .panel-footer.text-info
           = render result
