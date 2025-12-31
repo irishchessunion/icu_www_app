@@ -1,5 +1,6 @@
-= render "champions/champion", champion: Champion.recent(:open).first
-= render "champions/champion", champion: Champion.recent(:women).first
+.champions
+  = render "champions/champion", champion: Champion.recent(:open).first
+  = render "champions/champion", champion: Champion.recent(:women).first
 
 .panel.panel-primary
   .panel-body
