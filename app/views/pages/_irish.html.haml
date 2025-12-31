@@ -24,5 +24,20 @@
       %br
       = event.dates
       %br
-      = ((event.note || '').strip.split("\n").first || '').strip
+        %span.event-metadata.text-muted
+          -# Time Controls, if any
+          - if event.time_controls.present?
+            %span
+              - event.time_controls.each_with_index do |control, i|
+                = t("event.time_controls.#{control}")
+                - if i < event.time_controls.size - 1
+                  = ", "
+          -# Category, if any and not the default/assumed value
+          - if event.category.present? && event.category != "irish"
+            %span
+              =t("event.category.#{event.category}")
+          -# Event is FIDE-rated?
+          - if event.is_fide_rated.present? && event.is_fide_rated
+            %span
+              =t("event.fide_rated_event")
   .panel-footer.text-center= link_to t("event.calendar"), events_path
