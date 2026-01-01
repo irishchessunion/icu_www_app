@@ -1,24 +1,43 @@
-.panel.panel-primary.irish-events
-  .panel-heading
-    .text-center Main Pages
-  .panel-body
-    %ul
-      %li
-        = link_to "For Club players", home_path
-      %li
-        = link_to "For Juniors", juniors_path
-      %li
-        = link_to t("beginners.title"),  beginners_path
-      %li
-        = link_to t("for_parents.title"),  for_parents_path
-      %li
-        = link_to t("primary_schools.title"),  primary_schools_path
-      %li
-        = link_to t("secondary_schools.title"),  secondary_schools_path
-      %li
-        = link_to t("woman.women"),  women_path
--if @donate_fee
-  .panel
+.home-page-links
+  -# Shows only when screen width > 768px
+  .panel.panel-primary.irish-events
+    .panel-heading
+      .text-center Main Pages
     .panel-body
-      .text-center
-        = link_to "Donate", new_item_path(fee_id: @donate_fee), class: "btn btn-danger btn-sm"
+      %ul
+        %li
+          = link_to t("woman.for_women"),  women_path
+        %li
+          = link_to "For Juniors", juniors_path
+        %li
+          = link_to t("for_parents.title"),  for_parents_path
+        %li
+          = link_to t("primary_schools.title"),  primary_schools_path
+        %li
+          = link_to t("secondary_schools.title"),  secondary_schools_path
+  -# -if @donate_fee
+  .panel
+    = link_to t("beginners.button"), beginners_path, class: "btn btn-info btn-sm btn-block"
+    = link_to "Donate", new_item_path(fee_id: @donate_fee), class: "btn btn-danger btn-sm btn-block"
+  -# Shows only when screen width <= 768px (mobile-only)
+  .mobile-links
+    .actions
+      = link_to t("beginners.button"),  beginners_path, :class => "btn btn-info"
+      = link_to t("club.button"),  clubs_path, :class => "btn btn-primary btn-sm"
+      = link_to "Donate to the ICU",  new_item_path(fee_id: @donate_fee), :class => "btn btn-danger btn-sm"
+    .panel.panel-default.irish-events
+      .panel-heading
+        Resources
+      .panel-body
+        %ul
+          %li
+            = link_to t("woman.for_women"),  women_path
+          %li
+            = link_to "For Juniors", juniors_path
+          %li
+            = link_to t("for_parents.title"),  for_parents_path
+          %li
+            = link_to t("primary_schools.title"),  primary_schools_path
+          %li
+            = link_to t("secondary_schools.title"),  secondary_schools_path
+

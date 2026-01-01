@@ -1,6 +1,11 @@
 .panel.panel-primary.news
   .panel-heading
     .text-center Latest News
+  - if @results.present? && @results.length > 0
+    - (@results[0..4] || []).each do |result|
+      .panel-info.featured-result
+        .panel-footer.text-info
+          = render result
   - (@news[0..2] || []).each do |news|
     = render 'news/panel', news: news
   .panel-default
