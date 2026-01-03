@@ -8,6 +8,7 @@
     - if defined?(Capybara::Lockstep)
       = capybara_lockstep
     = stylesheet_link_tag "application", media: "all"
+    = stylesheet_link_tag "variables_#{current_user.preferred_theme.downcase}", media: "all"
     = stylesheet_link_tag "#{current_user.preferred_theme.downcase}.min", media: "all"
     = javascript_include_tag "application"
     - if content_for?(:includes)

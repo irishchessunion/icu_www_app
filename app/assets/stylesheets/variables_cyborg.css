@@ -1,0 +1,27 @@
+:root {
+  /* https://bootswatch.com/3/cyborg/variables.less */
+  /* Gray and brand colors for use across Bootstrap. */
+  --gray-base: #000;
+  --gray-darker: #222;
+  --gray-dark: #282828;
+  --gray: #555;
+  --gray-light: #888;
+  --gray-lighter: #ADAFAE;
+
+  --brand-primary: #2A9FD6;
+  --brand-success: #77B300;
+  --brand-info: #9933CC;
+  --brand-warning: #FF8800;
+  --brand-danger: #CC0000;
+
+  /* Settings for some of the most global styles. */
+
+  /* Background color for `<body>`. */
+  --body-bg: #060606;
+
+  /* Global text color on `<body>`. */
+  --text-color: var(--gray-light);
+
+  /* Global textual link color. */
+  --link-color: var(--brand-primary);
+}

@@ -1,0 +1,27 @@
+:root {
+  /* https://bootswatch.com/3/simplex/variables.less */
+  /* Gray and brand colors for use across Bootstrap. */
+  --gray-base: #000;
+  --gray-darker: color-mix(in oklab, var(--gray-base), white 13.5%);
+  --gray-dark: #444;
+  --gray: #777;
+  --gray-light: #808080;
+  --gray-lighter: #DDD;
+
+  --brand-primary: #D9230F;
+  --brand-success: #469408;
+  --brand-info: #029ACF;
+  --brand-warning: #9B479F;
+  --brand-danger: #D9831F;
+
+  /* Settings for some of the most global styles. */
+
+  /* Background color for `<body>`. */
+  --body-bg: #FCFCFC;
+
+  /* Global text color on `<body>`. */
+  --text-color: var(--gray);
+
+  /* Global textual link color. */
+  --link-color: var(--brand-primary);
+}
