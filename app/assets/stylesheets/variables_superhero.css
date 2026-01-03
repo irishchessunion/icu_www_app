@@ -1,0 +1,27 @@
+:root {
+  /* https://bootswatch.com/3/superhero/variables.less */
+  /* Gray and brand colors for use across Bootstrap. */
+  --gray-base: #000;
+  --gray-darker: color-mix(in oklab, var(--gray-base), white 13.5%);
+  --gray-dark: color-mix(in oklab, var(--gray-base), white 20%);
+  --gray: color-mix(in oklab, var(--gray-base), white 33.5%);
+  --gray-light: #4E5D6C;
+  --gray-lighter: #EBEBEB;
+
+  --brand-primary: #DF691A;
+  --brand-success: #5cb85c;
+  --brand-info: #5bc0de;
+  --brand-warning: #f0ad4e;
+  --brand-danger: #d9534f;
+
+  /* Settings for some of the most global styles. */
+
+  /* Background color for `<body>`. */
+  --body-bg: #2B3E50;
+
+  /* Global text color on `<body>`. */
+  --text-color: var(--gray-lighter);
+
+  /* Global textual link color. */
+  --link-color: var(--brand-primary);
+}
