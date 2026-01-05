@@ -1,0 +1,27 @@
+:root {
+  /* https://bootswatch.com/3/slate/variables.less */
+  /* Gray and brand colors for use across Bootstrap. */
+  --gray-base: #000;
+  --gray-darker: #272B30;
+  --gray-dark: #3A3F44;
+  --gray: #52575C;
+  --gray-light: #7A8288;
+  --gray-lighter: #999;
+
+  --brand-primary: var(--gray-light);
+  --brand-success: #62c462;
+  --brand-info: #5bc0de;
+  --brand-warning: #f89406;
+  --brand-danger: #ee5f5b;
+
+  /* Settings for some of the most global styles. */
+
+  /* Background color for `<body>`. */
+  --body-bg: var(--gray-darker);
+
+  /* Global text color on `<body>`. */
+  --text-color: #C8C8C8;
+
+  /* Global textual link color. */
+  --link-color: #FFF;
+}
