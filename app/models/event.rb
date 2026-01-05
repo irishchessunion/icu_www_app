@@ -5,7 +5,7 @@ class Event < ApplicationRecord
   include Pageable
   include Remarkable
 
-  journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date
+  journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date time_controls is_fide_rated
               active category contact email phone url pairings_url results_url report_url live_games_url live_games_url2 prize_fund note sections streaming_url], "/events/%d"
 
   MIN_SIZE = 1.kilobyte
