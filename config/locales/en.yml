@@ -13,7 +13,36 @@ en:
   confirm: Confirm
   contact: Contact
   created_at: Created
-  date: Date
+  date_label: Date
+  date:
+    month_names:
+      - ~
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+    abbr_month_names:
+      - ~,
+      - Jan,
+      - Feb,
+      - Mar,
+      - Apr,
+      - May,
+      - Jun,
+      - Jul,
+      - Aug,
+      - Sep,
+      - Oct,
+      - Nov,
+      - Dec
   dates: Dates
   date_format: YYYY-MM-DD
   default: default

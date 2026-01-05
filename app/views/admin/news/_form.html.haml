@@ -7,7 +7,7 @@
         - locals = { form: f, object: @news, col: "sm", pad: 2, mark: "required" }
         = render "utils/text_field_for", locals.merge(param: :headline, text: t("news.headline"), width: 7)
         - unless @news.new_record?
-          = render "utils/text_field_for", locals.merge(param: :date, text: t("date"), width: 3)
+          = render "utils/text_field_for", locals.merge(param: :date, text: t("date_label"), width: 3)
         = render "utils/select_for", locals.merge(param: :selected_categories, text: t("categories"), menu: categories_menu(@news.selected_categories), multiple: true, width: 4, size: 12)
         = render "utils/check_box_for", locals.merge(param: :active, text: t("active"), width: 1, mark: "none")
         .form-group{class: @news.errors[:text].any? ? "has-error" : ""}
