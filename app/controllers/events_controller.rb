@@ -38,6 +38,11 @@ class EventsController < ApplicationController
     end
   end
 
+  def history
+    @past_events = Event.paginate(Event.past.active, params, history_events_path)
+    flash.now[:warning] = t("no_matches") if @past_events.matches.empty?
+  end
+
   def swiss_manager
     event = Event.find(params[:id])
     items = Item::Entry.joins(:cart, :fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)

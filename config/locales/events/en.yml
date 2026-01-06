@@ -10,6 +10,7 @@ en:
     end: End date
     event: Event
     events: Forthcoming Events
+    history: Past Events
     lat: Latitude
     live_games_url: livechesscloud.com broadcast URL
     live_games_url2: lichess.org broadcast URL
@@ -30,6 +31,7 @@ en:
     streaming_url: Live commentary URL
     streaming_embed: Live Commentary
     url: Event website
+    upcoming: Upcoming Events
     user: Organizer
     is_fide_rated: FIDE Rated?
     fide_true: 'Yes'

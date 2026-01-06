@@ -35,6 +35,7 @@ IcuWwwApp::Application.routes.draw do
   resources :documents,   only: [:index, :show, :new, :create, :edit, :update]
   resources :downloads,   only: [:index, :show]
   resources :events,      only: [:index, :show] do
+    get :history, on: :collection
     member do
       get :swiss_manager
       get :csv_list
