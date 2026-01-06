@@ -1,3 +1,4 @@
+- defined?(css)    || css = "btn btn-info"
 - defined?(text)   || text = t("new")
 - defined?(path)   || path = send("new_admin_#{klass.to_s.underscore}_path")
 - defined?(extras) || extras = {}
@@ -5,6 +6,6 @@
 - if can?(:create, klass) || extras.any?
   .text-center
     - if can?(:create, klass)
-      = link_to text, path, class: "btn btn-info"
+      = link_to text, path, class: css
     - extras.each do |text, link|
-      = link_to text, link, class: "btn btn-info"
+      = link_to text, link, class: css
