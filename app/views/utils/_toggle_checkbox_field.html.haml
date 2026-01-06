@@ -1,0 +1,8 @@
+- defined?(id) || id = name
+
+.switch-group
+  %label.switch
+    %input{type: "checkbox", name: name, id: id}
+    %span.slider
+  %label{for: id}
+    =label

@@ -291,6 +291,84 @@
 
 /* // PAGES */
 
+/* INPUT */
+
+/* Custom switch toggle */
+.switch-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0 8px;
+}
+
+.switch-group label {
+  margin: 0;
+}
+
+.switch-group .admin-only-label {
+  font-size: 1.4rem;
+  color: var(--brand-info);
+  border: 1px solid var(--brand-info-light);
+  background: var(--brand-info-lighter);
+  margin-left: 5px;
+  padding: 3px 5px;
+  border-radius: 4px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  border-radius: 20px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--gray-light);
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+.slider:before {
+  border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--body-bg);
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+input:checked+.slider {
+  background-color: var(--brand-info);
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px var(--brand-info);
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(12px);
+  -ms-transform: translateX(12px);
+  transform: translateX(12px);
+}
+
+/* // Custom switch toggle */
 /* Vertical offsets and centering. */
 .voffset1 { margin-top: 10px; }
 .voffset2 { margin-top: 15px; }
