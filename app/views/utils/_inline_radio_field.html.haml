@@ -1,4 +1,5 @@
 - radio_options = (include_all ? [["all", t("all")]] : []) + options
+- checked_value = checked.presence || radio_options.first&.first
 
 .inline-radio
   - radio_options.each do |value, label|
