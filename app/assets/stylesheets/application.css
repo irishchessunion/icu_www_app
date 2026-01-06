@@ -369,6 +369,42 @@ input:checked+.slider:before {
 }
 
 /* // Custom switch toggle */
+/* Inline radio */
+.inline-radio {
+  display: flex;
+  flex-direction: row;
+  gap: 0 15px;
+}
+
+.inline-radio input {
+  display: none;
+}
+
+.inline-radio label {
+  color: var(--gray-base);
+  cursor: pointer;
+  padding: 0 0 4px 0;
+  border-bottom: 2px solid var(--gray-lighter);
+}
+
+.inline-radio label:hover {
+  padding: 0 0 4px 0;
+  color: var(--brand-info);
+  border-bottom: 2px solid var(--brand-info);
+}
+
+.inline-radio input[type="radio"]:checked+label {
+  color: var(--gray-base);
+  border-color: var(--gray-base);
+  font-weight: 700;
+  padding: 0 0 4px 0;
+}
+
+/* // Inline radio */
+
+
+/* // INPUT */
+
 /* Vertical offsets and centering. */
 .voffset1 { margin-top: 10px; }
 .voffset2 { margin-top: 15px; }
