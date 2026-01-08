@@ -12,6 +12,7 @@
         = render "utils/text_field_for", locals.merge(param: :district, text: t("club.district"))
         = render "utils/text_field_for", locals.merge(param: :city, text: t("city"))
         = render "utils/select_for", locals.merge(param: :county, text: t("club.county"), width: 3, menu: club_county_menu(@club.county, "please_select"))
+        = render "utils/text_field_for", locals.merge(param: :eircode, text: t("eircode"), width: 8)
         = render "utils/text_field_for", locals.merge(param: :lat, text: t("latitude"), width: 2)
         = render "utils/text_field_for", locals.merge(param: :long, text: t("longitude"), width: 2)
         = render "utils/text_field_for", locals.merge(param: :contact, text: t("contact"))
