@@ -14,7 +14,9 @@
  */
 
 :root {
-  --desktop-breakpoint: 1140px;
+  /* bootstrap defaults */
+  --desktop-breakpoint: 1200px;
+  --mobile-breakpoint: 768px;
 
   /* consistent across themes */
   --map-marker-classical: #3498DB;
@@ -22,6 +24,32 @@
   --map-marker-blitz: #FF8736;
   --map-marker-training: #DB344D;
   --map-marker-other: #B2BAE3;
+
+  /* extend theme colours */
+  --brand-primary-darker: color-mix(in oklab, var(--brand-primary), black 60%);
+  --brand-primary-dark: color-mix(in oklab, var(--brand-primary), black 30%);
+  --brand-primary-light: color-mix(in oklab, var(--brand-primary), white 30%);
+  --brand-primary-lighter: color-mix(in oklab, var(--brand-primary), white 80%);
+
+  --brand-success-darker: color-mix(in oklab, var(--brand-success), black 60%);
+  --brand-success-dark: color-mix(in oklab, var(--brand-success), black 30%);
+  --brand-success-light: color-mix(in oklab, var(--brand-success), white 30%);
+  --brand-success-lighter: color-mix(in oklab, var(--brand-success), white 80%);
+
+  --brand-danger-darker: color-mix(in oklab, var(--brand-danger), black 60%);
+  --brand-danger-dark: color-mix(in oklab, var(--brand-danger), black 30%);
+  --brand-danger-light: color-mix(in oklab, var(--brand-danger), white 30%);
+  --brand-danger-lighter: color-mix(in oklab, var(--brand-danger), white 80%);
+
+  --brand-warning-darker: color-mix(in oklab, var(--brand-warning), black 60%);
+  --brand-warning-dark: color-mix(in oklab, var(--brand-warning), black 30%);
+  --brand-warning-light: color-mix(in oklab, var(--brand-warning), white 30%);
+  --brand-warning-lighter: color-mix(in oklab, var(--brand-warning), white 80%);
+
+  --brand-info-darker: color-mix(in oklab, var(--brand-info), black 60%);
+  --brand-info-dark: color-mix(in oklab, var(--brand-info), black 30%);
+  --brand-info-light: color-mix(in oklab, var(--brand-info), white 30%);
+  --brand-info-lighter: color-mix(in oklab, var(--brand-info), white 80%);
 }
 
 /* Text styling. */
@@ -476,6 +504,28 @@ input:checked+.slider:before {
 {
   border: solid 1px #bbb;
   padding: 0.4em;
+}
+
+.btn.btn-pastel-info,
+.panel-pastel-info {
+  color: var(--brand-info-dark);
+  border-color: var(--brand-info-light);
+  background-color: var(--brand-info-lighter);
+}
+
+.btn.btn-pastel-info:hover, .btn.btn-pastel-info:focus {
+  background-color: var(--brand-info-light);
+}
+
+.btn.btn-pastel-warning,
+.panel-pastel-warning {
+  color: var(--brand-warning-dark);
+  border-color: var(--brand-warning-light);
+  background-color: var(--brand-warning-lighter);
+}
+
+.btn.btn-pastel-warning:hover, .btn.btn-pastel-warning:focus {
+  background-color: var(--brand-warning-light);
 }
 
 button.like-btn {
