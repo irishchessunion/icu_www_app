@@ -15,6 +15,13 @@
 
 :root {
   --desktop-breakpoint: 1140px;
+
+  /* consistent across themes */
+  --map-marker-classical: #3498DB;
+  --map-marker-rapid: #12C9A2;
+  --map-marker-blitz: #FF8736;
+  --map-marker-training: #DB344D;
+  --map-marker-other: #B2BAE3;
 }
 
 /* Text styling. */

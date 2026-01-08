@@ -172,6 +172,12 @@ class Event < ApplicationRecord
     active && lat.present? && long.present?
   end
 
+  def map_marker_key
+    return 'other' if time_controls.blank?
+
+    time_controls.map(&:to_s).join('_')
+  end
+
   private
 
   def normalize_attributes
