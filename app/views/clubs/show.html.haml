@@ -37,6 +37,8 @@
                   = @club.lat
               = succeed(")") do
                 = @club.long
+          - if @club.eircode.present?
+            = link_to @club.eircode, google_maps_search(@club)
       %tr
         %th= t("contact")
         %td= @club.contact

@@ -23,4 +23,8 @@ module ClubsHelper
     junior_options.unshift [t(default), ""]
     options_for_select(junior_options, selected)
   end
+
+  def google_maps_search(club)
+    "https://www.google.com/maps/search/?api=1&query=#{club.eircode}"
+  end
 end
