@@ -129,7 +129,7 @@ function initialize() {
     map: map,
     title: '<%= escape_single_quoted(event.name) %>',
     icon: {
-      url: "assets/svg/marker_<%= event.map_marker_key %>.svg",
+      url: "<%= asset_path("svg/marker_#{event.map_marker_key}.svg") %>",
       scaledSize: new google.maps.Size(20, 26)
     },
   });
