@@ -6,19 +6,9 @@
   = render(:partial => "index", :handlers => [:erb], :formats => [:js])
 - @show_main_container = "false"
 
--# = render "utils/list_map_buttons", resource: "events", map: false
--# = render "utils/search_panel", form: "search_form", title: t("event.events"), col: "md"
 = render "events/search_panel"
 
 - extra = can?(:create, Event)
-
--# .container
--#   .row
--#     .col-md-12
--#       %div{class: "panel panel-info", style: "background: var(--brand-info-lighter); margin-top: 21px"}
--#         .panel-body
--#           %a.btn.btn-primary.pull-right
--#             Create new event
 
 %section{class: "container", "aria-label": t("event.upcoming") }
   .row
@@ -73,4 +63,3 @@
                 - if extra
                   %td.text-center= ok_ko(event.active)
             = render "utils/pagination_links", pager: @events, columns: 3 + (extra ? 1 : 0)
-      -# = render "utils/index_buttons", klass: Event
