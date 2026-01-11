@@ -12,3 +12,4 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += User::THEMES.reject{ |theme| theme == "Bootstrap" }.map{ |theme| "#{theme.downcase}.min.css"}
 # Rails.application.config.assets.precompile += %w/spin.js payment.js switch_from_tls.js/
 # Rails.application.config.assets.precompile += %w(pgnyui.js pgnviewer.js)
+Rails.application.config.assets.precompile += %w[ *.svg ]
