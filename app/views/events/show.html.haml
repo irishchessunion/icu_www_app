@@ -155,6 +155,7 @@
           - if admin
             = link_to "FIDE pre-2013 File", swiss_manager_event_path(@event.id), class: 'btn btn-info btn-sm'
             = link_to "CSV file", csv_list_event_path(@event.id), class: 'btn btn-info btn-sm'
+            = link_to "Excel file", excel_list_event_path(@event.id), class: 'btn btn-info btn-sm'
       - @event.items.paid.where(section: nil).each do |entry_item|
         %p
           - if admin && section_names.size > 0
@@ -185,6 +186,7 @@
           - if admin
             = link_to "FIDE pre-2013 File", swiss_manager_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
             = link_to "CSV file", csv_list_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
+            = link_to "Excel file", excel_list_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
         - paid_entries.each do |entry_item|
           %p
             - if admin && section_names.size > 1
