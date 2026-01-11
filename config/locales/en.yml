@@ -2,6 +2,8 @@ en:
   active: Active
   address: Address
   all: All
+  aria:
+    search_for: Search for
   any: Any
   by: by
   beta: Beta quality software

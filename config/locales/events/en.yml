@@ -2,6 +2,8 @@ en:
   event:
     admin:
       cannot_edit_past_fields: This event has ended. Some fields can no longer be edited.
+      include_inactive: Include inactive events
+      new_event: New event
     contact: Contact name
     create_entry_fee: New Entry Fee
     calendar: Calendar
@@ -37,6 +39,7 @@ en:
     fide_true: 'Yes'
     fide_false: 'No'
     fide_rated_event: FIDE-rated
+    fide_rated_toggle: FIDE-rated events only
     time_controls:
       label: Time Control(s)
       hint: Select any that apply
@@ -46,7 +49,10 @@ en:
     category:
       any: Any type
       foreign: Foreign
+      international: International
       irish: Irish
       junint: Junior International
       junior: Juniors only
+      junior_short: Juniors
       women: Women only
+      women_short: Women

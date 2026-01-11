@@ -216,6 +216,93 @@
 
 /* PAGES */
 
+main {
+  overflow-x: hidden;
+}
+
+section.full-width {
+  width: 100%;
+}
+
+section.title-only {
+  background: var(--gray-lighter);
+  padding: 32px 0;
+  margin: 0 0 21px 0;
+}
+
+section h2 {
+  color: var(--gray-base);
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Events */
+
+
+section.events-search {
+  background: var(--gray-lighter);
+  padding: 32px 0;
+  margin: 0 0 10px 0;
+}
+
+section .flex-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0 30px;
+  justify-content: space-between;
+}
+
+section .form-panel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 21px 0;
+}
+
+
+section .form-panel .form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px 0;
+}
+
+section .form-panel .form-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0 15px;
+}
+
+section .form-panel label {
+  display: block;
+  font-weight: 400;
+  line-height: 1em;
+  margin: 0 0 5px 0;
+}
+
+section .form-panel input::placeholder {
+  font-style: italic;
+}
+
+section .form-panel select::picker-icon {
+  padding: 0 5px 0 0;
+}
+
+section .form-panel button {
+  width: fit-content;
+}
+
+section .form-panel > form {
+  display: flex;
+  flex-direction: column;
+  gap: 21px 0;
+}
+
+section aside.map {
+  width: 400px;
+  height: 100%;
+}
+
 .panel.panel-default {
     margin-bottom: 0;
 }
@@ -243,6 +330,10 @@
 
 /* Bootstrap SM Breakpoint */
 @media (max-width: 768px) {
+  section aside.map {
+    display: none;
+  }
+
   .home-page-links>.mobile-links {
       display: flex;
       flex-direction: row-reverse;
@@ -635,6 +726,35 @@ a.no-underline {
 /* For Google Maps. */
 #map-canvas {
   height: 600px;
+}
+
+#map-canvas hr {
+  margin: 10px 0;
+}
+
+#map-canvas .event_info {
+  font-weight: 400;
+  font-size: 15px;
+}
+#map-canvas a:focus {
+  outline: 0;
+}
+
+#map-canvas .time_controls_list {
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+#map-canvas .time_controls_list > span::before {
+  padding-right: 5px;
+  content: "•";
+  font-size: 20px;
+  vertical-align: middle;
 }
 
 .hidden {
