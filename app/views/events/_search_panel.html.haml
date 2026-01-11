@@ -1,0 +1,34 @@
+%section{class: "full-width events-search", "aria-label": "#{t('aria.search_for')} #{t('event.upcoming')}"}
+  .container
+    .row
+      .col-md-12.flex-row
+        .form-panel
+          %h2= t('event.upcoming')
+          = form_with url: events_path, class: "form-inline", method: :get, role: "form" do |form|
+            .form-section
+              = render "utils/inline_radio_field", name: "category", include_all: true, checked: params[:category],
+                        options: [["juniors", t("event.category.junior_short")], ["women", t("event.category.women_short")], ["international", t("event.category.international")]]
+              = render "utils/inline_radio_field", name: "time_controls", include_all: true, checked: params[:time_controls],
+                        options: [["classical", t("event.time_controls.classical")], ["rapid", t("event.time_controls.rapid")], ["blitz", t("event.time_controls.blitz")]]
+            .form-section
+              =render "utils/toggle_checkbox_field", name: "is_fide_rated", label: t("event.fide_rated_toggle")
+              - if can?(:create, Event)
+                =render "utils/toggle_checkbox_field", name: "include_inactive", label: t("event.admin.include_inactive")
+            .form-section
+              %fieldset{"aria-label": "Select Date From"}
+                %label
+                  From:
+                %select{name: "year", id: "year", "aria-label": "year", class: "form-control"}
+                  = event_year_menu(params[:year])
+                %select{name: "month", id: "month", "aria-label": "month", class: "form-control"}
+                  = event_month_menu(params[:month])
+              %fieldset{"aria-label": "Text Search"}
+                %label{ for: "location" }= "Search:"
+                = text_field_tag :search, params[:search], class: "form-control", placeholder: "Name or Location"
+            .form-actions
+              = button_tag t("search"), type: "submit", class: "btn btn-info"
+              - if can?(:create, Event)
+                = render "utils/index_buttons", klass: Event, text: t("event.admin.new_event"), css: "btn btn-primary"
+        %aside{class: "map", "aria-label": "Map View"}
+          %div{style: "width: 100%; aspect-ratio: 1/1; border-radius: 4px; background: #CCC; overflow: hidden"}
+            #map-canvas{style: "width: 100%; height: 100%"}

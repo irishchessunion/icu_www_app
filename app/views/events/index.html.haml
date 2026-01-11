@@ -1,60 +1,65 @@
 - content_for :title, t("event.calendar")
+- content_for :header_bg_color, "var(--gray-lighter)"
+- content_for :includes do
+  = javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Rails.application.secrets.google[:simple_api_key]}"
+- content_for :javascript do
+  = render(:partial => "index", :handlers => [:erb], :formats => [:js])
+- @show_main_container = "false"
 
-= render "utils/list_map_buttons", resource: "events", map: false
-= render "utils/search_panel", form: "search_form", title: t("event.events"), col: "md"
+= render "events/search_panel"
 
 - extra = can?(:create, Event)
 
-.row
-  .col-md-12
-    - if @events.count > 0
-      %table{class: "table table-striped", id: "results"}
-        %thead
-          %tr
-            %th.text-center= t("dates")
-            %th= t("event.name")
-            -# Shows only when screen width > 768px
-            %th.event-location-col= t("event.location")
-            - if extra
-              %th.text-center= t("active")
-        %tbody
-          - @events.matches.each do |event|
+%section{class: "container", "aria-label": t("event.upcoming") }
+  .row
+    .col-md-12
+      - if @events.count > 0
+        %table{class: "table table-striped", id: "results"}
+          %thead
             %tr
-              - if event.start_date.year == event.end_date.year
-                %td.no-wrap.text-right= event.dates
-              - else
-                %td
-                  %span.dates-as-spans
-                    - event.multiyear_dates_as_spans.each do |span|
-                      %span= span
-              %td
-                = link_to event.name, event
-                %br
-                %span.event-metadata.text-muted
-                  -# Time Controls, if any
-                  - if event.time_controls.present?
-                    %span
-                      - event.time_controls.each_with_index do |control, i|
-                        = t("event.time_controls.#{control}")
-                        - if i < event.time_controls.size - 1
-                          = ", "
-                  -# Category, if any and not the default/assumed value
-                  - if event.category.present? && event.category != "irish"
-                    %span
-                      =t("event.category.#{event.category}")
-                  -# Event is FIDE-rated?
-                  - if event.is_fide_rated.present? && event.is_fide_rated
-                    %span
-                      =t("event.fide_rated_event")
-                -# Shows only when screen width <= 768px
-                %br.event-location-span
-                %span.event-location-span
-                  %span.glyphicon.glyphicon-map-marker
-                  =link_to_if event.geocodes?, event.location, events_map_path(event)
-
+              %th.cell-no-wrap= t("dates")
+              %th= t("event.name")
               -# Shows only when screen width > 768px
-              %td.event-location-col= link_to_if event.geocodes?, event.location, events_map_path(event)
+              %th.event-location-col= t("event.location")
               - if extra
-                %td.text-center= ok_ko(event.active)
-          = render "utils/pagination_links", pager: @events, columns: 3 + (extra ? 1 : 0)
-    = render "utils/index_buttons", klass: Event
+                %th.cell-no-wrap.text-center= t("active")
+          %tbody
+            - @events.matches.each do |event|
+              %tr
+                - if event.start_date.year == event.end_date.year
+                  %td.cell-no-wrap.text-right= event.dates
+                - else
+                  %td
+                    %span.dates-as-spans
+                      - event.multiyear_dates_as_spans.each do |span|
+                        %span= span
+                %td
+                  = link_to event.name, event
+                  %br
+                  %span.event-metadata.text-muted
+                    -# Time Controls, if any
+                    - if event.time_controls.present?
+                      %span
+                        - event.time_controls.each_with_index do |control, i|
+                          = t("event.time_controls.#{control}")
+                          - if i < event.time_controls.size - 1
+                            = ", "
+                    -# Category, if any and not the default/assumed value
+                    - if event.category.present? && event.category != "irish"
+                      %span
+                        =t("event.category.#{event.category}")
+                    -# Event is FIDE-rated?
+                    - if event.is_fide_rated.present? && event.is_fide_rated
+                      %span
+                        =t("event.fide_rated_event")
+                  -# Shows only when screen width <= 768px
+                  %br.event-location-span
+                  %span.event-location-span
+                    %span.glyphicon.glyphicon-map-marker
+                    =link_to_if event.geocodes?, event.location, events_map_path(event)
+
+                -# Shows only when screen width > 768px
+                %td.event-location-col= link_to_if event.geocodes?, event.location, events_map_path(event)
+                - if extra
+                  %td.text-center= ok_ko(event.active)
+            = render "utils/pagination_links", pager: @events, columns: 3 + (extra ? 1 : 0)

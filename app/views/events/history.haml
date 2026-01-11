@@ -1,0 +1,38 @@
+- content_for :title, t("event.history")
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
+
+= render "utils/title_panel", header_text: t("event.history")
+
+.container
+  .row
+    .col-md-12
+      - if @past_events.count > 0
+        %table{class: "table table-striped", id: "results"}
+          %thead
+            %tr
+              %th.cell-no-wrap= t("dates")
+              %th= t("event.event")
+          %tbody
+            - @past_events.matches.each do |event|
+              %tr
+                - if event.start_date.year == event.end_date.year
+                  %td.cell-no-wrap.text-right= event.dates
+                - else
+                  %td
+                    %span.dates-as-spans
+                      - event.multiyear_dates_as_spans.each do |span|
+                        %span= span
+                %td
+                  = link_to event.name, event
+                  - if event.pairings_url.present? || event.report_url.present?
+                    %br
+                  %span.event-metadata
+                    - if event.report_url.present?
+                      %a{class: "btn btn-xs btn-pastel-info", href: "#{event.report_url}"}
+                        Report
+                    - if event.pairings_url.present?
+                      %a{class: "btn btn-xs btn-pastel-warning", href: "#{event.pairings_url}", target: "_blank"}
+                        Pairings / Results
+
+            = render "utils/pagination_links", pager: @past_events, columns: 2

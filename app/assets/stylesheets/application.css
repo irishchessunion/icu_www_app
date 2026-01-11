@@ -14,7 +14,42 @@
  */
 
 :root {
-  --desktop-breakpoint: 1140px;
+  /* bootstrap defaults */
+  --desktop-breakpoint: 1200px;
+  --mobile-breakpoint: 768px;
+
+  /* consistent across themes */
+  --map-marker-classical: #3498DB;
+  --map-marker-rapid: #12C9A2;
+  --map-marker-blitz: #FF8736;
+  --map-marker-training: #DB344D;
+  --map-marker-other: #B2BAE3;
+
+  /* extend theme colours */
+  --brand-primary-darker: color-mix(in oklab, var(--brand-primary), black 60%);
+  --brand-primary-dark: color-mix(in oklab, var(--brand-primary), black 30%);
+  --brand-primary-light: color-mix(in oklab, var(--brand-primary), white 30%);
+  --brand-primary-lighter: color-mix(in oklab, var(--brand-primary), white 80%);
+
+  --brand-success-darker: color-mix(in oklab, var(--brand-success), black 60%);
+  --brand-success-dark: color-mix(in oklab, var(--brand-success), black 30%);
+  --brand-success-light: color-mix(in oklab, var(--brand-success), white 30%);
+  --brand-success-lighter: color-mix(in oklab, var(--brand-success), white 80%);
+
+  --brand-danger-darker: color-mix(in oklab, var(--brand-danger), black 60%);
+  --brand-danger-dark: color-mix(in oklab, var(--brand-danger), black 30%);
+  --brand-danger-light: color-mix(in oklab, var(--brand-danger), white 30%);
+  --brand-danger-lighter: color-mix(in oklab, var(--brand-danger), white 80%);
+
+  --brand-warning-darker: color-mix(in oklab, var(--brand-warning), black 60%);
+  --brand-warning-dark: color-mix(in oklab, var(--brand-warning), black 30%);
+  --brand-warning-light: color-mix(in oklab, var(--brand-warning), white 30%);
+  --brand-warning-lighter: color-mix(in oklab, var(--brand-warning), white 80%);
+
+  --brand-info-darker: color-mix(in oklab, var(--brand-info), black 60%);
+  --brand-info-dark: color-mix(in oklab, var(--brand-info), black 30%);
+  --brand-info-light: color-mix(in oklab, var(--brand-info), white 30%);
+  --brand-info-lighter: color-mix(in oklab, var(--brand-info), white 80%);
 }
 
 /* Text styling. */
@@ -73,6 +108,10 @@
 #header.jumbotron h1 {
     font-size: 34px;
     margin: 15px 0;
+}
+
+.navbar {
+  margin: 0;
 }
 
 .navbar-header > ul {
@@ -177,6 +216,93 @@
 
 /* PAGES */
 
+main {
+  overflow-x: hidden;
+}
+
+section.full-width {
+  width: 100%;
+}
+
+section.title-only {
+  background: var(--gray-lighter);
+  padding: 32px 0;
+  margin: 0 0 21px 0;
+}
+
+section h2 {
+  color: var(--gray-base);
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Events */
+
+
+section.events-search {
+  background: var(--gray-lighter);
+  padding: 32px 0;
+  margin: 0 0 10px 0;
+}
+
+section .flex-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0 30px;
+  justify-content: space-between;
+}
+
+section .form-panel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 21px 0;
+}
+
+
+section .form-panel .form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px 0;
+}
+
+section .form-panel .form-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0 15px;
+}
+
+section .form-panel label {
+  display: block;
+  font-weight: 400;
+  line-height: 1em;
+  margin: 0 0 5px 0;
+}
+
+section .form-panel input::placeholder {
+  font-style: italic;
+}
+
+section .form-panel select::picker-icon {
+  padding: 0 5px 0 0;
+}
+
+section .form-panel button {
+  width: fit-content;
+}
+
+section .form-panel > form {
+  display: flex;
+  flex-direction: column;
+  gap: 21px 0;
+}
+
+section aside.map {
+  width: 400px;
+  height: 100%;
+}
+
 .panel.panel-default {
     margin-bottom: 0;
 }
@@ -204,6 +330,10 @@
 
 /* Bootstrap SM Breakpoint */
 @media (max-width: 768px) {
+  section aside.map {
+    display: none;
+  }
+
   .home-page-links>.mobile-links {
       display: flex;
       flex-direction: row-reverse;
@@ -291,6 +421,120 @@
 
 /* // PAGES */
 
+/* INPUT */
+
+/* Custom switch toggle */
+.switch-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0 8px;
+}
+
+.switch-group label {
+  margin: 0;
+}
+
+.switch-group .admin-only-label {
+  font-size: 1.4rem;
+  color: var(--brand-info);
+  border: 1px solid var(--brand-info-light);
+  background: var(--brand-info-lighter);
+  margin-left: 5px;
+  padding: 3px 5px;
+  border-radius: 4px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  border-radius: 20px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--gray-light);
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+.slider:before {
+  border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--body-bg);
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+input:checked+.slider {
+  background-color: var(--brand-info);
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px var(--brand-info);
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(12px);
+  -ms-transform: translateX(12px);
+  transform: translateX(12px);
+}
+
+/* // Custom switch toggle */
+/* Inline radio */
+.inline-radio {
+  display: flex;
+  flex-direction: row;
+  gap: 0 15px;
+}
+
+.inline-radio input {
+  display: none;
+}
+
+.inline-radio label {
+  color: var(--gray-base);
+  cursor: pointer;
+  padding: 0 0 4px 0;
+  border-bottom: 2px solid var(--gray-lighter);
+}
+
+.inline-radio label:hover {
+  padding: 0 0 4px 0;
+  color: var(--brand-info);
+  border-bottom: 2px solid var(--brand-info);
+}
+
+.inline-radio input[type="radio"]:checked+label {
+  color: var(--gray-base);
+  border-color: var(--gray-base);
+  font-weight: 700;
+  padding: 0 0 4px 0;
+}
+
+/* // Inline radio */
+
+
+/* // INPUT */
+
 /* Vertical offsets and centering. */
 .voffset1 { margin-top: 10px; }
 .voffset2 { margin-top: 15px; }
@@ -298,6 +542,7 @@
 .vcenter { vertical-align: middle !important; }
 
 /* To stop text wrapping */
+.cell-no-wrap { white-space: nowrap; width: 1%; }
 .no-wrap { white-space: nowrap; }
 
 /* For articles */
@@ -355,6 +600,28 @@
 {
   border: solid 1px #bbb;
   padding: 0.4em;
+}
+
+.btn.btn-pastel-info,
+.panel-pastel-info {
+  color: var(--brand-info-dark);
+  border-color: var(--brand-info-light);
+  background-color: var(--brand-info-lighter);
+}
+
+.btn.btn-pastel-info:hover, .btn.btn-pastel-info:focus {
+  background-color: var(--brand-info-light);
+}
+
+.btn.btn-pastel-warning,
+.panel-pastel-warning {
+  color: var(--brand-warning-dark);
+  border-color: var(--brand-warning-light);
+  background-color: var(--brand-warning-lighter);
+}
+
+.btn.btn-pastel-warning:hover, .btn.btn-pastel-warning:focus {
+  background-color: var(--brand-warning-light);
 }
 
 button.like-btn {
@@ -459,6 +726,35 @@ a.no-underline {
 /* For Google Maps. */
 #map-canvas {
   height: 600px;
+}
+
+#map-canvas hr {
+  margin: 10px 0;
+}
+
+#map-canvas .event_info {
+  font-weight: 400;
+  font-size: 15px;
+}
+#map-canvas a:focus {
+  outline: 0;
+}
+
+#map-canvas .time_controls_list {
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+#map-canvas .time_controls_list > span::before {
+  padding-right: 5px;
+  content: "•";
+  font-size: 20px;
+  vertical-align: middle;
 }
 
 .hidden {

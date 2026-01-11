@@ -39,7 +39,7 @@ describe Game do
   end
 
   context "edit" do
-    let(:date)   { I18n.t("date") }
+    let(:date)   { I18n.t("date_label") }
     let(:black)  { I18n.t("game.black") }
     let(:event)  { I18n.t("game.event") }
     let(:moves)  { I18n.t("game.moves") }

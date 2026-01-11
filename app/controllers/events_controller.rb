@@ -4,6 +4,9 @@ require 'cgi'
 class EventsController < ApplicationController
   def index
     @events = Event.search(params, events_path)
+    @map_events = Event.with_geocodes.search(params, events_path)
+    @center = [53.45, -7.95]
+    @zoom = 6.4
     flash.now[:warning] = t("no_matches") if @events.count == 0
     save_last_search(@events, :events)
   end
@@ -36,6 +39,11 @@ class EventsController < ApplicationController
       end
 
     end
+  end
+
+  def history
+    @past_events = Event.paginate(Event.past.active, params, history_events_path)
+    flash.now[:warning] = t("no_matches") if @past_events.matches.empty?
   end
 
   def swiss_manager

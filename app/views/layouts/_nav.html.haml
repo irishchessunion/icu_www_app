@@ -14,7 +14,13 @@
   .collapse.navbar-collapse.navbar-ex1-collapse
     %ul.nav.navbar-nav
       - if active("pages", "home")
-        %li= link_to t("event.calendar"), events_path
+        %li.dropdown
+          = link_to "#", class: "dropdown-toggle", data: { toggle: "dropdown" } do
+            = t("event.calendar")
+            %b.caret
+          %ul.dropdown-menu
+            %li= link_to t("event.upcoming"), events_path
+            %li= link_to t("event.history"), history_events_path
       - else
         %li= link_to t("home"), home_path
       %li{class: active("payments")}= link_to t("shop.shop"), shop_path

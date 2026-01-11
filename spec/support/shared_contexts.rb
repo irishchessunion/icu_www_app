@@ -8,7 +8,7 @@ shared_context "features" do
   let(:comment)      { I18n.t("comment") }
   let(:confirm)      { I18n.t("confirm") }
   let(:contact)      { I18n.t("contact") }
-  let(:date)         { I18n.t("date") }
+  let(:date)         { I18n.t("date_label") }
   let(:delete)       { I18n.t("delete") }
   let(:description)  { I18n.t("description") }
   let(:details)      { I18n.t("details") }

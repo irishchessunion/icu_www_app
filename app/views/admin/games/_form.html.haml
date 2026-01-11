@@ -11,7 +11,7 @@
         = render "utils/select_for", locals.merge(param: :result, text: t("game.result"), width: 2, menu: game_result_menu(@game.result))
         = render "utils/text_field_for", locals.merge(param: :event, text: t("game.event"), width: 4)
         = render "utils/text_field_for", locals.merge(param: :round, text: t("game.round"), width: 2)
-        = render "utils/text_field_for", locals.merge(param: :date, text: t("date"), width: 2, placeholder: t("game.date_db_format"))
+        = render "utils/text_field_for", locals.merge(param: :date, text: t("date_label"), width: 2, placeholder: t("game.date_db_format"))
         = render "utils/text_field_for", locals.merge(param: :site, text: t("game.site"), width: 3)
         = render "utils/text_field_for", locals.merge(param: :eco, text: "ECO", width: 2)
         = render "utils/text_field_for", locals.merge(param: :ply, text: t("game.ply"), width: 2)

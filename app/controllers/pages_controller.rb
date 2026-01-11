@@ -29,7 +29,7 @@ class PagesController < ApplicationController
   end
 
   def women
-    @news = News.active.women
+    @news = News.active.women.ordered
     @woman_events = Event.active.short.women.where('end_date >= ?', Date.today).ordered.limit(4)
     @international_events = Event.active.short.wint.where('end_date >= ?', Date.today).ordered.limit(4)
     @officers = Officer.active.ordered.include_players

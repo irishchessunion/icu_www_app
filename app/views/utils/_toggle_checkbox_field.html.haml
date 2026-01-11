@@ -1,0 +1,9 @@
+- defined?(id) || id = name
+- is_checked = params[name].present? || false
+
+.switch-group
+  %label.switch
+    %input{type: "checkbox", name: name, id: id, checked: (is_checked ? "checked" : nil)}
+    %span.slider
+  %label{for: id}
+    =label

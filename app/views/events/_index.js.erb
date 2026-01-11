@@ -1,0 +1,159 @@
+function initialize() {
+  var mapOptions = {
+    center: new google.maps.LatLng(<%= @center[0] %>, <%= @center[1] %>),
+    zoom: <%= @zoom %>,
+    apTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID]
+    }, // here´s the array of controls
+    disableDefaultUI: true, // a way to quickly hide all controls
+    mapTypeControl: false,
+    scaleControl: true,
+    fullscreenControl: true,
+    zoomControl: true,
+    zoomControlOptions: {
+      style: google.maps.ZoomControlStyle.LARGE
+    },
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    styles: [
+      {
+        "featureType": "water",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#85a8c1"
+            }
+        ]
+      },
+      {
+          "featureType": "landscape",
+          "stylers": [
+              {
+                  "color": "#e5eCed"
+              }
+          ]
+      },
+      {
+          "featureType": "road.highway",
+          "elementType": "geometry",
+          "stylers": [
+              {
+                  "color": "#83a5b0"
+              }
+          ]
+      },
+      {
+          "featureType": "road.arterial",
+          "elementType": "geometry",
+          "stylers": [
+              {
+                  "color": "#b7c6d4"
+              }
+          ]
+      },
+      {
+          "featureType": "road.local",
+          "elementType": "geometry",
+          "stylers": [
+              {
+                  "color": "#ffffff"
+              }
+          ]
+      },
+      {
+          "featureType": "poi.park",
+          "elementType": "geometry",
+          "stylers": [
+              {
+                  "color": "#e3eed3"
+              }
+          ]
+      },
+      {
+          "featureType": "administrative",
+          "stylers": [
+              {
+                  "visibility": "on"
+              },
+              {
+                  "lightness": 33
+              }
+          ]
+      },
+      {
+          "featureType": "road"
+      },
+      {
+          "featureType": "poi.park",
+          "elementType": "labels",
+          "stylers": [
+              {
+                  "visibility": "on"
+              },
+              {
+                  "lightness": 20
+              }
+          ]
+      },
+      {},
+      {
+          "featureType": "road",
+          "stylers": [
+              {
+                  "lightness": 20
+              }
+          ]
+      }
+    ]
+  };
+
+  var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+  var info = new google.maps.InfoWindow({
+    content: "holding..",
+    setHeaderDisabled: true
+  });
+
+  var marker;
+
+  google.maps.event.addListener(info, 'closeclick', function() {
+    map.setCenter(new google.maps.LatLng(<%= @center[0] %>, <%= @center[1] %>));
+    map.setZoom(<%= @zoom %>);
+  });
+
+<% @map_events.each do |event| %>
+
+  marker = new google.maps.Marker({
+    position: new google.maps.LatLng(<%= event.lat %>,<%= event.long %>),
+    map: map,
+    title: '<%= escape_single_quoted(event.name) %>',
+    icon: {
+      url: "assets/svg/marker_<%= event.map_marker_key %>.svg",
+      scaledSize: new google.maps.Size(20, 26)
+    },
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    info.setContent(`
+      <div class="event_info">
+        <% if event.time_controls.present? %>
+          <div class='time_controls_list'>
+          <% event.time_controls.each do |control| %>
+            <span style="color: var(--map-marker-<%= control %>)"><%= t("event.time_controls.#{control}") %></span>
+          <% end %>
+          </div>
+        <hr>
+        <% end %>
+        <div class="text-center"><strong><%= link_to escape_single_quoted(event.name), event_path(event) %></strong></div>
+        <hr>
+        <div class="text-center text-muted"><%= event.start_date.strftime("%-d %b %Y") %></div>
+      </div>
+    `);
+    info.open(map, this);
+  });
+
+<% end %>
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);

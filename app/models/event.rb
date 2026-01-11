@@ -5,7 +5,7 @@ class Event < ApplicationRecord
   include Pageable
   include Remarkable
 
-  journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date
+  journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date time_controls is_fide_rated
               active category contact email phone url pairings_url results_url report_url live_games_url live_games_url2 prize_fund note sections streaming_url], "/events/%d"
 
   MIN_SIZE = 1.kilobyte
@@ -77,27 +77,45 @@ class Event < ApplicationRecord
 
   scope :include_player, -> { includes(user: :player) }
   scope :ordered, -> { order(:start_date, :end_date, :name) }
+  scope :past, -> { where("end_date < ?", Date.today).order(end_date: :desc) }
+  scope :active, -> { where(active: true) }
 
   def self.search(params, path)
     matches = ordered.include_player
-    case params[:active]
-    when "true", nil
-      matches = matches.where(active: true)
-    when "false"
-      matches = matches.where(active: false)
+
+    # include inactive?
+    matches = matches.where(active: true) unless params[:include_inactive] == "on"
+    matches = matches.where(is_fide_rated: true) if params[:is_fide_rated] == "on"
+
+    # search
+    if params[:search].present?
+      matches = matches.where("name LIKE :term OR location LIKE :term", term: "%#{params[:search]}%")
     end
-    matches = matches.where("name LIKE ?", "%#{params[:name]}%") if params[:name].present?
-    matches = matches.where("location LIKE ?", "%#{params[:location]}%") if params[:location].present?
+
+    # from date
     default = Date.today
     params[:year] = default.year.to_s unless params[:year].to_s.match(/\A20\d\d\z/)
     params[:month] = "%02d" % default.month unless params[:month].to_s.match(/\A(0[1-9]|1[0-2])\z/)
-    if default.year.to_s == params[:year] && default.strftime("%m") == params[:month]
-      day = default.strftime("%d")
-    else
-      day = "01"
-    end
+    day = (default.year.to_s == params[:year] && default.strftime("%m") == params[:month]) ? default.strftime("%d") : "01"
     matches = matches.where("start_date >= ?", "#{params[:year]}-#{params[:month]}-#{day}")
-    matches = matches.where(category: params[:category]) if CATEGORIES.include?(params[:category])
+
+    # category
+    category_values = {
+      "all" => CATEGORIES,
+      "women" => ["women"],
+      "juniors" => ["junior", "junint"],
+      "international" => ["foreign", "junint"]
+    }
+    matches = matches.where(category: category_values[params[:category]] || CATEGORIES)
+
+    # time control
+    if TIME_CONTROLS.include?(params[:time_controls])
+      matches = matches.where(
+        "JSON_CONTAINS(time_controls, ?)",
+        params[:time_controls].to_json
+      )
+    end
+
     paginate(matches, params, path)
   end
 
@@ -170,6 +188,12 @@ class Event < ApplicationRecord
 
   def geocodes?
     active && lat.present? && long.present?
+  end
+
+  def map_marker_key
+    return 'other' if time_controls.blank?
+
+    time_controls.map(&:to_s).join('_')
   end
 
   private
