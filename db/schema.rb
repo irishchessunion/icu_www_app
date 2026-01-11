@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_12_08_201206) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_08_160147) do
   create_table "article_likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "article_id"
     t.bigint "user_id"
@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_08_201206) do
     t.datetime "updated_at", null: false
     t.boolean "junior_only", default: false
     t.boolean "has_junior_section", default: false
+    t.string "eircode"
     t.index ["active"], name: "index_clubs_on_active"
     t.index ["city"], name: "index_clubs_on_city"
     t.index ["county"], name: "index_clubs_on_county"

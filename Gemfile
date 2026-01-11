@@ -34,6 +34,8 @@ gem 'bigdecimal', '>= 2.5.5' # To avoid BigDecimal.new error
 gem 'terrapin'
 gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 
+gem "caxlsx"
+
 group :development do
   gem "capistrano" # For same reason as colorize comment above
   gem "capistrano-rvm"

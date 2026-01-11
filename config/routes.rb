@@ -39,6 +39,7 @@ IcuWwwApp::Application.routes.draw do
     member do
       get :swiss_manager
       get :csv_list
+      get :excel_list
     end
   end
 

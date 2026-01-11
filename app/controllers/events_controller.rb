@@ -48,6 +48,8 @@ class EventsController < ApplicationController
 
   def swiss_manager
     event = Event.find(params[:id])
+    authorize! :update, event
+
     items = Item::Entry.joins(:cart, :fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::SwissManagerGenerator.new
 
@@ -56,10 +58,22 @@ class EventsController < ApplicationController
 
   def csv_list
     event = Event.find(params[:id])
+    authorize! :update, event
+    
     items = Item::Entry.joins(:fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::EntryListCsvGenerator.new
 
     send_data generator.generate_from_items(items, event.name, can?(:show, Cart)), filename: download_filename(event, params[:section], 'csv'), type: 'text/csv'
+  end
+
+  def excel_list
+    event = Event.find(params[:id])
+    authorize! :update, event
+
+    items = Item::Entry.joins(:fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
+    generator = Admin::EntryListExcelGenerator.new
+
+    send_data generator.generate_from_items(items), filename: download_filename(event, params[:section], 'xlsx'), type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   end
 
   private
