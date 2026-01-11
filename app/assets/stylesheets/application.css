@@ -110,6 +110,10 @@
     margin: 15px 0;
 }
 
+.navbar {
+  margin: 0;
+}
+
 .navbar-header > ul {
   display: none
 }
@@ -447,6 +451,7 @@ input:checked+.slider:before {
 .vcenter { vertical-align: middle !important; }
 
 /* To stop text wrapping */
+.cell-no-wrap { white-space: nowrap; width: 1%; }
 .no-wrap { white-space: nowrap; }
 
 /* For articles */
