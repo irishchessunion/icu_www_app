@@ -21,6 +21,10 @@ class Cart < ApplicationRecord
     items.map(&:cost).reduce(0.0, :+)
   end
 
+  def has_expired_items?
+    items.any?(&:discount_expired?)
+  end
+
   def refundable?
     active? && purchased_with_current_payment_account?
   end

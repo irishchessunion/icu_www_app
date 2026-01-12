@@ -116,6 +116,14 @@ class Item < ApplicationRecord
     cart.confirmation_email if cart
   end
 
+  def provisional_cost
+    fee.current_amount
+  end
+
+  def discount_expired?
+    provisional_cost != cost
+  end
+
   def note_references(all_notes)
     notes.each_with_object([]) do |note, refs|
       number = all_notes[note]
@@ -139,7 +147,7 @@ class Item < ApplicationRecord
     self.description = fee.description(:full) unless description.present?
     self.start_date  = fee.start_date         unless start_date.present?
     self.end_date    = fee.end_date           unless end_date.present?
-    self.cost        = fee.amount             unless cost.present?
+    self.cost        = fee.current_amount     unless cost.present?
   end
 
   def normalise

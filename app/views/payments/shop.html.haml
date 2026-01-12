@@ -32,4 +32,4 @@
                 %td.text-center.small{colspan: 2}= icu_season_dates(fee.start_date)
             %tr
               %td.col-sm-10= link_to fee.description, new_item_path(fee_id: fee.id)
-              %td.col-sm-2.text-center= euros(fee.amount)
+              %td.col-sm-2.text-center= euros(fee.current_amount)
