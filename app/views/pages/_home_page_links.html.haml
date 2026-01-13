@@ -1,8 +1,7 @@
 .home-page-links
   -# Shows only when screen width > 768px
-  .panel.panel-primary.irish-events
-    .panel-heading
-      .text-center Main Pages
+  .panel.panel-default.irish-events.home-links
+    .panel-heading= t("home.resources")
     .panel-body
       %ul
         %li
@@ -27,7 +26,7 @@
       = link_to "Donate to the ICU",  new_item_path(fee_id: @donate_fee), :class => "btn btn-danger btn-sm"
     .panel.panel-default.irish-events
       .panel-heading
-        Resources
+        t("home.resources")
       .panel-body
         %ul
           %li
