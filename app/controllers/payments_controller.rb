@@ -27,7 +27,7 @@ class PaymentsController < ApplicationController
 
     if @cart.has_expired_items?
       # Only should occur if the user gets to /card without going through /cart
-      flash[:warning] = "Your cart contained an item which had a discount which has since expired. Please double check that you are okay with the cart before proceeding to payment."
+      flash[:warning] = t("shop.payment.expired_items")
       redirect_to cart_path
     end
 
