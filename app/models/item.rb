@@ -120,12 +120,14 @@ class Item < ApplicationRecord
     fee.current_amount
   end
 
+  # Returns true if the item has been discounted
   def discounted?
-    cost == fee.discounted_amount
+    fee.discounted_amount && cost == fee.discounted_amount
   end
 
+  # Returns true if the item was discounted, but no longer should be
   def discount_expired?
-    provisional_cost != cost
+    discounted? && !fee.discounted?
   end
 
   # Gives the percentage decrease of the discount

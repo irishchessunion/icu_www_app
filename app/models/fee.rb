@@ -85,7 +85,7 @@ class Fee < ApplicationRecord
 
   # Checks if the discounted amount should be used
   def discounted?
-    discount_deadline && Date.today < discount_deadline
+    discounted_amount && discount_deadline && Date.today < discount_deadline
   end
 
   # Retrieves the right amount for the fee depending
