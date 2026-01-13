@@ -21,7 +21,7 @@
                   - if note_references.any?
                     %sup= "[#{note_references.join(',')}]"
                 %td= item.player_name
-                %td.text-center= euros(item.cost) + (item.discounted? ? "*" : "")
+                %td.text-center= euros(item.cost) + (item.discounted? ? "* (#{item.discount_reduction}% off)" : "")
                 - if cart.unpaid?
                   %td.text-center= link_to t("symbol.delete"), item.becomes(Item), data: { confirm: t("item.confirm_delete") }, method: :delete, class: "btn btn-danger btn-xs"
             %tr
@@ -38,7 +38,7 @@
       .col-md-6
         .alert.alert-warning.text-center= t("shop.cart.empty")
 
-  - if cart.has_expired_items?
+  - if cart.has_discounted_items?
     .row
       .col-md-10.col-md-offset-1
-        %p * On sale
+        %p * Reduced price

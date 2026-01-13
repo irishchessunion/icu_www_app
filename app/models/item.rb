@@ -128,6 +128,12 @@ class Item < ApplicationRecord
     provisional_cost != cost
   end
 
+  # Gives the percentage decrease of the discount
+  def discount_reduction(decimal_places=0)
+    return unless self.discounted?
+    (((fee.amount - cost) / fee.amount) * 100).round(decimal_places)
+  end
+
   def note_references(all_notes)
     notes.each_with_object([]) do |note, refs|
       number = all_notes[note]

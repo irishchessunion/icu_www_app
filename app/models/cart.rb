@@ -21,6 +21,10 @@ class Cart < ApplicationRecord
     items.map(&:cost).reduce(0.0, :+)
   end
 
+  def has_discounted_items?
+    items.any?(&:discounted?)
+  end
+
   def has_expired_items?
     items.any?(&:discount_expired?)
   end
