@@ -25,6 +25,16 @@ class Cart < ApplicationRecord
     items.any?(&:discount_expired?)
   end
 
+  # Updates the cost field of any items which have discounted amounts
+  # past the discount deadline
+  def refresh_items
+    return unless has_expired_items?
+    items.each do |item|
+      next unless item.discount_expired?
+      item.update(cost: item.fee.current_amount)
+    end
+  end
+
   def refundable?
     active? && purchased_with_current_payment_account?
   end

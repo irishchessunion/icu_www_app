@@ -120,6 +120,10 @@ class Item < ApplicationRecord
     fee.current_amount
   end
 
+  def discounted?
+    cost == fee.discounted_amount
+  end
+
   def discount_expired?
     provisional_cost != cost
   end
