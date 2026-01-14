@@ -54,6 +54,36 @@
 
 /* Text styling. */
 .text-done { text-decoration: line-through !important; }
+.glyphicon-sm { font-size: 12px; }
+.glyphicon-xs { font-size: 10px; margin: 0 0 4px 0; }
+
+/* Global */
+.no-margin {
+  margin: 0;
+}
+
+.no-gutters {
+  padding-right: 0;
+  padding-left: 0
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.inline-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inline-glyph {
+  display: flex;
+  flex-direction: row;
+  gap: 0 8px;
+  align-items: center;
+}
 
 /* Indicator for maintenance mode. */
 #maintenance {
@@ -307,6 +337,19 @@ section aside.map {
     margin-bottom: 0;
 }
 
+section.latest-news > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 15px 0;
+}
+
+section.latest-news h3 {
+  color: var(--gray-base);
+  font-weight: 700;
+  margin: 0;
+}
+
 /* Homepage Links */
 .home-page-links>.mobile-links {
   display: none;
@@ -348,33 +391,39 @@ section aside.map {
 
 /* // Homepage Links */
 /* Featured Results */
-.panel-info.featured-result {
-  display: none;
+.panel.featured-result {
+  /* display: none; */
+  padding: 10px 15px;
+  margin: 0 0 8px 0;
+}
+
+.panel.panel-news {
+  margin: 0 0 8px 0;
 }
 
 .result-icon {
-  display: none;
+  /* display: none; */
 }
 
 .result-date {
-  display: none;
+  /* display: none; */
 }
 
-.panel-info.featured-result .result-icon {
+.panel.featured-result .result-icon {
   display: inline-block;
   margin-right: 4px;
 }
 
-.panel-info.featured-result .result-date {
+.panel.featured-result .result-date {
   display: inline-block;
   white-space: white-space-no-wrap;
 }
 
-.panel-info.featured-result a {
-  display: none;
+.panel.featured-result a {
+
 }
 
-.panel-info.featured-result .result-metadata {
+.panel.featured-result .result-metadata {
   display: none;
 }
 /* // Featured Results */
@@ -429,6 +478,58 @@ section aside.map {
 }
 
 /* // PAGES */
+
+/* Latest Tournament Reports Card */
+section.latest-reports {
+  margin: 0 0 8px 0;
+}
+
+section.latest-reports h4 {
+  font-weight: 700;
+  margin: 0;
+}
+
+section.latest-reports header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+section.latest-reports .content-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 15px
+}
+
+section.latest-reports .content-grid .each-report {
+  display: flex;
+  flex-direction: column;
+  gap: 8px 0
+}
+
+section.latest-reports .content-grid .thumbnail-image {
+  border-radius: 4px;
+  width: 100%;
+  aspect-ratio: 3/2;
+  background: var(--gray-lighter);
+  border: 2px solid var(--gray-lighter);
+}
+
+.latest-news footer {
+  margin: 0 0 21px 0;
+}
+
+@media (max-width: 768px) {
+  section.latest-reports .content-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  section.latest-reports .content-grid .each-report:last-child {
+    display: none;
+  }
+}
+
 
 /* INPUT */
 
@@ -611,6 +712,17 @@ input:checked+.slider:before {
   padding: 0.4em;
 }
 
+.btn.btn-pastel-primary,
+.panel-pastel-primary {
+  color: var(--brand-primary-dark);
+  border-color: var(--brand-primary-light);
+  background-color: var(--brand-primary-lighter);
+}
+
+.btn.btn-pastel-primary:hover, .btn.btn-pastel-primary:focus {
+  background-color: var(--brand-primary-light);
+}
+
 .btn.btn-pastel-info,
 .panel-pastel-info {
   color: var(--brand-info-dark);
@@ -631,6 +743,17 @@ input:checked+.slider:before {
 
 .btn.btn-pastel-warning:hover, .btn.btn-pastel-warning:focus {
   background-color: var(--brand-warning-light);
+}
+
+.btn.btn-pastel-danger,
+.panel-pastel-danger {
+  color: var(--brand-danger-dark);
+  border-color: var(--brand-danger-light);
+  background-color: var(--brand-danger-lighter);
+}
+
+.btn.btn-pastel-danger:hover, .btn.btn-pastel-danger:focus {
+  background-color: var(--brand-danger-light);
 }
 
 button.like-btn {
@@ -865,12 +988,21 @@ ol.nested-numbering > li:before {
 
 /* Bootstrap SM Breakpoint */
 @media (max-width: 768px) {
+  .no-gutters-xs {
+    padding-right: 0;
+    padding-left: 0
+  }
+
   .row.results {
     display: none;
   }
 
   .panel-info.featured-result {
     display: block;
+  }
+
+  .panel-info.featured-result a {
+    display: none;
   }
 
   .champions {
@@ -885,5 +1017,14 @@ ol.nested-numbering > li:before {
 
   .event-location-span {
     display: inline;
+  }
+
+  .events-search select {
+    display: inline-block;
+    width: auto;
+  }
+
+  .events-search input[type=text] {
+    width: auto;
   }
 }

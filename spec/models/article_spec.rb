@@ -6,6 +6,10 @@ describe Article do
   let(:guest)  { User::Guest.new }
   let(:member) { create(:user) }
 
+  let(:image1) { create(:image) }
+  let(:image2) { create(:image_april) }
+  let(:image3) { create(:image_suzanne) }
+
   def accs(user)
     Article.accessibilities_for(user).join("|")
   end
@@ -73,5 +77,38 @@ describe Article do
     it "includes women" do
       expect(CategoriesOwner::CATEGORIES.include?("women")).to be(true)
     end
+  end
+
+  context "thumbnail image" do
+    it "extracts the first image ID from text" do
+      article = build(:article, text: "testing123 [IMG:#{image1.id}:width=250:left] ending")
+      expect(article.thumbnail_image_id).to eq(image1.id)
+    end
+
+    it "returns the Image for the first IMG tag" do
+      article = create(:article, text: "Hello World! [IMG:#{image2.id}] Goodbye World!")
+      expect(article.thumbnail_image).to eq(image2)
+    end
+
+    it "extracts only the first IMG tag if multiple tags are present" do
+      article = build(
+        :article,
+        text: "[IMG:#{image1.id}] and John won the top section [IMG:#{image2.id}] and the €5Million prize [IMG:#{image3.id}]"
+      )
+      expect(article.thumbnail_image_id).to eq(image1.id)
+      expect(article.thumbnail_image).to eq(image1)
+    end
+
+    it "returns nil if there is no IMG tag" do
+      article = build(:article, text: "No images here")
+      expect(article.thumbnail_image_id).to be_nil
+      expect(article.thumbnail_image).to be_nil
+    end
+
+    it "returns nil if the IMG ID does not exist" do
+      article = build(:article, text: "[IMG:99999999]")
+      expect(article.thumbnail_image).to be_nil
+    end
+
   end
 end

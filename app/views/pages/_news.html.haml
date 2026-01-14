@@ -22,13 +22,9 @@
 
   - (@news[0..2] || []).each do |news|
     = render 'news/panel', news: news
-  .panel-default
-    .panel-heading
-      Sponsors
-    .panel-body
-      - Sponsor.random_pair.each do |sponsor|
-        = image_link_to_sponsor(sponsor)
+
+  - if @reports.present? && @results.length > 0
+    = render 'recent_reports'
+
   - (@news[3..-1] || []).each do |news|
     = render 'news/panel', news: news
-
-  .panel-footer.text-center= link_to t('news.search'), news_index_path

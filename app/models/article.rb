@@ -10,6 +10,7 @@ class Article < ApplicationRecord
   include CategoriesOwner
 
   journalize %w[access active author categories text title year], "/article/%d"
+  IMG_TAG = /\[IMG:(\d+)(?::[^\]]*)?\]/.freeze
 
 
   belongs_to :user
@@ -27,6 +28,7 @@ class Article < ApplicationRecord
   scope :include_series, -> { includes(episodes: :series) }
   scope :ordered, -> { order(year: :desc, created_at: :desc) }
   scope :linked_to_game, -> { where("text like '%[GME:%' or title like '%[GME:%'") }
+  scope :active, -> { where(active: true) }
   # The category specific scopes are automatically created by has_flags.
 
   def self.search(params, path, user, opt={})
@@ -62,6 +64,17 @@ class Article < ApplicationRecord
 
   def expand(opt)
     %q{<a href="/articles/%d">%s</a>} % [id, opt[:title] || title]
+  end
+
+  # Returns the ID of the first image in the article, if any
+  def thumbnail_image_id
+    return unless text.present?
+    text[IMG_TAG, 1]&.to_i
+  end
+
+  def thumbnail_image
+    return unless (id = thumbnail_image_id)
+    @thumbnail_image ||= Image.find_by(id: id)
   end
 
   # Just returns the Like class for this type of item
