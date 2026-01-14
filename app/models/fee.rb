@@ -29,9 +29,11 @@ class Fee < ApplicationRecord
 
   def self.search(params, path)
     today = Date.today.to_s
-    matches = all
+    matches = Fee.all
     matches = matches.where(type: params[:type]) if params[:type].present?
     matches = matches.where(active: params[:active] == "true" ? true : false) if params[:active].present?
+    matches = matches.where(event_id: params[:event_id]) if params[:event_id].present? && params[:event_id].to_i > 0
+    matches = matches.where("name LIKE ?", "%#{params[:name]}%") if params[:name].present?
     case params[:sale]
     when "past"    then matches = matches.old_to_new.where("sale_end < ?", today)
     when "future"  then matches = matches.new_to_old.where("sale_start > ?", today)
@@ -171,3 +173,9 @@ class Fee < ApplicationRecord
     end
   end
 end
+
+# Subclasses need to be loaded to ensure the self.all method works correctly. Possibly only an issue in development mode.
+# The requires are placed here to avoid circular dependencies.
+require_dependency 'fee/entry'
+require_dependency 'fee/other'
+require_dependency 'fee/subscription'
