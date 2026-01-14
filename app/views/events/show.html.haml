@@ -144,7 +144,7 @@
           - if can?(:show, fee_entry)
             %tr
               %td= link_to(euros(fee_entry.current_amount), new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm')
-              %td= event_entry_fee_description(fee_entry) + (fee_entry.discounted? ? " (on sale)" : "")
+              %td= event_entry_fee_description(fee_entry) + (fee_entry.discounted? ? " (#{t("fee.has_discount")})" : "")
               %td= link_to(t("edit"), edit_admin_fee_path(fee_entry), class: 'btn btn-danger btn-sm') if can?(:edit, fee_entry)
 
     - unless @event.items.empty?

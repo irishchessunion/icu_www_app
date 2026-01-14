@@ -28,6 +28,7 @@ en:
       hint: Setting the event will set the start and end dates
       label: Event
     fees: Fees
+    has_discount: Reduced price
     name: Name
     everybody: Everyone
     organizer_only: Only organizers
