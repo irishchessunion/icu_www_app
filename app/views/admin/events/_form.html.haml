@@ -24,6 +24,11 @@
         = render "utils/text_field_for", locals.merge(param: :location, text: t("event.location"), width: 6, disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :lat, text: t("latitude"), width: 3, mark: "none", disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :long, text: t("longitude"), width: 3, mark: "none", disabled: has_ended)
+        .form-group
+          .col-md-4.col-md-offset-3
+            .panel.panel-pastel-warning
+              .panel-body
+                This event will not appear in the 'upcoming events' page map unless Lat/Long values are provided.
         %hr
         %fieldset{"aria-label": "Select event time controls", class:"time-controls"}
           %legend.col-md-3

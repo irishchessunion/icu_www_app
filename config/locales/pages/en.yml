@@ -1,0 +1,13 @@
+en:
+  pages:
+    reports:
+      latest: Latest Tournament Reports
+      reports: Reports
+      zero_reports: There's no recent reports
+    resources: Resources
+    results:
+      add: Add Result
+      manage: Manage Results
+    news:
+      latest: Latest News
+      all: All News

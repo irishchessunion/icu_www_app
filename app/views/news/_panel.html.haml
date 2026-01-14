@@ -1,6 +1,7 @@
-.panel-default
+.panel.panel-default.panel-news
   .panel-heading
-    = news.headline
+    %strong
+      = news.headline
     - unless news.active
       = "(inactive)"
     .pull-right.visible-sm-block.text-sm.right-margin-thin= news.short_date

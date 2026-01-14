@@ -5,6 +5,7 @@ class PagesController < ApplicationController
     @news = News.active.nonjunior.ordered.limit(8)
     @ongoing_events = Event.active.short.where(category: %w(irish women)).where('start_date <= ? AND end_date >= ?', Date.today, Date.today).ordered.limit(4)
     @upcoming_events = Event.active.short.where(category: %w(irish women)).where('start_date > ?', Date.today).ordered.limit(4)
+    @reports = Article.active.tournament.ordered.limit(3)
     @results = Result.recent
   end
 

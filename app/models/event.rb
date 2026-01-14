@@ -141,7 +141,9 @@ class Event < ApplicationRecord
   def dates
     parts = []
     if start_date.year == end_date.year
-      parts.unshift start_date.year
+      unless start_date.year == Date.today.year
+        parts.unshift start_date.year
+      end
       if start_date.month == end_date.month
         parts.unshift I18n.t("month.s#{start_date.strftime('%m')}")
         if start_date.mday == end_date.mday

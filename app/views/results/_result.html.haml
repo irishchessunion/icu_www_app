@@ -1,11 +1,11 @@
 %span.result-icon
-  %span.glyphicon.glyphicon-pushpin
-%span.result-metadata
-  = "#{time_ago_in_words result.updated_at, scope: 'datetime.short_distance_in_words'} ago, #{result.reporter_name}: "
-= result.full_message
-%span.result-date
-  = "- #{time_ago_in_words result.updated_at, scope: 'datetime.short_distance_in_words'} ago"
-- if can?(:destroy, result)
-  = icon_link_to 'remove', '', admin_result_path(result), :method => :delete, class: 'btn btn-danger btn-xs', title: 'Delete result', data:{ confirm: 'Are you sure you want to delete the result?' }
-- if can?(:update, result)
-  = icon_link_to "ban-circle", '', ban_admin_result_path(result), :method => :post, class: 'btn btn-danger btn-xs', title: 'Ban reporter', data: { confirm: "Are you sure you want to ban #{result.reporter.name}?" }
+  %span.glyphicon.glyphicon-pushpin.glyphicon-sm
+%span
+  = result.full_message
+  %span.result-date
+    = "- #{time_ago_in_words result.updated_at, scope: 'datetime.short_distance_in_words'} ago"
+  %span
+    - if can?(:destroy, result)
+      = icon_link_to 'remove', '', admin_result_path(result), :method => :delete, class: 'btn btn-pastel-warning btn-xs hidden-xs', title: 'Delete result', data:{ confirm: 'Are you sure you want to delete the result?' }
+    - if can?(:update, result)
+      = icon_link_to "ban-circle", '', ban_admin_result_path(result), :method => :post, class: 'btn btn-pastel-danger btn-xs hidden-xs', title: 'Ban reporter', data: { confirm: "Are you sure you want to ban #{result.reporter.name}?" }

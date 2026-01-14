@@ -1,0 +1,17 @@
+%section{class: "panel panel-primary latest-reports", "aria-label": "Tournament Reports"}
+  .panel-body
+    %header
+      %h4.text-primary= t("pages.reports.latest")
+      %a{class: "inline-glyph", href: "#{articles_path}"}
+        %span
+          =t("all")
+          %span.hidden-xs= t("pages.reports.reports")
+        %span.glyphicon.glyphicon-chevron-right.glyphicon-xs
+    %div.content-grid
+      - @reports.each do |report|
+        %div.each-report
+          - if (image = report.thumbnail_image)
+            %div.thumbnail-image{style: "background-image: url(#{image.data.url}); background-size: cover;"}
+          - else
+            %div.thumbnail-image
+          =link_to report.title, article_path(report)

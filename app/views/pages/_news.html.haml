@@ -1,20 +1,30 @@
-.panel.panel-primary.news
-  .panel-heading
-    .text-center Latest News
+-# .panel.panel-primary.news
+-#   .panel-heading
+-#     .text-center Latest News
+
+%section{class: "latest-news", "aria-label": "Latest News Feed"}
+  %header
+    %h3= t("pages.news.latest")
+    %a{class: "inline-glyph", href: news_index_path}
+      =t("pages.news.all")
+      %span.glyphicon.glyphicon-chevron-right.glyphicon-xs
+
   - if @results.present? && @results.length > 0
-    - (@results[0..4] || []).each do |result|
-      .panel-info.featured-result
-        .panel-footer.text-info
-          = render result
+    - (@results[0..3] || []).each do |result|
+      .panel.panel-pastel-info.featured-result
+        = render result
+    - if can?(:create, Result)
+      .panel.panel-pastel-info.featured-result.inline-between
+        = link_to t("pages.results.manage"), admin_results_path, class: "text-primary"
+        %a{class: "btn btn-primary btn-sm inline-glyph", href: new_admin_result_path}
+          =t("pages.results.add")
+          %span.glypicon.glyphicon-plus
+
   - (@news[0..2] || []).each do |news|
     = render 'news/panel', news: news
-  .panel-default
-    .panel-heading
-      Sponsors
-    .panel-body
-      - Sponsor.random_pair.each do |sponsor|
-        = image_link_to_sponsor(sponsor)
+
+  - if @reports.present? && @results.length > 0
+    = render 'recent_reports'
+
   - (@news[3..-1] || []).each do |news|
     = render 'news/panel', news: news
-
-  .panel-footer.text-center= link_to t('news.search'), news_index_path
