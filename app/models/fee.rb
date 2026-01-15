@@ -85,6 +85,17 @@ class Fee < ApplicationRecord
     true
   end
 
+  # Checks if the discounted amount should be used
+  def discounted?
+    discounted_amount && discount_deadline && Date.today <= discount_deadline
+  end
+
+  # Retrieves the right amount for the fee depending
+  # on if it should be discounted or not
+  def current_amount
+    discounted? ? discounted_amount : amount
+  end
+
   def advance_1_year
     %w[start_date end_date sale_start sale_end discount_deadline age_ref_date].each do |date|
       send("#{date}=", send(date).years_since(1)) if send(date).present?

@@ -16,7 +16,7 @@
           - @fees.matches.each do |fee|
             %tr
               %td= link_to fee.description(:full), admin_fee_path(fee)
-              %td.text-center= euros(fee.amount)
+              %td.text-center= euros(fee.current_amount)
               %td.text-center= ok_ko(fee.active)
               %td.text-center= ok_ko(fee.within_sale_dates?)
               %td.text-center= ok_ko(fee.active && fee.within_sale_dates?)

@@ -116,6 +116,26 @@ class Item < ApplicationRecord
     cart.confirmation_email if cart
   end
 
+  def provisional_cost
+    fee.current_amount
+  end
+
+  # Returns true if the item has been discounted
+  def discounted?
+    fee.discounted_amount && cost == fee.discounted_amount
+  end
+
+  # Returns true if the item was discounted, but no longer should be
+  def discount_expired?
+    discounted? && !fee.discounted?
+  end
+
+  # Gives the percentage decrease of the discount
+  def discount_reduction(decimal_places=0)
+    return unless self.discounted?
+    (((fee.amount - cost) / fee.amount) * 100).round(decimal_places)
+  end
+
   def note_references(all_notes)
     notes.each_with_object([]) do |note, refs|
       number = all_notes[note]
@@ -139,7 +159,7 @@ class Item < ApplicationRecord
     self.description = fee.description(:full) unless description.present?
     self.start_date  = fee.start_date         unless start_date.present?
     self.end_date    = fee.end_date           unless end_date.present?
-    self.cost        = fee.amount             unless cost.present?
+    self.cost        = fee.current_amount     unless cost.present?
   end
 
   def normalise

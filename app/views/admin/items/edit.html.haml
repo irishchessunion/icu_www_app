@@ -9,7 +9,7 @@
         .panel-heading
           %h4.panel-title
             = @item.fee.description(:full)
-            .pull-right= euros(@item.fee.amount)
+            .pull-right= euros(@item.fee.current_amount)
         .panel-body
           = render "fees/#{@item.fee.subtype}", fee: @item.fee, player_name: @player_name
           = render "items/notes", fee: @item.fee, notes: @item.notes

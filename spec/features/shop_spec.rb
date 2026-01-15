@@ -407,10 +407,11 @@ describe "Shop" do
     let!(:u16)            { create(:player, dob: Date.today.years_ago(15), joined: Date.today.years_ago(5)) }
     let!(:u10)            { create(:player, dob: Date.today.years_ago(9), joined: Date.today.years_ago(1)) }
     let!(:entry_fee)      { create(:entry_fee) }
+    let!(:discount_entry_fee) { create(:entry_fee, name: "Discounted Fee", discounted_amount: 20.0, discount_deadline: 1.day.from_now) }
     let!(:u1400_fee)      { create(:entry_fee, name: "Limerick U1400", max_rating: 1400) }
     let!(:premier_fee)    { create(:entry_fee, name: "Kilbunny Premier", min_rating: 2000) }
     let!(:junior_fee)     { create(:entry_fee, name: "Irish U16", max_age: 15, min_age: 13, age_ref_date: Date.today.months_ago(1)) }
-
+    
     let(:too_high_error)  { I18n.t("item.error.rating.high", member: master.name, limit: u1400_fee.max_rating) }
     let(:too_low_error)   { I18n.t("item.error.rating.low", member: beginner.name, limit: premier_fee.min_rating) }
     let(:too_old_error)   { I18n.t("item.error.age.old", member: player.name, date: junior_fee.age_ref_date.to_s, limit: junior_fee.max_age) }
@@ -457,6 +458,25 @@ describe "Shop" do
 
       visit shop_path
       expect(page).to have_link(cart_link)
+    end
+
+    it "discount" do
+      visit shop_path
+      click_link discount_entry_fee.description
+      click_button select_member
+      fill_in last_name, with: player.last_name + force_submit
+      fill_in first_name, with: player.first_name + force_submit
+      click_link player.id.to_s
+      click_button add_to_cart
+
+      expect(page).to have_selector('s', text: "€50.00")
+      expect(page).to have_content("€50.00 €20.00")
+
+      discount_entry_fee.update(discount_deadline: 1.day.ago)
+      refresh
+
+      expect(page).to_not have_content("€50.00 €20.00")
+      expect(page).to have_content("€50.00")
     end
 
     it "blocked by existing entry" do

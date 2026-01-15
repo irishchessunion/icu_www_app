@@ -959,7 +959,7 @@ ol.nested-numbering > li:before {
 }
 
 .fees-table a.btn {
-    width: 80px;
+    min-width: 80px;
 }
 
 /* Bootstrap MD Breakpoint */
