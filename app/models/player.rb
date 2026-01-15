@@ -99,7 +99,7 @@ class Player < ApplicationRecord
       
     return true if cutoff_date.nil? # Lifetime membership
 
-    cutoff_date = Date.new(cutoff_date.year, 12, 31) # Change to Dec 31 if including grace period 
+    cutoff_date = Date.new(cutoff_date.year, 12, 31) if include_grace_period # Change to Dec 31 if including grace period 
     Date.today <= cutoff_date
   end
 
