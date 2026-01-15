@@ -469,14 +469,13 @@ describe "Shop" do
       click_link player.id.to_s
       click_button add_to_cart
 
-      expect(page).to have_content("€20.00* (60% off)")
-      expect(page).to have_content(t("shop.cart.has_discount"))
+      expect(page).to have_selector('s', text: "€50.00")
+      expect(page).to have_content("€50.00 €20.00")
 
       discount_entry_fee.update(discount_deadline: 1.day.ago)
       refresh
 
-      expect(page).to_not have_content("€20.00* (60% off)")
-      expect(page).to_not have_content(t("shop.cart.has_discount"))
+      expect(page).to_not have_content("€50.00 €20.00")
       expect(page).to have_content("€50.00")
     end
 

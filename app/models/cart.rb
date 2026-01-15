@@ -21,10 +21,6 @@ class Cart < ApplicationRecord
     items.map(&:cost).reduce(0.0, :+)
   end
 
-  def has_discounted_items?
-    items.any?(&:discounted?)
-  end
-
   def has_expired_items?
     items.any?(&:discount_expired?)
   end
@@ -34,8 +30,7 @@ class Cart < ApplicationRecord
   def refresh_items
     return unless has_expired_items?
     items.each do |item|
-      next unless item.discount_expired?
-      item.update(cost: item.fee.current_amount)
+      item.update(cost: item.fee.current_amount) if item.discount_expired?
     end
   end
 
