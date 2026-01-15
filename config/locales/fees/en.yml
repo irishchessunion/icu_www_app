@@ -27,6 +27,7 @@ en:
     event_id:
       hint: Setting the event will set the start and end dates
       label: Event
+    event_id_no_hint: Event ID
     fees: Fees
     name: Name
     everybody: Everyone
