@@ -13,12 +13,13 @@
     - (@results[0..3] || []).each do |result|
       .panel.panel-pastel-info.featured-result
         = render result
-    - if can?(:create, Result)
-      .panel.panel-pastel-info.featured-result.inline-between
+  - if can?(:create, Result)
+    .panel.panel-pastel-info.featured-result.inline-between
+      - if can?(:manage, Result)
         = link_to t("pages.results.manage"), admin_results_path, class: "text-primary"
-        %a{class: "btn btn-primary btn-sm inline-glyph", href: new_admin_result_path}
-          =t("pages.results.add")
-          %span.glypicon.glyphicon-plus
+      %a{class: "btn btn-primary btn-sm inline-glyph", href: new_admin_result_path}
+        =t("pages.results.add")
+        %span.glypicon.glyphicon-plus
 
   - (@news[0..2] || []).each do |news|
     = render 'news/panel', news: news

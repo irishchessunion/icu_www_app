@@ -2,7 +2,7 @@
   .panel-body
     %header
       %h4.text-primary= t("pages.reports.latest")
-      %a{class: "inline-glyph", href: "#{articles_path}"}
+      =link_to articles_path({category: "tournament"}), class: "inline-glyph" do
         %span
           =t("all")
           %span.hidden-xs= t("pages.reports.reports")
