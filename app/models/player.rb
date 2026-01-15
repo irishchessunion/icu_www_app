@@ -93,6 +93,8 @@ class Player < ApplicationRecord
   # @param include_grace_period Boolean that decides whether to include Sep-Dec of the next season
   # @return Boolean
   def is_subscribed?(include_grace_period)
+    return false if most_recent_subscription.nil?
+
     cutoff_date = most_recent_subscription.end_date # Aug 31 marks the end of the season  
       
     return true if cutoff_date.nil? # Lifetime membership

@@ -411,6 +411,10 @@ describe "Shop" do
     let!(:u1400_fee)      { create(:entry_fee, name: "Limerick U1400", max_rating: 1400) }
     let!(:premier_fee)    { create(:entry_fee, name: "Kilbunny Premier", min_rating: 2000) }
     let!(:junior_fee)     { create(:entry_fee, name: "Irish U16", max_age: 15, min_age: 13, age_ref_date: Date.today.months_ago(1)) }
+    let!(:event)          { create(:event) }
+    let!(:fee_requires_sub) { create(:entry_fee, name: "Requires Subscription", event: event) }
+    let!(:subscribed_player) { create(:player) }
+    let!(:subscription_item) { create(:subscription_item, player: subscribed_player, end_date: Date.new(Date.today.year, 8, 31)) }
     
     let(:too_high_error)  { I18n.t("item.error.rating.high", member: master.name, limit: u1400_fee.max_rating) }
     let(:too_low_error)   { I18n.t("item.error.rating.low", member: beginner.name, limit: premier_fee.min_rating) }
@@ -418,7 +422,8 @@ describe "Shop" do
     let(:too_young_error) { I18n.t("item.error.age.young", member: u10.name, date: junior_fee.age_ref_date.to_s, limit: junior_fee.min_age) }
     let(:exists_error)    { I18n.t("item.error.entry.already_entered", member: player.name(id: true)) }
     let(:in_cart_error)   { I18n.t("item.error.entry.already_in_cart", member: player.name(id: true)) }
-
+    let(:sub_required_error) { I18n.t("item.error.entry.no_subscription", member: player.name(id: true)) }
+    
     let(:existing_entry)  { create(:paid_entry_item, player: player, fee: entry_fee) }
 
     it "add" do
@@ -521,6 +526,33 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: in_cart_error)
+      wait_a_second(0.2)
+
+      expect(Cart.count).to eq 1
+      expect(Item::Entry.inactive.count).to eq 1
+    end
+
+    it "blocked by lack of subscription" do
+      visit event_path(id: event.id)
+      click_link fee_requires_sub.amount
+      click_button select_member
+      fill_in last_name, with: player.last_name + force_submit
+      fill_in first_name, with: player.first_name + force_submit
+      click_link player.id.to_s
+      click_button add_to_cart
+
+      expect(page).to have_css(failure, text: sub_required_error)
+      wait_a_second(0.2)
+      
+      visit event_path(id: event.id)
+      click_link fee_requires_sub.amount.to_s
+      click_button select_member
+      fill_in last_name, with: subscribed_player.last_name + force_submit
+      fill_in first_name, with: subscribed_player.first_name + force_submit
+      click_link subscribed_player.id.to_s
+      click_button add_to_cart
+
+      expect(page).to_not have_css(failure)
       wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
