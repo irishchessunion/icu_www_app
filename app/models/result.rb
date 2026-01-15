@@ -13,7 +13,7 @@ class Result < ApplicationRecord
   scope :include_reporter, -> { includes(:reporter) }
   scope :ordered, -> { order('created_at DESC') }
 
-  scope :recent, -> { active.include_reporter.ordered.limit(5) }
+  scope :recent, -> { active.where('created_at >= ?', 12.months.ago).include_reporter.ordered.limit(4) }
 
   before_create :make_active
 
