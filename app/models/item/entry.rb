@@ -1,5 +1,6 @@
 class Item::Entry < Item
   validates :start_date, :end_date, :player, presence: true
+  validate :membership_check
   validate :no_duplicates
   belongs_to :fee_entry, class_name: 'Fee::Entry', foreign_key: :fee_id
 
@@ -19,6 +20,12 @@ class Item::Entry < Item
   end
 
   private
+
+  def membership_check
+    if fee.event&.subscription_required && !player.is_subscribed?(true)
+      errors.add(:base, I18n.t("item.error.entry.no_subscription", member: player.name(id: true)))
+    end
+  end
 
   def no_duplicates
     if new_record? && [player, fee].all?(&:present?)

@@ -45,6 +45,7 @@
         = render "utils/text_field_for", locals.merge(param: :sections, ttext: "event.sections", width: 6, disabled: has_ended)
         = render "utils/check_box_for",  locals.merge(param: :short_event, text: t("event.short_event"), width: 1, disabled: has_ended)
         = render "utils/check_box_for",  locals.merge(param: :is_fide_rated, text: t("event.is_fide_rated"), width: 1, disabled: has_ended)
+        = render "utils/check_box_for",  locals.merge(param: :subscription_required, text: t("event.subscription_required"), width: 1, disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :prize_fund, text: t("event.prize_fund"), width: 2, mark: "none", disabled: has_ended)
         %hr
         = render "utils/file_field_for", locals.merge(param: :flyer, text: t("event.flyer"), width: 2, mark: "none", disabled: has_ended)

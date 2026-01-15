@@ -20,6 +20,7 @@ en:
       entry:
         already_entered: "%{member} has already entered this event"
         already_in_cart: "A entry for %{member} in the same event is already in your cart"
+        no_subscription: "%{member} must be have an ICU subscription to enter this event."
       other:
         already_exists: A duplicate item has already been paid for
         already_in_cart: A duplicate item is already in your cart
