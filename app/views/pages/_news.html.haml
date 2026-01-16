@@ -24,7 +24,7 @@
   - (@news[0..2] || []).each do |news|
     = render 'news/panel', news: news
 
-  - if @reports.present? && @results.length > 0
+  - if @reports.present? && @reports.length > 0
     = render 'recent_reports'
 
   - (@news[3..-1] || []).each do |news|
