@@ -10,7 +10,7 @@ class Fee < ApplicationRecord
 
   has_many :items, dependent: :nullify
   has_many :user_inputs, dependent: :destroy
-
+  belongs_to :event # Only used by Fee::Entry
   before_validation :normalize_attributes
 
   validates :type, inclusion: { in: TYPES }
@@ -29,7 +29,7 @@ class Fee < ApplicationRecord
 
   def self.search(params, path)
     today = Date.today.to_s
-    matches = Fee.all
+    matches = Fee.all.includes(:event)
     matches = matches.where(type: params[:type]) if params[:type].present?
     matches = matches.where(active: params[:active] == "true" ? true : false) if params[:active].present?
     matches = matches.where(event_id: params[:event_id]) if params[:event_id].present? && params[:event_id].to_i > 0
