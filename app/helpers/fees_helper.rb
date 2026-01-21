@@ -16,4 +16,16 @@ module FeesHelper
     ]
     options_for_select(sales, selected)
   end
+
+  def fee_event_link(fee)
+    if fee.type == "Fee::Entry" && fee.event_id.present?
+      link_to fee.event.name, event_path(fee.event)
+    elsif fee.type == "Fee::Subscription"
+      "Subscription"
+    elsif fee.type == "Fee::Other"
+      "Other"
+    else
+      "No idea"
+    end
+  end
 end

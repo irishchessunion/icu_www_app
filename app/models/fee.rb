@@ -29,7 +29,7 @@ class Fee < ApplicationRecord
 
   def self.search(params, path)
     today = Date.today.to_s
-    matches = Fee.all.includes(:event)
+    matches = all.includes(:event)
     matches = matches.where(type: params[:type]) if params[:type].present?
     matches = matches.where(active: params[:active] == "true" ? true : false) if params[:active].present?
     matches = matches.where(event_id: params[:event_id]) if params[:event_id].present? && params[:event_id].to_i > 0
