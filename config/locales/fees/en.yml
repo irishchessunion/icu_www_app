@@ -46,6 +46,7 @@ en:
     rating:
       max: Maximum rating
       min: Minimum rating
+    types: Fee Type
     type:
       entry: Tournament Entry Fee
       other: Other Fee
