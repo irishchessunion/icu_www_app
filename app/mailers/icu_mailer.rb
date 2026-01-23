@@ -13,7 +13,7 @@ class IcuMailer < ActionMailer::Base
   def test_email(to, subject, message)
     raise "'#{to}' is not a valid email address" unless Util::Mailgun.validate(to)
     @message = message
-    @time = Time.now.to_s(:nosec)
+    @time = Time.now.to_fs(:nosec)
     mail(to: to, subject: subject)
   end
 
@@ -29,7 +29,7 @@ class IcuMailer < ActionMailer::Base
 
   def mail_stats(stats)
     @stats = stats
-    mail(to: WEBMASTER, subject: MAIL_STATS % Time.now.to_s(:db))
+    mail(to: WEBMASTER, subject: MAIL_STATS % Time.now.to_fs(:db))
   end
 
   def forgot_password(user_id, token)

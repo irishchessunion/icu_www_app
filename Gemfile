@@ -1,8 +1,8 @@
 source "https://rubygems.org"
 
 gem "rake"
-gem "rails", "7.0.4"
-gem "puma" # web server
+gem "rails", "7.0.10"
+gem "puma", ">= 6.4.3" # web server
 # gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '3543363026121ee28d98dfce4cb6366980c055ee' # Lastest version of mimemagic has copyright issues and breaks
 gem "sprockets" # Latest version of sprockets 2.*. 3.* causes a failure at startup
 gem "sprockets-rails"
@@ -62,3 +62,9 @@ group :test do
   gem "database_cleaner"
   #gem "byebug"
 end
+
+# Avoiding CVE problems - these are found with `bundle audit`
+gem "nokogiri", ">= 1.18.9"
+gem "rack", "~> 2.2.20"
+gem "rexml", ">= 3.3.9"
+gem "thor", ">= 1.4.0"
