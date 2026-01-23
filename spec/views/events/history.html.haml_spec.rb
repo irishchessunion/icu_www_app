@@ -5,8 +5,8 @@ RSpec.describe "events/history", type: :view do
     event = build(
       :event,
       name: "Dublin Rapid",
-      start_date: Date.today - 10,
-      end_date: Date.today - 10,
+      start_date: Date.today.days_ago(10),
+      end_date: Date.today.days_ago(10),
       time_controls: ["rapid"],
       pairings_url: "http://chess-results.com",
       report_url: "http://icu.ie/report/123",
