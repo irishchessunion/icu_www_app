@@ -1,10 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe "events/history", type: :view do
-  let!(:event) { create(:event, name: "Dublin Rapid", start_date: Date.today - 10, end_date: Date.today - 10, time_controls: ["rapid"], pairings_url: "http://chess-results.com", report_url: "http://icu.ie/report/123", active: true) }
+  let!(:event) do
+    event = build(
+      :event,
+      name: "Dublin Rapid",
+      start_date: Date.today - 10,
+      end_date: Date.today - 10,
+      time_controls: ["rapid"],
+      pairings_url: "http://chess-results.com",
+      report_url: "http://icu.ie/report/123",
+      active: true
+    )
+    event.save!(validate: false)
+    event
+  end
 
   before do
-    assign(:past_events, Event.search({}, "/events"))
+    assign(:past_events, Event.paginate(Event.past.active, {}, history_events_path))
     allow(view).to receive(:can?).and_return(true)
     render
   end
