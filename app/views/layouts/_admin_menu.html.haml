@@ -35,14 +35,14 @@
           %li{class: active("admin/carts")}= link_to "Carts", admin_carts_path
         - if bdlgns
           %li{class: active("admin/bad_logins")}= link_to "Bad Logins", admin_bad_logins_path
+        - if events
+          %li{class: active("admin/events")}= link_to "Events", admin_events_path
         - if fails
           %li{class: active("admin/failures")}
             = link_to admin_failures_path do
               Failures
               - if nfails > 0
                 %span.label.label-danger= nfails
-        - if events
-          %li{class: active("admin/events")}= link_to "Events", admin_events_path
         - if fees
           %li{class: active("admin/fees")}= link_to "Fees", admin_fees_path
         - if pgns

@@ -113,6 +113,69 @@ describe Event do
     end
   end
 
+  context "admin_search" do
+    let(:admin_search_path) { "/admin/events" }
+    let(:admin) { create(:user, roles: "admin") }
+    let(:organiser1) { create(:user, roles: "organiser") }
+    let(:organiser2) { create(:user, roles: "organiser") }
+
+    let(:upcoming_event1) do
+      upcoming_event1 = build(:event, name: "Howth Congress", user: organiser1, start_date: Date.today + 10, end_date: Date.today + 12)
+      upcoming_event1.save!(validate: false)
+      upcoming_event1
+    end
+
+    let(:upcoming_event2) do
+      upcoming_event2 = build(:event, name: "Drogheda Congress", user: organiser2, start_date: Date.today + 15, end_date: Date.today + 17)
+      upcoming_event2.save!(validate: false)
+      upcoming_event2
+    end
+
+    let(:past_event1) do
+      past_event1 = build(:event, name: "Belfast Congress", user: organiser1, start_date: Date.today - 12, end_date: Date.today - 10)
+      past_event1.save!(validate: false)
+      past_event1
+    end
+
+    let(:past_event2) do
+      past_event2 = build(:event, name: "Cobh Congress", user: organiser2, start_date: Date.today - 17, end_date: Date.today - 15)
+      past_event2.save!(validate: false)
+      past_event2
+    end
+
+    it "returns upcoming and past events separately" do
+      results = Event.admin_search({}, admin_search_path, admin)
+
+      expect(results[:upcoming]).to include(upcoming_event1, upcoming_event2)
+      expect(results[:upcoming]).not_to include(past_event1, past_event2)
+      expect(results[:past]).to include(past_event1, past_event2)
+      expect(results[:past]).not_to include(upcoming_event1, upcoming_event2)
+    end
+
+    it "organisers only see their own events" do
+      results = Event.admin_search({}, admin_search_path, organiser1)
+
+      expect(results[:upcoming]).to include(upcoming_event1)
+      expect(results[:upcoming]).not_to include(upcoming_event2)
+      expect(results[:past]).to include(past_event1)
+      expect(results[:past]).not_to include(past_event2)
+    end
+
+    it "filters by name" do
+      results = Event.admin_search({ name: "Dublin" }, admin_search_path, admin)
+
+      expect(results[:upcoming]).not_to include(upcoming_event1)
+      expect(results[:upcoming]).not_to include(upcoming_event2)
+    end
+
+    it "admins can filter by user_id" do
+      results = Event.admin_search({ user_id: organiser1.id }, admin_search_path, admin)
+
+      expect(results[:upcoming]).to include(upcoming_event1)
+      expect(results[:upcoming]).not_to include(upcoming_event2)
+    end
+  end
+
   context "map_marker_key" do
     it "returns 'other' when time_controls is nil" do
       event = Event.new(time_controls: nil)

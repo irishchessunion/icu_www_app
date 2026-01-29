@@ -17,7 +17,7 @@
             %th= t("name")
             %th.col-md-2= t("event.dates")
             - if current_user.admin?
-              %th.col-md-2= t("created_by")
+              %th.col-md-2= t("event.created_by")
             %th.col-md-1.text-center= t("active")
         - if @events[:upcoming].any?
           %tbody

@@ -247,6 +247,183 @@ describe Event do
     end
   end
 
+  context "index" do
+    let(:organiser1) { create(:user, roles: "organiser") }
+    let(:organiser2) { create(:user, roles: "organiser") }
+    let(:admin_user) { create(:user, roles: "admin") }
+    let(:regular_user) { create(:user, roles: "member") }
+
+    let!(:upcoming_event1) do
+      upcoming_event1 = build(:event, user: organiser1, name: "Dublin Congress", start_date: Date.today + 10, end_date: Date.today + 12, active: true)
+      upcoming_event1.save!(validate: false)
+      upcoming_event1
+    end
+
+    let!(:upcoming_event2) do
+      upcoming_event2 = build(:event, user: organiser2, name: "Cork Open", start_date: Date.today + 15, end_date: Date.today + 17, active: false)
+      upcoming_event2.save!(validate: false)
+      upcoming_event2
+    end
+
+    let!(:past_event1) do
+      past_event1 = build(:event, user: organiser1, name: "Belfast Classic", start_date: Date.today - 12, end_date: Date.today - 10, active: true)
+      past_event1.save!(validate: false)
+      past_event1
+    end
+
+    let!(:past_event2) do
+      past_event2 = build(:event, user: organiser2, name: "Galway Rapid", start_date: Date.today - 17, end_date: Date.today - 15, active: false)
+      past_event2.save!(validate: false)
+      past_event2
+    end
+
+    context "authorization" do
+      it "allows admin to access index" do
+        login admin_user
+        visit admin_events_path
+        expect(page).to_not have_css(failure)
+        expect(page).to have_content("Dublin Congress")
+      end
+
+      it "allows organiser to access index" do
+        login organiser1
+        visit admin_events_path
+        expect(page).to_not have_css(failure)
+        expect(page).to have_content("Dublin Congress")
+      end
+
+      it "denies regular users access" do
+        login regular_user
+        visit admin_events_path
+        expect(page).to have_css(failure, text: unauthorized)
+      end
+
+      it "denies guests access" do
+        visit admin_events_path
+        expect(page).to have_css(failure, text: unauthorized)
+      end
+    end
+
+    context "organiser view" do
+      before do
+        login organiser1
+        visit admin_events_path
+      end
+
+      it "shows only their own upcoming events" do
+        expect(page).to have_content("Dublin Congress")
+        expect(page).not_to have_content("Cork Open")
+      end
+
+      it "shows only their own past events" do
+        expect(page).to have_content("Belfast Classic")
+        expect(page).not_to have_content("Galway Rapid")
+      end
+
+      it "hides created by column" do
+        expect(page).not_to have_content(I18n.t("event.created_by"))
+      end
+
+      it "hides user filter dropdown" do
+        expect(page).not_to have_select(I18n.t("event.creator"))
+      end
+    end
+
+    context "admin view" do
+      before do
+        login admin_user
+        visit admin_events_path
+      end
+
+      it "shows all upcoming events" do
+        expect(page).to have_content("Dublin Congress")
+        expect(page).to have_content("Cork Open")
+      end
+
+      it "shows all past events" do
+        expect(page).to have_content("Belfast Classic")
+        expect(page).to have_content("Galway Rapid")
+      end
+
+      it "shows created by column" do
+        expect(page).to have_content(I18n.t("event.created_by"))
+      end
+
+      it "shows user filter dropdown" do
+        expect(page).to have_select(I18n.t("event.creator"))
+      end
+
+      it "filters by user" do
+        select organiser1.name, from: I18n.t("event.creator")
+        click_button I18n.t("search")
+
+        expect(page).to have_content("Dublin Congress")
+        expect(page).not_to have_content("Cork Open")
+        expect(page).to have_content("Belfast Classic")
+        expect(page).not_to have_content("Galway Rapid")
+      end
+
+      it "shows all users when 'All' is selected" do
+        select organiser1.name, from: I18n.t("event.creator")
+        click_button I18n.t("search")
+        select I18n.t("all"), from: I18n.t("event.creator")
+        click_button I18n.t("search")
+
+        expect(page).to have_content("Dublin Congress")
+        expect(page).to have_content("Cork Open")
+      end
+    end
+
+    context "search" do
+      it "filters by name for organiser" do
+        login organiser1
+        visit admin_events_path
+        fill_in I18n.t("name"), with: "Dublin"
+        click_button I18n.t("search")
+
+        expect(page).to have_content("Dublin Congress")
+        expect(page).not_to have_content("Belfast Classic")
+      end
+
+      it "filters by name for admin" do
+        login admin_user
+        visit admin_events_path
+        fill_in I18n.t("name"), with: "Dublin"
+        click_button I18n.t("search")
+
+        expect(page).to have_content("Dublin Congress")
+        expect(page).not_to have_content("Cork Open")
+      end
+    end
+
+    context "empty state" do
+      it "shows no events message when organiser has no events" do
+        new_organiser = create(:user, roles: "organiser")
+        login new_organiser
+        visit admin_events_path
+
+        expect(page).to have_content(I18n.t("event.upcoming"))
+        expect(page).to have_content(I18n.t("event.past"))
+        expect(page).not_to have_link("Dublin Congress")
+      end
+    end
+
+    context "event display" do
+      before do
+        login organiser1
+        visit admin_events_path
+      end
+
+      it "shows event names as links to edit" do
+        expect(page).to have_link("Dublin Congress", href: edit_admin_event_path(upcoming_event1))
+      end
+
+      it "shows active events with checkmark" do
+        expect(page).to have_content("✔")
+      end
+    end
+  end
+
   context "edit a event thats ended" do
     let(:user) { create(:user, roles: "organiser") }
 
