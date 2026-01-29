@@ -5,4 +5,6 @@
     .row
       .col-md-12.flex-row
         .form-panel
-          %h2= "#{header_text}"
+          .inline-between
+            %h2= "#{header_text}"
+            = yield

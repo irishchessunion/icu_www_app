@@ -71,6 +71,13 @@
   flex-grow: 1;
 }
 
+.inline-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0 15px;
+}
+
 .inline-between {
   display: flex;
   flex-direction: row;
