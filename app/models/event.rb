@@ -31,7 +31,7 @@ class Event < ApplicationRecord
   scope :short, -> { where(short_event: true) }
   scope :is_fide_rated, -> { where(is_fide_rated: true) }
   scope :with_geocodes, -> { where.not(lat: nil).where.not(long: nil) }
-  scope :upcoming, -> { active.where("start_date > ?", Date.today).order(:start_date) }
+  scope :upcoming, -> { where("start_date > ?", Date.today).order(:start_date) }
 
   scope :classical, -> { where("JSON_CONTAINS(time_controls, ?)", '"classical"') }
   scope :rapid, -> { where("JSON_CONTAINS(time_controls, ?)", '"rapid"') }
