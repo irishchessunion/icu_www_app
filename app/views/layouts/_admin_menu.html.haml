@@ -12,6 +12,7 @@
   - links += 1 if fails   = can?(:index, Failure)
   - links += 1 if mevnts  = can?(:index, MailEvent)
   - links += 1 if items   = can?(:index, Item)
+  - links += 1 if events  = can?(:index, Event)
   - links += 1 if trans   = can?(:manage, Translation)
   - links += 1 if pages   = can?(:read, Page)
   - links += 1 if pgns    = can?(:index, Pgn)
@@ -40,6 +41,8 @@
               Failures
               - if nfails > 0
                 %span.label.label-danger= nfails
+        - if events
+          %li{class: active("admin/events")}= link_to "Events", admin_events_path
         - if fees
           %li{class: active("admin/fees")}= link_to "Fees", admin_fees_path
         - if pgns

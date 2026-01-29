@@ -120,6 +120,29 @@ class Event < ApplicationRecord
     paginate(matches, params, path)
   end
 
+  def self.admin_search(params, path, user)
+    matches = includes(:user)
+
+    # organisers see only their own events
+    matches = matches.where(user_id: user.id) unless user.admin?
+
+    # filter by specific user (admin-only)
+    if user.admin? && params[:user_id].present?
+      matches = matches.where(user_id: params[:user_id])
+    end
+
+    # event name
+    if params[:name].present?
+      matches = matches.where("name LIKE ?", "%#{params[:name]}%")
+    end
+
+    # return all upcoming events and paginated past events
+    {
+      upcoming: matches.upcoming,
+      past: paginate(matches.past, params, path)
+    }
+  end
+
   # @return [Array<Item::Entry>] belonging to this event
   def items
     # should be safe since ID is not a user entered value and using the normal syntax throws errors

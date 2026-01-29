@@ -60,6 +60,7 @@ class Ability
     # Useful for tournament organizers
     if user.organiser?
       can :manage, Event, user_id: user.id
+      can :index, Event
 
       # Hash condition ensures that .accessible_by works as intended
       can :manage, Fee::Entry, :event => { :user_id => user.id }

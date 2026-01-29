@@ -4,6 +4,7 @@ en:
       cannot_edit_past_fields: This event has ended. Some fields can no longer be edited.
       include_inactive: Include inactive events
       new_event: New event
+      my_events: My Events
     contact: Contact name
     create_entry_fee: New Entry Fee
     calendar: Calendar
@@ -35,6 +36,10 @@ en:
     streaming_embed: Live Commentary
     url: Event website
     upcoming: Upcoming Events
+    past: Past Events
+    dates: Date(s)
+    created_by: Created By
+    creator: Creator
     user: Organizer
     is_fide_rated: FIDE Rated?
     fide_true: 'Yes'

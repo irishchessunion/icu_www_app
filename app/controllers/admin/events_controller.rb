@@ -2,6 +2,10 @@ class Admin::EventsController < ApplicationController
   before_action :set_event, only: [:edit, :update, :destroy]
   authorize_resource
 
+  def index
+    @events = Event.admin_search(params, admin_events_path, current_user)
+  end
+
   def new
     @event = Event.new(short_event: true)
   end
