@@ -1,0 +1,18 @@
+- content_for :title, @event.name
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
+
+= render "utils/title_panel", header_text: @event.name do
+  %div.inline-flex
+    = link_to t("edit"), edit_admin_event_path(@event), class: "btn btn-primary"
+    = link_to t("delete"), edit_admin_event_path(@event), class: "btn btn-danger"
+
+.container
+  .row
+    .col-md-8.col-sm-12
+      -# Event Info
+      -# Feed
+    .col-md-4.col-sm-12
+      -# User Management
+      -# Fee Management
+      -# Changelog

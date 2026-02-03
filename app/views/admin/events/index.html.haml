@@ -3,7 +3,7 @@
 - @show_main_container = "false"
 
 = render "utils/title_panel", header_text: t("event.admin.my_events") do
-  = render "utils/index_buttons", klass: Event
+  = render "utils/index_buttons", klass: Event, text: t("event.admin.new_event")
 
 .container
   = render "utils/search_panel", form: "admin/events/search_form", col: "md"
@@ -23,7 +23,7 @@
           %tbody
             - @events[:upcoming].each do |event|
               %tr
-                %td= link_to event.name, edit_admin_event_path(event)
+                %td= link_to event.name, admin_event_path(event)
                 %td= event.dates
                 - if current_user.admin?
                   %td= event.user.name
