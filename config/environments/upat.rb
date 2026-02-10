@@ -48,4 +48,14 @@ IcuWwwApp::Application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages. (Causes more trouble than it's worth - MO).
   # config.assets.raise_runtime_errors = true
+
+  # Only set a JS compressor if Uglifier is available
+  begin
+    require "uglifier"
+    config.assets.js_compressor = Uglifier.new(harmony: true)
+  rescue LoadError
+    # If you *want* to hard-fail in production, re-raise instead.
+    config.assets.js_compressor = nil
+  end
+
 end
