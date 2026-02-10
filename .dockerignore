@@ -1,0 +1,56 @@
+# Git
+.git
+.gitignore
+
+# Logs
+log/*
+!log/.keep
+
+# Temp files
+tmp/*
+!tmp/.keep
+
+# Editor directories and files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*
+.docker
+
+# CI
+.github
+.circleci
+.travis.yml
+
+# Test artifacts
+coverage/
+spec/reports/
+
+# Node modules (if any)
+node_modules/
+
+# Bundler
+.bundle
+
+# Environment files (keep examples)
+.env*
+!.env.example
+config/secrets.yml
+config/database.yml
+
+# Storage
+storage/*
+!storage/.keep
+
+# Public uploads
+public/system/
+public/uploads/

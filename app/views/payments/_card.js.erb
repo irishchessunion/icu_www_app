@@ -6,7 +6,13 @@ $(function() {
 
   const elements = stripe.elements(options);
 
-  const paymentElement = elements.create('payment')
+  const paymentElement = elements.create('payment', {
+    fields: {
+      billingDetails: {
+        address: { country: 'never', postalCode: 'never' }
+      }
+    }
+  })
   paymentElement.mount('#payment-element')
 
   $('#stripe_form').on('submit', function(e) {
@@ -29,7 +35,12 @@ $(function() {
 
     stripe.confirmPayment({
       elements,
-      redirect: 'if_required'
+      redirect: 'if_required',
+      confirmParams: {
+        payment_method_data: {
+          billing_details: { address: { country: 'IE', postal_code: '' } }
+        }
+      }
     }).then(function(result) {
       if (result.error) {
         // Inform the customer that there was an error.
