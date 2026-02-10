@@ -182,6 +182,9 @@ GEM
       terrapin (~> 0.6.0)
     launchy (2.5.2)
       addressable (~> 2.8)
+    libv8-node (24.12.0.1)
+    libv8-node (24.12.0.1-arm64-darwin)
+    libv8-node (24.12.0.1-x86_64-linux)
     logger (1.7.0)
     loofah (2.19.1)
       crass (~> 1.0.2)
@@ -197,6 +200,8 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
+    mini_racer (0.19.2)
+      libv8-node (~> 24.12.0.1)
     minitest (5.17.0)
     mutex_m (0.3.0)
     mysql2 (0.5.4)
@@ -376,6 +381,7 @@ DEPENDENCIES
   launchy
   mail (= 2.7.1)
   mailgun-ruby
+  mini_racer
   mysql2
   nokogiri (>= 1.18.9)
   puma (>= 6.4.3)

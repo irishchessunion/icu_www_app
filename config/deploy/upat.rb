@@ -11,7 +11,7 @@ set :stage, :upat
 set :deploy_to, "/var/apps/www"
 set :rails_env, 'upat'
 
-server "icu_upat", user: "webmaster", roles: %w{app db web}
+server "icu_upat", user: "root", roles: %w{app db web}
 
 # role-based syntax
 # ==================

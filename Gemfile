@@ -12,6 +12,7 @@ gem "mysql2"
 gem "haml-rails"
 gem "sass-rails"
 gem "uglifier", ">= 1.3.0"
+gem "mini_racer", platforms: :ruby
 gem "jquery-rails"
 gem "cancancan" # cancan is no longer maintained, newer version is cancancan
 gem "redis"
