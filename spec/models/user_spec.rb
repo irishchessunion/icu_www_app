@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'byebug'
 
 describe User do
   context "model validation" do
