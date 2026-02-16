@@ -298,6 +298,13 @@ section .form-panel {
   gap: 21px 0;
 }
 
+section.title-only .form-panel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px 0;
+}
+
 
 section .form-panel .form-section {
   display: flex;

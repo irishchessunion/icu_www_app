@@ -2,7 +2,7 @@
 - content_for :header_bg_color, "var(--gray-lighter)"
 - @show_main_container = "false"
 
-= render "utils/title_panel", header_text: @event.name do
+= render "utils/title_panel", header_text: @event.name, back_button: true do
   %div.inline-flex
     - if can?(:edit, @event)
       = link_to t("edit"), edit_admin_event_path(@event), class: "btn btn-primary"
