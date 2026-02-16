@@ -176,6 +176,47 @@ describe Event do
     end
   end
 
+  context "multi-user access helpers" do
+    let(:creator) { create(:user, roles: "organiser") }
+    let(:full_user) { create(:user, roles: "organiser") }
+    let(:limited_user) { create(:user, roles: "organiser") }
+    let(:event) { create(:event, user: creator) }
+
+    before do
+      create(:event_user, event: event, user: full_user, role: "full_access")
+      create(:event_user, event: event, user: limited_user, role: "limited_access")
+    end
+
+    it "creator returns the event's creator user" do
+      expect(event.creator).to eq(creator)
+    end
+
+    it "creator? returns true for the creator" do
+      expect(event.creator?(creator)).to be true
+      expect(event.creator?(full_user)).to be false
+    end
+
+    it "has_full_access? returns true for creator and full_access users" do
+      expect(event.has_full_access?(creator)).to be true
+      expect(event.has_full_access?(full_user)).to be true
+      expect(event.has_full_access?(limited_user)).to be false
+    end
+
+    it "has_limited_access? returns true only for limited_access users" do
+      expect(event.has_limited_access?(creator)).to be false
+      expect(event.has_limited_access?(full_user)).to be false
+      expect(event.has_limited_access?(limited_user)).to be true
+    end
+
+    it "has_any_access? returns true for creator, full_access, and limited_access users" do
+      other_user = create(:user)
+      expect(event.has_any_access?(creator)).to be true
+      expect(event.has_any_access?(full_user)).to be true
+      expect(event.has_any_access?(limited_user)).to be true
+      expect(event.has_any_access?(other_user)).to be false
+    end
+  end
+
   context "map_marker_key" do
     it "returns 'other' when time_controls is nil" do
       event = Event.new(time_controls: nil)
