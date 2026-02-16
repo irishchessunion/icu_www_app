@@ -11,7 +11,7 @@
   .row
     .col-md-12
       %h3= t("event.upcoming")
-      %table{class: "table table-bordered table-striped"}
+      %table.table.table-bordered.table-striped
         %thead
           %tr
             %th= t("name")
@@ -23,7 +23,15 @@
           %tbody
             - @events[:upcoming].each do |event|
               %tr
-                %td= link_to event.name, admin_event_path(event)
+                %td
+                  = link_to event.name, admin_event_path(event)
+                  - unless current_user.admin?
+                    - if event.creator?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.creator")
+                    - elsif event.has_limited_access?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-warning= t("event.admin.limited_access")
+                    - else
+                      %span.label.label-rounded.label-margin-left.panel-pastel-success= t("event.admin.full_access")
                 %td= event.dates
                 - if current_user.admin?
                   %td= event.user.name
@@ -32,7 +40,7 @@
   .row
     .col-md-12
       %h3= t("event.past")
-      %table{class: "table table-bordered table-striped"}
+      %table.table.table-bordered.table-striped
         %thead
           %tr
             %th= t("name")
@@ -44,7 +52,16 @@
           %tbody
             - @events[:past].matches.each do |event|
               %tr
-                %td= link_to event.name, edit_admin_event_path(event)
+                %td
+                  = link_to event.name, edit_admin_event_path(event)
+                  - unless current_user.admin?
+                    - if event.creator?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.creator")
+                    - elsif event.has_limited_access?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-warning= t("event.admin.limited_access")
+                    - else
+                      %span.label.label-rounded.label-margin-left.panel-pastel-success= t("event.admin.full_access")
+
                 %td= event.dates
                 - if current_user.admin?
                   %td= event.user.name
