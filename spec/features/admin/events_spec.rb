@@ -414,8 +414,8 @@ describe Event do
         visit admin_events_path
       end
 
-      it "shows event names as links to edit" do
-        expect(page).to have_link("Dublin Congress", href: edit_admin_event_path(upcoming_event1))
+      it "shows event names as links to manage" do
+        expect(page).to have_link("Dublin Congress", href: admin_event_path(upcoming_event1))
       end
 
       it "shows active events with checkmark" do
