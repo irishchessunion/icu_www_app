@@ -44,8 +44,9 @@
   --brand-warning-darker: color-mix(in oklab, var(--brand-warning), black 60%);
   --brand-warning-dark: color-mix(in oklab, var(--brand-warning), black 30%);
   --brand-warning-light: color-mix(in oklab, var(--brand-warning), white 30%);
-  --brand-warning-lighter: color-mix(in oklab, var(--brand-warning), white 80%);
-
+  --brand-warning-lighter: color-mix(in oklab,
+    var(--brand-warning),
+    white 80%);
   --brand-info-darker: color-mix(in oklab, var(--brand-info), black 60%);
   --brand-info-dark: color-mix(in oklab, var(--brand-info), black 30%);
   --brand-info-light: color-mix(in oklab, var(--brand-info), white 30%);
@@ -344,6 +345,20 @@ section aside.map {
     margin-bottom: 0;
 }
 
+.panel.with-margin{
+    margin-bottom: 21px;
+}
+
+.panel ul.panel-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.panel ul.panel-list.with-divider > li:not(:last-child) {
+  margin: 0 0 10px 0;
+}
+
 section.latest-news > header {
   display: flex;
   justify-content: space-between;
@@ -537,6 +552,22 @@ section.latest-reports .content-grid .thumbnail-image {
   }
 }
 
+
+/* LABELS */
+.label-rounded {
+  border-radius: calc(infinity * 1px);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  padding: 0.375em 0.75em;
+}
+
+.label-margin-left {
+  margin: 0 0 0 4px;
+}
+
+.label-margin-right {
+  margin: 0 4px 0 0;
+}
 
 /* INPUT */
 
@@ -739,6 +770,17 @@ input:checked+.slider:before {
 
 .btn.btn-pastel-info:hover, .btn.btn-pastel-info:focus {
   background-color: var(--brand-info-light);
+}
+
+.btn.btn-pastel-success,
+.panel-pastel-success {
+  color: var(--brand-success-dark);
+  border-color: var(--brand-success-light);
+  background-color: var(--brand-success-lighter);
+}
+
+.btn.btn-pastel-success:hover, .btn.btn-pastel-success:focus {
+  background-color: var(--brand-success-light);
 }
 
 .btn.btn-pastel-warning,

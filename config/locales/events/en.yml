@@ -1,13 +1,25 @@
 en:
   event:
     admin:
+      access_level: Access Level
+      add: Add
+      add_user: Add User
+      changelog: Changelog
       cannot_edit_past_fields: This event has ended. Some fields can no longer be edited.
       cannot_remove_creator: Cannot remove event creator
       cannot_remove_self: Cannot remove yourself
+      confirm_delete: Are you sure you want to delete this event?
+      confirm_remove: Are you sure you want to remove this user?
+      creator: Creator
+      fees: Fees
+      full_access: Full Access
       include_inactive: Include inactive events
-      new_event: New event
+      limited_access: Limited Access
       my_events: My Events
+      new_event: New event
       only_creator_or_admin: Only the event creator or admins can manage users
+      sections: Sections
+      select_user: Select User
       user: User
       users: Users
       user_must_be_organiser: User must have organiser role
