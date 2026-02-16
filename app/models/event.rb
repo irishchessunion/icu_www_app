@@ -44,6 +44,8 @@ class Event < ApplicationRecord
   has_attached_file :flyer, keep_old_files: true
 
   belongs_to :user
+  has_many :event_users, dependent: :destroy
+  has_many :event_organisers, through: :event_users, source: :user
   has_many :fee_entries, class_name: 'Fee::Entry'
   attribute :time_controls, :json, default: -> { ["classical"] }
 
@@ -123,8 +125,11 @@ class Event < ApplicationRecord
   def self.admin_search(params, path, user)
     matches = includes(:user)
 
-    # organisers see only their own events
-    matches = matches.where(user_id: user.id) unless user.admin?
+    # organisers see only their own events & events they have been added to
+    unless user.admin?
+      matches = matches.includes(:event_users)
+      matches = matches.where("events.user_id = ? OR EXISTS (SELECT 1 FROM event_users WHERE event_users.event_id = events.id AND event_users.user_id = ?)", user.id, user.id)
+    end
 
     # filter by specific user (admin-only)
     if user.admin? && params[:user_id].present?
@@ -142,6 +147,31 @@ class Event < ApplicationRecord
       past: paginate(matches.past, params, path)
     }
   end
+
+
+  # EventUser helpers
+  def creator
+    user
+  end
+
+  def creator?(user)
+    self.user_id == user.id
+  end
+
+  def has_full_access?(user)
+    return true if creator?(user)
+    event_users.exists?(user_id: user.id, role: "full_access")
+  end
+
+  def has_limited_access?(user)
+    event_users.exists?(user_id: user.id, role: "limited_access")
+  end
+
+  def has_any_access?(user)
+    return true if creator?(user)
+    event_users.exists?(user_id: user.id)
+  end
+
 
   # @return [Array<Item::Entry>] belonging to this event
   def items

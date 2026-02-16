@@ -2,9 +2,17 @@ en:
   event:
     admin:
       cannot_edit_past_fields: This event has ended. Some fields can no longer be edited.
+      cannot_remove_creator: Cannot remove event creator
+      cannot_remove_self: Cannot remove yourself
       include_inactive: Include inactive events
       new_event: New event
       my_events: My Events
+      only_creator_or_admin: Only the event creator or admins can manage users
+      user: User
+      users: Users
+      user_must_be_organiser: User must have organiser role
+      user_added: User added successfully
+      user_removed: User removed successfully
     contact: Contact name
     create_entry_fee: New Entry Fee
     calendar: Calendar
