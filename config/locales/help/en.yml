@@ -5,6 +5,8 @@ en:
     accounts: Login Accounts for the ICU Websites
     articles: Create and Edit News Items and Articles
     downloads: Upload Files for Later Download
+    events: Create and Edit Events
+    event_users: Manage Event Users
     exceptions: Monitor and Investigate Exceptions
     fees: Configure a New Simple Fee
     header: Hide or Show the Banner Header
