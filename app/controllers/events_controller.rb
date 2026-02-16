@@ -2,6 +2,7 @@ require 'uri'
 require 'cgi'
 
 class EventsController < ApplicationController
+  before_action :redirect_to_www
   def index
     @events = Event.search(params, events_path)
     @map_events = Event.with_geocodes.search(params, events_path)
@@ -78,6 +79,13 @@ class EventsController < ApplicationController
   end
 
   private
+
+  def redirect_to_www
+    return unless Rails.env.production?
+    return unless request.host == "icu.ie"
+
+    redirect_to "https://www.icu.ie#{request.fullpath}", status: :moved_permanently
+  end
 
   def download_filename(event, section, extension)
     if section.present?
