@@ -1007,7 +1007,11 @@ ol.nested-numbering > li:before {
     border-spacing: 3px;
 }
 
-.fees-table a.btn {
+td.enter {
+  padding: 0 8px 0 0;
+}
+
+.fees-table td.enter a.btn {
     min-width: 80px;
 }
 
