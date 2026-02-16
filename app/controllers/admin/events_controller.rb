@@ -7,6 +7,7 @@ class Admin::EventsController < ApplicationController
   end
 
   def show
+    @entries = @event.journal_search if can?(:create, Event)
   end
 
   def new

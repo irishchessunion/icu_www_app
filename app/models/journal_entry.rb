@@ -16,6 +16,10 @@ class JournalEntry < ApplicationRecord
   validates :ip, presence: true, unless: Proc.new { |e| e.source == "www1" }
   validates :source, inclusion: { in: Global::SOURCES }
 
+  def by_name
+    by.sub(/\s*\(.+\)\z/, "")
+  end
+
   def journalable_type_id
     "#{journalable_type} #{journalable_id}"
   end
