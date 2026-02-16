@@ -67,4 +67,34 @@ module EventsHelper
 
     "#{descr} #{extras.join(', ')}"
   end
+
+  # Format fee display with optional strikethrough discount styling
+  def format_fee_with_discount(fee)
+    if fee.discounted?
+      content_tag(:span) do
+        concat content_tag(:s, euros(fee.amount))
+        concat " "
+        concat euros(fee.current_amount)
+      end
+    else
+      euros(fee.current_amount)
+    end
+  end
+
+  # Calculate total amount paid fees for event
+  def event_total_paid_fees(event)
+    event.fee_entries.sum do |fee|
+      fee.items.paid.sum(:cost)
+    end
+  end
+
+  # Count of total paid entries across all fees
+  def event_count_paid_fees(event)
+    event.fee_entries.sum { |fee| fee.items.paid.count }
+  end
+
+  # Count paid entries for a specific fee
+  def fee_paid_entries_count(fee)
+    fee.items.paid.count
+  end
 end

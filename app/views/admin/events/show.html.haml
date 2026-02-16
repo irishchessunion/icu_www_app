@@ -12,8 +12,9 @@
 .container
   .row
     .col-md-8.col-sm-12
-      -# Event Info
-      -# Feed
+      - if @event.has_full_access?(current_user) || current_user.admin?
+        = render "admin/events/entry_fees_panel"
+
     %aside.col-md-4.col-sm-12
       - if @event.has_any_access?(current_user) || current_user.admin?
         = render "admin/events/users_panel"

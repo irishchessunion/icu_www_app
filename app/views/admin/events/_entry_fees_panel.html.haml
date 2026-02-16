@@ -1,0 +1,26 @@
+%section.panel.panel-default.stats-panel
+  .panel-body
+    .col-md-4.stats-col
+      %h4 Entry Fees
+      %div.stats-numeric
+        %h1= euros(event_total_paid_fees(@event))
+        %span= "from #{event_count_paid_fees(@event)} entries"
+      - if can?(:create, Fee)
+        %hr
+      - if can?(:create, Fee)
+        =link_to new_admin_fee_path(type: 'Fee::Entry', event_id: @event.id), class: "btn btn-pastel-success inline-between inline-glyph" do
+          Add New Fee
+          %span.glyphicon-plus
+    .col-md-8.list-col
+      %ul.panel-list.with-divider
+        - @event.fee_entries.each do |fee|
+          %li.inline-between
+            %span
+              %span.text-muted
+                = format_fee_with_discount(fee)
+              = " #{fee.name}"
+            - if can?(:edit, fee)
+              .btn-group
+                - if fee_paid_entries_count(fee) > 0
+                  =link_to "View #{fee_paid_entries_count(fee)} entries", admin_items_path(fee_id: fee.id), class: "btn btn-pastel-info btn-xs"
+                =link_to "Edit", edit_admin_fee_path(fee), class: "btn btn-default btn-xs"
