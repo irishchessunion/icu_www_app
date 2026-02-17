@@ -16,6 +16,8 @@ class JournalEntry < ApplicationRecord
   validates :ip, presence: true, unless: Proc.new { |e| e.source == "www1" }
   validates :source, inclusion: { in: Global::SOURCES }
 
+  # Extracts only the user's full name from 'by' [first last (email / id)] column
+  # "John Smith (admin@icu.ie/63)" => "John Smith"
   def by_name
     by.sub(/\s*\(.+\)\z/, "")
   end
