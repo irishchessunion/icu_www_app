@@ -37,11 +37,11 @@ describe "Pay", js: true do
   let(:shop)                  { I18n.t("shop.shop") }
   let(:total)                 { I18n.t("shop.cart.total") }
 
-  let(:cvc_id)    { "Field-cvcInput" }
+  let(:cvc_id)    { "payment-cvcInput" }
   let(:email_id)  { "confirmation_email" }
-  let(:expiry_id) { "Field-expiryInput" }
+  let(:expiry_id) { "payment-expiryInput" }
   let(:name_id)   { "name" }
-  let(:number_id) { "Field-numberInput" }
+  let(:number_id) { "payment-numberInput" }
 
   let(:cvc)     { "123" }
   let(:expiry)  { "01 / #{((Date.today.year + 2).to_s)[2..4]}" }
@@ -388,6 +388,7 @@ describe "Pay", js: true do
       select newbie_fed, from: fed
       fill_in email, with: newbie.email
       click_button save
+      wait_a_second(0.2)
       expect(page).to_not have_css(failure)
       click_button add_to_cart
       click_link checkout
