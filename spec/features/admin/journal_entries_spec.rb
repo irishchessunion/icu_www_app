@@ -97,7 +97,7 @@ describe JournalEntry do
     visit admin_journal_entry_path(@translation_change)
     expect(page).to have_css(failure, text: unauthorized)
 
-    visit admin_user_path(@user_change)
+    visit admin_journal_entry_path(@user_change)
     expect(page).to have_css(failure, text: unauthorized)
   end
 
@@ -121,7 +121,7 @@ describe JournalEntry do
     visit admin_journal_entry_path(@translation_change)
     expect(page).to_not have_css(failure)
 
-    visit admin_user_path(@user_change)
+    visit admin_journal_entry_path(@user_change)
     expect(page).to have_css(failure, text: unauthorized)
   end
 
@@ -144,7 +144,7 @@ describe JournalEntry do
     visit admin_journal_entry_path(@translation_change)
     expect(page).to have_css(failure, text: unauthorized)
 
-    visit admin_user_path(@user_change)
+    visit admin_journal_entry_path(@user_change)
     expect(page).to have_css(failure, text: unauthorized)
   end
 
