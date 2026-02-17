@@ -165,8 +165,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_02_03_163850) do
   end
 
   create_table "event_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "event_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
     t.string "role", default: "full_access", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
