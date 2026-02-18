@@ -2,6 +2,12 @@ source "https://rubygems.org"
 
 gem "rake"
 gem "rails", "7.0.10"
+
+# Ruby 3.2 includes `base64` as a default gem (0.1.1). Under Passenger it may be
+# activated before Bundler loads, causing "already activated base64 0.1.1" errors
+# if the lockfile wants a newer base64.
+gem "base64", "0.1.1"
+
 gem "puma", ">= 6.4.3" # web server
 # gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '3543363026121ee28d98dfce4cb6366980c055ee' # Lastest version of mimemagic has copyright issues and breaks
 gem "sprockets" # Latest version of sprockets 2.*. 3.* causes a failure at startup
