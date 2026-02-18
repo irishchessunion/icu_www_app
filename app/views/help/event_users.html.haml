@@ -1,0 +1,123 @@
+= render "titles", text: "help.event_users"
+
+%p
+  For large events it may be necessary to have multiple organisers and arbiters.
+  With Event Users, these individuals can all participate in managing the event on the ICU website.
+
+%p
+  An event's creator can track all Event User activity using the
+  %em Changelog
+  panel located on each event page.
+
+%h3 Add Event User(s)
+
+%p
+  Note:
+%ul
+  %li
+    Only users with the
+    %em organiser
+    system-level role (intended for Tournament Organisers & Arbiters) may be added to events as users.
+  %li
+    Only the creator of an event can add and remove users.
+
+%p
+  To create a new Event User:
+
+%ul
+  %li
+    Navigate to your event from the
+    =link_to "My Events", admin_events_path
+    page
+  %li
+    In the
+    %em Users
+    panel on the right side of the page, click the
+    %em Add User +
+    button
+  %li A modal will appear. Fill in the details of the user to be added:
+  %ul
+    %li first select the user from the list,
+    %li then choose the access level using the chart below as a guide
+  %li
+    Click
+    %em Add
+
+%p
+  The new event user will now be able to see a link to your event listed on their
+  =link_to "My Events", admin_events_path
+  page
+
+
+%h3 Event User Access
+
+%table.table.table-bordered.table-striped
+  %thead
+    %tr
+      %th= t("user.role.role")
+      %th View Event
+      %th Edit Event
+      %th Delete Event
+      %th Manage Fees
+      %th Manage Items
+      %th Manage Users
+      %th View Entries
+      %th Download Files
+  %tbody
+    %tr
+      %td
+        %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.creator")
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+    %tr
+      %td
+        %span.label.label-rounded.label-margin-left.panel-pastel-success= t("event.admin.full_access")
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-danger ✘
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-danger ✘
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+    %tr
+      %td
+        %span.label.label-rounded.label-margin-left.panel-pastel-warning= t("event.admin.limited_access")
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-danger ✘
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-danger ✘
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-danger ✘
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-danger ✘
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-danger ✘
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔
+      %td.text-center
+        %span.label.label-rounded.panel-pastel-success ✔

@@ -1,0 +1,17 @@
+.panel.panel-default.with-margin.event-changelog
+  .panel-heading
+    = t("event.admin.changelog")
+  .panel-body
+    - if entries.matches.any? && (@event.creator?(current_user) || current_user.admin?)
+      %ul.panel-list.with-divider
+        - entries.matches.each do |entry|
+          %li
+            %div.inline-between
+              %small= entry.by_name
+              %small.text-muted= "#{time_ago_in_words(entry.created_at, include_seconds: true)} ago"
+            %div.inline-between
+              %span
+                = "#{entry.action}d"
+                %em= "#{entry.column.try(:truncate, 12)}"
+                = "to:"
+                %span.text-info= "#{entry.to.try(:truncate, 30)}"

@@ -1,8 +1,24 @@
 - defined?(header_text) || header_text = "undefined"
+- defined?(back_button) || back_button = nil
+- defined?(back_text) || back_text = nil
+- defined?(subtitle) || subtitle = nil
 
 %section{class: "full-width title-only"}
   .container
     .row
       .col-md-12.flex-row
         .form-panel
-          %h2= "#{header_text}"
+          - if back_button
+            %div
+              %a{href: url_for(:back), class: "inline-glyph"}
+                %span.glyphicon.glyphicon-chevron-left.glyphicon-xs
+                - if back_text
+                  = "Back to #{back_text}"
+                - else
+                  = "Back"
+          .inline-between
+            %h2= "#{header_text}"
+            = yield
+          - if subtitle
+            .text-muted
+              = subtitle

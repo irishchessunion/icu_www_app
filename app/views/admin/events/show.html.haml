@@ -1,0 +1,46 @@
+- content_for :title, @event.name
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
+
+= render "utils/title_panel", header_text: @event.name, back_button: true do
+  %div.inline-flex
+    - if can?(:edit, @event)
+      = link_to t("edit"), edit_admin_event_path(@event), class: "btn btn-primary"
+    - if can?(:destroy, @event)
+      = link_to t("delete"), admin_event_path(@event), data: { confirm: t("event.admin.confirm_delete") }, method: :delete, class: "btn btn-danger"
+
+.container
+  .row
+    .col-md-8.col-sm-12
+      - if @event.has_full_access?(current_user) || current_user.admin?
+        = render "admin/events/entry_fees_panel"
+
+    %aside.col-md-4.col-sm-12
+      - if @event.has_any_access?(current_user) || current_user.admin?
+        = render "admin/events/users_panel"
+
+      .panel.panel-default.with-margin
+        .panel-heading
+          = t("event.admin.sections")
+        .panel-body
+          %ul.panel-list.with-divider
+            - @event.section_names.each do |section|
+              %li.inline-between
+                %span
+                  = section.capitalize
+                  %span.label.label-rounded.label-default.label-left-margin
+                    = "#{@event.items.paid.where(section: section).size}"
+                .btn-group
+                  %button{type: "button", class: "btn btn-pastel-info btn-sm dropdown-toggle", "data-toggle" => "dropdown"}
+                    Downloads
+                    %span.caret
+                  %ul{role: "menu", class: "dropdown-menu"}
+                    %li= link_to "SwissManager (xlxs)", excel_list_event_path(@event.id, section: section)
+                    %li= link_to "SwissPerfect (csv)", csv_list_event_path(@event.id, section: section)
+                    %li= link_to "FIDE pre-2013", swiss_manager_event_path(@event.id, section: section)
+
+      - if @entries.present?
+        = render "admin/events/changelog", entries: @entries
+
+- if @event.creator?(current_user) || current_user.admin?
+  = render "admin/events/add_user_modal"

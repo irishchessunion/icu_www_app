@@ -44,8 +44,9 @@
   --brand-warning-darker: color-mix(in oklab, var(--brand-warning), black 60%);
   --brand-warning-dark: color-mix(in oklab, var(--brand-warning), black 30%);
   --brand-warning-light: color-mix(in oklab, var(--brand-warning), white 30%);
-  --brand-warning-lighter: color-mix(in oklab, var(--brand-warning), white 80%);
-
+  --brand-warning-lighter: color-mix(in oklab,
+    var(--brand-warning),
+    white 80%);
   --brand-info-darker: color-mix(in oklab, var(--brand-info), black 60%);
   --brand-info-dark: color-mix(in oklab, var(--brand-info), black 30%);
   --brand-info-light: color-mix(in oklab, var(--brand-info), white 30%);
@@ -69,6 +70,13 @@
 
 .flex-grow {
   flex-grow: 1;
+}
+
+.inline-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0 15px;
 }
 
 .inline-between {
@@ -290,6 +298,13 @@ section .form-panel {
   gap: 21px 0;
 }
 
+section.title-only .form-panel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px 0;
+}
+
 
 section .form-panel .form-section {
   display: flex;
@@ -337,6 +352,20 @@ section aside.map {
     margin-bottom: 0;
 }
 
+.panel.with-margin{
+    margin-bottom: 21px;
+}
+
+.panel ul.panel-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.panel ul.panel-list.with-divider > li:not(:last-child) {
+  margin: 0 0 10px 0;
+}
+
 section.latest-news > header {
   display: flex;
   justify-content: space-between;
@@ -348,6 +377,52 @@ section.latest-news h3 {
   color: var(--gray-base);
   font-weight: 700;
   margin: 0;
+}
+
+
+/* Admin */
+
+section.stats-panel {
+  overflow: hidden;
+}
+
+section.stats-panel .panel-body {
+  display: flex;
+  padding: 0
+}
+
+section.stats-panel .panel-body :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0
+}
+
+section.stats-panel .stats-col {
+  display: flex;
+  flex-direction: column;
+  gap: calc(1em / 1.5);
+  background: var(--brand-success-dark);
+  color: var(--body-bg);
+  padding: 1.5em
+}
+
+section.stats-panel .stats-col > hr {
+  margin: 0.5em 0;
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background-color: var(--brand-success-light);
+}
+
+section.stats-panel .stats-col .stats-numeric {
+  /* width: fit-content; */
+  text-align: right;
+}
+
+section.stats-panel .stats-col .stats-numeric span {
+  color: var(--brand-success-lighter);
+}
+
+section.stats-panel .list-col {
+  padding: 1.5em
 }
 
 /* Homepage Links */
@@ -530,6 +605,22 @@ section.latest-reports .content-grid .thumbnail-image {
   }
 }
 
+
+/* LABELS */
+.label-rounded {
+  border-radius: calc(infinity * 1px);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  padding: 0.375em 0.75em;
+}
+
+.label-margin-left {
+  margin: 0 0 0 4px;
+}
+
+.label-margin-right {
+  margin: 0 4px 0 0;
+}
 
 /* INPUT */
 
@@ -732,6 +823,17 @@ input:checked+.slider:before {
 
 .btn.btn-pastel-info:hover, .btn.btn-pastel-info:focus {
   background-color: var(--brand-info-light);
+}
+
+.btn.btn-pastel-success,
+.panel-pastel-success {
+  color: var(--brand-success-dark);
+  border-color: var(--brand-success-light);
+  background-color: var(--brand-success-lighter);
+}
+
+.btn.btn-pastel-success:hover, .btn.btn-pastel-success:focus {
+  background-color: var(--brand-success-light);
 }
 
 .btn.btn-pastel-warning,
@@ -958,7 +1060,11 @@ ol.nested-numbering > li:before {
     border-spacing: 3px;
 }
 
-.fees-table a.btn {
+td.enter {
+  padding: 0 8px 0 0;
+}
+
+.fees-table td.enter a.btn {
     min-width: 80px;
 }
 

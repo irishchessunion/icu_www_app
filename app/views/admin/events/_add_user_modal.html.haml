@@ -1,0 +1,41 @@
+#add_user_modal.modal.fade{tabindex: "-1", role: "dialog", "aria-labelledby" => "addUserLabel", "aria-hidden" => "true"}
+  .modal-dialog
+    .modal-content
+      = form_for [:admin, @event, EventUser.new], html: { class: "form-horizontal", role: "form" } do |f|
+        .modal-header
+          %button{type: "button", class: "close", "data-dismiss" => "modal", "aria-hidden" => "true"} &times;
+          %h4.modal-title#addUserLabel= t("event.admin.add_user")
+
+        .modal-body
+          .form-group
+            = f.label :user_id, t("event.admin.user"), class: "col-sm-3 control-label"
+            .col-sm-7
+              - available_users = User.organisers.by_name.reject { |u| u.id == @event.user_id || @event.event_users.exists?(user_id: u.id) }
+              = f.select :user_id, options_from_collection_for_select(available_users, :id, :name), { include_blank: t("event.admin.select_user") }, class: "form-control"
+
+          .form-group
+            = f.label :role, t("event.admin.access_level"), class: "col-sm-3 control-label"
+            .col-sm-7
+              = f.select :role, options_for_select([[t("event.admin.full_access"), "full_access"], [t("event.admin.limited_access"), "limited_access"]]), {}, class: "form-control"
+          .form-group
+            = f.label :role, "Access Help", class: "col-sm-3 control-label text-muted"
+            .col-md-7
+              .panel.panel-default
+                .panel-body
+                  %ul.panel-list.with-divider
+                    %li
+                      %span.label.label-rounded.panel-pastel-info
+                        Creator
+                      %div Full permissions
+                    %li
+                      %span.label.label-rounded.panel-pastel-success
+                        Full Access
+                      %div Full permissions, cannot delete the event
+                    %li
+                      %span.label.label-rounded.panel-pastel-warning
+                        Limited Access
+                      %div Can only view entries and download entry files
+
+        .modal-footer
+          %button{type: "button", class: "btn btn-default", "data-dismiss" => "modal"}= t("cancel")
+          = f.submit t("event.admin.add"), class: "btn btn-primary"
