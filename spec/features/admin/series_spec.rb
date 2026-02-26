@@ -276,9 +276,9 @@ describe Series do
       fill_in article_title, with: episodes[2].article.title + force_submit
       click_link episodes[2].article.title
 
-      wait_a_second(0.5)
+      expect(page).to have_css("#article_title_4", text: episodes[2].article.title)
 
-      find(number(1, 3)).select(1)
+      find(number(1, 3)).select("1")
       click_button save
 
       series.reload
