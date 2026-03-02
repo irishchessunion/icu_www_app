@@ -23,6 +23,8 @@ class Ability
         event.event_users.exists?(user_id: user.id, role: "limited_access")
       end
 
+      can [:read, :show], Event if user.treasurer?
+
       # Can view the admin events index
       can :index, Event
 
@@ -111,8 +113,9 @@ class Ability
     end
 
     if user.treasurer?
+      grant_full_event_permissions(user)
       can :create, CashPayment
-      can :index, [Item, PaymentError, Refund]
+      can :index, [Item, Item::Entry, PaymentError, Refund]
       can :manage, [Cart, Fee, Sponsor, UserInput]
     end
 

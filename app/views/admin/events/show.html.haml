@@ -12,7 +12,7 @@
 .container
   .row
     .col-md-8.col-sm-12
-      - if @event.has_full_access?(current_user) || current_user.admin?
+      - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
         = render "admin/events/entry_fees_panel"
 
     %aside.col-md-4.col-sm-12
