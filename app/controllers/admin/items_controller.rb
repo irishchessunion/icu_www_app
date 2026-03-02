@@ -4,7 +4,7 @@ class Admin::ItemsController < ApplicationController
 
   def index
     authorize! :index, Item
-    @params = params.permit(:description, :type, :status, :payment_method, :player_id, :first_name, :last_name, :from_date, :to_date, :format, :commit)
+    @params = params.permit(:description, :type, :status, :payment_method, :player_id, :first_name, :last_name, :from_date, :to_date, :format, :commit, :fee_id)
     params[:format] = 'csv' if generating_csv?
 
     # A hash condition is used in ability.rb due to accessible_by not working with the nested joins
