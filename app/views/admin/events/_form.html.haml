@@ -19,8 +19,8 @@
         = render "utils/form_header", object: @event, atr: :name
         - locals = { form: f, object: @event, col: "md", pad: 3, mark: "required" }
         = render "utils/text_field_for", locals.merge(param: :name, text: t("event.name"), width: 5, disabled: has_ended)
-        = render "utils/text_field_for", locals.merge(param: :start_date,text: t("event.start"), disabled: has_started, width: 3, placeholder: t("date_format"))
-        = render "utils/text_field_for", locals.merge(param: :end_date, text: t("event.end"), disabled: has_ended, width: 3, placeholder: t("date_format"))
+        = render "utils/text_field_for", locals.merge(param: :start_date, type: "date", text: t("event.start"), disabled: has_started, width: 3, placeholder: t("date_format"))
+        = render "utils/text_field_for", locals.merge(param: :end_date, type: "date", text: t("event.end"), disabled: has_ended, width: 3, placeholder: t("date_format"))
         = render "utils/text_field_for", locals.merge(param: :location, text: t("event.location"), width: 6, disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :lat, text: t("latitude"), width: 3, mark: "none", disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :long, text: t("longitude"), width: 3, mark: "none", disabled: has_ended)
