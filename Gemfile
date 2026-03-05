@@ -61,7 +61,7 @@ group :test do
   gem 'capybara-lockstep' # Used to make capybara tests more robust.
   gem "selenium-webdriver"
 #   gem "chromedriver-helper" # (deprecated in favour of webdrivers)
-  gem "webdrivers"
+  gem "webdrivers", require: false
 #   gem "factory_girl_rails", require: false # name changed to factory_bot_rails
   gem "factory_bot_rails"
   gem "launchy"

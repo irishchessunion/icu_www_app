@@ -20,19 +20,11 @@ class Episode < ApplicationRecord
     if number.blank? || number <= 0 || number > max
       self.number = max + 1
     elsif number <= max
-      series.episodes.each do |episode|
-        if episode.number >= number
-          episode.update_column(:number, episode.number + 1)
-        end
-      end
+      series.episodes.where("number >= ?", number).update_all("number = number + 1")
     end
   end
 
   def squash_old_numbers
-    series.episodes.each do |episode|
-      if episode.number > number
-        episode.update_column(:number, episode.number - 1)
-      end
-    end
+    series.episodes.where("number > ?", number).update_all("number = number - 1")
   end
 end
