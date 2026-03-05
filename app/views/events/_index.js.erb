@@ -2,7 +2,7 @@ function initialize() {
   var mapOptions = {
     center: new google.maps.LatLng(<%= @center[0] %>, <%= @center[1] %>),
     zoom: <%= @zoom %>,
-    apTypeControlOptions: {
+    mapTypeControlOptions: {
       mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID]
     }, // here´s the array of controls
     disableDefaultUI: true, // a way to quickly hide all controls
@@ -115,6 +115,7 @@ function initialize() {
     setHeaderDisabled: true
   });
 
+  var markers = [];
   var marker;
 
   google.maps.event.addListener(info, 'closeclick', function() {
@@ -126,7 +127,6 @@ function initialize() {
 
   marker = new google.maps.Marker({
     position: new google.maps.LatLng(<%= event.lat %>,<%= event.long %>),
-    map: map,
     title: '<%= escape_single_quoted(event.name) %>',
     icon: {
       url: "<%= asset_path("svg/marker_#{event.map_marker_key}.svg") %>",
@@ -153,7 +153,62 @@ function initialize() {
     info.open(map, this);
   });
 
+  markers.push(marker);
+
 <% end %>
+
+  // Cluster icon custom svgs
+  const renderer = {
+    render: function({ count, position, markers }) {
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 40;
+      canvas.height = 40;
+      const ctx = canvas.getContext('2d');
+
+      // Draw halo circle (32px diameter)
+      ctx.beginPath();
+      ctx.arc(20, 20, 16, 0, 2 * Math.PI);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+      ctx.fill();
+
+      // Draw cluster circle (24px diameter)
+      ctx.beginPath();
+      ctx.arc(20, 20, 12, 0, 2 * Math.PI);
+      ctx.fillStyle = '#000000';
+      ctx.fill();
+
+      // Draw text
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 1.2rem Lato, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(count, 20, 20);
+
+      return new google.maps.Marker({
+        position: position,
+        icon: {
+          url: canvas.toDataURL(),
+          scaledSize: new google.maps.Size(40, 40),
+          anchor: new google.maps.Point(20, 20)
+        },
+        zIndex: 1000
+      });
+    }
+  };
+
+  // Initialize marker clustering
+  const markerCluster = new markerClusterer.MarkerClusterer({
+    map: map,
+    markers: markers,
+    renderer: renderer,
+    algorithmOptions: {
+      radius: 40,
+      maxZoom: 14,
+      minPoints: 3
+    },
+    minimumClusterSize: 3
+  });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
