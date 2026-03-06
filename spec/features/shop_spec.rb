@@ -534,7 +534,7 @@ describe "Shop" do
 
     it "blocked by lack of subscription" do
       visit event_path(id: event.id)
-      click_link fee_requires_sub.amount
+      click_link fee_requires_sub.amount.to_s
       click_button select_member
       fill_in last_name, with: player.last_name + force_submit
       fill_in first_name, with: player.first_name + force_submit
