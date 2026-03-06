@@ -27,7 +27,7 @@ describe Item::Subscription do
     end
 
     it "normally a fee is required" do
-      expect{create(:nofee_subscription_item)}.to raise_error
+      expect{create(:nofee_subscription_item)}.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 
