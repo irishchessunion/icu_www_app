@@ -1,6 +1,6 @@
 - content_for :title, t("item.items")
 
-= render "utils/search_panel", form: "search_form", title: t("item.items"), col: "md"
+= render "utils/search_panel", form: "search_form", title: @title, col: "md"
 
 - if @items.count > 0
   .row

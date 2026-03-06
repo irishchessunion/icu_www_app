@@ -11,6 +11,9 @@
         =link_to new_admin_fee_path(type: 'Fee::Entry', event_id: @event.id), class: "btn btn-pastel-success inline-between inline-glyph" do
           Add New Fee
           %span.glyphicon-plus
+      - if can?(:read, Item)
+        =link_to admin_items_path(event_id: @event.id), class: "btn btn-pastel-info inline-between inline-glyph" do
+          View Entry Payments
     .col-md-8.list-col
       %ul.panel-list.with-divider
         - @event.fee_entries.each do |fee|
