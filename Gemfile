@@ -17,7 +17,8 @@ gem "tzinfo-data" # new requirement
 gem "mysql2"
 gem "haml-rails"
 gem "sass-rails"
-gem "uglifier", ">= 1.3.0"
+#gem "uglifier", ">= 1.3.0"
+gem "terser", "~> 1.2.6"
 gem "mini_racer", platforms: :ruby
 gem "jquery-rails"
 gem "cancancan" # cancan is no longer maintained, newer version is cancancan
