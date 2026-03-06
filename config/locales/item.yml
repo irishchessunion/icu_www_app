@@ -6,8 +6,12 @@ en:
     csv: Generate CSV Report
     from_date: From
     to_date: To
+    event_not_found: Event not found
+    fee_not_found: Fee not found
     item: Item
     items: Items
+    items_for_event: Items for %{event}
+    items_for_fee: Items for %{fee}
     lifetime_create: New Lifetime Member
     sales_ledger: Sales Ledger
     search_csv: Generate CSV
