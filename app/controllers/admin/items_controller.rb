@@ -28,7 +28,6 @@ class Admin::ItemsController < ApplicationController
 
     flash.now[:warning] = t("no_matches") if @items.count == 0
 
-
     respond_to do |format|
       format.html do
         if generating_csv?
