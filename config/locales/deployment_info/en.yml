@@ -1,0 +1,10 @@
+en:
+  deployment_info:
+    title: "Deployment Info"
+    deployed_at: "Deployed at"
+    booted_at: "App booted at"
+    uptime: "App uptime"
+    git_branch: "Git branch"
+    git_tag: "Git tag"
+    git_commit_hash: "Git commit hash"
+    git_message: "Last commit message"

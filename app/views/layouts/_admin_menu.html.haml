@@ -20,6 +20,7 @@
   - links += 1 if results    = can?(:manage, Result)
   - links += 1 if stats   = can?(:index, Admin::Statistic)
   - links += 1 if usage   = Rails.env.production? && current_user.admin?
+  - links += 1 if deploy_info = can?(:show, DeploymentInfo)
   - nfails = fails ? Failure.active.count : 0
   - if nfails > 0
     %li{class: active("admin/failures")}
@@ -78,3 +79,5 @@
           %li= link_to "Usage Stats", "/webalizer/", target: "_usage"
         - if users
           %li{class: active("admin/users")}= link_to "Users", admin_users_path
+        - if deploy_info
+          %li{class: active("admin/deployment_info")}= link_to "Deployment Info", admin_deployment_info_path

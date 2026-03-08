@@ -72,6 +72,8 @@ IcuWwwApp::Application.routes.draw do
       get page => "pages##{page}"
     end
 
+    get "deployment_info" => "deployment_info#show"
+
     resources :articles,        only: [:new, :create, :edit, :update, :destroy]
     resources :article_ids,     only: [:index]
     resources :bad_logins,      only: [:index]
