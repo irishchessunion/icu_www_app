@@ -1,5 +1,6 @@
 class DeploymentInfo
   DEPLOY_INFO_FILE = Rails.root.join("DEPLOY_INFO").freeze
+  REVISION_FILE = Rails.root.join("REVISION").freeze
 
   attr_reader :deployed_at, :booted_at, :branch, :tag, :commit, :message
 
@@ -8,7 +9,7 @@ class DeploymentInfo
   end
 
   def initialize
-    data = file_data.presence || git_data
+    data = file_data.presence || revision_data.presence || git_data
 
     @deployed_at = parse_time(data["deployed_at"])
     @booted_at   = APP_BOOTED_AT
@@ -54,11 +55,19 @@ class DeploymentInfo
     {}
   end
 
+  def revision_data
+    return {} unless File.exist?(REVISION_FILE)
+
+    { "commit" => presence(File.read(REVISION_FILE).strip) }
+  rescue StandardError
+    {}
+  end
+
   def git_data
     {
-      "branch" => git("rev-parse", "--abbrev-ref", "HEAD"),
-      "tag"    => git("describe", "--tags", "--exact-match"),
-      "commit" => git("rev-parse", "HEAD"),
+      "branch"  => git("rev-parse", "--abbrev-ref", "HEAD"),
+      "tag"     => git("describe", "--tags", "--exact-match"),
+      "commit"  => git("rev-parse", "HEAD"),
       "message" => git("log", "-1", "--pretty=%s")
     }
   end
