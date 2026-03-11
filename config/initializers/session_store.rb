@@ -3,4 +3,6 @@
 #   domain: ".icu.ie"
 #
 # (in production only of course) would make sure sessions get shared between the two.
-IcuWwwApp::Application.config.session_store :cookie_store, key: "_www_session"
+IcuWwwApp::Application.config.session_store :cookie_store,
+  key: "_www_session",
+  domain: Rails.env.production? ? ".icu.ie" : nil

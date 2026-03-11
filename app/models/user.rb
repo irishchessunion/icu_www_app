@@ -24,11 +24,14 @@ class User < ApplicationRecord
   has_many :logins, dependent: :destroy
   has_many :refunds, dependent: :nullify
   has_many :pgns, dependent: :nullify
+  has_many :event_users, dependent: :destroy
+  has_many :organised_events, through: :event_users, source: :event
   belongs_to :player
 
   default_scope { order(:email) }
   scope :include_player, -> { includes(:player) }
   scope :vips, -> { where("roles is not null") }
+  scope :organisers, -> { where("roles LIKE ?", "%organiser%") }
   scope :by_name, -> { include_player.order("players.last_name asc, players.first_name asc")}
 
   before_validation :canonicalize_roles, :dont_remove_the_last_admin, :update_password_if_present, :asshole_check

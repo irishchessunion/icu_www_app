@@ -3,6 +3,17 @@ set -e
 
 rm -f /rails/tmp/pids/server.pid
 
+# Copy example config files if they don't exist
+if [ ! -f /rails/config/secrets.yml ]; then
+  echo "Copying example secrets.yml..."
+  cp /rails/config/examples/secrets.yml /rails/config/secrets.yml
+fi
+
+if [ ! -f /rails/config/database.yml ]; then
+  echo "Copying example database.yml..."
+  cp /rails/config/database.yml.docker /rails/config/database.yml
+fi
+
 bundle check || bundle install
 
 if [ "$RAILS_ENV" = "development" ] || [ "$RAILS_ENV" = "test" ]; then

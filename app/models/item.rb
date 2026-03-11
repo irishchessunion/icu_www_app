@@ -31,6 +31,14 @@ class Item < ApplicationRecord
     elsif params[:status].match(/\A(in)?active\z/)
       matches = matches.send(params[:status])
     end
+    if params[:event_id].present?
+      event = Event.find_by(id: params[:event_id])
+      if event.present?
+        matches = matches.where(fee_id: event.fee_entry_ids)
+      end
+    elsif params[:fee_id].present?
+      matches = matches.where(fee_id: params[:fee_id])
+    end
     matches = matches.where(payment_method: params[:payment_method]) if params[:payment_method].present?
     matches = matches.where(player_id: params[:player_id].to_i) if params[:player_id].to_i > 0
     matches = matches.where("players.last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?

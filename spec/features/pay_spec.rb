@@ -37,11 +37,11 @@ describe "Pay", js: true do
   let(:shop)                  { I18n.t("shop.shop") }
   let(:total)                 { I18n.t("shop.cart.total") }
 
-  let(:cvc_id)    { "Field-cvcInput" }
+  let(:cvc_id)    { "payment-cvcInput" }
   let(:email_id)  { "confirmation_email" }
-  let(:expiry_id) { "Field-expiryInput" }
+  let(:expiry_id) { "payment-expiryInput" }
   let(:name_id)   { "name" }
-  let(:number_id) { "Field-numberInput" }
+  let(:number_id) { "payment-numberInput" }
 
   let(:cvc)     { "123" }
   let(:expiry)  { "01 / #{((Date.today.year + 2).to_s)[2..4]}" }
@@ -83,12 +83,23 @@ describe "Pay", js: true do
     fill_in email_id, with: opt[:email]   if opt[:email]
     click_button pay
     if opt[:number] == number
-      # 3D secure, the button is in 2 nested iframes
-      wait_a_second(5)
-      within_frame(0) do
-        within_frame(0) do
-          page.find('#test-source-authorize-3ds').native.send_key(:enter)
-        end
+      # 3D secure - bypass capybara-lockstep, which deadlocks here because
+      # stripe.confirmPayment() holds a pending fetch open until 3DS completes.
+      # Raw Selenium navigates the 3-level nested iframe without going through lockstep.
+      browser = page.driver.browser
+      wait = Selenium::WebDriver::Wait.new(timeout: 15)
+      begin
+        wait.until { browser.find_elements(:css, "iframe[src*='three-ds-2-challenge']").any? }
+        browser.switch_to.frame(browser.find_element(:css, "iframe[src*='three-ds-2-challenge']"))
+        wait.until { browser.find_elements(:css, '#challengeFrame').any? }
+        browser.switch_to.frame(browser.find_element(:css, '#challengeFrame'))
+        wait.until { browser.find_elements(:css, '#test-source-authorize-3ds').any? }
+        browser.find_element(:css, '#test-source-authorize-3ds').click
+        browser.switch_to.default_content
+      rescue Selenium::WebDriver::Error::TimeoutError, Selenium::WebDriver::Error::NoSuchFrameError
+        # 3DS challenge didn't appear or frame navigation failed - payment may have
+        # completed via frictionless authentication, or iframe structure changed.
+        browser.switch_to.default_content rescue nil
       end
     end
   end
@@ -124,19 +135,20 @@ describe "Pay", js: true do
       expect(cart.payment_account).to be_nil
       expect(cart.user).to be_nil
       expect(cart.items.count).to eq 1
-      
+
       subscription = cart.items.first
       expect(subscription).to be_unpaid
       expect(subscription.payment_method).to be_nil
       expect(subscription.source).to eq "www2"
-      
+
       fill_in_all_and_click_pay
-      
+
+      wait_a_second(5)
       expect(page).to have_css(title, text: completed)
       expect(page).to have_css(item, text: /\A#{total}: €#{"%.2f" % subscription.cost}\z/)
       expect(page).to have_css(item, text: /\A#{payment_time}: 20\d\d-\d\d-\d\d \d\d:\d\d GMT\z/)
       expect(page).to have_css(item, text: /\A#{confirmation_email_to}: #{player.email}\z/)
-      
+
       cart.reload
       expect(cart).to be_paid
       expect(cart.user).to be_nil
@@ -148,11 +160,11 @@ describe "Pay", js: true do
       expect(cart.confirmation_sent).to be true
       expect(cart.confirmation_error).to be_nil
       expect(cart.confirmation_text).to be_present
-      
+
       subscription.reload
       expect(subscription).to be_paid
       expect(subscription.payment_method).to eq stripe
-      
+
       expect(ActionMailer::Base.deliveries.size).to eq 1
       email = ActionMailer::Base.deliveries.last
       expect(email.from.size).to eq 1
@@ -160,7 +172,7 @@ describe "Pay", js: true do
       expect(email.to.size).to eq 1
       expect(email.to.first).to eq player.email
       expect(email.subject).to eq IcuMailer::CONFIRMATION
-      
+
       text = email.body.decoded
       expect(text).to include(player.name(id: true))
       expect(text).to include("%.2f" % subscription.cost)
@@ -185,7 +197,7 @@ describe "Pay", js: true do
       expect(payment_error.payment_name).to eq player.name
       expect(payment_error.confirmation_email).to eq player.email
       expect(ActionMailer::Base.deliveries).to be_empty
-      
+
       fill_in_number_and_click_pay(number: "4000000000000069")
       wait_a_second(2)
       expect(page).to have_css(failure, text: expired_card)
@@ -201,12 +213,12 @@ describe "Pay", js: true do
       expect(payment_error.payment_name).to eq player.name
       expect(payment_error.confirmation_email).to eq player.email
       expect(ActionMailer::Base.deliveries).to be_empty
-      
+
       login(user)
       click_link shop
       click_link current
       click_link checkout
-      
+
       fill_in_all_and_click_pay(number: "4000000000000127")
       wait_a_second(2)
       expect(page).to have_css(failure, text: incorrect_cvc)
@@ -388,6 +400,7 @@ describe "Pay", js: true do
       select newbie_fed, from: fed
       fill_in email, with: newbie.email
       click_button save
+      wait_a_second(0.2)
       expect(page).to_not have_css(failure)
       click_button add_to_cart
       click_link checkout
@@ -397,13 +410,14 @@ describe "Pay", js: true do
       subscription = Item::Subscription.last
       expect(subscription.player_id).to be_nil
       expect(subscription.player_data).to be_present
-      
+
       fill_in_all_and_click_pay
-      
+
+      wait_a_second(5)
       expect(page).to have_css(title, text: completed)
       subscription.reload
       expect(subscription).to be_paid
-      
+
       new_player = subscription.player
       expect(new_player).to be_present
       expect(new_player.first_name).to eq newbie.first_name
@@ -414,10 +428,10 @@ describe "Pay", js: true do
       expect(new_player.email).to eq newbie.email
       expect(new_player.status).to eq "active"
       expect(new_player.source).to eq "subscription"
-      
+
       expect(ActionMailer::Base.deliveries.size).to eq 1
       email = ActionMailer::Base.deliveries.last
-      
+
       text = email.body.decoded
       expect(text).to include(new_player.name(id: true))
       expect(text).to include("%.2f" % subscription.cost)
@@ -443,14 +457,15 @@ describe "Pay", js: true do
     it "card" do
       click_link checkout
       fill_in_all_and_click_pay
-      
+
+      wait_a_second(5)
       expect(page).to have_css(title, text: completed)
-      
+
       expect(Item::Subscription.count).to eq 1
       subscription = Item::Subscription.first
       expect(subscription).to be_paid
       expect(subscription.player_id).to eq player.id
-      
+
       old_user.reload
       expect(old_user.expires_on).to eq Season.new.end_of_grace_period
     end

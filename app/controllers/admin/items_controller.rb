@@ -4,8 +4,19 @@ class Admin::ItemsController < ApplicationController
 
   def index
     authorize! :index, Item
-    @params = params.permit(:description, :type, :status, :payment_method, :player_id, :first_name, :last_name, :from_date, :to_date, :format, :commit)
     params[:format] = 'csv' if generating_csv?
+    @params = params.permit(:description, :type, :status, :payment_method, :player_id, :first_name, :last_name, :from_date, :to_date,
+                            :format, :commit, :fee_id, :event_id)
+
+    if params[:event_id].present?
+      event = Event.find_by(id: params[:event_id])
+      @title = I18n.t("item.items_for_event", event: event&.name || I18n.t("item.event_not_found"))
+    elsif params[:fee_id].present?
+      fee = Fee.find_by(id: params[:fee_id])
+      @title = I18n.t("item.items_for_fee", fee: fee&.name || I18n.t("item.fee_not_found"))
+    else
+      @title = I18n.t("item.items")
+    end
 
     # A hash condition is used in ability.rb due to accessible_by not working with the nested joins
     # This is ugly but it prevents an AssocationError
@@ -16,7 +27,6 @@ class Admin::ItemsController < ApplicationController
     end
 
     flash.now[:warning] = t("no_matches") if @items.count == 0
-
 
     respond_to do |format|
       format.html do

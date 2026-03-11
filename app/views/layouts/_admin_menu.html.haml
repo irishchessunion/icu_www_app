@@ -12,6 +12,7 @@
   - links += 1 if fails   = can?(:index, Failure)
   - links += 1 if mevnts  = can?(:index, MailEvent)
   - links += 1 if items   = can?(:index, Item)
+  - links += 1 if events  = can?(:index, Event)
   - links += 1 if trans   = can?(:manage, Translation)
   - links += 1 if pages   = can?(:read, Page)
   - links += 1 if pgns    = can?(:index, Pgn)
@@ -19,6 +20,7 @@
   - links += 1 if results    = can?(:manage, Result)
   - links += 1 if stats   = can?(:index, Admin::Statistic)
   - links += 1 if usage   = Rails.env.production? && current_user.admin?
+  - links += 1 if deploy_info = can?(:show, DeploymentInfo)
   - nfails = fails ? Failure.active.count : 0
   - if nfails > 0
     %li{class: active("admin/failures")}
@@ -34,6 +36,8 @@
           %li{class: active("admin/carts")}= link_to "Carts", admin_carts_path
         - if bdlgns
           %li{class: active("admin/bad_logins")}= link_to "Bad Logins", admin_bad_logins_path
+        - if events
+          %li{class: active("admin/events")}= link_to "Events", admin_events_path
         - if fails
           %li{class: active("admin/failures")}
             = link_to admin_failures_path do
@@ -75,3 +79,5 @@
           %li= link_to "Usage Stats", "/webalizer/", target: "_usage"
         - if users
           %li{class: active("admin/users")}= link_to "Users", admin_users_path
+        - if deploy_info
+          %li{class: active("admin/deployment_info")}= link_to "Deployment Info", admin_deployment_info_path

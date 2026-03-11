@@ -1,4 +1,4 @@
-FROM ruby:3.2.0-bullseye
+FROM --platform=linux/amd64 ruby:3.2-bookworm
 
 # Install base dependencies
 RUN apt-get update -qq && \
@@ -34,6 +34,7 @@ ENV BUNDLE_PATH="/usr/local/bundle" \
   BUNDLE_JOBS=4
 
 COPY Gemfile Gemfile.lock ./
+RUN bundle config build.sassc -- --with-cflags="-Wno-error"
 RUN bundle install
 
 COPY . .

@@ -19,8 +19,10 @@ module EventsHelper
     options_for_select(([Event.new(name: '')] + events).map { |event| [event.name, event.id] }, selected_event_id)
   end
 
-  def user_menu(selected_user_id)
-    options_for_select(User.vips.by_name.map { |user| [user.name, user.id] }, selected_user_id)
+  def user_menu(selected_user_id, default=nil)
+    users = User.vips.by_name.map { |user| [user.name, user.id] }
+    users.unshift([default, ""]) if default
+    options_for_select(users, selected_user_id)
   end
 
   # @param entry_item [Item::Entry]
@@ -64,5 +66,35 @@ module EventsHelper
     end
 
     "#{descr} #{extras.join(', ')}"
+  end
+
+  # Format fee display with optional strikethrough discount styling
+  def format_fee_with_discount(fee)
+    if fee.discounted?
+      content_tag(:span) do
+        concat content_tag(:s, euros(fee.amount))
+        concat " "
+        concat euros(fee.current_amount)
+      end
+    else
+      euros(fee.current_amount)
+    end
+  end
+
+  # Calculate total amount paid fees for event
+  def event_total_paid_fees(event)
+    event.fee_entries.sum do |fee|
+      fee.items.paid.sum(:cost)
+    end
+  end
+
+  # Count of total paid entries across all fees
+  def event_count_paid_fees(event)
+    event.fee_entries.sum { |fee| fee.items.paid.count }
+  end
+
+  # Count paid entries for a specific fee
+  def fee_paid_entries_count(fee)
+    fee.items.paid.count
   end
 end

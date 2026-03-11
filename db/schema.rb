@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_15_160057) do
+ActiveRecord::Schema[7.0].define(version: 2026_02_03_163850) do
   create_table "article_likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "article_id"
     t.bigint "user_id"
@@ -162,6 +162,17 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_15_160057) do
     t.index ["article_id"], name: "index_episodes_on_article_id"
     t.index ["number"], name: "index_episodes_on_number"
     t.index ["series_id"], name: "index_episodes_on_series_id"
+  end
+
+  create_table "event_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.string "role", default: "full_access", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "user_id"], name: "index_event_users_on_event_id_and_user_id", unique: true
+    t.index ["event_id"], name: "index_event_users_on_event_id"
+    t.index ["user_id"], name: "index_event_users_on_user_id"
   end
 
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

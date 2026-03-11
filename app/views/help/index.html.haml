@@ -23,6 +23,19 @@
       %li= link_to t("help.pgn_upload"), help_pgn_upload_path
 .row
   .col-md-offset-1.col-md-5
+    %h2= t("user.role.organiser")
+    %ul
+      %li= link_to t("help.events"), help_events_path
+      %li= link_to t("help.event_users"), help_event_users_path
+  .col-md-offset-1.col-md-5
+    %h2= t("user.role.treasurer")
+    %ul
+      %li= link_to t("help.treasurer"), help_treasurer_path
+      %li= link_to t("help.fees"), help_fees_path
+      %li= link_to t("help.offline_payments"), help_offline_payments_path
+      %li= link_to t("help.rollover_subs"), help_rollover_subs_path
+.row
+  .col-md-offset-1.col-md-5
     %h2= t("user.role.admin")
     %ul
       %li= link_to t("help.overview"), help_overview_path
@@ -31,10 +44,3 @@
       %li= link_to t("help.players"), help_players_path
       %li= link_to t("help.password_reset"), help_password_reset_path
       %li= link_to t("help.suspend_account"), help_suspend_account_path
-  .col-md-offset-1.col-md-5
-    %h2= t("user.role.treasurer")
-    %ul
-      %li= link_to t("help.treasurer"), help_treasurer_path
-      %li= link_to t("help.fees"), help_fees_path
-      %li= link_to t("help.offline_payments"), help_offline_payments_path
-      %li= link_to t("help.rollover_subs"), help_rollover_subs_path

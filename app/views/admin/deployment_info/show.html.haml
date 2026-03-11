@@ -1,0 +1,26 @@
+- content_for :title, t("deployment_info.title")
+
+%table.table.table-striped
+  %tbody
+    %tr
+      %th= t("deployment_info.deployed_at")
+      %td= @deployment_info.deployed_at ? l(@deployment_info.deployed_at, format: :long) : "Unknown"
+    %tr
+      %th= t("deployment_info.booted_at")
+      %td= @deployment_info.booted_at ? l(@deployment_info.booted_at, format: :long) : "Unknown"
+    %tr
+      %th= t("deployment_info.uptime")
+      %td= @deployment_info.uptime_in_words
+    %tr
+      %th= t("deployment_info.git_branch")
+      %td= @deployment_info.branch || "Unknown"
+    %tr
+      %th= t("deployment_info.git_tag")
+      %td= @deployment_info.tag || "Unknown"
+    %tr
+      %th= t("deployment_info.git_commit_hash")
+      %td
+        %code= @deployment_info.commit || "Unknown"
+    %tr
+      %th= t("deployment_info.git_message")
+      %td= @deployment_info.message || "Unknown"

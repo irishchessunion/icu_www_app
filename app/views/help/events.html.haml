@@ -1,0 +1,110 @@
+= render "titles", text: "help.events"
+
+%h3 Create an Event
+
+%p To create an event:
+%ul
+  %li
+    log in as an
+    = succeed(",") do
+      %em Organiser
+  %li
+    click
+    %em Admin
+    (in the top navigation bar),
+  %li
+    click
+    %em Events
+    ,
+  %li
+    To the right of the
+    %em My Events
+    page title click the
+    %em New event
+    button,
+  %li
+    fill in the details but, for now, leave
+    %em Active
+    unchecked,
+  %li the details are:
+  %ul
+    %li Event name,
+    %li Start and end dates (can be the same date for single day events),
+    %li Location: address and co-ordinates (events without valid co-ordinates will not show in the Events page map),
+    %li Time controls: classical, rapid, blitz (select any that apply),
+    %li Category,
+    %li
+      Sections: this should be a comma-seperated list of sections (
+      %em e.g. "masters, major, challengers"
+      ),
+    %li Short Playing Event: Select only if the event is less than 14 days in duration,
+    %li FIDE-rated: Select if the event is to be FIDE-rated,
+    %li ICU Subscription Required: If selected a user must have an active ICU membership to join this event,
+    %li Prize fund value,
+    %li Flyer (pdf recommended),
+    %li Website,
+    %li Contact persons' name, email & phone number,
+    %li URLs: links to external content for players such as pairings, results and live boards,
+    %li Notes: A description text field for any other notes,
+    %li Organizer: This user is the event's creator,
+  %li
+    click
+    = succeed(",") do
+      %em Save
+  %li
+    examine your work and if unsatisfied, click
+    = succeed(",") do
+      %em Edit
+    update the details, click
+    = succeed(",") do
+      %em Save
+    and repeat if necessary,
+  %li
+    when ready click
+    = succeed(",") do
+      %em Edit
+    check the
+    %em Active
+    button and then click
+    = succeed(",") do
+      %em Save
+    to publish it.
+%p
+  Events with active status appear on the
+  = succeed(",") do
+    = link_to "Events page", events_path
+
+%h3 Searching for and Editing Events
+
+%p
+  Note that you cannot edit Events created by other organisers unless added to that Event as an
+  = link_to "Event User", help_event_users_path
+  by its creator
+%p To edit an event:
+%ul
+  %li
+    log in as an
+    = succeed(",") do
+      %em Organiser
+  %li
+    click
+    %em Admin
+    (in the top navigation bar),
+  %li
+    then click
+    = succeed(",") do
+      %em Events
+  %li search for the event you want to alter and click it's name,
+  %li
+    To the right of the event name
+    %em Edit
+    button,
+  %li
+    update the details and click
+    = succeed(",") do
+      %em Save
+  %li repeat as required.
+
+%h3 Deleting Events
+
+%p Note: only the creator of an event can delete that event.

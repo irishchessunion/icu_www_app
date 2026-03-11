@@ -1,0 +1,70 @@
+- content_for :title, t("event.admin.my_events")
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
+
+= render "utils/title_panel", header_text: t("event.admin.my_events") do
+  = render "utils/index_buttons", klass: Event, text: t("event.admin.new_event")
+
+.container
+  = render "utils/search_panel", form: "admin/events/search_form", col: "md"
+
+  .row
+    .col-md-12
+      %h3= t("event.upcoming")
+      %table.table.table-bordered.table-striped
+        %thead
+          %tr
+            %th= t("name")
+            %th.col-md-2= t("event.dates")
+            - if current_user.admin?
+              %th.col-md-2= t("event.created_by")
+            %th.col-md-1.text-center= t("active")
+        - if @events[:upcoming].any?
+          %tbody
+            - @events[:upcoming].each do |event|
+              %tr
+                %td
+                  = link_to event.name, admin_event_path(event)
+                  - unless current_user.admin?
+                    - if event.creator?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.creator")
+                    - elsif event.has_limited_access?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-warning= t("event.admin.limited_access")
+                    - else
+                      %span.label.label-rounded.label-margin-left.panel-pastel-success= t("event.admin.full_access")
+                %td= event.dates
+                - if current_user.admin?
+                  %td= event.user.name
+                %td.text-center= ok_ko(event.active)
+
+  .row
+    .col-md-12
+      %h3= t("event.past")
+      %table.table.table-bordered.table-striped
+        %thead
+          %tr
+            %th= t("name")
+            %th.col-md-2= t("event.dates")
+            - if current_user.admin?
+              %th.col-md-2= t("event.created_by")
+            %th.col-md-1.text-center= t("active")
+        - if @events[:past].count > 0
+          %tbody
+            - @events[:past].matches.each do |event|
+              %tr
+                %td
+                  = link_to event.name, edit_admin_event_path(event)
+                  - unless current_user.admin?
+                    - if event.creator?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.creator")
+                    - elsif event.has_limited_access?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-warning= t("event.admin.limited_access")
+                    - else
+                      %span.label.label-rounded.label-margin-left.panel-pastel-success= t("event.admin.full_access")
+
+                %td= event.dates
+                - if current_user.admin?
+                  %td= event.user.name
+                %td.text-center= ok_ko(event.active)
+            = render "utils/pagination_links", pager: @events[:past], columns: current_user.admin? ? 4 : 3
+

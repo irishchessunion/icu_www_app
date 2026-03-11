@@ -86,7 +86,7 @@ class Translation < ApplicationRecord
   end
 
   def self.cache_db
-    @redis_db ||= ["production", "development", "test"].index(Rails.env) + 1
+    @redis_db ||= ["production", "development", "test", "upat"].index(Rails.env) + 1
   end
 
   def self.check_cache(opt={})

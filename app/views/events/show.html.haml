@@ -4,6 +4,17 @@
 
 - admin = can?(:update, @event)
 
+- if can?(:read, @event)
+  .row.voffset3
+    .col-md-8.col-md-offset-2
+      .panel.panel-pastel-info
+        .panel-body
+          .inline-between
+            =link_to "Manage Event", admin_event_path(@event), class: "btn btn-primary"
+            %div
+              =link_to "Create News Item", new_admin_news_path(headline: @event.name, summary: "[EVT:#{params[:id]}] ..."), class: "btn btn-info"
+              =link_to "Create Article", new_admin_article_path(title: @event.name, text: "[EVT:#{params[:id]}] ..."), class: "btn btn-info"
+
 %h1.text-center= @event.name
 
 .row.voffset3
@@ -101,7 +112,7 @@
       = render "utils/timestamps", object: @event, ability: :create
       - if admin && @event.user.present?
         %tr
-          %th= t("user.role.editor")
+          %th= t("user.role.organiser")
           %td= @event.user.player.name
       - if @event.note.present?
         %tr
@@ -135,7 +146,7 @@
               class: "video-embed"
             }
 
-    = render "utils/show_buttons", object: @event, extras: @extras
+    = render "utils/show_buttons", object: @event
 
     - unless @event.fee_entries.on_sale.empty?
       %h2.text-center Enter Tournament
@@ -143,15 +154,15 @@
         - @event.fee_entries.on_sale.each do |fee_entry|
           - if can?(:show, fee_entry)
             %tr
-              %td<
-                = link_to new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm' do 
+              %td.enter<
+                = link_to new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm' do
                   - if fee_entry.discounted?
                     %s= euros(fee_entry.amount)
                     = euros(fee_entry.current_amount)
                   - else
                     = euros(fee_entry.current_amount)
               %td= event_entry_fee_description(fee_entry)
-              %td= link_to(t("edit"), edit_admin_fee_path(fee_entry), class: 'btn btn-danger btn-sm') if can?(:edit, fee_entry)
+              %td= link_to(t("edit"), edit_admin_fee_path(fee_entry), class: 'btn btn-link btn-xs') if can?(:edit, fee_entry)
 
     - unless @event.items.empty?
       %h2.text-center Entries
@@ -164,12 +175,12 @@
             = link_to "Excel file", excel_list_event_path(@event.id), class: 'btn btn-info btn-sm'
       - @event.items.paid.where(section: nil).each do |entry_item|
         %p
-          - if admin && section_names.size > 0
-            = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
           = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
           - if can?(:show, entry_item.cart)
             | Cart ID:
             = link_to entry_item.cart_id, admin_cart_path(entry_item.cart_id)
+          - if admin && section_names.size > 0
+            = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-link btn-xs'
       - paid_invalid_section = @event.items.paid.where("section NOT IN (?)", section_names)
       - if can?(:edit, @event) and paid_invalid_section.size > 0
         %h3
@@ -177,11 +188,11 @@
             Paid Entries with an Invalid Section
         - paid_invalid_section.each do |entry_item|
           %p
-            = link_to "Change Section from #{entry_item.section}", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
             = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
             - if can?(:show, entry_item.cart)
               | Cart ID:
               = link_to entry_item.cart_id, admin_cart_path(entry_item.cart_id)
+            = link_to "Change Section from #{entry_item.section}", edit_admin_item_path(entry_item), class: 'btn btn-link btn-xs'
       - @event.section_names.each do |section|
         - paid_entries = @event.items.paid.where(section: section)
         %h3
@@ -189,16 +200,12 @@
           %span.small
             = paid_entries.size
             entries
-          - if admin
-            = link_to "FIDE pre-2013 File", swiss_manager_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
-            = link_to "CSV file", csv_list_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
-            = link_to "Excel file", excel_list_event_path(@event.id, section: section), class: 'btn btn-info btn-sm'
         - paid_entries.each do |entry_item|
           %p
-            - if admin && section_names.size > 1
-              = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-danger btn-sm'
             = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
             - if can?(:show, entry_item.cart)
               | Cart ID:
               = link_to entry_item.cart_id, admin_cart_path(entry_item.cart_id)
+            - if admin && section_names.size > 1
+              = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-link btn-xs'
 = render "admin/journal_entries/changes", entries: @entries

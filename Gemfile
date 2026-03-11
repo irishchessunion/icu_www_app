@@ -2,6 +2,12 @@ source "https://rubygems.org"
 
 gem "rake"
 gem "rails", "7.0.10"
+
+# Ruby 3.2 includes `base64` as a default gem (0.1.1). Under Passenger it may be
+# activated before Bundler loads, causing "already activated base64 0.1.1" errors
+# if the lockfile wants a newer base64.
+gem "base64", "0.1.1"
+
 gem "puma", ">= 6.4.3" # web server
 # gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '3543363026121ee28d98dfce4cb6366980c055ee' # Lastest version of mimemagic has copyright issues and breaks
 gem "sprockets" # Latest version of sprockets 2.*. 3.* causes a failure at startup
@@ -11,7 +17,9 @@ gem "tzinfo-data" # new requirement
 gem "mysql2"
 gem "haml-rails"
 gem "sass-rails"
-gem "uglifier", ">= 1.3.0"
+#gem "uglifier", ">= 1.3.0"
+gem "terser", "~> 1.2.6"
+gem "mini_racer", platforms: :ruby
 gem "jquery-rails"
 gem "cancancan" # cancan is no longer maintained, newer version is cancancan
 gem "redis"
@@ -58,7 +66,7 @@ group :test do
   gem 'capybara-lockstep' # Used to make capybara tests more robust.
   gem "selenium-webdriver"
 #   gem "chromedriver-helper" # (deprecated in favour of webdrivers)
-  gem "webdrivers"
+  gem "webdrivers", require: false
 #   gem "factory_girl_rails", require: false # name changed to factory_bot_rails
   gem "factory_bot_rails"
   gem "launchy"

@@ -1,0 +1,27 @@
+- if current_user.admin? || @event.has_any_access?(current_user)
+  .panel.panel-default.with-margin
+    .panel-heading
+      .inline-between
+        %span= t("event.admin.users")
+        - if @event.creator?(current_user) || current_user.admin?
+          %button.btn.btn-sm.btn-primary.inline-glyph{"data-toggle" => "modal", "data-target" => "#add_user_modal"}
+            = t("event.admin.add_user")
+            %span.glypicon.glyphicon-plus
+    .panel-body
+      %ul.panel-list.with-divider
+        %li.inline-between
+          %span
+            = @event.creator.name
+            %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.creator")
+
+        - @event.event_users.includes(:user).each do |event_user|
+          - next if event_user.user_id == @event.user_id
+          %li.inline-between
+            %span
+              = event_user.user.name
+              .label.label-rounded.label-margin-left{class: event_user.full_access? ? "panel-pastel-success" : "panel-pastel-warning"}
+                = t("event.admin.#{event_user.role}")
+            - if current_user.admin? || @event.creator?(current_user)
+              - if event_user.user_id != current_user.id
+                = link_to admin_event_event_user_path(@event, event_user), method: :delete, class: "btn btn-xs btn-pastel-danger", data: { confirm: t("event.admin.confirm_remove") } do
+                  %i.glyphicon.glyphicon-remove

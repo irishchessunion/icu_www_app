@@ -72,6 +72,8 @@ IcuWwwApp::Application.routes.draw do
       get page => "pages##{page}"
     end
 
+    get "deployment_info" => "deployment_info#show"
+
     resources :articles,        only: [:new, :create, :edit, :update, :destroy]
     resources :article_ids,     only: [:index]
     resources :bad_logins,      only: [:index]
@@ -82,7 +84,9 @@ IcuWwwApp::Application.routes.draw do
     resources :champions,       only: [:new, :create, :edit, :update, :destroy]
     resources :clubs,           only: [:new, :create, :edit, :update]
     resources :downloads,       only: [:show, :new, :create, :edit, :update, :destroy]
-    resources :events,          only: [:new, :create, :edit, :update, :destroy]
+    resources :events do
+      resources :event_users, only: [:create, :destroy]
+    end
     resources :failures,        only: [:index, :show, :new, :update, :destroy]
     resources :fees do
       get :rollover, :clone, on: :member

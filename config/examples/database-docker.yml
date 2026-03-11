@@ -1,0 +1,26 @@
+# Database configuration for Docker environment
+# Copy this file to config/database.yml when running in Docker
+
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV.fetch("DATABASE_USERNAME", "root") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "password") %>
+  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
+  port: 3306
+  strict: false
+
+development:
+  <<: *default
+  database: www_development
+
+test:
+  <<: *default
+  database: www_test
+
+production:
+  <<: *default
+  database: www_production
+  username: <%= ENV["DATABASE_USERNAME"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
