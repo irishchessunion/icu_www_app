@@ -11,7 +11,7 @@ fi
 
 if [ ! -f /rails/config/database.yml ]; then
   echo "Copying example database.yml..."
-  cp /rails/config/database.yml.docker /rails/config/database.yml
+  cp /rails/config/examples/database-docker.yml /rails/config/database.yml
 fi
 
 bundle check || bundle install
