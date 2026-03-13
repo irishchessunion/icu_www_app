@@ -16,6 +16,6 @@ fi
 
 bundle check || bundle install
 
-bundle exec rails db:create db:migrate db:test:prepare
+bundle exec rails db:create db:schema:load db:test:prepare
 
 exec "$@"
