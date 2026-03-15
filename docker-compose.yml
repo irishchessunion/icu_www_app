@@ -42,6 +42,7 @@ services:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: password
       REDIS_URL: redis://redis:6379/0
+      SKIP_DB_SETUP: ${SKIP_DB_SETUP:-false}
     depends_on:
       db:
         condition: service_healthy

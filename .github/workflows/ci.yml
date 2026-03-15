@@ -39,6 +39,7 @@ jobs:
 
       - name: Start services
         run: |
+          export SKIP_DB_SETUP=true
           docker compose up -d db redis web
 
       - name: Wait for database to be ready

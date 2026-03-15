@@ -16,6 +16,8 @@ fi
 
 bundle check || bundle install
 
-bundle exec rails db:drop db:create db:schema:load db:test:prepare
+if [ "${SKIP_DB_SETUP}" != "true" ]; then
+  bundle exec rails db:prepare
+fi
 
 exec "$@"
