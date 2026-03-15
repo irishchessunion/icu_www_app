@@ -30,8 +30,7 @@ ENV CHROME_BIN=/usr/bin/chromium \
 
 WORKDIR /rails
 
-ENV RAILS_ENV="development" \
-  BUNDLE_PATH="/usr/local/bundle" \
+ENV BUNDLE_PATH="/usr/local/bundle" \
   BUNDLE_JOBS=4
 
 COPY Gemfile Gemfile.lock ./

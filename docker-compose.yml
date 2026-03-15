@@ -38,11 +38,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      RAILS_ENV: development
       DATABASE_HOST: db
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: password
       REDIS_URL: redis://redis:6379/0
+      SKIP_DB_SETUP: ${SKIP_DB_SETUP:-false}
     depends_on:
       db:
         condition: service_healthy

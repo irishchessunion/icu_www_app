@@ -55,6 +55,10 @@ group :development do
   gem "ed25519"
 end
 
+group :development, :test do
+  gem "byebug"
+end
+
 group :test do
   gem "rspec-rails"
   gem "rails-controller-testing"
@@ -68,7 +72,6 @@ group :test do
   gem "launchy"
   gem "faker"
   gem "database_cleaner"
-  #gem "byebug"
 end
 
 # Avoiding CVE problems - these are found with `bundle audit`
