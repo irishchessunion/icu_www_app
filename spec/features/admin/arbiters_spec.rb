@@ -52,7 +52,7 @@ describe "Arbiters" do
 
       visit new_arbiter_path
       fill_in I18n.t("player.id"), with: new_player.id
-      select I18n.t("arbiter.levels.club"), from: level
+      select I18n.t("arbiter.levels.fide"), from: level
       fill_in date_of_qual, with: "2025-03-01"
       click_button save
 
