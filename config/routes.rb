@@ -7,7 +7,7 @@ IcuWwwApp::Application.routes.draw do
   get  "redirect" => "redirects#redirect"
   get  "header"   => "header#control"
 
-  %w[home home2 links juniors women beginners for_parents primary_schools secondary_schools].each do |page|
+  %w[home home2 links juniors women beginners for_parents organisers primary_schools secondary_schools].each do |page|
     get page => "pages##{page}"
   end
   %w[clubs events].each do |page|
@@ -25,6 +25,9 @@ IcuWwwApp::Application.routes.draw do
   Global::HELP_PAGES.each do |page|
     get "help/#{page}" => "help##{page}"
   end
+
+  resources :arbiters
+  get "admin/arbiters/new", to: "arbiters#new", as: "new_admin_arbiter"
 
   resources :articles,    only: [:index, :show] do
     get :source, on: :member
@@ -73,7 +76,6 @@ IcuWwwApp::Application.routes.draw do
     end
 
     get "deployment_info" => "deployment_info#show"
-
     resources :articles,        only: [:new, :create, :edit, :update, :destroy]
     resources :article_ids,     only: [:index]
     resources :bad_logins,      only: [:index]

@@ -1,0 +1,26 @@
+- content_for :title, t("arbiter.new_arbiter")
+- content_for :javascript do
+  = render(:partial => "player_ids_callback", :handlers => [:erb], :formats => [:js])
+
+= render "player_ids/modal", title: t("arbiter.select_player")
+
+.row
+  .col-sm-1
+  .col-sm-10
+    %h1.text-center= t("arbiter.new_arbiter")
+    %hr
+    = form_for @arbiter, html: { class: "form-horizontal", role: "form" } do |f|
+      %fieldset
+        - locals = { form: f, object: @arbiter, col: "sm", pad: 2, width: 4 }
+        = render "utils/text_field_for", locals.merge(param: :player_id, text: t("player.id"), width: 2)
+        = render "utils/select_for", locals.merge(param: :level, text: t("arbiter.level"), menu: Arbiter::LEVELS.map { |l| [t("arbiter.levels.#{l}"), l] })
+        = render "utils/text_field_for", locals.merge(param: :date_of_qualification, text: t("arbiter.date_of_qualification"),  placeholder: t("date_format"))
+        = render "utils/text_field_for", locals.merge(param: :location, text: t("arbiter.location"))
+        = render "utils/text_field_for", locals.merge(param: :email, text: t("email"))
+        = render "utils/text_field_for", locals.merge(param: :phone, text: t("arbiter.phone"))
+        = render "utils/check_box_for", locals.merge(param: :active, text: t("active"))
+      %hr
+      .text-center
+        = render "player_ids_button"
+        = f.submit t("save"), class: "btn btn-primary"
+        = link_to t("cancel"), arbiters_path, class: "btn btn-default"
