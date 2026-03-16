@@ -1,6 +1,6 @@
 class Fee::Subscription < Fee
   include Comparable
-  before_validation :set_dates, :set_more_info
+  before_validation :set_dates
 
   validates :start_date, :end_date, :sale_start, :sale_end, :age_ref_date, presence: true
   validates :name, uniqueness: { scope: :years, message: "duplicate subscription name and season" }
@@ -43,6 +43,10 @@ class Fee::Subscription < Fee
     name.match(/\bnew\b/i)
   end
 
+  def url
+    "/help/membership"
+  end
+
   def <=>(other)
     return super(other) unless other.class == self.class
     [other.start_date, other.amount, description[8..-1].to_s] <=> [start_date, amount, other.description[8..-1].to_s]
@@ -62,7 +66,4 @@ class Fee::Subscription < Fee
     end
   end
 
-  def set_more_info
-    self.url = "http://www.icu.ie/help/membership"
-  end
 end

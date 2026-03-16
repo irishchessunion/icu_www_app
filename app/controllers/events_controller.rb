@@ -84,7 +84,7 @@ class EventsController < ApplicationController
     return unless Rails.env.production?
     return unless request.host == "icu.ie"
 
-    redirect_to "https://www.icu.ie#{request.fullpath}", status: :moved_permanently
+    redirect_to "https://www.#{request.host}#{request.fullpath}", status: :moved_permanently
   end
 
   def download_filename(event, section, extension)
