@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_16_120000) do
     t.string "level", null: false
     t.date "date_of_qualification", null: false
     t.boolean "active", default: true, null: false
+    t.boolean "available", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_arbiters_on_active"

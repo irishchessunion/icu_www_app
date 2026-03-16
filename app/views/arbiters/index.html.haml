@@ -12,8 +12,12 @@
             %th= t("arbiter.level")
             %th= t("arbiter.date_of_qualification")
             %th= t("arbiter.location")
+            %th= t("arbiter.available")
             %th= t("email")
             %th= t("arbiter.phone")
+            - if can?(:manage, Arbiter)
+              %th= t("arbiter.active")
+
         %tbody
           - @arbiters.each do |arbiter|
             %tr
@@ -21,8 +25,11 @@
               %td= t("arbiter.levels.#{arbiter.level}")
               %td= arbiter.date_of_qualification.to_fs(:db)
               %td= arbiter.location
+              %td= ok_ko(arbiter.available)
               %td= arbiter.email
               %td= arbiter.phone
+              - if can?(:manage, Arbiter)
+                %td= ok_ko(arbiter.active)
     - else
       %p.text-center= t("no_records")
     = render "utils/index_buttons", klass: Arbiter

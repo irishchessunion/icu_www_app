@@ -8,6 +8,7 @@ class CreateArbiters < ActiveRecord::Migration[7.0]
       t.string  :level, null: false
       t.date    :date_of_qualification, null: false
       t.boolean :active, default: true, null: false
+      t.boolean :available, default: true, null: false
 
       t.timestamps
     end

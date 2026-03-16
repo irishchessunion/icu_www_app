@@ -126,7 +126,8 @@ if seed_sample_data
       date_of_qualification: "2023-09-15",
       location: "Dublin",
       email: "henry.williams@icu.ie",
-      active: true
+      active: true,
+      available: true
     )
 
     # Sample data for refunds

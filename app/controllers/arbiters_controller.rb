@@ -48,9 +48,9 @@ class ArbitersController < ApplicationController
 
   def arbiter_params
     if can?(:manage, Arbiter)
-      params.require(:arbiter).permit(:player_id, :email, :phone, :location, :level, :date_of_qualification, :active)
+      params.require(:arbiter).permit(:player_id, :email, :phone, :location, :level, :date_of_qualification, :active, :available)
     else
-      params.require(:arbiter).permit(:email, :phone, :location)
+      params.require(:arbiter).permit(:email, :phone, :location, :available)
     end
   end
 end

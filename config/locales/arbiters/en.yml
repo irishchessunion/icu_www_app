@@ -1,7 +1,9 @@
 en:
   arbiter:
+    active: Active?
     arbiter: Arbiter
     arbiters: Arbiters
+    available: Available?
     new_arbiter: New Arbiter
     select_player: Select Player
     level: Level
