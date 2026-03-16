@@ -3,6 +3,7 @@ class Ability
 
   def initialize(user)
     if user.guest?
+      can :index, Arbiter
       can :show, Fee::Entry do |entry|
         !entry.organizer_only
       end
@@ -36,8 +37,9 @@ class Ability
     end
 
     can :view, :special_membership # Used in IcuController to hide life members and current members
-    can :index, [Article, Download, Game, Image, Series, Tournament]
-    can :show, [Article, Game, Series, Tournament]
+    can :index, [Article, Arbiter, Download, Game, Image, Series, Tournament]
+    can :show, [Article, Arbiter, Game, Series, Tournament]
+    can [:edit, :update], Arbiter, player_id: user.player_id
 
     if user.admin?
       can :manage, :all

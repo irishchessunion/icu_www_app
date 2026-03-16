@@ -1,0 +1,14 @@
+en:
+  arbiter:
+    arbiter: Arbiter
+    arbiters: Arbiters
+    new_arbiter: New Arbiter
+    select_player: Select Player
+    level: Level
+    date_of_qualification: Date of Qualification
+    location: Location
+    phone: Phone
+    levels:
+      club: Club Arbiter
+      national: National Arbiter
+      international: International Arbiter

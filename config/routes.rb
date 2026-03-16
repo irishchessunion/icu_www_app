@@ -7,7 +7,7 @@ IcuWwwApp::Application.routes.draw do
   get  "redirect" => "redirects#redirect"
   get  "header"   => "header#control"
 
-  %w[home home2 links juniors women beginners for_parents primary_schools secondary_schools].each do |page|
+  %w[home home2 links juniors women beginners for_parents organisers primary_schools secondary_schools].each do |page|
     get page => "pages##{page}"
   end
   %w[clubs events].each do |page|
@@ -25,6 +25,8 @@ IcuWwwApp::Application.routes.draw do
   Global::HELP_PAGES.each do |page|
     get "help/#{page}" => "help##{page}"
   end
+
+  resources :arbiters
 
   resources :articles,    only: [:index, :show] do
     get :source, on: :member
