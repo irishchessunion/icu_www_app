@@ -17,6 +17,7 @@ module CategoriesOwner
               10 => :primary,
               11 => :secondary,
               12 => :women,
+              13 => :organisers,
               :column => 'categories',
               :flag_query_mode => :bit_operator,
               :check_for_column => false # Otherwise the migration fails as the Article class gets created before the migration happens.
@@ -34,7 +35,7 @@ module CategoriesOwner
 
   end
 
-  CATEGORIES = %w[bulletin tournament biography obituary coaching juniors beginners general for_parents primary secondary women]
+  CATEGORIES = %w[bulletin tournament biography obituary coaching juniors beginners general for_parents primary secondary women organisers]
   # Used to convert from string to symbol, without creating extra symbols from user input
   CATEGORY_HASH = Hash[CATEGORIES.map(&:to_s).zip(0...CATEGORIES.size)]
 

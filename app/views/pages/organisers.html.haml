@@ -1,0 +1,15 @@
+- content_for :title, t("junior.chess")
+
+%h3.text-center= t("organisers.chess")
+.row
+  .col-sm-3
+    = render "home_page_links"
+    = render 'irish'
+  .col-sm-6
+    = render 'news'
+    = render 'articles'
+  .col-sm-3
+    = render "organiser_docs"
+.row
+  .col-sm-12
+    = render 'layouts/sponsors'
