@@ -2,11 +2,11 @@ class Arbiter < ApplicationRecord
   include Pageable
   include Journalable
   include Normalizable
-  journalize %w[player_id email phone location level date_of_qualification active], "/admin/arbiters/%d"
+  journalize %w[player_id email phone location level date_of_qualification active], "/arbiters/%d"
 
   belongs_to :player
 
-  LEVELS = %w[club national international]
+  LEVELS = %w[national fide international]
 
   scope :active,          -> { where(active: true) }
   scope :ordered,         -> { joins(:player).order("players.last_name, players.first_name") }

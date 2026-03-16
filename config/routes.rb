@@ -27,6 +27,7 @@ IcuWwwApp::Application.routes.draw do
   end
 
   resources :arbiters
+  get "admin/arbiters/new", to: "arbiters#new", as: "new_admin_arbiter"
 
   resources :articles,    only: [:index, :show] do
     get :source, on: :member
@@ -75,7 +76,6 @@ IcuWwwApp::Application.routes.draw do
     end
 
     get "deployment_info" => "deployment_info#show"
-
     resources :articles,        only: [:new, :create, :edit, :update, :destroy]
     resources :article_ids,     only: [:index]
     resources :bad_logins,      only: [:index]
