@@ -19,6 +19,7 @@
         = render "utils/text_field_for", locals.merge(param: :location, text: t("arbiter.location"))
         = render "utils/text_field_for", locals.merge(param: :email, text: t("email"))
         = render "utils/text_field_for", locals.merge(param: :phone, text: t("arbiter.phone"))
+        = render "utils/check_box_for", locals.merge(param: :available, text: t("arbiter.available"))
         - if can?(:manage, Arbiter)
           = render "utils/check_box_for", locals.merge(param: :active, text: t("active"))
       %hr
