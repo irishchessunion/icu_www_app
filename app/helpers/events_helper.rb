@@ -25,6 +25,28 @@ module EventsHelper
     options_for_select(users, selected_user_id)
   end
 
+  # "Fri 29th May - Mon 1st June 2026"
+  def formatted_event_dates(event)
+    start_date = event.start_date
+    end_date = event.end_date
+
+    start_day = start_date.day.ordinalize
+    end_day = end_date.day.ordinalize
+
+    if start_date.month == end_date.month
+      "#{start_date.strftime('%a')} #{start_day} - #{end_date.strftime('%a')} #{end_day} #{start_date.strftime('%B %Y')}"
+    else
+      "#{start_date.strftime('%a')} #{start_day} #{start_date.strftime('%B')} - #{end_date.strftime('%a')} #{end_day} #{end_date.strftime('%B %Y')}"
+    end
+  end
+
+  # ["classical", "rapid"] => "Classical, Rapid"
+  def time_controls_as_string(event)
+    event.time_controls.map do |control|
+      t("event.time_controls.#{control}")
+    end.join(", ")
+  end
+
   # @param entry_item [Item::Entry]
   def event_entry_item_description(entry_item)
     desc = ""
