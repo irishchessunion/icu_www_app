@@ -7,8 +7,13 @@ on:
 
 jobs:
   test:
-    name: Run Tests
+    name: Test (${{ matrix.gemfile }})
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        gemfile: [Gemfile, Gemfile.next]
 
     steps:
       - name: Checkout code
@@ -26,13 +31,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-buildx-${{ matrix.gemfile }}-${{ hashFiles('**/Gemfile.lock', '**/Gemfile.next.lock') }}
           restore-keys: |
+            ${{ runner.os }}-buildx-${{ matrix.gemfile }}-
             ${{ runner.os }}-buildx-
 
       - name: Build Docker images
         run: |
-          docker compose build --build-arg BUILDKIT_INLINE_CACHE=1
+          docker compose build --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg BUNDLE_GEMFILE=${{ matrix.gemfile }}
         env:
           DOCKER_BUILDKIT: 1
           COMPOSE_DOCKER_CLI_BUILD: 1
@@ -68,11 +74,11 @@ jobs:
 
       - name: Create and prepare test database
         run: |
-          docker compose exec -T -e RAILS_ENV=test web bin/rails db:create db:test:prepare
+          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bin/rails db:create db:test:prepare
 
       - name: Run RSpec tests
         run: |
-          docker compose exec -T -e RAILS_ENV=test web bundle exec rspec --format progress
+          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
 
       - name: Show test logs on failure
         if: failure()
@@ -88,7 +94,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-screenshots
+          name: test-screenshots-${{ matrix.gemfile }}
           path: tmp/screenshots/
           if-no-files-found: ignore
 

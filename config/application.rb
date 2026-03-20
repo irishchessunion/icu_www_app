@@ -33,7 +33,9 @@ module IcuWwwApp
     # Do not swallow errors in after_commit/after_rollback callbacks. (no longer a valid option)
     # config.active_record.raise_in_transactional_callbacks = true
 
-    # Removes deprecation warning
-    config.active_record.legacy_connection_handling = false
+    # Removes deprecation warning (removed in Rails 7.1)
+    unless NextRails.next?
+      config.active_record.legacy_connection_handling = false
+    end
   end
 end
