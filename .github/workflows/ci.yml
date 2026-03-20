@@ -7,8 +7,17 @@ on:
 
 jobs:
   test:
-    name: Run Tests
+    name: Run Tests (Rails ${{ matrix.rails_version }})
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rails_version: "7.0"
+            gemfile: "Gemfile"
+          - rails_version: "7.1"
+            gemfile: "Gemfile.next"
 
     steps:
       - name: Checkout code
@@ -26,8 +35,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-buildx-${{ matrix.rails_version }}-${{ hashFiles('**/Gemfile.lock', '**/Gemfile.next.lock') }}
           restore-keys: |
+            ${{ runner.os }}-buildx-${{ matrix.rails_version }}-
             ${{ runner.os }}-buildx-
 
       - name: Build Docker images
@@ -66,13 +76,17 @@ jobs:
             sleep 2
           done
 
+      - name: Install gems for target Rails version
+        run: |
+          docker compose exec -T -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle install
+
       - name: Create and prepare test database
         run: |
-          docker compose exec -T -e RAILS_ENV=test web bin/rails db:create db:test:prepare
+          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bin/rails db:create db:test:prepare
 
       - name: Run RSpec tests
         run: |
-          docker compose exec -T -e RAILS_ENV=test web bundle exec rspec --format progress
+          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
 
       - name: Show test logs on failure
         if: failure()
@@ -88,7 +102,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-screenshots
+          name: test-screenshots-rails-${{ matrix.rails_version }}
           path: tmp/screenshots/
           if-no-files-found: ignore
 

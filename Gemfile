@@ -1,7 +1,18 @@
 source "https://rubygems.org"
 
+def next?
+  File.basename(__FILE__) == "Gemfile.next"
+end
+
 gem "rake"
-gem "rails", "7.0.10"
+
+if next?
+  gem "rails", "~> 7.1.0"
+else
+  gem "rails", "7.0.10"
+end
+
+gem "next_rails"
 
 # Ruby 3.2 includes `base64` as a default gem (0.1.1). Under Passenger it may be
 # activated before Bundler loads, causing "already activated base64 0.1.1" errors
