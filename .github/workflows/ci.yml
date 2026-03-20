@@ -42,15 +42,18 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker compose build --build-arg BUILDKIT_INLINE_CACHE=1
+          docker compose build --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg BUNDLE_GEMFILE=${{ matrix.gemfile }}
         env:
           DOCKER_BUILDKIT: 1
           COMPOSE_DOCKER_CLI_BUILD: 1
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Start services
         run: |
-          export SKIP_DB_SETUP=true
           docker compose up -d db redis web
+        env:
+          SKIP_DB_SETUP: "true"
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Wait for database to be ready
         run: |
@@ -75,10 +78,6 @@ jobs:
             echo "Waiting for Redis... ($i/30)"
             sleep 2
           done
-
-      - name: Install gems for target Rails version
-        run: |
-          docker compose exec -T -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle install
 
       - name: Create and prepare test database
         run: |
