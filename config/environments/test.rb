@@ -5,7 +5,11 @@ IcuWwwApp::Application.configure do
   # test suite. You never need to work with it otherwise. Remember that
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs. Don't rely on the data there!
-  config.cache_classes = true
+  if NextRails.next?
+    config.enable_reloading = false
+  else
+    config.cache_classes = true
+  end
 
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
@@ -13,15 +17,24 @@ IcuWwwApp::Application.configure do
   config.eager_load = false
 
   # Configure static file server for tests with Cache-Control for performance.
-  config.serve_static_files   = true
-  config.static_cache_control = 'public, max-age=3600'
+  if NextRails.next?
+    config.public_file_server.enabled = true
+    config.public_file_server.headers = { "Cache-Control" => "public, max-age=3600" }
+  else
+    config.serve_static_files   = true
+    config.static_cache_control = 'public, max-age=3600'
+  end
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates.
-  config.action_dispatch.show_exceptions = false
+  if NextRails.next?
+    config.action_dispatch.show_exceptions = :none
+  else
+    config.action_dispatch.show_exceptions = false
+  end
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false

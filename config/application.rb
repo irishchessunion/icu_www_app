@@ -14,11 +14,21 @@ Bundler.require(*Rails.groups)
 # General configuration.
 module IcuWwwApp
   class Application < Rails::Application
+    if NextRails.next?
+      config.load_defaults 7.1
+    else
+      config.load_defaults 7.0
+    end
+
     # Express preference for double quoted attributes (single quoted is HAML's default).
     Haml::Template.options[:attr_wrapper] = '"'
 
-    # Autoload these directories.
-    config.autoload_paths += %W(#{Rails.root}/lib)
+    # Autoload lib/ directory.
+    if NextRails.next?
+      config.autoload_lib(ignore: %w[assets tasks])
+    else
+      config.autoload_paths += %W(#{Rails.root}/lib)
+    end
 
     # The following is recomended since 4.1. See also http://stackoverflow.com/questions/20361428/rails-i18n-validation-deprecation-warning.
     I18n.config.available_locales = [:en, :ga]
