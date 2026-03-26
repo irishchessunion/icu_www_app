@@ -14,7 +14,7 @@ Bundler.require(*Rails.groups)
 # General configuration.
 module IcuWwwApp
   class Application < Rails::Application
-    config.load_defaults 7.1
+    config.load_defaults NextRails.next? ? 7.2 : 7.1
 
     # Disable belongs_to required by default (introduced in 5.0 load_defaults).
     # The app's models rely on optional belongs_to associations.
