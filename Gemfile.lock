@@ -448,7 +448,6 @@ DEPENDENCIES
   redis
   rexml (>= 3.3.9)
   rspec-rails
-  rubyzip (~> 2.3)
   sass-rails
   selenium-webdriver
   sprockets

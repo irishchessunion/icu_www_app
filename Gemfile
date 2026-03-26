@@ -54,7 +54,9 @@ gem 'terrapin'
 gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 
 gem "caxlsx"
-gem "rubyzip", "~> 2.3" # Pin to avoid RubyZip 3.0 breaking API changes
+if next?
+  gem "rubyzip", "~> 2.3" # Pin to avoid RubyZip 3.0 breaking API changes
+end
 
 group :development do
   gem "capistrano" # For same reason as colorize comment above
