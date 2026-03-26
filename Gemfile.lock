@@ -352,7 +352,7 @@ GEM
       sprockets-rails
       tilt
     securerandom (0.4.1)
-    selenium-webdriver (4.10.0)
+    selenium-webdriver (4.7.1)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -449,7 +449,7 @@ DEPENDENCIES
   rexml (>= 3.3.9)
   rspec-rails
   sass-rails
-  selenium-webdriver
+  selenium-webdriver (= 4.7.1)
   sprockets
   sprockets-rails
   stripe

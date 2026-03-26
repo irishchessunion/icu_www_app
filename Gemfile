@@ -82,7 +82,7 @@ group :test do
   if next?
     gem "selenium-webdriver", ">= 4.11" # 4.11+ includes Selenium Manager (replaces webdrivers)
   else
-    gem "selenium-webdriver"
+    gem "selenium-webdriver", "4.7.1"
     gem "webdrivers", require: false
   end
   gem "factory_bot_rails"
