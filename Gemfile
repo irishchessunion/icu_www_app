@@ -47,13 +47,14 @@ gem "colored"
 gem "whenever", :require => false
 # gem "quiet_assets" # (deprecated in favour of sprockets-rails)
 
-gem "mail", "2.7.1" # latest version of mail does not work with rails 7.0.4 at the moment
+gem "mail"
 
 gem 'bigdecimal', '>= 2.5.5' # To avoid BigDecimal.new error
 gem 'terrapin'
 gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 
 gem "caxlsx"
+gem "rubyzip", "~> 2.3" # Pin to avoid RubyZip 3.0 breaking API changes
 
 group :development do
   gem "capistrano" # For same reason as colorize comment above
@@ -75,10 +76,7 @@ group :test do
   gem "rails-controller-testing"
   gem "capybara"
   gem 'capybara-lockstep' # Used to make capybara tests more robust.
-  gem "selenium-webdriver"
-#   gem "chromedriver-helper" # (deprecated in favour of webdrivers)
-  gem "webdrivers", require: false
-#   gem "factory_girl_rails", require: false # name changed to factory_bot_rails
+  gem "selenium-webdriver", ">= 4.11" # 4.11+ includes Selenium Manager (replaces webdrivers)
   gem "factory_bot_rails"
   gem "launchy"
   gem "faker"

@@ -6,18 +6,31 @@ on:
       - '**'
 
 jobs:
+  generate-matrix:
+    name: Generate test matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect Rails versions from lockfiles
+        id: set-matrix
+        run: |
+          RAILS_VERSION=$(grep "^    rails (" Gemfile.lock | grep -oP '\d+\.\d+' | head -1)
+          RAILS_NEXT_VERSION=$(grep "^    rails (" Gemfile.next.lock | grep -oP '\d+\.\d+' | head -1)
+          MATRIX=$(printf '{"include":[{"rails_version":"%s","gemfile":"Gemfile"},{"rails_version":"%s","gemfile":"Gemfile.next"}]}' "$RAILS_VERSION" "$RAILS_NEXT_VERSION")
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+
   test:
     name: Run Tests (Rails ${{ matrix.rails_version }})
     runs-on: ubuntu-latest
+    needs: generate-matrix
 
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - rails_version: "7.0"
-            gemfile: "Gemfile"
-          - rails_version: "7.1"
-            gemfile: "Gemfile.next"
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
 
     steps:
       - name: Checkout code
