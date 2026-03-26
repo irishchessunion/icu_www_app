@@ -5,7 +5,7 @@ class Series < ApplicationRecord
   journalize %w[title], "/series/%d"
 
   has_many :episodes, dependent: :delete_all
-  has_many :articles, through: :episodes
+  has_many :articles, -> { order("episodes.number") }, through: :episodes
 
   validates :title, presence: true, uniqueness: true
 

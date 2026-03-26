@@ -14,9 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - rails_version: "7.0"
-            gemfile: "Gemfile"
           - rails_version: "7.1"
+            gemfile: "Gemfile"
+          - rails_version: "7.2"
             gemfile: "Gemfile.next"
 
     steps:
