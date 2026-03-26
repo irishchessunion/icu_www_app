@@ -7,9 +7,9 @@ end
 gem "rake"
 
 if next?
-  gem "rails", "~> 7.1.0"
+  gem "rails", "~> 7.2.0"
 else
-  gem "rails", "7.0.10"
+  gem "rails", "~> 7.1.0"
 end
 
 gem "next_rails"
@@ -82,7 +82,7 @@ group :test do
   gem "factory_bot_rails"
   gem "launchy"
   gem "faker"
-  gem "database_cleaner"
+  gem "database_cleaner", ">= 2.1"
 end
 
 # Avoiding CVE problems - these are found with `bundle audit`
