@@ -47,8 +47,6 @@ gem "colored"
 gem "whenever", :require => false
 # gem "quiet_assets" # (deprecated in favour of sprockets-rails)
 
-gem "mail"
-
 gem 'bigdecimal', '>= 2.5.5' # To avoid BigDecimal.new error
 gem 'terrapin'
 gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
@@ -56,6 +54,9 @@ gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 gem "caxlsx"
 if next?
   gem "rubyzip", "~> 2.3" # Pin to avoid RubyZip 3.0 breaking API changes
+  gem "mail"
+else
+  gem "mail", "2.7.1"
 end
 
 group :development do

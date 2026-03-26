@@ -433,7 +433,7 @@ DEPENDENCIES
   jquery-rails
   kt-paperclip
   launchy
-  mail
+  mail (= 2.7.1)
   mailgun-ruby
   mini_racer
   mysql2
