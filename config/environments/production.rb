@@ -2,11 +2,7 @@ IcuWwwApp::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
-  if NextRails.next?
-    config.enable_reloading = false
-  else
-    config.cache_classes = true
-  end
+  config.enable_reloading = false
 
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
@@ -26,11 +22,7 @@ IcuWwwApp::Application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  if NextRails.next?
-    config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
-  else
-    config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
-  end
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :terser
