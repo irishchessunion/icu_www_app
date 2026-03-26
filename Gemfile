@@ -76,7 +76,12 @@ group :test do
   gem "rails-controller-testing"
   gem "capybara"
   gem 'capybara-lockstep' # Used to make capybara tests more robust.
-  gem "selenium-webdriver", ">= 4.11" # 4.11+ includes Selenium Manager (replaces webdrivers)
+  if next?
+    gem "selenium-webdriver", ">= 4.11" # 4.11+ includes Selenium Manager (replaces webdrivers)
+  else
+    gem "selenium-webdriver"
+    gem "webdrivers", require: false
+  end
   gem "factory_bot_rails"
   gem "launchy"
   gem "faker"
