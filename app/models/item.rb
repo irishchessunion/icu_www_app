@@ -2,7 +2,7 @@ class Item < ApplicationRecord
   include Pageable
   include Payable
 
-  serialize :notes, Array
+  serialize :notes, coder: YAML, type: Array
 
   belongs_to :player
   belongs_to :fee
