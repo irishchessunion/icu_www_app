@@ -7,9 +7,9 @@ end
 gem "rake"
 
 if next?
-  gem "rails", "~> 7.1.0"
+  gem "rails", "~> 7.2.0"
 else
-  gem "rails", "7.0.10"
+  gem "rails", "~> 7.1.0"
 end
 
 gem "next_rails"
@@ -47,13 +47,17 @@ gem "colored"
 gem "whenever", :require => false
 # gem "quiet_assets" # (deprecated in favour of sprockets-rails)
 
-gem "mail", "2.7.1" # latest version of mail does not work with rails 7.0.4 at the moment
-
 gem 'bigdecimal', '>= 2.5.5' # To avoid BigDecimal.new error
 gem 'terrapin'
 gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 
 gem "caxlsx"
+if next?
+  gem "rubyzip", "~> 2.3" # Pin to avoid RubyZip 3.0 breaking API changes
+  gem "mail"
+else
+  gem "mail", "2.7.1"
+end
 
 group :development do
   gem "capistrano" # For same reason as colorize comment above
@@ -75,14 +79,16 @@ group :test do
   gem "rails-controller-testing"
   gem "capybara"
   gem 'capybara-lockstep' # Used to make capybara tests more robust.
-  gem "selenium-webdriver"
-#   gem "chromedriver-helper" # (deprecated in favour of webdrivers)
-  gem "webdrivers", require: false
-#   gem "factory_girl_rails", require: false # name changed to factory_bot_rails
+  if next?
+    gem "selenium-webdriver", ">= 4.11" # 4.11+ includes Selenium Manager (replaces webdrivers)
+  else
+    gem "selenium-webdriver", "4.7.1"
+    gem "webdrivers", require: false
+  end
   gem "factory_bot_rails"
   gem "launchy"
   gem "faker"
-  gem "database_cleaner"
+  gem "database_cleaner", ">= 2.1"
 end
 
 # Avoiding CVE problems - these are found with `bundle audit`

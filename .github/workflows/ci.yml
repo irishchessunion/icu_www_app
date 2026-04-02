@@ -14,9 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - rails_version: "7.0"
-            gemfile: "Gemfile"
           - rails_version: "7.1"
+            gemfile: "Gemfile"
+          - rails_version: "7.2"
             gemfile: "Gemfile.next"
 
     steps:
@@ -50,9 +50,8 @@ jobs:
 
       - name: Start services
         run: |
-          docker compose up -d db redis web
+          docker compose up -d db redis
         env:
-          SKIP_DB_SETUP: "true"
           BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Wait for database to be ready
@@ -81,17 +80,19 @@ jobs:
 
       - name: Create and prepare test database
         run: |
-          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bin/rails db:create db:test:prepare
+          docker compose run --rm -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bin/rails db:create db:test:prepare
+        env:
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Run RSpec tests
         run: |
-          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
+          docker compose run --rm -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
+        env:
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Show test logs on failure
         if: failure()
         run: |
-          echo "=== Web service logs ==="
-          docker compose logs web
           echo "=== Database service logs ==="
           docker compose logs db
           echo "=== Redis service logs ==="
