@@ -81,7 +81,9 @@ jobs:
 
       - name: Create and prepare test database
         run: |
-          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bin/rails db:create db:test:prepare
+          docker compose run --rm -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bin/rails db:create db:test:prepare
+        env:
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Run RSpec tests
         run: |
