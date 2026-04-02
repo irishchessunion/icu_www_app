@@ -114,7 +114,7 @@ describe Series do
 
       expect(series.title).to eq title
       expect(series.episodes.map(&:number).join("|")).to eq "1|2"
-      expect(series.articles.map(&:title).join("|")).to eq (0..1).map{ |i| articles[i].title }.join("|")
+      expect(series.articles.order("episodes.number").map(&:title).join("|")).to eq (0..1).map{ |i| articles[i].title }.join("|")
       expect(series.max_number).to eq 2
 
       expect(JournalEntry.series.count).to eq 1
@@ -163,7 +163,7 @@ describe Series do
 
       expect(series.title).to eq title
       expect(series.episodes.map(&:number).join("|")).to eq "1|2|3|4"
-      expect(series.articles.map(&:title).join("|")).to eq (0..3).map{ |i| articles[i].title }.join("|")
+      expect(series.articles.order("episodes.number").map(&:title).join("|")).to eq (0..3).map{ |i| articles[i].title }.join("|")
       expect(series.max_number).to eq 4
 
       expect(JournalEntry.series.count).to eq 1
@@ -220,7 +220,7 @@ describe Series do
       expect(series.episodes.count).to eq 4
       expect(series.articles.count).to eq 4
       expect(series.episodes.map(&:number).join("|")).to eq "1|2|3|4"
-      expect(series.articles.map(&:title).join("|")).to eq (0..2).map{ |i| episodes[i].article.title }.push(article.title).join("|")
+      expect(series.articles.order("episodes.number").map(&:title).join("|")).to eq (0..2).map{ |i| episodes[i].article.title }.push(article.title).join("|")
 
       expect(Article.count).to eq 4
       expect(Episode.count).to eq 4
@@ -238,7 +238,7 @@ describe Series do
       expect(series.episodes.count).to eq 2
       expect(series.articles.count).to eq 2
       expect(series.episodes.map(&:number).join("|")).to eq "1|2"
-      expect(series.articles.map(&:title).join("|")).to eq [0, 2].map{ |i| episodes[i].article.title }.join("|")
+      expect(series.articles.order("episodes.number").map(&:title).join("|")).to eq [0, 2].map{ |i| episodes[i].article.title }.join("|")
 
       expect(Article.count).to eq 4
       expect(Episode.count).to eq 2
@@ -261,7 +261,7 @@ describe Series do
       expect(series.episodes.count).to eq 3
       expect(series.articles.count).to eq 3
       expect(series.episodes.map(&:number).join("|")).to eq "1|2|3"
-      expect(series.articles.map(&:title).join("|")).to eq [1, 2, 0].map{ |i| episodes[i].article.title }.join("|")
+      expect(series.articles.order("episodes.number").map(&:title).join("|")).to eq [1, 2, 0].map{ |i| episodes[i].article.title }.join("|")
 
       expect(Article.count).to eq 4
       expect(Episode.count).to eq 3
@@ -285,7 +285,7 @@ describe Series do
       expect(series.episodes.count).to eq 3
       expect(series.articles.count).to eq 3
       expect(series.episodes.map(&:number).join("|")).to eq "1|2|3"
-      expect(series.articles.map(&:title).join("|")).to eq [2, 0, 1].map{ |i| episodes[i].article.title }.join("|")
+      expect(series.articles.order("episodes.number").map(&:title).join("|")).to eq [2, 0, 1].map{ |i| episodes[i].article.title }.join("|")
 
       expect(Article.count).to eq 4
       expect(Episode.count).to eq 3
