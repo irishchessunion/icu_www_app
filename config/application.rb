@@ -14,7 +14,13 @@ Bundler.require(*Rails.groups)
 # General configuration.
 module IcuWwwApp
   class Application < Rails::Application
-    config.load_defaults NextRails.next? ? 7.2 : 7.1
+    # Rails 7.2 removed Rails.application.secrets. This shim adds it back via config_for
+    # so the rest of the codebase doesn't need to change during dual-boot.
+    def secrets
+      @_secrets ||= config_for(:secrets)
+    end
+
+    config.load_defaults NextRails.next? ? 8.0 : 7.2
 
     # Rails 7.2 removed Rails.application.secrets. This shim adds it back via config_for
     # so the rest of the codebase doesn't need to change during dual-boot.

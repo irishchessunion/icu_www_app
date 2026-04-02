@@ -7,9 +7,9 @@ end
 gem "rake"
 
 if next?
-  gem "rails", "~> 7.2.0"
+  gem "rails", "~> 8.0.0"
 else
-  gem "rails", "~> 7.1.0"
+  gem "rails", "~> 7.2.0"
 end
 
 gem "next_rails"
@@ -52,12 +52,8 @@ gem 'terrapin'
 gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 
 gem "caxlsx"
-if next?
-  gem "rubyzip", "~> 2.3" # Pin to avoid RubyZip 3.0 breaking API changes
-  gem "mail"
-else
-  gem "mail", "2.7.1"
-end
+gem "rubyzip", "~> 2.3" # Pin to avoid RubyZip 3.0 breaking API changes
+gem "mail"
 
 group :development do
   gem "capistrano" # For same reason as colorize comment above
@@ -79,12 +75,7 @@ group :test do
   gem "rails-controller-testing"
   gem "capybara"
   gem 'capybara-lockstep' # Used to make capybara tests more robust.
-  if next?
-    gem "selenium-webdriver", ">= 4.11" # 4.11+ includes Selenium Manager (replaces webdrivers)
-  else
-    gem "selenium-webdriver", "4.7.1"
-    gem "webdrivers", require: false
-  end
+  gem "selenium-webdriver", ">= 4.11" # 4.11+ includes Selenium Manager (replaces webdrivers)
   gem "factory_bot_rails"
   gem "launchy"
   gem "faker"
