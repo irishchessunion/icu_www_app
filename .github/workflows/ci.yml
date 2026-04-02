@@ -79,13 +79,17 @@ jobs:
             sleep 2
           done
 
-      - name: Create and prepare test database
+      - name: Create test database
         run: |
-          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bin/rails db:create db:test:prepare
+          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} -e MALLOC_ARENA_MAX=2 web bin/rails db:create
+
+      - name: Prepare test database
+        run: |
+          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} -e MALLOC_ARENA_MAX=2 web bin/rails db:test:prepare
 
       - name: Run RSpec tests
         run: |
-          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
+          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} -e MALLOC_ARENA_MAX=2 web bundle exec rspec --format progress
 
       - name: Show test logs on failure
         if: failure()
