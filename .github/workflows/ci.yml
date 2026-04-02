@@ -50,9 +50,8 @@ jobs:
 
       - name: Start services
         run: |
-          docker compose up -d db redis web
+          docker compose up -d db redis
         env:
-          SKIP_DB_SETUP: "true"
           BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Wait for database to be ready
@@ -87,13 +86,13 @@ jobs:
 
       - name: Run RSpec tests
         run: |
-          docker compose exec -T -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
+          docker compose run --rm -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
+        env:
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Show test logs on failure
         if: failure()
         run: |
-          echo "=== Web service logs ==="
-          docker compose logs web
           echo "=== Database service logs ==="
           docker compose logs db
           echo "=== Redis service logs ==="
