@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe DeploymentInfo, type: :model do
   describe ".current" do
     it "loads branch, tag and commit from git when neither file exists" do
