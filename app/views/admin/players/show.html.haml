@@ -73,6 +73,18 @@
         %th= t("player.rating.latest")
         %td= @player.latest_rating
       %tr
+        %th= t("player.rating.fide_id")
+        %td= @player.fide_id
+      %tr
+        %th= t("player.rating.fide_rating")
+        %td= @player.fide_rating
+      %tr
+        %th= t("player.rating.fide_rapid_rating")
+        %td= @player.fide_rapid_rating
+      %tr
+        %th= t("player.rating.fide_blitz_rating")
+        %td= @player.fide_blitz_rating
+      %tr
         %th= t("player.status.status")
         %td= t("player.status.#{@player.status}")
       %tr

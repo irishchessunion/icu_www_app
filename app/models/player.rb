@@ -43,6 +43,10 @@ class Player < ApplicationRecord
   validates :source, inclusion: { in: SOURCES }
   validates :fed, format: { with: /\A[A-Z]{3}\z/ }, allow_nil: true
   validates :latest_rating, numericality: { only_integer: true }, allow_nil: true
+  validates :fide_id, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+  validates :fide_rating, numericality: { only_integer: true }, allow_nil: true
+  validates :fide_rapid_rating, numericality: { only_integer: true }, allow_nil: true
+  validates :fide_blitz_rating, numericality: { only_integer: true }, allow_nil: true
   validates :legacy_rating, numericality: { only_integer: true }, allow_nil: true
   validates :legacy_rating_type, inclusion: { in: RATING_TYPES }, allow_nil: true
   validates :legacy_games, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
