@@ -10,9 +10,9 @@
 set :stage, :upat
 set :deploy_to, "/var/apps/www"
 set :rails_env, 'upat'
-set :branch, "deploy/rails-7-1-0"
+set :branch, "master"
 
-server "icu_upat", user: "root", roles: %w{app db web}
+server "icu_upat", user: "etagwerker", roles: %w{app db web}
 
 # role-based syntax
 # ==================
