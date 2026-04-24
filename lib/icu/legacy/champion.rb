@@ -84,7 +84,7 @@ EOQ
         when force
           puts "old champion records deleted: #{::Champion.delete_all}"
           puts "old champion journal entries deleted: #{JournalEntry.champions.delete_all}"
-          ActiveRecord::Base.connection.execute("ALTER TABLE champions AUTO_INCREMENT = 1")
+          ActiveRecord::Base.lease_connection.execute("ALTER TABLE champions AUTO_INCREMENT = 1")
           false
         else
           true
