@@ -73,7 +73,7 @@ end
 group :test do
   gem "rspec-rails"
   gem "rails-controller-testing"
-  gem "capybara"
+  gem "capybara", ">= 3.40" # 3.40+ supports selenium-webdriver 4.16+
   gem 'capybara-lockstep' # Used to make capybara tests more robust.
   gem "selenium-webdriver", ">= 4.11" # 4.11+ includes Selenium Manager (replaces webdrivers)
   gem "factory_bot_rails"
