@@ -222,8 +222,8 @@ module ICU
           puts "old series records deleted: #{Series.delete_all}"
           puts "old series journal entries deleted: #{JournalEntry.series.delete_all}"
           puts "old episode records deleted: #{Episode.delete_all}"
-          ActiveRecord::Base.connection.execute("ALTER TABLE series AUTO_INCREMENT = 1")
-          ActiveRecord::Base.connection.execute("ALTER TABLE episodes AUTO_INCREMENT = 1")
+          ActiveRecord::Base.lease_connection.execute("ALTER TABLE series AUTO_INCREMENT = 1")
+          ActiveRecord::Base.lease_connection.execute("ALTER TABLE episodes AUTO_INCREMENT = 1")
           false
         else
           true

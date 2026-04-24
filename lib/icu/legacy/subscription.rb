@@ -158,8 +158,8 @@ module ICU
         when force
           puts "old subscription records deleted: #{Item.delete_all}"
           puts "old carts records deleted: #{Cart.delete_all}"
-          ActiveRecord::Base.connection.execute("ALTER TABLE items AUTO_INCREMENT = 1")
-          ActiveRecord::Base.connection.execute("ALTER TABLE carts AUTO_INCREMENT = 1")
+          ActiveRecord::Base.lease_connection.execute("ALTER TABLE items AUTO_INCREMENT = 1")
+          ActiveRecord::Base.lease_connection.execute("ALTER TABLE carts AUTO_INCREMENT = 1")
           false
         else
           true

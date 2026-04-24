@@ -61,7 +61,7 @@ module ICU
         when force
           puts "old download records deleted: #{::Download.delete_all}"
           puts "old download journal entries deleted: #{JournalEntry.downloads.delete_all}"
-          ActiveRecord::Base.connection.execute("ALTER TABLE downloads AUTO_INCREMENT = 1")
+          ActiveRecord::Base.lease_connection.execute("ALTER TABLE downloads AUTO_INCREMENT = 1")
           remove_old_files
           false
         else
