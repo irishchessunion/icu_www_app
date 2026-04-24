@@ -18,10 +18,8 @@ module IcuWwwApp
 
     # Rails 7.2 removed Rails.application.secrets. This shim adds it back via config_for
     # so the rest of the codebase keeps working until a proper migration to credentials.
-    IcuWwwApp::Application.class_eval do
-      def secrets
-        @_secrets ||= config_for(:secrets)
-      end
+    def secrets
+      @_secrets ||= config_for(:secrets)
     end
 
 
