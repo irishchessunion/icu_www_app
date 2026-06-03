@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+rm -f /rails/tmp/pids/server.pid
+
+# Run pending migrations only on the primary web container.
+if [ "${KAMAL_RECORDED_AT:-}" != "" ] && [ "${KAMAL_CONTAINER_NAME:-}" = "icu-www-app-web-1" ]; then
+  bundle exec rails db:prepare
+fi
+
+exec "$@"

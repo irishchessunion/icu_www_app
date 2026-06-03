@@ -68,6 +68,7 @@ group :development do
   # The following 2 gems are needed to support ed25519 encrypted keys for capistrano installs.
   gem "bcrypt_pbkdf"
   gem "ed25519"
+  gem "kamal", "~> 2.0", require: false
 end
 
 group :development, :test do

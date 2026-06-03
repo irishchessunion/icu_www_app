@@ -20,3 +20,8 @@
 
 .vscode
 spec/examples.txt
+
+# Kamal local state and secrets
+.env
+.kamal/secrets*.local
+.kamal/state/

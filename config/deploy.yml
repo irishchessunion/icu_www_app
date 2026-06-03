@@ -1,0 +1,91 @@
+# Kamal deployment config for the ICU staging environment.
+# https://kamal-deploy.org/docs
+#
+# Usage from a developer machine (with Docker Desktop + Kamal installed):
+#   bundle exec kamal setup       # first time only
+#   bundle exec kamal deploy      # subsequent deploys
+#   bundle exec kamal app logs -f # tail logs
+#
+# Secrets live in .kamal/secrets and are sourced from local ENV vars
+# (or `op read` calls for 1Password integration). See that file for the list.
+
+service: icu-www-app
+
+# Image name (without registry prefix). Combined with `registry.server`
+# below this resolves to e.g. ghcr.io/irishchessunion/icu-www-app:<tag>.
+image: irishchessunion/icu-www-app
+
+servers:
+  web:
+    - 49.13.6.94
+
+ssh:
+  user: etagwerker
+
+# Kamal 2 ships its own reverse proxy (kamal-proxy) for routing & SSL.
+# Set `host` and flip `ssl: true` once a hostname is pointed at the box;
+# until then we route by IP with HTTP only.
+proxy:
+  ssl: false
+  app_port: 3000
+  # host: staging.icu.ie
+
+registry:
+  server: ghcr.io
+  username: irishchessunion
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+  dockerfile: Dockerfile.production
+
+env:
+  clear:
+    RAILS_ENV: upat
+    RAILS_LOG_TO_STDOUT: "true"
+    RAILS_SERVE_STATIC_FILES: "true"
+    DATABASE_HOST: icu-www-app-mysql
+    DATABASE_USERNAME: icu_www
+    RAILS_MAX_THREADS: "5"
+    REDIS_URL: redis://icu-www-app-redis:6379/0
+  secret:
+    - SECRET_KEY_BASE
+    - DATABASE_PASSWORD
+    - STRIPE_PUBLIC_KEY
+    - STRIPE_SECRET_KEY
+    - MAILGUN_PASSWORD
+    - MAILGUN_SECRET
+    - MAILGUN_PUBLIC
+    - GOOGLE_MAPS_API_KEY
+    - PAPERCLIP_HASH_SECRET
+    - SEASON_TICKET_BASE
+
+# Persist Paperclip uploads across container redeploys.
+# The ENV-templated config/secrets.yml is baked into the image at build time
+# (see Dockerfile.production), so no extra mount is needed for secrets.
+volumes:
+  - "icu_www_app_uploads:/rails/public/system"
+
+# Side services managed by Kamal as Docker containers on the same host.
+# They live on the kamal private network — no host ports published, so
+# they won't collide with anything currently running on the box.
+accessories:
+  mysql:
+    image: mysql:8.0
+    host: 49.13.6.94
+    env:
+      clear:
+        MYSQL_DATABASE: www_upat
+        MYSQL_USER: icu_www
+      secret:
+        - MYSQL_ROOT_PASSWORD
+        - MYSQL_PASSWORD
+    directories:
+      - data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    host: 49.13.6.94
+    directories:
+      - data:/data
