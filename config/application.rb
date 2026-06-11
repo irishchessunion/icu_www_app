@@ -22,6 +22,10 @@ module IcuWwwApp
       @_secrets ||= config_for(:secrets)
     end
 
+    if !NextRails.next?
+      config.active_support.to_time_preserves_timezone = :zone
+    end
+
 
     # Disable belongs_to required by default (introduced in 5.0 load_defaults).
     # The app's models rely on optional belongs_to associations.
