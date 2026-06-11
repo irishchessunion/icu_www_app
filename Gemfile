@@ -84,10 +84,6 @@ end
 
 # Avoiding CVE problems - these are found with `bundle audit`
 gem "nokogiri", ">= 1.18.9"
-if next?
-  gem "rack", ">= 3.1" # Rails 8.0 requires Rack 3
-else
-  gem "rack", "~> 2.2.20" # CVE patches for Rack 2.2.x (Rails 7.2 still works with Rack 2)
-end
+gem "rack", "~> 2.2.20"
 gem "rexml", ">= 3.3.9"
 gem "thor", ">= 1.4.0"

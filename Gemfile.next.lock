@@ -284,14 +284,14 @@ GEM
     puma (7.2.0)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.2.6)
-    rack-session (2.1.2)
-      base64 (>= 0.1.0)
-      rack (>= 3.0.0)
+    rack (2.2.23)
+    rack-session (1.0.2)
+      rack (< 3)
     rack-test (2.2.0)
       rack (>= 1.3)
-    rackup (2.3.1)
-      rack (>= 3)
+    rackup (1.0.1)
+      rack (< 3)
+      webrick
     rails (8.0.5)
       actioncable (= 8.0.5)
       actionmailbox (= 8.0.5)
@@ -406,6 +406,7 @@ GEM
       tzinfo (>= 1.0.0)
     uri (1.1.1)
     useragent (0.16.11)
+    webrick (1.9.2)
     websocket (1.2.11)
     websocket-driver (0.8.0)
       base64
@@ -440,7 +441,7 @@ DEPENDENCIES
   capistrano-maintenance (~> 1.2)
   capistrano-rails
   capistrano-rvm
-  capybara
+  capybara (>= 3.40)
   capybara-lockstep
   caxlsx
   colored
@@ -462,7 +463,7 @@ DEPENDENCIES
   next_rails
   nokogiri (>= 1.18.9)
   puma (>= 6.4.3)
-  rack (>= 3.1)
+  rack (~> 2.2.20)
   rails (~> 8.0.0)
   rails-controller-testing
   rake
