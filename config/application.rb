@@ -14,7 +14,7 @@ Bundler.require(*Rails.groups)
 # General configuration.
 module IcuWwwApp
   class Application < Rails::Application
-    config.load_defaults 7.2
+    config.load_defaults NextRails.next? ? 8.0 : 7.2
 
     # Rails 7.2 removed Rails.application.secrets. This shim adds it back via config_for
     # so the rest of the codebase keeps working until a proper migration to credentials.
