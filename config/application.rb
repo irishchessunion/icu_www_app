@@ -22,8 +22,6 @@ module IcuWwwApp
       @_secrets ||= config_for(:secrets)
     end
 
-    config.active_support.to_time_preserves_timezone = :zone
-
     # Disable belongs_to required by default (introduced in 5.0 load_defaults).
     # The app's models rely on optional belongs_to associations.
     config.active_record.belongs_to_required_by_default = false
