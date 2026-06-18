@@ -7,9 +7,9 @@ end
 gem "rake"
 
 if next?
-  gem "rails", "~> 8.0.0"
+  gem "rails", "~> 8.1.0"
 else
-  gem "rails", "~> 7.2.0"
+  gem "rails", "~> 8.0.0"
 end
 
 gem "next_rails"

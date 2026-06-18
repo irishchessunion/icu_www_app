@@ -91,7 +91,8 @@ IcuWwwApp::Application.routes.draw do
     end
     resources :failures,        only: [:index, :show, :new, :update, :destroy]
     resources :fees do
-      get :rollover, :clone, on: :member
+      get :rollover, on: :member
+      get :clone, on: :member
     end
     resources :games,           only: [:edit, :update, :destroy]
     resources :images,          only: [:new, :create, :edit, :update, :destroy]
@@ -110,7 +111,9 @@ IcuWwwApp::Application.routes.draw do
     resources :players,         only: [:show, :new, :create, :edit, :update]
     resources :refunds,         only: [:index]
     resources :relays,          only: [:index, :show, :edit, :update] do
-      get :refresh, :enable_all, :disable_all, on: :collection
+      get :refresh, on: :collection
+      get :enable_all, on: :collection
+      get :disable_all, on: :collection
     end
     resources :results, except: [:show] do
       member do
