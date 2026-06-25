@@ -5,7 +5,7 @@ set :branch, "master"
 
 set :deploy_to, "/var/apps/www"
 
-set :linked_files, %w{config/database.yml config/secrets.yml}
+set :linked_files, %w{config/database.yml config/secrets.yml config/puma.rb}
 set :linked_dirs, %w{log tmp/pids tmp/puma tmp/sockets public/system public/webalizer public/sm public/live}  # capistrano/rails adds public/assets
 
 set :maintenance_file, "public/system/maintenance.html"
