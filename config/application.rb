@@ -18,8 +18,11 @@ module IcuWwwApp
 
     # Rails 7.2 removed Rails.application.secrets. This shim adds it back via config_for
     # so the rest of the codebase keeps working until a proper migration to credentials.
+    config.secrets = config_for(:secrets) # loads from config/secrets.yml
+    config.secret_key_base = config.secrets[:secret_key_base]
+
     def secrets
-      @_secrets ||= config_for(:secrets)
+      config.secrets
     end
 
     # Disable belongs_to required by default (introduced in 5.0 load_defaults).
