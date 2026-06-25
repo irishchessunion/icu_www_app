@@ -10,9 +10,10 @@
 set :stage, :upat
 set :deploy_to, "/var/apps/www"
 set :rails_env, 'upat'
-set :branch, "master"
+set :branch, "puma-config"
+set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
 
-server "icu_upat", user: "etagwerker", roles: %w{app db web}
+server "49.13.6.94", user: "arieljuod", roles: %w{app db web}
 
 # role-based syntax
 # ==================
