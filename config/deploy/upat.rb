@@ -12,6 +12,7 @@ set :deploy_to, "/var/apps/www"
 set :rails_env, 'upat'
 set :branch, "puma-config"
 set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
+set :puma_enable_socket_service, true
 
 server "49.13.6.94", user: "arieljuod", roles: %w{app db web}
 

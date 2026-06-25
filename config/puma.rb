@@ -36,8 +36,3 @@ plugin :tmp_restart
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
-
-puma_tmp_path = Rails.root.join("tmp", "puma")
-bind "unix://#{puma_tmp_path}/puma.sock"
-pidfile "#{puma_tmp_path}/puma.pid"
-state_path "#{puma_tmp_path}/puma.state"
