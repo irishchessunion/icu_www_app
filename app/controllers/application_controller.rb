@@ -110,7 +110,7 @@ class ApplicationController < ActionController::Base
   def switch_to_tls(prefix_or_path)
     prefix, path = _split(prefix_or_path)
     if Rails.env.production? && !request.ssl?
-      prefix ? send("#{prefix}_url", protocol: "https") : "https://www.icu.ie#{path}"
+      prefix ? send("#{prefix}_url", protocol: "https") : "https://#{request.host}#{path}"
     else
       prefix ? send("#{prefix}_path") : path
     end
@@ -119,7 +119,7 @@ class ApplicationController < ActionController::Base
   def switch_from_tls(prefix_or_path)
     prefix, path = _split(prefix_or_path)
     if Rails.env.production? && request.ssl?
-      prefix ? send("#{prefix}_url", protocol: "http") : "http://www.icu.ie#{path}"
+      prefix ? send("#{prefix}_url", protocol: "http") : "http://#{request.host}#{path}"
     else
       prefix ? send("#{prefix}_path") : path
     end

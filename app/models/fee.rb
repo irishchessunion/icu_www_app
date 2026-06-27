@@ -18,7 +18,7 @@ class Fee < ApplicationRecord
   validates :amount, numericality: { greater_than_or_equal_to: Cart::MIN_AMOUNT, less_than: Cart::MAX_AMOUNT }, unless: Proc.new { |f| f.amount.blank? }
   validates :amount, presence: true, unless: Proc.new { |f| f.user_amount? }
   validates :days, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
-  validates :url, url: true, allow_nil: true
+  validates :url, url: true, if: -> { self[:url].present? }
   validate :valid_days, :valid_dates, :valid_discount, :valid_age_limits, :valid_rating_limits
 
   scope :alphabetic, -> { order(name: :asc) }
