@@ -6,7 +6,7 @@ class PasswordsController < ApplicationController
 
   # POST /password
   def create
-    user = User.for_subscribed_player(params[:email])
+    user = User.where(email: params[:email]).first
     unless user
       redirect_to new_password_path, notice: t('password.unknown_email')
       return
