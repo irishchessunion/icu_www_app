@@ -15,7 +15,7 @@ en:
     incomplete_registration: Already created but waiting for response to verification message
     junior_newsletter: Would you like to receive a newsletter on junior chess by email?
     locale: Language
-    need_to_sign_up: Register if you have never had an account and are a member
+    need_to_sign_up: Click here to register if you have never had an account and are a member
     new: Register for website account
     new_password_1: New password
     new_password_2: Confirm password
