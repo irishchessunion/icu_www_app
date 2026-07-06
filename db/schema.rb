@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_03_16_120000) do
+ActiveRecord::Schema[7.0].define(version: 2026_03_24_120000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -629,6 +629,10 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_16_120000) do
     t.integer "legacy_games", limit: 2
     t.integer "latest_rating", limit: 2
     t.string "privacy"
+    t.integer "fide_id"
+    t.integer "fide_rating", limit: 2
+    t.integer "fide_rapid_rating", limit: 2
+    t.integer "fide_blitz_rating", limit: 2
     t.index ["club_id"], name: "index_players_on_club_id"
     t.index ["dob"], name: "index_players_on_dob"
     t.index ["fed"], name: "index_players_on_fed"

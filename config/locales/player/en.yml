@@ -65,6 +65,10 @@ en:
     rating:
       latest: Latest rating
       ratings: Ratings
+      fide_id: FIDE ID
+      fide_rating: FIDE rating
+      fide_rapid_rating: FIDE rapid rating
+      fide_blitz_rating: FIDE blitz rating
       type:
         full: Full
         provisional: Provisional
