@@ -631,6 +631,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_01_113725) do
     t.integer "legacy_games", limit: 2
     t.integer "latest_rating", limit: 2
     t.string "privacy"
+    t.integer "fide_id"
+    t.integer "fide_rating", limit: 2
+    t.integer "fide_rapid_rating", limit: 2
+    t.integer "fide_blitz_rating", limit: 2
     t.index ["club_id"], name: "index_players_on_club_id"
     t.index ["dob"], name: "index_players_on_dob"
     t.index ["fed"], name: "index_players_on_fed"
