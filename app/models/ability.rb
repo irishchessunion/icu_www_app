@@ -14,6 +14,7 @@ class Ability
     can :index, [Article, Arbiter, Download, Game, Image, Series, Tournament]
     can :show, [Article, Arbiter, Game, Series, Tournament]
     can [:edit, :update], Arbiter, player_id: user.player_id
+    can [:edit, :update], Club, secretary_id: user.player_id if user.player_id.present?
 
     if user.admin?
       can :manage, :all
