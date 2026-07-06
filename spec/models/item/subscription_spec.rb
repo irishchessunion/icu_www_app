@@ -150,7 +150,7 @@ describe Item::Subscription do
     it "successful" do
       player = create(:player)
       create(:paid_subscription_item, player: player)
-      user = User.for_subscribed_player(player.email)
+      create(:user, player: player)
       expect{ Item::Subscription.new_lifetime_member(player.id) }.to_not raise_error
       for user in player.users
         expect(user.expires_on).to eq(Date.new(Date.today.year) + 100.years)
