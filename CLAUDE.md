@@ -40,7 +40,7 @@ Tests use RSpec + Capybara/Selenium (feature specs) with `database_cleaner` (tra
 
 ### Dual Rails version (`Gemfile.next`)
 
-The app is mid-upgrade from Rails 7.1 to 7.2. `Gemfile.next` is a symlink to `Gemfile`; the `next_rails` gem (`NextRails.next?`) checks which filename Bundler was invoked with (`File.basename(__FILE__) == "Gemfile.next"`) and switches gem versions/config load_defaults accordingly (see `config/application.rb`). To exercise the "next" version locally, invoke Bundler with `BUNDLE_GEMFILE=Gemfile.next`. Don't remove this dual-boot scaffolding without checking whether the upgrade is complete.
+The app is mid-upgrade from Rails 8.0 to 8.1. `Gemfile.next` is a symlink to `Gemfile`; the `next_rails` gem (`NextRails.next?`) checks which filename Bundler was invoked with (`File.basename(__FILE__) == "Gemfile.next"`) and switches gem versions/config load_defaults accordingly (see `config/application.rb`). To exercise the "next" version locally, invoke Bundler with `BUNDLE_GEMFILE=Gemfile.next`. Don't remove this dual-boot scaffolding without checking whether the upgrade is complete.
 
 ## Architecture
 
