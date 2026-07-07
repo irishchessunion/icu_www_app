@@ -285,7 +285,7 @@ class Event < ApplicationRecord
 
   def restrict_edits_if_ended
     return if end_date.blank?
-    return if end_date > Date.today
+    return if end_date >= Date.today
 
     disallowed_changes = changed - EDIT_AFTER_ENDED
     if disallowed_changes.any?
