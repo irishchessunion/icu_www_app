@@ -115,7 +115,12 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   options.add_argument('--window-size=1920,1080')
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--disable-gpu')
+
+  service = Selenium::WebDriver::Service.chrome(
+    args: ["--verbose", "--log-path=/rails/log/chromedriver.log"]
+  )
   # options.add_argument("--remote-debugging-port=9222")
-  Capybara::Selenium::Driver.new(app, :browser => :chrome, options: options)
+  Capybara::Selenium::Driver.new(app, :browser => :chrome, options: options, service: service)
   # Capybara::Selenium::Driver.new(app, :browser => :chrome)
 end

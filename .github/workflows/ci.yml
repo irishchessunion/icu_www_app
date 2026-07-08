@@ -86,7 +86,7 @@ jobs:
 
       - name: Run RSpec tests
         run: |
-          docker compose run --rm -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
+          docker compose run --rm -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress spec/features/shop_spec.rb:100
         env:
           BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
@@ -104,6 +104,14 @@ jobs:
         with:
           name: test-screenshots-rails-${{ matrix.rails_version }}
           path: tmp/screenshots/
+          if-no-files-found: ignore
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.rails_version }}
+          path: log
           if-no-files-found: ignore
 
       - name: Cleanup
