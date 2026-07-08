@@ -30,10 +30,12 @@ ENV CHROME_BIN=/usr/bin/chromium \
 
 WORKDIR /rails
 
+ARG BUNDLE_GEMFILE=Gemfile
 ENV BUNDLE_PATH="/usr/local/bundle" \
-  BUNDLE_JOBS=4
+  BUNDLE_JOBS=4 \
+  BUNDLE_GEMFILE=${BUNDLE_GEMFILE}
 
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile Gemfile.lock Gemfile.next Gemfile.next.lock ./
 RUN bundle config build.sassc -- --with-cflags="-Wno-error"
 RUN bundle install
 

@@ -4,11 +4,15 @@
   .col-sm-8.col-sm-offset-2
     %h1.text-center= t("password.new")
     %hr
+    %h4 Disclaimer
+    %p= t('password.disclaimer')
+    %p= link_to t("user.need_to_sign_up"), switch_to_tls(:sign_up)
+    %hr
     = form_tag password_path, method: :post, class: "form-horizontal", role: "form" do
       %fieldset
         - locals = { col: "sm", pad: 4, width: 4 }
         = render "utils/text_field_tag", locals.merge(param: :email, text: t("password.email"), type: 'email')
-        .text-sm= t('password.instructions')
+        %p= t('password.instructions')
       %hr
       .text-center
         = submit_tag t("send_request"), class: "btn btn-primary"

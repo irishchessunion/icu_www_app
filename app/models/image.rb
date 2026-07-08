@@ -4,7 +4,7 @@ class Image < ApplicationRecord
 
   journalize %w[data_file_name data_content_type data_file_size caption credit year], "/images/%d"
 
-  serialize :dimensions, Hash
+  serialize :dimensions, coder: YAML, type: Hash
 
   TYPES = "jpe?g|gif|png"
   MAX_PIXELS = 4000

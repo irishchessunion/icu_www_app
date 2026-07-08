@@ -1,0 +1,38 @@
+- content_for :title, @arbiter.player.name
+
+.row
+  .col-sm-8.col-sm-offset-2
+    %h1.text-center= @arbiter.player.name
+    %table.table.table-striped
+      - if can?(:manage, Arbiter)
+        %tr
+          %th= t("player.id")
+          %td= link_to @arbiter.player_id, admin_player_path(@arbiter.player_id)
+      %tr
+        %th= t("arbiter.level")
+        %td= t("arbiter.levels.#{@arbiter.level}")
+      %tr
+        %th= t("arbiter.date_of_qualification")
+        %td= @arbiter.date_of_qualification.to_fs(:db)
+      %tr
+        %th= t("arbiter.location")
+        %td= @arbiter.location
+      %tr
+        %th= t("email")
+        %td= @arbiter.email
+      %tr
+        %th= t("arbiter.phone")
+        %td= @arbiter.phone
+      - if can?(:manage, Arbiter)
+        %tr
+          %th= t("active")
+          %td= @arbiter.active ? t("yes") : t("no")
+    .text-center
+      - if can?(:edit, @arbiter)
+        = link_to t("edit"), edit_arbiter_path(@arbiter), class: "btn btn-primary"
+      - if can?(:destroy, @arbiter)
+        = link_to t("delete"), arbiter_path(@arbiter), method: :delete, data: { confirm: t("confirm") }, class: "btn btn-danger"
+      = link_to t("cancel"), arbiters_path, class: "btn btn-default"
+
+- if can?(:manage, Arbiter)
+  = render "admin/journal_entries/changes", entries: @entries

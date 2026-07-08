@@ -7,8 +7,17 @@ on:
 
 jobs:
   test:
-    name: Run Tests
+    name: Run Tests (Rails ${{ matrix.rails_version }})
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rails_version: "8.0"
+            gemfile: "Gemfile"
+          - rails_version: "8.1"
+            gemfile: "Gemfile.next"
 
     steps:
       - name: Checkout code
@@ -26,21 +35,24 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-buildx-${{ matrix.rails_version }}-${{ hashFiles('**/Gemfile.lock', '**/Gemfile.next.lock') }}
           restore-keys: |
+            ${{ runner.os }}-buildx-${{ matrix.rails_version }}-
             ${{ runner.os }}-buildx-
 
       - name: Build Docker images
         run: |
-          docker compose build --build-arg BUILDKIT_INLINE_CACHE=1
+          docker compose build --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg BUNDLE_GEMFILE=${{ matrix.gemfile }}
         env:
           DOCKER_BUILDKIT: 1
           COMPOSE_DOCKER_CLI_BUILD: 1
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Start services
         run: |
-          export SKIP_DB_SETUP=true
-          docker compose up -d db redis web
+          docker compose up -d db redis
+        env:
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Wait for database to be ready
         run: |
@@ -68,17 +80,19 @@ jobs:
 
       - name: Create and prepare test database
         run: |
-          docker compose exec -T -e RAILS_ENV=test web bin/rails db:create db:test:prepare
+          docker compose run --rm -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bin/rails db:create db:test:prepare
+        env:
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Run RSpec tests
         run: |
-          docker compose exec -T -e RAILS_ENV=test web bundle exec rspec --format progress
+          docker compose run --rm -e RAILS_ENV=test -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
+        env:
+          BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
       - name: Show test logs on failure
         if: failure()
         run: |
-          echo "=== Web service logs ==="
-          docker compose logs web
           echo "=== Database service logs ==="
           docker compose logs db
           echo "=== Redis service logs ==="
@@ -88,7 +102,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-screenshots
+          name: test-screenshots-rails-${{ matrix.rails_version }}
           path: tmp/screenshots/
           if-no-files-found: ignore
 

@@ -2,7 +2,7 @@
   = render(:partial => "utils/file_field", :handlers => [:erb], :formats => [:js], :locals => { :param => "flyer" })
 
 - has_started = @event.start_date.present? && @event.start_date <= Date.today
-- has_ended = @event.end_date.present? && @event.end_date <= Date.today
+- has_ended = @event.end_date.present? && @event.end_date < Date.today
 
 .row
   .col-md-1

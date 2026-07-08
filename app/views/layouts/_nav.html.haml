@@ -48,6 +48,7 @@
           = t("more")
           %b.caret
         %ul.dropdown-menu
+          %li{class: active("arbiters")}= link_to t("arbiter.arbiters"), arbiters_path
           - if can?(:index, Article)
             %li{class: active("articles")}= link_to t("article.articles"), articles_path
           - if can?(:index, Series)
