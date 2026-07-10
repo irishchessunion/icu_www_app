@@ -9,6 +9,6 @@ class DownloadsController < ApplicationController
   def show
     @download = Download.find(params[:id])
     raise CanCan::AccessDenied.new(nil, :read, Download) unless @download.accessible_to?(current_user)
-    redirect_to @download.url
+    redirect_to @download.url, allow_other_host: true
   end
 end

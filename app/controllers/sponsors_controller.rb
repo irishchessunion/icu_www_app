@@ -8,6 +8,6 @@ class SponsorsController < ApplicationController
   def click_on
     @sponsor = Sponsor.find(params[:id])
     @sponsor.record_click
-    redirect_to @sponsor.weblink
+    redirect_to @sponsor.weblink, allow_other_host: true
   end
 end

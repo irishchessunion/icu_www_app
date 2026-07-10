@@ -42,7 +42,7 @@ class UsersController < ApplicationController
     else
       @user.journal(:update, current_user, request.remote_ip)
       flash[:notice] = "Password updated"
-      redirect_to switch_from_tls(:account)
+      redirect_to switch_from_tls(:account), allow_other_host: true
     end
   end
 
@@ -53,7 +53,7 @@ class UsersController < ApplicationController
       @user.journal(:update, @user, request.remote_ip)
       flash[:notice] = I18n.t("user.completed_registration")
     end
-    redirect_to switch_to_tls(:sign_in)
+    redirect_to switch_to_tls(:sign_in), allow_other_host: true
   end
 
   private
