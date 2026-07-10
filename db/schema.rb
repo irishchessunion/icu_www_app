@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_16_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_06_120000) do
+
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -152,10 +153,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_16_120000) do
     t.boolean "junior_only", default: false
     t.boolean "has_junior_section", default: false
     t.string "eircode"
+    t.integer "secretary_id"
     t.index ["active"], name: "index_clubs_on_active"
     t.index ["city"], name: "index_clubs_on_city"
     t.index ["county"], name: "index_clubs_on_county"
     t.index ["name"], name: "index_clubs_on_name"
+    t.index ["secretary_id"], name: "index_clubs_on_secretary_id"
   end
 
   create_table "documents", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|

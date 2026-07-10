@@ -28,6 +28,31 @@ describe Ability do
 
   end
 
+  context "Club secretary" do
+    let(:secretary) { create(:user) }
+    let(:other_user) { create(:user) }
+    let(:club) { create(:club, secretary_id: secretary.player_id) }
+    let(:other_club) { create(:club, name: "Cork Chess Club") }
+
+    it "can edit and update their own club" do
+      ability = Ability.new(secretary)
+      expect(ability.can?(:edit, club)).to be true
+      expect(ability.can?(:update, club)).to be true
+    end
+
+    it "cannot edit or update other clubs" do
+      ability = Ability.new(secretary)
+      expect(ability.can?(:edit, other_club)).to be false
+      expect(ability.can?(:update, other_club)).to be false
+    end
+
+    it "other users cannot edit or update the club" do
+      ability = Ability.new(other_user)
+      expect(ability.can?(:edit, club)).to be false
+      expect(ability.can?(:update, club)).to be false
+    end
+  end
+
   context "Event permissions" do
     let(:creator) { create(:user, roles: "organiser") }
     let(:full_user) { create(:user, roles: "organiser") }
