@@ -1,0 +1,10 @@
+.event_info
+  - if event.time_controls.present?
+    .time_controls_list
+    - event.time_controls.each do |control|
+      %span{style: "color: var(--map-marker-#{control})"}= t("event.time_controls.#{control}")
+  %hr
+  .text-center
+    %strong= link_to event.name, event_path(event)
+  %hr
+  .text-center.text-muted= event.start_date.strftime("%-d %b %Y")

@@ -7,8 +7,8 @@ class EventsController < ApplicationController
     @events = Event.search(params, events_path)
     @map_events = Event.with_geocodes.search(params, events_path)
     # Map coordinates of default area bounds [Lat, Lng]
-    @center = [53.45, -7.95]
-    @zoom = 6.4
+    @center = [53.5, -8]
+    @zoom = 5.5
     flash.now[:warning] = t("no_matches") if @events.count == 0
     save_last_search(@events, :events)
   end

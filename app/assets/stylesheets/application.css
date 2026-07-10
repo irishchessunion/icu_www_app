@@ -54,6 +54,7 @@
 }
 
 /* Text styling. */
+.text-muted { color: var(--gray) } /* default is too light */
 .text-done { text-decoration: line-through !important; }
 .glyphicon-sm { font-size: 12px; }
 .glyphicon-xs { font-size: 10px; margin: 0 0 4px 0; }
