@@ -153,6 +153,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_06_120000) do
     t.boolean "junior_only", default: false
     t.boolean "has_junior_section", default: false
     t.string "eircode"
+    t.string "description"
+    t.text "notes"
     t.integer "secretary_id"
     t.index ["active"], name: "index_clubs_on_active"
     t.index ["city"], name: "index_clubs_on_city"
@@ -632,6 +634,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_06_120000) do
     t.integer "legacy_games", limit: 2
     t.integer "latest_rating", limit: 2
     t.string "privacy"
+    t.integer "fide_id"
+    t.integer "fide_rating", limit: 2
+    t.integer "fide_rapid_rating", limit: 2
+    t.integer "fide_blitz_rating", limit: 2
     t.index ["club_id"], name: "index_players_on_club_id"
     t.index ["dob"], name: "index_players_on_dob"
     t.index ["fed"], name: "index_players_on_fed"

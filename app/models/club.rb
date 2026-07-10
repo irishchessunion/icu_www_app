@@ -4,7 +4,7 @@ class Club < ApplicationRecord
   include Normalizable
   include Pageable
 
-  journalize %w[name web meet address district city county lat long contact email phone active secretary_id], "/clubs/%d"
+  journalize %w[name web meet address district city county lat long contact email phone active description notes secretary_id], "/clubs/%d"
 
   has_many :players
   belongs_to :secretary, class_name: "Player", optional: true

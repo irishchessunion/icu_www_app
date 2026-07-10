@@ -6,6 +6,10 @@
   .col-md-8.col-md-offset-2
     %h1.text-center= @club.name
     %table.table.table-bordered
+      - if @club.description.present?
+        %tr
+          %th= t("description")
+          %td= @club.description
       %tr
         %th= t("club.web")
         %td= link_to simple_url(@club.web), @club.web, target: "club" if @club.web.present?
@@ -63,6 +67,10 @@
       %tr
         %th= t("active")
         %td= t(@club.active ? "yes" : "no")
+      - if @club.notes.present?
+        %tr
+          %th= t("club.notes")
+          %td= @club.notes
       %tr
         %th= t("player.players")
         - clubs = @club.players.where(status: "active").count
