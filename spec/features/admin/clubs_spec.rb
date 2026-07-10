@@ -136,6 +136,25 @@ describe Club do
       expect(page).to have_css(field_error, text: "invalid")
     end
 
+    it "secretary is saved and shown on the club page" do
+      player = create(:player)
+      fill_in I18n.t("club.secretary"), with: player.id
+      click_button save
+
+      expect(page).to have_css(success)
+      expect(@bangor.reload.secretary_id).to eq player.id
+
+      visit club_path(@bangor)
+      expect(page).to have_content(player.name)
+    end
+
+    it "secretary must be an existing player" do
+      fill_in I18n.t("club.secretary"), with: 999999
+      click_button save
+      expect(page).to have_css(field_error, text: "does not exist")
+      expect(@bangor.reload.secretary_id).to be_nil
+    end
+
     it "at least one contact method is mandadory for an active club" do
       fill_in website, with: ""
       fill_in email, with: ""

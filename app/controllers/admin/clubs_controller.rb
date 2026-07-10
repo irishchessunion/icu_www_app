@@ -35,6 +35,6 @@ class Admin::ClubsController < ApplicationController
 
   def club_params
     params[:club].permit(:name, :web, :meet, :address, :district, :city, :county, :eircode, :lat, :long, :contact,
-                         :email, :phone, :junior_only, :has_junior_section, :active, :description, :notes)
+                         :email, :phone, :junior_only, :has_junior_section, :active, :description, :notes, :secretary_id)
   end
 end

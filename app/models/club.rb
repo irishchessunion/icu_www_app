@@ -4,9 +4,10 @@ class Club < ApplicationRecord
   include Normalizable
   include Pageable
 
-  journalize %w[name web meet address district city county lat long contact email phone active description notes], "/clubs/%d"
+  journalize %w[name web meet address district city county lat long contact email phone active description notes secretary_id], "/clubs/%d"
 
   has_many :players
+  belongs_to :secretary, class_name: "Player", optional: true
 
   default_scope { order(:name) }
   scope :active, -> { where(active: true) }
@@ -29,6 +30,7 @@ class Club < ApplicationRecord
   validates :email, email: true, allow_nil: true
   validates :phone, format: { with: /\d{3}/ }, allow_nil: true
   validates :active, inclusion: { in: [true, false] }
+  validate :secretary_exists
 
   def province
     Ireland.province(county)
@@ -71,6 +73,12 @@ class Club < ApplicationRecord
   end
 
   private
+
+  def secretary_exists
+    if secretary_id.present? && !Player.exists?(secretary_id)
+      errors.add(:secretary_id, "player does not exist")
+    end
+  end
 
   def has_contact_method
     if active && !contactable?

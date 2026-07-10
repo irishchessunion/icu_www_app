@@ -3,6 +3,23 @@ require 'rails_helper'
 describe Club do
   let(:bangor) { create(:club) }
 
+  context "secretary" do
+    it "can be blank" do
+      bangor.secretary_id = nil
+      expect{ bangor.save! }.to_not raise_error
+    end
+
+    it "can be an existing player" do
+      bangor.secretary_id = create(:player).id
+      expect{ bangor.save! }.to_not raise_error
+    end
+
+    it "must reference an existing player" do
+      bangor.secretary_id = 999999
+      expect{ bangor.save! }.to raise_error(/does not exist/i)
+    end
+  end
+
   context "latitude and longitude" do
     it "can be blank" do
       bangor.lat = nil
