@@ -2,8 +2,9 @@
   - if section.present?
     %strong= section.capitalize
   - fees.each do |fee_entry|
+    - path = section.present? ? new_item_path(fee_id: fee_entry.id, section: section) : new_item_path(fee_id: fee_entry.id)
     .inline-flex
-      = link_to new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm' do
+      = link_to path, class: 'btn btn-info btn-sm' do
         = format_fee_with_discount(fee_entry)
       %span{style: "line-height: 1em"}
         = fee_entry.name
