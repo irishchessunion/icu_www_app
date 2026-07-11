@@ -1,6 +1,11 @@
 - section_names = @event.section_names
 - paid_entries = @event.items.paid
 
+-# When can entries in each group be moved?
+- move_for_valid = admin && section_names.size > 1
+- move_for_unsectioned = admin && section_names.any?
+- move_for_invalid = admin
+
 - if paid_entries.any?
   %section{"id": "entries", "class": "entries", "aria-label": "List of #{t('event.entries')}"}
     %header.inline-between
@@ -43,7 +48,7 @@
         - if unsectioned.any?
           %li
             %a{href: "#unsectioned", "data-toggle": "tab"}
-              Unsectioned
+              %span.muted= t('event.sections.none')
               %span.label.label-sm.label-rounded.panel-pastel-primary= unsectioned.size
         - if admin && invalid_sections.any?
           %li.invalid-entries
@@ -55,106 +60,12 @@
         - section_names.each_with_index do |section, index|
           %ol{id: section, class:"tab-pane fade #{'active in' if index.zero?}"}
             - paid_entries.where(section: section).each do |entry_item|
-              = render "events/show_entries_entry", entry_item: entry_item, show_move: admin && section_names.size > 1
+              = render "events/show_entries_entry", entry_item: entry_item, show_move: move_for_valid
         - if unsectioned.any?
           %ol{id: "unsectioned", class:"tab-pane fade"}
             - unsectioned.each do |entry_item|
-              = render "events/show_entries_entry", entry_item: entry_item, show_move: admin && section_names.size > 1
+              = render "events/show_entries_entry", entry_item: entry_item, show_move: move_for_unsectioned
         - if admin && invalid_sections.any?
           %ol{id: "invalidEntries", class:"tab-pane fade"}
             - invalid_sections.each do |entry_item|
-              = render "events/show_entries_entry", entry_item: entry_item, show_move: admin && section_names.size > 1
-
-
--# %section{"id": "entries", "class": "entries", "aria-label": "List of #{t('event.entries')}"}
--#   %header.inline-between
--#     %h4= t('event.entries')
--#     %div.inline-flex
--#       %span.text-muted= "#{@event.items.paid.size} entries"
--#       -# Sort by (ICU, FIDE)
--#       %button{type: "button", "aria-label": "Sort by ICU rating, descending", class: "btn btn-pastel-info btn-xs"}
--#         ICU rating
--#         %span.glyphicon.glyphicon-sort-by-attributes-alt
-
--#   -# List of entries
--#   - if @event.items.empty?
-
--#     -# If no sections, display only a single list
--#     - section_names = @event.section_names
--#     - if section_names.empty?
--#       %ol
--#         %li.entry.inline-between
--#           %span.with_title
--#             %span.label.label-default.label-sm.label-margin-right GM
--#             John Smith
--#           %span 2450
--#         %li.entry.inline-between
--#           %span.with_title
--#             %span.label.label-default.label-sm.label-margin-right CM
--#             Jane Doe
--#           %span 2231
--#         %li.entry.inline-between
--#           %span.with_title
--#             Declan Byrne
--#           %span 1896
--#         %li.entry.inline-between
--#           %span.with_title
--#             Jonathan Kennedy
--#           %span 1702
--#         %li.entry.inline-between
--#           %span.with_title
--#             Mark O'Connor
--#           %span 1833
-
--#     - else
--#       %ul.nav.nav-tabs
--#         - @event.section_names.each_with_index do |section, index|
--#           %li{ class: ("active" if index.zero?) }
--#             %a{href: "##{section}", "data-toggle": "tab"}
--#               = section.capitalize()
--#               %span.label.label-sm.label-rounded.panel-pastel-primary 0
--#         - paid_invalid_section = @event.items.paid.where("section NOT IN (?)", section_names)
--#         - if can?(:edit, @event) and paid_invalid_section.size == 0
--#           %li.invalid-entries
--#             %a{href: "#invalidEntries", "data-toggle": "tab"}
--#               Invalid
--#               %span.label.label-sm.label-rounded.panel-pastel-danger= paid_invalid_section.size
--#       %div{id: "myTabContent", class:"entries-list tab-content"}
--#         %ol{id: "masters", class:"tab-pane fade active in"}
--#           %li.entry.inline-between
--#             %span.with_title
--#               %span.label.label-default.label-sm.label-margin-right GM
--#               John Smith
--#             %span 2450
--#           %li.entry.inline-between
--#             %span.with_title
--#               %span.label.label-default.label-sm.label-margin-right CM
--#               Jane Doe
--#             %span 2231
--#           %li.entry.inline-between
--#             %span.with_title
--#               Declan Byrne
--#             %span 1896
--#           %li.entry.inline-between
--#             %span.with_title
--#               Jonathan Kennedy
--#             %span 1702
--#           %li.entry.inline-between
--#             %span.with_title
--#               Mark O'Connor
--#             %span 1833
--#         %ol{id: "open", class:"tab-pane fade"}
--#         - if can?(:edit, @event) and paid_invalid_section.size == 0
--#           %ol{id: "invalidEntries", class:"tab-pane fade"}
--#             - paid_invalid_section.each do |entry_item|
--#               %li.entry.inline-between
--#                 %span.with_title
--#                   %span.label.label-default.label-sm.label-margin-right CM
--#                   Jane Doe
--#                 %div.inline-flex
--#                   %span 2231
--#                   - if can?(:show, entry_item.cart)
--#                     %span
--#                       Cart ID:
--#                       = link_to entry_item.cart_id, admin_cart_path(entry_item.cart_id)
--#                   = link_to "Move", edit_admin_item_path(entry_item), class: 'btn btn-primary btn-xs'
+              = render "events/show_entries_entry", entry_item: entry_item, show_move: move_for_invalid
