@@ -15,7 +15,6 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
-    @prev_next = Util::PrevNext.new(session, Event, params[:id])
     @entries = @event.journal_search if can?(:create, Event)
     @extras = {}
     if can?(:update, @event)

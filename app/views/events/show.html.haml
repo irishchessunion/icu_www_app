@@ -23,6 +23,11 @@
       .primary-content
         = render "events/show_description"
         = render "events/show_contact"
+        - if @entries.present?
+          %button{type: "button", "data-toggle": "collapse", "data-target": "#changeLog", class: "btn btn-primary"}
+            View changelog
+          %div{id: "changeLog", class: "collapse"}
+            = render "admin/journal_entries/changes", entries: @entries
 
       %aside{class: "side-content"}
         = render "events/show_admin", admin: admin
@@ -30,4 +35,3 @@
         = render "events/show_links"
         = render "events/show_entries", admin: admin
 
--# = render "admin/journal_entries/changes", entries: @entries
