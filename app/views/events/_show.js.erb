@@ -5,31 +5,27 @@ $(function() {
     ICU.Maps.init("map-canvas", data);
   }
 
-  var $sections = $("#description, #contact, #links, #enter, #entries");
-  var $navItems = $(".event-nav-sm li");
+  var $navLinks = $(".event-nav-sm a");
+  var $sections = $($navLinks.map(function() {
+    return $($(this).attr("href"))[0];
+  }).get()).filter(function() { return !!this; });
 
-  if ($sections.length === 0 || $navItems.length === 0) return;
+  if ($sections.length === 0 || $navLinks.length === 0) return;
 
   var setActive = function(id) {
-    $navItems.each(function() {
-      var $item = $(this);
-      var href = $item.find("a").attr("href");
-      $item.toggleClass("active", href === "#" + id);
+    $navLinks.each(function() {
+      $(this).closest("li").toggleClass("active", this.getAttribute("href") === "#" + id);
     });
   };
 
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        setActive(entry.target.id);
-      }
+      if (entry.isIntersecting) setActive(entry.target.id);
     });
   }, {
-    rootMargin: "-40px 0px -80% 0px",
+    rootMargin: "-40px 0px -75% 0px",
     threshold: 0
   });
 
-  $sections.each(function() {
-    observer.observe(this);
-  });
+  $sections.each(function() { observer.observe(this); });
 });
