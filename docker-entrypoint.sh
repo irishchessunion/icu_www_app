@@ -11,13 +11,13 @@ fi
 
 if [ ! -f /rails/config/database.yml ]; then
   echo "Copying example database.yml..."
-  cp /rails/config/database.yml.docker /rails/config/database.yml
+  cp /rails/config/examples/database-docker.yml /rails/config/database.yml
 fi
 
 bundle check || bundle install
 
-if [ "$RAILS_ENV" = "development" ] || [ "$RAILS_ENV" = "test" ]; then
-  bundle exec rails db:prepare 2>/dev/null || bundle exec rails db:create db:migrate
+if [ "${SKIP_DB_SETUP}" != "true" ]; then
+  bundle exec rails db:prepare
 fi
 
 exec "$@"

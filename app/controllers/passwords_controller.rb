@@ -6,7 +6,7 @@ class PasswordsController < ApplicationController
 
   # POST /password
   def create
-    user = User.for_subscribed_player(params[:email])
+    user = User.where(email: params[:email]).first
     unless user
       redirect_to new_password_path, notice: t('password.unknown_email')
       return
@@ -48,7 +48,7 @@ class PasswordsController < ApplicationController
   def last_page_before_sign_in_or_home(notice)
     goto = session[:last_page_before_sign_in]
     goto = :home unless goto.present? && goto.match(/\A\//)
-    redirect_to switch_from_tls(goto), notice: notice
+    redirect_to switch_from_tls(goto), notice: notice, allow_other_host: true
   end
 
   # Only allow a trusted parameter "white list" through.

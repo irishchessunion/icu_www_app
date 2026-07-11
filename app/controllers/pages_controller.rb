@@ -53,6 +53,13 @@ class PagesController < ApplicationController
     @junior_clubs = Club.active.junior
   end
 
+  def organisers
+    @news = News.active.organisers.ordered.limit(8)
+    @articles = Article.active.organisers.ordered.limit(8)
+    @ongoing_events = Event.active.short.where(category: %w(irish women)).where('start_date <= ? AND end_date >= ?', Date.today, Date.today).ordered.limit(4)
+    @upcoming_events = Event.active.short.where(category: %w(irish women)).where('start_date > ?', Date.today).ordered.limit(4)
+  end
+
   private
 
   def load_donate_fee

@@ -30,6 +30,6 @@ class SessionsController < ApplicationController
   def last_page_before_sign_in_or_home(notice)
     goto = session[:last_page_before_sign_in]
     goto = :home unless goto.present? && goto.match(/\A\//)
-    redirect_to switch_from_tls(goto), notice: notice
+    redirect_to switch_from_tls(goto), notice: notice, allow_other_host: true
   end
 end

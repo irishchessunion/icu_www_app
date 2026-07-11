@@ -109,6 +109,27 @@ if seed_sample_data
       )
     end
 
+    # Sample arbiter
+    arbiter_player = Player.create!(
+      first_name: "Henry",
+      last_name: "Williams",
+      status: "active",
+      email: "henry.williams@icu.ie",
+      gender: "M",
+      dob: "1975-03-10",
+      joined: "2000-01-01",
+      source: "officer"
+    )
+    Arbiter.create!(
+      player: arbiter_player,
+      level: "national",
+      date_of_qualification: "2023-09-15",
+      location: "Dublin",
+      email: "henry.williams@icu.ie",
+      active: true,
+      available: true
+    )
+
     # Sample data for refunds
     5.times do |i|
       Refund.create!(

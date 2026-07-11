@@ -3,41 +3,18 @@ class Ability
 
   def initialize(user)
     if user.guest?
+      can :index, Arbiter
       can :show, Fee::Entry do |entry|
         !entry.organizer_only
       end
       return
     end
 
-    def grant_full_event_permissions(user)
-      # Creator has full manage rights
-      can :manage, Event, user_id: user.id
-
-      # Event users with full_access can manage (except destroy)
-      can [:read, :update, :edit], Event do |event|
-        event.event_users.exists?(user_id: user.id, role: "full_access")
-      end
-
-      # Event users with limited_access can only read/show (incl. downloading entries)
-      can [:read, :show], Event do |event|
-        event.event_users.exists?(user_id: user.id, role: "limited_access")
-      end
-
-      can [:read, :show], Event if user.treasurer?
-
-      # Can view the admin events index
-      can :index, Event
-
-      # Can manage event_users for events they created
-      can [:create, :destroy], EventUser do |event_user|
-        event = event_user.event
-        event.creator?(user) || user.admin?
-      end
-    end
-
     can :view, :special_membership # Used in IcuController to hide life members and current members
-    can :index, [Article, Download, Game, Image, Series, Tournament]
-    can :show, [Article, Game, Series, Tournament]
+    can :index, [Article, Arbiter, Download, Game, Image, Series, Tournament]
+    can :show, [Article, Arbiter, Game, Series, Tournament]
+    can [:edit, :update], Arbiter, player_id: user.player_id
+    can [:edit, :update], Club, secretary_id: user.player_id if user.player_id.present?
 
     if user.admin?
       can :manage, :all
@@ -92,6 +69,7 @@ class Ability
       # Hash condition ensures that .accessible_by works as intended
       can :manage, Fee::Entry, :event => { :user_id => user.id }
       can :manage, Item::Entry, :fee_entry => {:event => { :user_id => user.id }}
+      can :manage, Arbiter
 
       can :create, [Article, News]
       can [:destroy, :update], [Article, News], user_id: user.id
@@ -131,5 +109,31 @@ class Ability
     can :sales_ledger, Item
     can :download, Game
     can :index, Player
+  end
+
+  def grant_full_event_permissions(user)
+    # Creator has full manage rights
+    can :manage, Event, user_id: user.id
+
+    # Event users with full_access can manage (except destroy)
+    can [:read, :update, :edit], Event do |event|
+      event.event_users.exists?(user_id: user.id, role: "full_access")
+    end
+
+    # Event users with limited_access can only read/show (incl. downloading entries)
+    can [:read, :show], Event do |event|
+      event.event_users.exists?(user_id: user.id, role: "limited_access")
+    end
+
+    can [:read, :show], Event if user.treasurer?
+
+    # Can view the admin events index
+    can :index, Event
+
+    # Can manage event_users for events they created
+    can [:create, :destroy], EventUser do |event_user|
+      event = event_user.event
+      event.creator?(user) || user.admin?
+    end
   end
 end

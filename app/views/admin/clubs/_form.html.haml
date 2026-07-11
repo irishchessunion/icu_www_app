@@ -1,3 +1,8 @@
+- content_for :javascript do
+  = render(:partial => "player_ids_callback", :handlers => [:erb], :formats => [:js])
+
+= render "player_ids/modal", title: t("club.select_secretary")
+
 .row
   .col-sm-1
   .col-sm-10
@@ -6,6 +11,7 @@
         = render "utils/form_header", object: @club, atr: :name
         - locals = { form: f, object: @club, col: "sm", pad: 2, width: 4 }
         = render "utils/text_field_for", locals.merge(param: :name, text: t("name"))
+        = render "utils/text_field_for", locals.merge(param: :description, text: t("description"))
         = render "utils/text_field_for", locals.merge(param: :web, text: t("club.web"), width: 6)
         = render "utils/text_field_for", locals.merge(param: :meet, text: t("club.meet"), width: 6)
         = render "utils/text_field_for", locals.merge(param: :address, text: t("address"))
@@ -18,7 +24,12 @@
         = render "utils/text_field_for", locals.merge(param: :contact, text: t("contact"))
         = render "utils/text_field_for", locals.merge(param: :email, text: t("email"))
         = render "utils/text_field_for", locals.merge(param: :phone, text: t("club.phone"))
+        = render "utils/text_field_for", locals.merge(param: :secretary_id, text: t("club.secretary"), width: 2)
+        .form-group
+          %div{class: "col-sm-offset-2 col-sm-4"}
+            = render "player_ids_button"
         = render "utils/check_box_for", locals.merge(param: :junior_only, text: t("club.junior_only"), width: 1)
         = render "utils/check_box_for", locals.merge(param: :has_junior_section, text: t("club.has_junior_section"), width: 1)
         = render "utils/check_box_for", locals.merge(param: :active, text: t("active"), width: 1)
+        = render "utils/text_area_for", locals.merge(param: :notes, text: t("club.notes"))
       = render "utils/form_buttons", form: f, object: @club
