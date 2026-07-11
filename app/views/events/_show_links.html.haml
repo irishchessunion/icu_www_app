@@ -1,0 +1,31 @@
+- if event_has_links?(@event)
+  %section{"id": "links", "class": "show-links"}
+    %h4= t('event.links')
+    %ul
+      - if @event.pairings_url.present?
+        %li
+          = link_to @event.pairings_url, target: "event", class: "inline-glyph" do
+            %span.glyphicon.glyphicon-list.glyphicon-sm
+            Pairings
+      - if @event.results_url.present?
+        %li
+          = link_to @event.results_url, target: "event", class: "inline-glyph" do
+            %span.glyphicon.glyphicon-stats.glyphicon-sm
+            Results
+      - if @event.report_url.present?
+        %li
+          = link_to @event.report_url, target: "event", class: "inline-glyph" do
+            %span.glyphicon.glyphicon-folder-open.glyphicon-sm
+            Event Report
+      - if @event.live_games_url.present? || @event.live_games_url2.present?
+        %li
+          %span.inline-glyph
+            %span.glyphicon.glyphicon-tower.glyphicon-sm
+            Live Boards:
+          .liveboards
+            - if @event.live_games_url2.present?
+              = link_to @event.live_games_url2, target: "event", class: "btn btn-pastel-primary btn-block" do
+                Lichess
+            - if @event.live_games_url.present?
+              = link_to @event.live_games_url, target: "event", class: "btn btn-pastel-info btn-block" do
+                DGT Live

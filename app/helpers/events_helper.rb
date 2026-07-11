@@ -25,7 +25,6 @@ module EventsHelper
     options_for_select(users, selected_user_id)
   end
 
-  # "Fri 29th May - Mon 1st June 2026"
   def formatted_event_dates(event)
     start_date = event.start_date
     end_date = event.end_date
@@ -33,9 +32,14 @@ module EventsHelper
     start_day = start_date.day.ordinalize
     end_day = end_date.day.ordinalize
 
-    if start_date.month == end_date.month
+    if start_date == end_date
+      # Fri 29th May 2026
+      "#{start_date.strftime('%a')} #{start_day} #{start_date.strftime('%B %Y')}"
+    elsif start_date.month == end_date.month
+      # Fri 29th - Sat 30th May 2026
       "#{start_date.strftime('%a')} #{start_day} - #{end_date.strftime('%a')} #{end_day} #{start_date.strftime('%B %Y')}"
     else
+      # "Fri 29th May - Mon 1st June 2026"
       "#{start_date.strftime('%a')} #{start_day} #{start_date.strftime('%B')} - #{end_date.strftime('%a')} #{end_day} #{end_date.strftime('%B %Y')}"
     end
   end
@@ -45,6 +49,14 @@ module EventsHelper
     event.time_controls.map do |control|
       t("event.time_controls.#{control}")
     end.join(", ")
+  end
+
+  def event_has_links?(event)
+    event.pairings_url.present? ||
+      event.live_games_url.present? ||
+      event.live_games_url2.present? ||
+      event.results_url.present? ||
+      event.report_url.present?
   end
 
   # @param entry_item [Item::Entry]
@@ -88,6 +100,28 @@ module EventsHelper
     end
 
     "#{descr} #{extras.join(', ')}"
+  end
+
+  # @param fee_entry [Fee::Entry]
+  def event_entry_fee_requirements(fee_entry)
+    reqs = []
+    if fee_entry.min_age.present? && fee_entry.max_age.present?
+      reqs << "aged #{fee_entry.min_age}-#{fee_entry.max_age}"
+    elsif fee_entry.min_age.present?
+      reqs << "aged #{fee_entry.min_age} or over"
+    elsif fee_entry.max_age.present?
+      reqs << "aged #{fee_entry.max_age} or under"
+    end
+
+    if fee_entry.min_rating.present? && fee_entry.max_rating.present?
+      reqs << "rated #{fee_entry.min_rating}-#{fee_entry.max_rating}"
+    elsif fee_entry.min_rating.present?
+      reqs << "rated >= #{fee_entry.min_rating}"
+    elsif fee_entry.max_rating.present?
+      reqs << "rated <= #{fee_entry.max_rating}"
+    end
+
+    reqs.join(', ')
   end
 
   # Format fee display with optional strikethrough discount styling

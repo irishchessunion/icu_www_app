@@ -1,0 +1,4 @@
+- if @event.note.present?
+  %section{"id": "description", "aria-label": "#{t('event.event')} #{t('event.description')}"}
+    %h4 Description
+    %div= @event.note_html

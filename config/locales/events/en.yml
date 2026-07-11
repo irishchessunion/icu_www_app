@@ -26,15 +26,20 @@ en:
       user_added: User added successfully
       user_removed: User removed successfully
     contact: Contact name
+    contact_name: Contact name
     create_entry_fee: New Entry Fee
     calendar: Calendar
+    description: Description
     flyer: Flyer
     email: Contact email
     end: End date
+    enter: Enter
+    entries: Entries
     event: Event
     events: Forthcoming Events
     history: Past Events
     lat: Latitude
+    links: Links
     live_games_url: livechesscloud.com broadcast URL
     live_games_url2: lichess.org broadcast URL
     location: Location

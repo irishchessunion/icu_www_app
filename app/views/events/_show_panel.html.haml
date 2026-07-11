@@ -1,0 +1,59 @@
+%section{class: "full-width static-panel", "aria-label": "#{t('aria.search_for')} #{t('event.upcoming')}"}
+  .container
+    .row
+      .col-md-12.flex-row
+        .show-panel
+
+          %div
+            %a{href: events_path(), class: "inline-glyph"}
+              %span.glyphicon.glyphicon-chevron-left.glyphicon-xs
+              = t('event.upcoming')
+          %h2= @event.name
+          %div.subtitle= formatted_event_dates(@event)
+
+          %div.inline-glyph{style: "margin-top: 14px"}
+            %span.glyphicon.glyphicon-map-marker.glyphicon-sm{style: "color: var(--gray)"}
+            = @event.location
+
+          - if @event.time_controls.present?
+            %div.inline-glyph
+              %span.glyphicon.glyphicon-time.glyphicon-sm{style: "color: var(--gray)"}
+              = time_controls_as_string(@event)
+
+          - if @event.category != "irish"
+            %div.inline-glyph
+              %span.glyphicon.glyphicon-th-list.glyphicon-sm{style: "color: var(--gray)"}
+              = t("event.category.#{@event.category}")
+
+          - if @event.is_fide_rated.present? && @event.is_fide_rated
+            %div.inline-glyph
+              %span.glyphicon.glyphicon-ok.glyphicon-sm{style: "color: var(--gray)"}
+              = t("event.fide_rated_event")
+
+          - if @event.prize_fund.present?
+            %div.inline-glyph
+              %span.glyphicon.glyphicon-euro.glyphicon-sm{style: "color: var(--gray)"}
+              = euros(@event.prize_fund, precision: 0)
+              = "#{t("event.prize_fund")}"
+
+          -if @event.url.present? || @event.flyer.present?
+            %div.inline-flex.buttons
+              - if @event.url.present?
+                = link_to @event.url, target: "event", class: "btn btn-pastel-info inline-glyph" do
+                  %span.glyphicon.glyphicon-link.glyphicon-sm
+                  Website
+              - if @event.flyer.present?
+                - flyer_ext = File.extname(@event.flyer_file_name).delete('.').upcase
+                - flyer_ext = "PDF" if @event.flyer_content_type == "application/pdf" || flyer_ext == "PDF"
+
+                - main_types = %w[PDF DOCX XLSX]
+                - btn_class = ["btn", "btn-download"]
+                - btn_class << "btn-#{flyer_ext.downcase}" if main_types.include?(flyer_ext)
+
+                = link_to @event.flyer.url, class: btn_class.join(" ") do
+                  %span.file-ext= flyer_ext
+                  Flyer
+
+        %aside{class: "map", "aria-label": "Map View"}
+          %div{style: "width: 100%; aspect-ratio: 4/3; border-radius: 4px; background: #CCC; overflow: hidden"}
+            #map-canvas{style: "width: 100%; height: 100%"}

@@ -1,0 +1,17 @@
+- if can?(:read, @event)
+  -# Admin
+  %section.show-admin
+    %h4 Admin
+    .panel.panel-pastel-info
+      .panel-body
+        .inline-between
+          =link_to "Manage Event", admin_event_path(@event), class: "btn btn-primary btn-sm"
+          %div.create-btn-group
+            %span.text-primary Create:
+            =link_to "News Item", new_admin_news_path(headline: @event.name, summary: "[EVT:#{params[:id]}] ..."), class: "btn btn-info btn-sm"
+            =link_to "Article", new_admin_article_path(title: @event.name, text: "[EVT:#{params[:id]}] ..."), class: "btn btn-info btn-sm"
+        %hr{style: "border-color: var(--brand-info-light); margin: 15px 0"}
+        - if admin && @event.user.present? && @event.user.player.present?
+          %div= "#{t('user.role.organiser')}: #{@event.user.player.name}"
+        %div= "#{t('created_at')}: #{@event.created_at.to_date}"
+        %div= "#{t('updated_at')}: #{@event.updated_at.to_fs(:nosec)}"

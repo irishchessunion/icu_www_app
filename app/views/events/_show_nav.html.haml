@@ -1,0 +1,11 @@
+.event-nav-sm
+  .col-md-12{style: "width: 100%"}
+    %ul.no-margin{style: "display: flex; justify-content: space-between; padding: 0; list-style: none"}
+      - if @event.note.present?
+        %li= link_to t('event.description'), "#description"
+      - if @event.contact.present? || @event.email.present? || @event.phone.present?
+        %li= link_to t('event.contact'), "#contact"
+      - if event_has_links?(@event)
+        %li= link_to t('event.links'), "#links"
+      %li.enter= link_to t('event.enter'), "#enter"
+      %li= link_to t('event.entries'), "#entries"

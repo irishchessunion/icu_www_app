@@ -1,0 +1,211 @@
+- content_for :title, t("event.event") + " | " + @event.name
+
+= render "utils/prev_next", prev_next: @prev_next
+
+- admin = can?(:update, @event)
+
+- if can?(:read, @event)
+  .row.voffset3
+    .col-md-8.col-md-offset-2
+      .panel.panel-pastel-info
+        .panel-body
+          .inline-between
+            =link_to "Manage Event", admin_event_path(@event), class: "btn btn-primary"
+            %div
+              =link_to "Create News Item", new_admin_news_path(headline: @event.name, summary: "[EVT:#{params[:id]}] ..."), class: "btn btn-info"
+              =link_to "Create Article", new_admin_article_path(title: @event.name, text: "[EVT:#{params[:id]}] ..."), class: "btn btn-info"
+
+%h1.text-center= @event.name
+
+.row.voffset3
+  .col-md-8.col-md-offset-2
+    %table.table.table-striped
+      %tr
+        %th= t("event.location")
+        %td= link_to_if @event.geocodes?, @event.location, events_map_path(@event)
+      %tr
+        %th= t("event.start")
+        %td= @event.start_date
+      %tr
+        %th= t("event.end")
+        %td= @event.end_date
+      - if @event.prize_fund.present?
+        %tr
+          %th= t("event.prize_fund")
+          %td= euros(@event.prize_fund, precision: 0)
+      - if @event.sections.present?
+        %tr
+          %th= t("event.sections.label")
+          %td= @event.sections
+      - if @event.contact.present? || @event.email.present? || @event.phone.present?
+        %tr
+          %th= t("contact")
+          %td
+            - if @event.contact.present? || @event.email.present?
+              = succeed(@event.phone.present? ? "," : "") do
+                - if @event.email.present?
+                  = mail_to @event.email, @event.contact.present? ? @event.contact : @event.email
+                - else
+                  = @event.contact
+            - if @event.phone.present?
+              = @event.phone
+      - if @event.url.present?
+        %tr
+          %th= t("event.url")
+          %td= link_to simple_url(@event.url), @event.url, target: "event"
+      - if @event.pairings_url.present?
+        %tr
+          %th= t("event.pairings_url")
+          %td= link_to simple_url(@event.pairings_url), @event.pairings_url, target: "event"
+      - if @event.live_games_url.present?
+        %tr
+          %th= t("event.live_games_url")
+          %td= link_to simple_url(@event.live_games_url), @event.live_games_url, target: "event"
+      - if @event.live_games_url2.present?
+        %tr
+          %th= t("event.live_games_url2")
+          %td= link_to simple_url(@event.live_games_url2), @event.live_games_url2, target: "event"
+      -# Only if the streaming url isn't recognised as a valid YouTube / Twitch.tv URL for the embed
+      - if @event.streaming_url.present? && @youtube_video_id.blank? && @twitch_channel_id.blank?
+        %tr
+          %th= t("event.streaming_url")
+          %td= link_to simple_url(@event.streaming_url), @event.streaming_url, target: "event"
+      - if @event.results_url.present?
+        %tr
+          %th= t("event.results_url")
+          %td= link_to simple_url(@event.results_url), @event.results_url, target: "event"
+      - if @event.report_url.present?
+        %tr
+          %th= t("event.report_url")
+          %td= link_to simple_url(@event.report_url), @event.report_url, target: "event"
+      - if @event.flyer.present?
+        %tr
+          %th= t("event.flyer")
+          %td
+            = link_to @event.flyer_file_name, @event.flyer.url
+            - if admin
+              = "(#{@event.flyer_content_type}, #{@event.flyer_file_size} bytes)"
+        - if admin && @event.flyer_updated_at != @event.updated_at
+          %tr
+            %th= "File last updated"
+            %td= @event.flyer_updated_at.to_fs(:nosec)
+      %tr
+        %th= t("category")
+        %td= t("event.category.#{@event.category}")
+      %tr
+        %th= t("event.is_fide_rated")
+        - if @event.is_fide_rated.present?
+          - if @event.is_fide_rated
+            %td= t("event.fide_true")
+          - else
+            %td= t("event.fide_false")
+        - else
+          %td= t("event.fide_false")
+      - if @event.time_controls.present?
+        %tr
+          %th= t("event.time_controls.label")
+          %td
+            - @event.time_controls.each_with_index do |control, i|
+              = t("event.time_controls.#{control}")
+              - if i < @event.time_controls.size - 1
+                = ", "
+      = render "utils/timestamps", object: @event, ability: :create
+      - if admin && @event.user.present?
+        %tr
+          %th= t("user.role.organiser")
+          %td= @event.user.player.name
+      - if @event.note.present?
+        %tr
+          %th{colspan: 2, class: "text-center"}= t("notes")
+        %tr
+          %td{colspan: 2}= @event.note_html
+
+    - if @event.streaming_url.present? && @event.start_date <= Date.today && @event.end_date >= Date.today && (@youtube_video_id.present? || @twitch_channel_id.present?)
+      %div
+        .inline-header
+          %h4=t("event.streaming_embed")
+          =link_to simple_url(@event.streaming_url), @event.streaming_url, target: "event"
+        .well
+          - if @youtube_video_id.present?
+            %iframe{
+              width: "100%",
+              src: "https://www.youtube-nocookie.com/embed/" + @youtube_video_id + "?controls=0",
+              title: "YouTube video player",
+              frameborder: "0",
+              allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+              referrerpolicy: "strict-origin-when-cross-origin",
+              allowfullscreen: true,
+              class: "video-embed"
+            }
+          - if @twitch_channel_id.present?
+            %iframe{
+              width: "100%",
+              src: "https://player.twitch.tv/?channel=" + @twitch_channel_id + "&parent=icu.ie&parent=www.icu.ie&autoplay=false",
+              title: "Twitch.tv video player",
+              allowfullscreen: true,
+              class: "video-embed"
+            }
+
+    = render "utils/show_buttons", object: @event
+
+    - unless @event.fee_entries.on_sale.empty?
+      %h2.text-center Enter Tournament
+      %table.table-spaced.fees-table
+        - @event.fee_entries.on_sale.each do |fee_entry|
+          - if can?(:show, fee_entry)
+            %tr
+              %td.enter<
+                = link_to new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm' do
+                  - if fee_entry.discounted?
+                    %s= euros(fee_entry.amount)
+                    = euros(fee_entry.current_amount)
+                  - else
+                    = euros(fee_entry.current_amount)
+              %td= event_entry_fee_description(fee_entry)
+              %td= link_to(t("edit"), edit_admin_fee_path(fee_entry), class: 'btn btn-link btn-xs') if can?(:edit, fee_entry)
+
+    - unless @event.items.empty?
+      %h2.text-center Entries
+      - section_names = @event.section_names
+      - if @event.section_names.empty?
+        %h3
+          - if admin
+            = link_to "FIDE pre-2013 File", swiss_manager_event_path(@event.id), class: 'btn btn-info btn-sm'
+            = link_to "CSV file", csv_list_event_path(@event.id), class: 'btn btn-info btn-sm'
+            = link_to "Excel file", excel_list_event_path(@event.id), class: 'btn btn-info btn-sm'
+      - @event.items.paid.where(section: nil).each do |entry_item|
+        %p
+          = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
+          - if can?(:show, entry_item.cart)
+            | Cart ID:
+            = link_to entry_item.cart_id, admin_cart_path(entry_item.cart_id)
+          - if admin && section_names.size > 0
+            = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-link btn-xs'
+      - paid_invalid_section = @event.items.paid.where("section NOT IN (?)", section_names)
+      - if can?(:edit, @event) and paid_invalid_section.size > 0
+        %h3
+          %i
+            Paid Entries with an Invalid Section
+        - paid_invalid_section.each do |entry_item|
+          %p
+            = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
+            - if can?(:show, entry_item.cart)
+              | Cart ID:
+              = link_to entry_item.cart_id, admin_cart_path(entry_item.cart_id)
+            = link_to "Change Section from #{entry_item.section}", edit_admin_item_path(entry_item), class: 'btn btn-link btn-xs'
+      - @event.section_names.each do |section|
+        - paid_entries = @event.items.paid.where(section: section)
+        %h3
+          = section
+          %span.small
+            = paid_entries.size
+            entries
+        - paid_entries.each do |entry_item|
+          %p
+            = can?(:show, entry_item.player) ? link_to(event_entry_item_description(entry_item), admin_player_path(entry_item.player_id)) : event_entry_item_description(entry_item)
+            - if can?(:show, entry_item.cart)
+              | Cart ID:
+              = link_to entry_item.cart_id, admin_cart_path(entry_item.cart_id)
+            - if admin && section_names.size > 1
+              = link_to "Change Section", edit_admin_item_path(entry_item), class: 'btn btn-link btn-xs'
+= render "admin/journal_entries/changes", entries: @entries

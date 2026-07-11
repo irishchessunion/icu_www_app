@@ -1,0 +1,14 @@
+.fees-group{style: "display: flex; flex-direction: column; gap: 5px 0; margin-bottom: 15px"}
+  - if section.present?
+    %strong= section.capitalize
+  - fees.each do |fee_entry|
+    .inline-flex
+      = link_to new_item_path(fee_id: fee_entry.id), class: 'btn btn-info btn-sm' do
+        = format_fee_with_discount(fee_entry)
+      %span{style: "line-height: 1em"}
+        = fee_entry.name
+        - extras = event_entry_fee_requirements(fee_entry)
+        - if extras.present?
+          %br
+          %span{style: "color: var(--gray); font-size: 14px"}
+            = extras
