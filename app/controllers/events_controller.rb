@@ -50,7 +50,7 @@ class EventsController < ApplicationController
 
   def swiss_manager
     event = Event.find(params[:id])
-    authorize! :update, event
+    authorize! :read, event
 
     items = Item::Entry.joins(:cart, :fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::SwissManagerGenerator.new
@@ -60,8 +60,8 @@ class EventsController < ApplicationController
 
   def csv_list
     event = Event.find(params[:id])
-    authorize! :update, event
-    
+    authorize! :read, event
+
     items = Item::Entry.joins(:fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::EntryListCsvGenerator.new
 
@@ -70,7 +70,7 @@ class EventsController < ApplicationController
 
   def excel_list
     event = Event.find(params[:id])
-    authorize! :update, event
+    authorize! :read, event
 
     items = Item::Entry.joins(:fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::EntryListExcelGenerator.new
