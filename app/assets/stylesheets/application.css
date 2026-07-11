@@ -322,6 +322,17 @@ section .title-panel .subtitle {
   font-size: 1.2em;
 }
 
+section .show-panel .details {
+  margin: 15px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px 0;
+}
+
+section .show-panel .details span.glyphicon {
+  color: var(--gray);
+}
+
 section .show-panel .buttons {
   flex-grow: 1;
   align-items: end;
@@ -453,6 +464,11 @@ section.latest-news h3 {
   padding-right: 3em;
 }
 
+section.show-admin hr {
+  border-color: var(--brand-info-light);
+  margin: 15px 0;
+}
+
 section.show-admin .create-btn-group {
   display: inline-flex;
   align-items: center;
@@ -496,6 +512,21 @@ section.show-links .liveboards a {
   margin: 0;
 }
 
+section.show-fees .fees-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px 0;
+  margin: 0 0 15px 0;
+}
+
+section.show-fees .fees-group span.description {
+  line-height: 1em;
+}
+
+section.show-fees .fees-group span.reqs {
+  color: var(--gray);
+  font-size: 14px;
+}
 
 section.entries .download-buttons {
   margin: 0 0 15px 0;
@@ -567,9 +598,18 @@ section.entries .entries-list {
   top: 0;
   z-index: 10;
 }
-.nav>li>a {
 
+.event-nav-sm > .col-md-12 {
+  width: 100%;
 }
+
+.event-nav-sm ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+}
+
 .event-nav-sm ul li > a {
   color: var(--gray);
   border-bottom: 2px solid var(--body-bg);

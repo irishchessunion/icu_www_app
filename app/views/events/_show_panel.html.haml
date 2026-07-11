@@ -11,30 +11,31 @@
           %h2= @event.name
           %div.subtitle= formatted_event_dates(@event)
 
-          %div.inline-glyph{style: "margin-top: 14px"}
-            %span.glyphicon.glyphicon-map-marker.glyphicon-sm{style: "color: var(--gray)"}
-            = @event.location
-
-          - if @event.time_controls.present?
+          %div{class: "details", "aria-label": "#{t('event.event')} Details"}
             %div.inline-glyph
-              %span.glyphicon.glyphicon-time.glyphicon-sm{style: "color: var(--gray)"}
-              = time_controls_as_string(@event)
+              %span.glyphicon.glyphicon-map-marker.glyphicon-sm
+              = @event.location
 
-          - if @event.category != "irish"
-            %div.inline-glyph
-              %span.glyphicon.glyphicon-th-list.glyphicon-sm{style: "color: var(--gray)"}
-              = t("event.category.#{@event.category}")
+            - if @event.time_controls.present?
+              %div.inline-glyph
+                %span.glyphicon.glyphicon-time.glyphicon-sm
+                = time_controls_as_string(@event)
 
-          - if @event.is_fide_rated.present? && @event.is_fide_rated
-            %div.inline-glyph
-              %span.glyphicon.glyphicon-ok.glyphicon-sm{style: "color: var(--gray)"}
-              = t("event.fide_rated_event")
+            - if @event.category != "irish"
+              %div.inline-glyph
+                %span.glyphicon.glyphicon-th-list.glyphicon-sm
+                = t("event.category.#{@event.category}")
 
-          - if @event.prize_fund.present?
-            %div.inline-glyph
-              %span.glyphicon.glyphicon-euro.glyphicon-sm{style: "color: var(--gray)"}
-              = euros(@event.prize_fund, precision: 0)
-              = "#{t("event.prize_fund")}"
+            - if @event.is_fide_rated.present? && @event.is_fide_rated
+              %div.inline-glyph
+                %span.glyphicon.glyphicon-ok.glyphicon-sm
+                = t("event.fide_rated_event")
+
+            - if @event.prize_fund.present?
+              %div.inline-glyph
+                %span.glyphicon.glyphicon-euro.glyphicon-sm
+                = euros(@event.prize_fund, precision: 0)
+                = "#{t("event.prize_fund")}"
 
           -if @event.url.present? || @event.flyer.present?
             %div.inline-flex.buttons

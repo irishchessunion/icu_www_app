@@ -1,6 +1,6 @@
 .event-nav-sm
-  .col-md-12{style: "width: 100%"}
-    %ul.no-margin{style: "display: flex; justify-content: space-between; padding: 0; list-style: none"}
+  .col-md-12
+    %ul.no-margin
       - if @event.note.present?
         %li= link_to t('event.description'), "#description"
       - if @event.contact.present? || @event.email.present? || @event.phone.present?

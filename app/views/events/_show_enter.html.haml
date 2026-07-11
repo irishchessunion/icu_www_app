@@ -1,6 +1,6 @@
 - on_sale_fees = @event.fee_entries.on_sale.select { |f| can?(:show, f) }
 - if on_sale_fees.any?
-  %section{"id": "enter", "aria-label": "#{t('event.enter')} #{t('event.event')}"}
+  %section{id: "enter", class: "show-fees", "aria-label": "#{t('event.enter')} #{t('event.event')}"}
     %h4= t('event.enter')
 
     - section_names = @event.section_names
