@@ -496,6 +496,11 @@ section.show-links .liveboards a {
   margin: 0;
 }
 
+
+section.entries .download-buttons {
+  margin: 0 0 15px 0;
+}
+
 section.entries ol,
 section.entries .tab-content > ol.active {
   display: flex;
