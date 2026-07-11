@@ -34,7 +34,7 @@
             - if @event.prize_fund.present?
               %div.inline-glyph
                 %span.glyphicon.glyphicon-euro.glyphicon-sm
-                = @event.prize_fund
+                = euros(@event.prize_fund, precision: 0)
                 = "#{t("event.prize_fund")}"
 
           -if @event.url.present? || @event.flyer.present?

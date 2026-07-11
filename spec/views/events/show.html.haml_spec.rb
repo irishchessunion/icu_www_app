@@ -77,7 +77,7 @@ RSpec.describe "events/show", type: :view do
     end
 
     it "displays the prize fund" do
-      expect(rendered).to have_selector(".show-panel", text: "3250")
+      expect(rendered).to have_selector(".show-panel", text: "€3,250")
     end
 
     it "displays the website button" do

@@ -3,7 +3,7 @@
 - @show_main_container = "false"
 - content_for :includes do
   = javascript_include_tag "maplibre-gl"
-  = stylesheet_link_tag "maplibre-gl"
+  = stylesheet_link_tag "maplibre-gl", skip_pipeline: true
 - content_for :javascript do
   = render(:partial => "show", :handlers => [:erb], :formats => [:js])
 - if @event.geocodes?

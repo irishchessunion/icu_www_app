@@ -2,7 +2,7 @@
 - content_for :header_bg_color, "var(--gray-lighter)"
 - content_for :includes do
   = javascript_include_tag "maplibre-gl"
-  = stylesheet_link_tag "maplibre-gl"
+  = stylesheet_link_tag "maplibre-gl", skip_pipeline: true
 - content_for :javascript do
   = render(:partial => "index", :handlers => [:erb], :formats => [:js])
 - @show_main_container = "false"
