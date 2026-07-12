@@ -28,7 +28,7 @@ describe Event do
     let(:level3) { User::ROLES.reject { |r| r.match(/\A(admin|editor|organiser|treasurer)\z/) }.append("guest") }
     let(:user)   { create(:user, roles: "organiser") }
     let(:event)  { create(:event, user: user) }
-    let(:header) { "h1" }
+    let(:header) { "h2" }
 
     it "level 1 can update as well as create" do
       level1.each do |role|
@@ -37,7 +37,7 @@ describe Event do
         expect(page).to_not have_css(failure)
         visit edit_admin_event_path(event)
         expect(page).to_not have_css(failure)
-        visit events_path
+        visit admin_events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
         expect(page).to have_link(edit)
@@ -51,7 +51,7 @@ describe Event do
         expect(page).to_not have_css(failure)
         visit edit_admin_event_path(event)
         expect(page).to have_css(failure)
-        visit events_path
+        visit admin_events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
         expect(page).to_not have_link(edit)
@@ -65,7 +65,7 @@ describe Event do
         expect(page).to have_css(failure, text: unauthorized)
         visit edit_admin_event_path(event)
         expect(page).to have_css(failure, text: unauthorized)
-        visit events_path
+        visit admin_events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
         expect(page).to_not have_link(edit)

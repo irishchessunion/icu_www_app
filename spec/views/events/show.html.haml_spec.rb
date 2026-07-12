@@ -101,12 +101,17 @@ RSpec.describe "events/show", type: :view do
   describe "links section" do
     it "renders links" do
       expect(rendered).to have_selector("section#links")
-      expect(rendered).to have_link("Pairings", href: "http://chess-results.com")
+      expect(rendered).to have_link("Pairings", href: "http://chess-results.com/1234")
       expect(rendered).to have_link("Results", href: "http://results.inishbofinchess.com")
     end
   end
 
   describe "enter section" do
+    before do
+      allow(view).to receive(:can?).with(:show, instance_of(Fee::Entry)).and_return(true)
+      render
+    end
+
     it "renders the enter section with fees" do
       expect(rendered).to have_selector("section#enter")
       expect(rendered).to have_selector("section#enter", text: "Standard")
