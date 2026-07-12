@@ -37,7 +37,7 @@ describe Event do
         expect(page).to_not have_css(failure)
         visit edit_admin_event_path(event)
         expect(page).to_not have_css(failure)
-        visit admin_events_path
+        visit events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
         expect(page).to have_link(edit)
@@ -51,7 +51,7 @@ describe Event do
         expect(page).to_not have_css(failure)
         visit edit_admin_event_path(event)
         expect(page).to have_css(failure)
-        visit admin_events_path
+        visit events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
         expect(page).to_not have_link(edit)
@@ -65,7 +65,7 @@ describe Event do
         expect(page).to have_css(failure, text: unauthorized)
         visit edit_admin_event_path(event)
         expect(page).to have_css(failure, text: unauthorized)
-        visit admin_events_path
+        visit events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
         expect(page).to_not have_link(edit)
