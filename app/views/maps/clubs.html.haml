@@ -1,8 +1,9 @@
-- content_for :includes do
-  = javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Rails.application.secrets.google[:simple_api_key]}"
-- content_for :javascript do
-  = render(:partial => "clubs", :handlers => [:erb], :formats => [:js])
 - content_for :title, t("club.map")
+- content_for :includes do
+  = javascript_include_tag "maplibre-gl"
+  = stylesheet_link_tag "maplibre-gl", skip_pipeline: true
+- content_for :javascript do
+  = render(:partial => "maps/clubs", :handlers => [:erb], :formats => [:js])
 
 = render "utils/list_map_buttons", resource: "clubs"
 
@@ -15,3 +16,11 @@
 
 .row
   #map-canvas.col-md-6.col-md-offset-3
+
+- markers = []
+- @clubs.each do |club|
+  - popup_html = link_to club.name, club_path(club)
+  - markers << { "lat" => club.lat, "lng" => club.long, "title" => club.name, "iconUrl" => asset_path("svg/marker_other.svg"), "popupHtml" => popup_html }
+
+%script{type: "application/json", id: "map-data"}= raw json_escape(JSON.generate({ "center" => @center, "zoom" => @zoom, "cluster" => true, "fit" => false, "markers" => markers }))
+

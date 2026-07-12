@@ -1,7 +1,7 @@
 class MapsController < ApplicationController
-  CENTER = [53.45, -7.95]
-  IN = 18
-  OUT = 7
+  CENTER = [53.5, -8.1]
+  IN = 14
+  OUT = 6
 
   def clubs
     @clubs = Club.active.with_geocodes
