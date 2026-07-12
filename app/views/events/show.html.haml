@@ -20,6 +20,7 @@
     .col-md-12.flex-row
 
       .primary-content
+        = render "events/show_livestream"
         = render "events/show_description"
         = render "events/show_contact"
         - if @entries.present?

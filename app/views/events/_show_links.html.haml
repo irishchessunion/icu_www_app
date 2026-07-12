@@ -2,6 +2,12 @@
   %section{"id": "links", "class": "show-links"}
     %h4= t('event.links')
     %ul
+      -# Only if the streaming url isn't recognised as a valid YouTube / Twitch.tv URL for the embed
+      - if @event.streaming_url.present? && @youtube_video_id.blank? && @twitch_channel_id.blank?
+        %li
+          = link_to @event.streaming_url, target: "event", class: "inline-glyph" do
+            %span.glyphicon.glyphicon-facetime-video.glyphicon-sm
+            = t("event.streaming_embed")
       - if @event.pairings_url.present?
         %li
           = link_to @event.pairings_url, target: "event", class: "inline-glyph" do
