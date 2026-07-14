@@ -1,16 +1,16 @@
 source "https://rubygems.org"
 
-def next?
-  File.basename(__FILE__) == "Gemfile.next"
-end
+# def next?
+#   File.basename(__FILE__) == "Gemfile.next"
+# end
 
 gem "rake"
 
-if next?
-  gem "rails", "~> 8.1.0"
-else
-  gem "rails", "~> 8.0.0"
-end
+# if next?
+gem "rails", "~> 8.1.0"
+# else
+#   gem "rails", "~> 8.0.0"
+# end
 
 gem "next_rails"
 
