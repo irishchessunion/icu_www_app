@@ -6,9 +6,6 @@
   = stylesheet_link_tag "maplibre-gl", skip_pipeline: true
 - content_for :javascript do
   = render(:partial => "show", :handlers => [:erb], :formats => [:js])
-- if @event.geocodes?
-  - popup_html = render(partial: "events/marker_popup", locals: { event: @event }, formats: [:html], handlers: [:haml])
-  - markers = [{ "lat" => @event.lat, "lng" => @event.long, "title" => @event.name, "iconUrl" => asset_path("svg/marker_#{@event.map_marker_key}.svg"), "popupHtml" => popup_html }]
 
 - admin = can?(:update, @event)
 
@@ -35,5 +32,7 @@
         = render "events/show_links"
         = render "events/show_entries", admin: admin
 
-%script{type: "application/json", id: "map-data"}= raw json_escape(JSON.generate({ "center" => [@event.lat, @event.long], "zoom" => 13, "fit" => false, "markers" => markers }))
-
+- if @event.geocodes?
+  - popup_html = render(partial: "events/marker_popup", locals: { event: @event }, formats: [:html], handlers: [:haml])
+  - markers = [{ "lat" => @event.lat, "lng" => @event.long, "title" => @event.name, "iconUrl" => asset_path("svg/marker_#{@event.map_marker_key}.svg"), "popupHtml" => popup_html }]
+  %script{type: "application/json", id: "map-data"}= raw json_escape(JSON.generate({ "center" => [@event.lat, @event.long], "zoom" => 13, "fit" => false, "markers" => markers }))
