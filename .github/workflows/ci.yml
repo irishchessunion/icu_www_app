@@ -14,10 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - rails_version: "8.0"
-            gemfile: "Gemfile"
           - rails_version: "8.1"
-            gemfile: "Gemfile.next"
+            gemfile: "Gemfile"
+          # - rails_version: "8.1"
+          #   gemfile: "Gemfile.next"
 
     steps:
       - name: Checkout code
