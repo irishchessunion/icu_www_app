@@ -56,6 +56,9 @@ RSpec.describe "events/show", type: :view do
   before do
     assign(:event, event)
     allow(view).to receive(:can?).and_return(false)
+    assign(:on_sale_fees, [])
+    assign(:paid_entries, [paid_entry])
+    assign(:entries_by_section, { nil => [paid_entry] })
     render
   end
 
@@ -108,7 +111,7 @@ RSpec.describe "events/show", type: :view do
 
   describe "enter section" do
     before do
-      allow(view).to receive(:can?).with(:show, instance_of(Fee::Entry)).and_return(true)
+      assign(:on_sale_fees, [fee_open, fee_all])
       render
     end
 

@@ -1,17 +1,16 @@
 - section_names = @event.section_names
-- paid_entries = @event.items.paid
 
 -# When can entries in each group be moved?
 - move_for_valid = admin && section_names.size > 1
 - move_for_unsectioned = admin && section_names.any?
 - move_for_invalid = admin
 
-- if paid_entries.any?
+- if @paid_entries.any?
   %section{"id": "entries", "class": "entries", "aria-label": "List of #{t('event.entries')}"}
     %header.inline-between
       %h4= t('event.entries')
       %div.inline-flex
-        %span.text-muted= "#{paid_entries.size} entries"
+        %span.text-muted= "#{@paid_entries.size} entries"
         -# Sort by (ICU, FIDE)
         %button{type: "button", "aria-label": "Sort by ICU rating, descending", class: "btn btn-pastel-info btn-xs"}
           ICU rating
@@ -31,17 +30,18 @@
             %li
               = link_to "Excel file", excel_list_event_path(@event.id)
       %ol
-        - paid_entries.each do |entry_item|
+        - @paid_entries.each do |entry_item|
           = render "events/show_entries_entry", entry_item: entry_item, show_move: false
 
     - else
-      - unsectioned = paid_entries.where(section: nil)
-      - invalid_sections = paid_entries.where("section NOT IN (?)", section_names)
+      - unsectioned = @entries_by_section[nil] || []
+      - invalid_sections = @paid_entries.reject { |e| e.section.nil? || section_names.include?(e.section) }
 
       %ul.nav.nav-tabs
         - section_names.each_with_index do |section, index|
-          - count = paid_entries.where(section: section).size
           - section_id = section.parameterize
+          - section_entries = @entries_by_section[section] || []
+          - count = section_entries.size
           %li{ class: ("active" if index.zero?) }
             %a{href: "##{section_id}", "data-toggle": "tab"}
               = section.capitalize()
@@ -60,8 +60,9 @@
       %div{id: "myTabContent", class:"entries-list tab-content"}
         - section_names.each_with_index do |section, index|
           - section_id = section.parameterize
+          - section_entries = @entries_by_section[section] || []
           %ol{id: section_id, class:"tab-pane fade #{'active in' if index.zero?}"}
-            - paid_entries.where(section: section).each do |entry_item|
+            - section_entries.each do |entry_item|
               = render "events/show_entries_entry", entry_item: entry_item, show_move: move_for_valid
         - if unsectioned.any?
           %ol{id: "unsectioned", class:"tab-pane fade"}

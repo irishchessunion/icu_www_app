@@ -15,6 +15,11 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
+
+    @on_sale_fees = @event.fee_entries.on_sale.select { |f| can?(:show, f) }
+    @paid_entries = @event.items.paid.includes(:player).to_a
+    @entries_by_section = @paid_entries.group_by(&:section)
+
     @entries = @event.journal_search if can?(:create, Event)
     @extras = {}
     if can?(:update, @event)
@@ -23,6 +28,7 @@ class EventsController < ApplicationController
       @extras["Create Article"] = new_admin_article_path(title: @event.name, text: sample_text)
       @extras["Create News Item"] = new_admin_news_path(headline: @event.name, summary: sample_text)
     end
+
     if @event.streaming_url.present?
       uri = URI.parse(@event.streaming_url) rescue nil
 

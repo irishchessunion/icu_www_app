@@ -7,7 +7,7 @@
         %li= link_to t('event.contact'), "#contact"
       - if event_has_links?(@event)
         %li= link_to t('event.links'), "#links"
-      - if @event.fee_entries.on_sale.any? { |f| can?(:show, f) }
+      - if @on_sale_fees.any?
         %li.enter= link_to t('event.enter'), "#enter"
-      - if @event.items.paid.any?
+      - if @paid_entries.any?
         %li= link_to t('event.entries'), "#entries"
