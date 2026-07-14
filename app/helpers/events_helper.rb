@@ -56,7 +56,8 @@ module EventsHelper
       event.live_games_url.present? ||
       event.live_games_url2.present? ||
       event.results_url.present? ||
-      event.report_url.present?
+      event.report_url.present? ||
+      event.streaming_url.present?
   end
 
   # @param entry_item [Item::Entry]
