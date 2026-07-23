@@ -323,7 +323,7 @@ section .title-panel .subtitle {
 }
 
 section .show-panel .details {
-  margin: 15px 0 0 0;
+  margin: 15px 0;
   display: flex;
   flex-direction: column;
   gap: 8px 0;
@@ -634,6 +634,10 @@ section.entries .entries-list {
 @media (max-width: 768px) {
   .event-nav-sm {
     display: flex;
+  }
+
+  .container aside.side-content {
+    width: 100%;
   }
 }
 

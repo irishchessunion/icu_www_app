@@ -19,7 +19,7 @@ module ApplicationHelper
   end
 
   def home_page?
-    controller_name = "pages" && action_name == "home"
+    controller_name == "pages" && action_name == "home"
   end
 
   def flash_style(name)
