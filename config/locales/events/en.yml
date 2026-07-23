@@ -26,36 +26,50 @@ en:
       user_added: User added successfully
       user_removed: User removed successfully
     contact: Contact name
+    contact_name: Contact name
     create_entry_fee: New Entry Fee
     calendar: Calendar
+    description: Description
     flyer: Flyer
     email: Contact email
     end: End date
+    enter: Enter
+    entries: Entries
     event: Event
     events: Forthcoming Events
     history: Past Events
     lat: Latitude
+    links: Links
+    live_games: Live Boards
+    live_games_provider1: DGT Live
     live_games_url: livechesscloud.com broadcast URL
+    live_games_provider2: Lichess
     live_games_url2: lichess.org broadcast URL
     location: Location
     long: Longitude
     map: Forthcoming Events Map
+    map_aria: Map View
     name: Event name
     short_event: Short Playing Event
     start: Start date
+    pairings: Pairings
     pairings_url: Pairings URL
     phone: Contact phone
     prize_fund: Prize fund
+    report: Event Report
     report_url: Report URL
+    results: Results
     results_url: Results URL
     sections:
       hint: When editing this, please ensure to also edit the sections field for any relevant fees.
       label: Sections
+      none: (none)
     subscription_required: ICU Subscription Required?
     streaming_url: Live commentary URL
     streaming_embed: Live Commentary
     url: Event website
     upcoming: Upcoming Events
+    website: Website
     past: Past Events
     dates: Date(s)
     created_by: Created By

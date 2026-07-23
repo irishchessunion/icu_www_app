@@ -176,7 +176,7 @@ class Event < ApplicationRecord
   # @return [Array<Item::Entry>] belonging to this event
   def items
     # should be safe since ID is not a user entered value and using the normal syntax throws errors
-    Item::Entry.joins(:fee).joins(:player).where("fees.event_id=?", id).order(Arel.sql("coalesce(players.latest_rating, players.legacy_rating) desc"))
+    Item::Entry.joins(:fee).joins(:player).preload(:player, :cart).where("fees.event_id=?", id).order(Arel.sql("coalesce(players.latest_rating, players.legacy_rating) desc"))
   end
 
   # @return [Array<String>] A collection of section names for this event. Mostly "Minor", "Intermediate", "Major", "Masters"

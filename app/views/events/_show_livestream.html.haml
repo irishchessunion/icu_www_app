@@ -1,0 +1,25 @@
+- if @event.streaming_url.present? && @event.start_date <= Date.today && @event.end_date >= Date.today && (@youtube_video_id.present? || @twitch_channel_id.present?)
+  %section{"id": "livestream", "class": "show-stream"}
+    %h4.inline-between
+      = t('event.streaming_embed')
+      %small= link_to simple_url(@event.streaming_url), @event.streaming_url, target: "event"
+    .well
+      - if @youtube_video_id.present?
+        %iframe{
+          width: "100%",
+          src: "https://www.youtube-nocookie.com/embed/" + @youtube_video_id + "?controls=0",
+          title: "YouTube video player",
+          frameborder: "0",
+          allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+          referrerpolicy: "strict-origin-when-cross-origin",
+          allowfullscreen: true,
+          class: "video-embed"
+        }
+      - if @twitch_channel_id.present?
+        %iframe{
+          width: "100%",
+          src: "https://player.twitch.tv/?channel=" + @twitch_channel_id + "&parent=icu.ie&parent=www.icu.ie&autoplay=false",
+          title: "Twitch.tv video player",
+          allowfullscreen: true,
+          class: "video-embed"
+        }

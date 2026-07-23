@@ -1,0 +1,13 @@
+.event-nav-sm
+  .col-md-12
+    %ul.no-margin
+      - if @event.note.present?
+        %li= link_to t('event.description'), "#description"
+      - if @event.contact.present? || @event.email.present? || @event.phone.present?
+        %li= link_to t('event.contact'), "#contact"
+      - if event_has_links?(@event)
+        %li= link_to t('event.links'), "#links"
+      - if @on_sale_fees.any?
+        %li.enter= link_to t('event.enter'), "#enter"
+      - if @paid_entries.any?
+        %li= link_to t('event.entries'), "#entries"

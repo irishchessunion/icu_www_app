@@ -4,5 +4,5 @@
 - if fee.sections.present?
   %p
     %em Section:
-    = select_tag 'item[section]', options_for_select(fee.section_names), class: "pull-right text-center"
+    = select_tag 'item[section]', options_for_select(fee.section_names, params[:section]), class: "pull-right text-center"
 

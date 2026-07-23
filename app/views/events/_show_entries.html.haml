@@ -1,0 +1,74 @@
+- section_names = @event.section_names
+
+-# When can entries in each group be moved?
+- move_for_valid = admin && section_names.size > 1
+- move_for_unsectioned = admin && section_names.any?
+- move_for_invalid = admin
+
+- if @paid_entries.any?
+  %section{"id": "entries", "class": "entries", "aria-label": "List of #{t('event.entries')}"}
+    %header.inline-between
+      %h4= t('event.entries')
+      %div.inline-flex
+        %span.text-muted= "#{@paid_entries.size} entries"
+        -# Sort by (ICU, FIDE)
+        %button{type: "button", "aria-label": "Sort by ICU rating, descending", class: "btn btn-pastel-info btn-xs"}
+          ICU rating
+          %span.glyphicon.glyphicon-sort-by-attributes-alt
+
+    - if section_names.empty?
+      - if can?(:read, @event)
+        .btn-group.download-buttons
+          %button{type: "button", class: "btn btn-primary btn-sm dropdown-toggle", "data-toggle": "dropdown"}
+            Downloads
+            %span.caret
+          %ul{class: "dropdown-menu", role: "menu"}
+            %li
+              = link_to "FIDE pre-2013 File", swiss_manager_event_path(@event.id)
+            %li
+              = link_to "CSV file", csv_list_event_path(@event.id)
+            %li
+              = link_to "Excel file", excel_list_event_path(@event.id)
+      %ol
+        - @paid_entries.each do |entry_item|
+          = render "events/show_entries_entry", entry_item: entry_item, show_move: false
+
+    - else
+      - unsectioned = @entries_by_section[nil] || []
+      - invalid_sections = @paid_entries.reject { |e| e.section.nil? || section_names.include?(e.section) }
+
+      %ul.nav.nav-tabs
+        - section_names.each_with_index do |section, index|
+          - section_id = section.parameterize
+          - section_entries = @entries_by_section[section] || []
+          - count = section_entries.size
+          %li{ class: ("active" if index.zero?) }
+            %a{href: "##{section_id}", "data-toggle": "tab"}
+              = section.capitalize()
+              %span.label.label-sm.label-rounded.panel-pastel-primary= count
+        - if unsectioned.any?
+          %li
+            %a{href: "#unsectioned", "data-toggle": "tab"}
+              %span.muted= t('event.sections.none')
+              %span.label.label-sm.label-rounded.panel-pastel-primary= unsectioned.size
+        - if admin && invalid_sections.any?
+          %li.invalid-entries
+            %a{href: "#invalidEntries", "data-toggle": "tab"}
+              Invalid
+              %span.label.label-sm.label-rounded.panel-pastel-danger= invalid_sections.size
+
+      %div{id: "myTabContent", class:"entries-list tab-content"}
+        - section_names.each_with_index do |section, index|
+          - section_id = section.parameterize
+          - section_entries = @entries_by_section[section] || []
+          %ol{id: section_id, class:"tab-pane fade #{'active in' if index.zero?}"}
+            - section_entries.each do |entry_item|
+              = render "events/show_entries_entry", entry_item: entry_item, show_move: move_for_valid
+        - if unsectioned.any?
+          %ol{id: "unsectioned", class:"tab-pane fade"}
+            - unsectioned.each do |entry_item|
+              = render "events/show_entries_entry", entry_item: entry_item, show_move: move_for_unsectioned
+        - if admin && invalid_sections.any?
+          %ol{id: "invalidEntries", class:"tab-pane fade"}
+            - invalid_sections.each do |entry_item|
+              = render "events/show_entries_entry", entry_item: entry_item, show_move: move_for_invalid

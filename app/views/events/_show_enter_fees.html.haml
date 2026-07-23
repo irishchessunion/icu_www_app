@@ -1,0 +1,15 @@
+.fees-group
+  - if section.present?
+    %strong= section.capitalize
+  - fees.each do |fee_entry|
+    - path = section.present? ? new_item_path(fee_id: fee_entry.id, section: section) : new_item_path(fee_id: fee_entry.id)
+    .inline-flex
+      = link_to path, class: 'btn btn-info btn-sm' do
+        = format_fee_with_discount(fee_entry)
+      %span.description
+        = fee_entry.name
+        - extras = event_entry_fee_requirements(fee_entry)
+        - if extras.present?
+          %br
+          %span.reqs
+            = extras

@@ -1,0 +1,14 @@
+- if @on_sale_fees.any?
+  %section{id: "enter", class: "show-fees", "aria-label": "#{t('event.enter')} #{t('event.event')}"}
+    %h4= t('event.enter')
+
+    - section_names = @event.section_names
+
+    - if section_names.empty?
+      = render "events/show_enter_fees", fees: @on_sale_fees, section: nil
+
+    - else
+      - section_names.each do |section|
+        - section_fees = @on_sale_fees.select { |f| f.section_names.include?(section) }
+        - next if section_fees.empty?
+        = render "events/show_enter_fees", fees: section_fees, section: section

@@ -7,15 +7,19 @@ class EventsController < ApplicationController
     @events = Event.search(params, events_path)
     @map_events = Event.with_geocodes.search(params, events_path)
     # Map coordinates of default area bounds [Lat, Lng]
-    @center = [53.45, -7.95]
-    @zoom = 6.4
+    @center = [53.5, -8]
+    @zoom = 5.5
     flash.now[:warning] = t("no_matches") if @events.count == 0
     save_last_search(@events, :events)
   end
 
   def show
     @event = Event.find(params[:id])
-    @prev_next = Util::PrevNext.new(session, Event, params[:id])
+
+    @on_sale_fees = @event.fee_entries.on_sale.select { |f| can?(:show, f) }
+    @paid_entries = @event.items.paid.includes(:player).to_a
+    @entries_by_section = @paid_entries.group_by(&:section)
+
     @entries = @event.journal_search if can?(:create, Event)
     @extras = {}
     if can?(:update, @event)
@@ -24,6 +28,7 @@ class EventsController < ApplicationController
       @extras["Create Article"] = new_admin_article_path(title: @event.name, text: sample_text)
       @extras["Create News Item"] = new_admin_news_path(headline: @event.name, summary: sample_text)
     end
+
     if @event.streaming_url.present?
       uri = URI.parse(@event.streaming_url) rescue nil
 
@@ -50,7 +55,7 @@ class EventsController < ApplicationController
 
   def swiss_manager
     event = Event.find(params[:id])
-    authorize! :update, event
+    authorize! :read, event
 
     items = Item::Entry.joins(:cart, :fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::SwissManagerGenerator.new
@@ -60,8 +65,8 @@ class EventsController < ApplicationController
 
   def csv_list
     event = Event.find(params[:id])
-    authorize! :update, event
-    
+    authorize! :read, event
+
     items = Item::Entry.joins(:fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::EntryListCsvGenerator.new
 
@@ -70,7 +75,7 @@ class EventsController < ApplicationController
 
   def excel_list
     event = Event.find(params[:id])
-    authorize! :update, event
+    authorize! :read, event
 
     items = Item::Entry.joins(:fee_entry => :event).paid.where(section: params[:section]).where("fees.event_id = ?", event.id)
     generator = Admin::EntryListExcelGenerator.new

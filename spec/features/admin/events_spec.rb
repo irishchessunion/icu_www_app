@@ -28,7 +28,7 @@ describe Event do
     let(:level3) { User::ROLES.reject { |r| r.match(/\A(admin|editor|organiser|treasurer)\z/) }.append("guest") }
     let(:user)   { create(:user, roles: "organiser") }
     let(:event)  { create(:event, user: user) }
-    let(:header) { "h1" }
+    let(:header) { "h2" }
 
     it "level 1 can update as well as create" do
       level1.each do |role|

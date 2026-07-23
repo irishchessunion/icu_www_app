@@ -1,0 +1,31 @@
+<%# bootstraps inbuilt scrollspy doesnt account for the offset correctly %>
+$(function() {
+  var data = ICU.Maps.readData("map-data");
+  if (data && data.markers && data.markers.length) {
+    ICU.Maps.init("map-canvas", data);
+  }
+
+  var $navLinks = $(".event-nav-sm a");
+  var $sections = $($navLinks.map(function() {
+    return $($(this).attr("href"))[0];
+  }).get()).filter(function() { return !!this; });
+
+  if ($sections.length === 0 || $navLinks.length === 0) return;
+
+  var setActive = function(id) {
+    $navLinks.each(function() {
+      $(this).closest("li").toggleClass("active", this.getAttribute("href") === "#" + id);
+    });
+  };
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) setActive(entry.target.id);
+    });
+  }, {
+    rootMargin: "-40px 0px -75% 0px",
+    threshold: 0
+  });
+
+  $sections.each(function() { observer.observe(this); });
+});
