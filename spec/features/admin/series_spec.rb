@@ -253,7 +253,7 @@ describe Series do
       fill_in article_title, with: episodes[0].article.title + force_submit
       click_link episodes[0].article.title
 
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop", wait: 5)
 
       click_button save
 
@@ -277,6 +277,7 @@ describe Series do
       click_link episodes[2].article.title
 
       expect(page).to have_css("#article_title_4", text: episodes[2].article.title)
+      expect(page).to have_no_css(".modal-backdrop", wait: 5)
 
       find(number(1, 3)).select("1")
       click_button save

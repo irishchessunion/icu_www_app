@@ -39,7 +39,7 @@
                     %li= link_to "SwissPerfect (csv)", csv_list_event_path(@event.id, section: section)
                     %li= link_to "FIDE pre-2013", swiss_manager_event_path(@event.id, section: section)
 
-      - if @entries.present?
+      - if @entries.present? && (@event.creator?(current_user) || current_user.admin?)
         = render "admin/events/changelog", entries: @entries
 
 - if @event.creator?(current_user) || current_user.admin?
