@@ -1,5 +1,9 @@
 const stripe = Stripe('<%= Rails.application.secrets.stripe[:public] %>');
 $(function() {
+
+  $('#javascript-message').hide();
+  $('#submit-btn').prop('disabled', false);
+
   const options = {
     clientSecret: "<%= @intent.client_secret %>"
   };

@@ -63,13 +63,31 @@ class Cart < ApplicationRecord
   def purchase(params, user)
     email = params[:confirmation_email]
     name = params[:payment_name]
-    intent = Stripe::PaymentIntent.retrieve(params[:payment_intent_id]) if params[:payment_intent_id]
+
+    begin
+      intent = Stripe::PaymentIntent.retrieve(params[:payment_intent_id]) if params[:payment_intent_id]
+    rescue Stripe::InvalidRequestError
+      # User disabled JS and submitted the form with a payment intent of an empty string.
+      add_payment_error({message: "Payment intent missing"}, name, email, "Something went wrong, please contact webmaster@icu.ie")
+      return
+    end
+      
+    # Verify intent integrity, preventing a user from using a payment intent of a different amount
+    if intent and intent.amount != cents(total_cost)
+      add_payment_error(intent, name, email, "Payment intent amount (#{intent.amount}) does not match cart amount (#{cents(total_cost)})")
+      return
+    end
+
     if intent and intent.status == 'succeeded'  
       latest_charge = intent.latest_charge
       Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),})
       successful_payment("stripe", intent.id, latest_charge, Cart.current_payment_account)
     elsif intent and not intent.status == 'succeeded'
       add_payment_error(intent, name, email, "Something went wrong, please contact webmaster@icu.ie")
+      return
+    elsif total_cost > 0.0
+      # Catches the rare cases where the user disables JS and deletes the payment intent from the form before submitting
+      add_payment_error({message: "Payment intent missing"}, name, email, "Something went wrong, please contact webmaster@icu.ie")
       return
     else
       successful_payment("free", nil, nil, Cart.current_payment_account)

@@ -16,6 +16,13 @@
       %button.close{"type" => "button", "data-dismiss" => "alert"} ×
       %span{id: "payment_error_message"}
 
+#javascript-message
+  .col-sm-12
+    .text-center{class: "alert alert-danger"}
+      %button.close{"type" => "button", "data-dismiss" => "alert"} ×
+      %span
+        Please enable JavaScript in your browser to complete the payment process.
+
 = form_tag charge_path(format: "js"), id: "stripe_form", class: "form-horizontal", role: "form", :data => {:secret => @intent.client_secret} do
   - locals = { col: "sm", pad: 5, width: 3, param: nil}
   .row
@@ -37,7 +44,7 @@
   .row
     .col-sm-5
     .col-sm-7
-      = button_tag t("shop.payment.card.pay"), type: "submit", class: "btn btn-success btn-md", id: "submit-btn"
+      = button_tag t("shop.payment.card.pay"), type: "submit", class: "btn btn-success btn-md", id: "submit-btn", disabled: true
       = link_to t("cancel"), cart_path, class: "btn btn-info btn-md", id: "cancel_button"
   %hr
   .row
