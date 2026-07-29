@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require bootstrap.min
 //= require openmaps
+//= require spotlight
 
 // Auto-submit on change.
 $(function() {

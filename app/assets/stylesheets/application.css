@@ -687,6 +687,202 @@ section.stats-panel .list-col {
   padding: 1.5em
 }
 
+/* -- HOME -- */
+
+section.spotlight {
+  position: relative;
+  color: white;
+  background: var(--brand-info-darker);
+  padding: 21px 15px;
+  margin: 0 0 21px 0;
+}
+
+section.spotlight::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background: linear-gradient(160deg, var(--brand-info-darker) 0%, var(--brand-info-darker) 45%, rgb(from var(--brand-info-darker) r g b / 0.95) 60%, rgb(from var(--brand-info-darker) r g b / 0.5) 85%, transparent 100%),
+    url("data:image/svg+xml,%3Csvg width='16' height='20' viewBox='0 0 16 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f9bb73' fill-opacity='0.18' fill-rule='evenodd'%3E%3Cpath d='M8 0v20L0 10M16 0v10L8 0M16 10v10H8'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+section.spotlight .wrap {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+section.spotlight .main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+section.spotlight header {
+  font-size: 2em;
+  line-height: 1.25em;
+  letter-spacing: 0.025em;
+  margin: 0 0 21px 0;
+}
+
+section.spotlight header .eyebrow {
+  color: var(--gray-lighter);
+  font-size: 13px;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+section.spotlight header .eyebrow > .highlight {
+  color: var(--brand-warning-light);
+}
+
+section.spotlight .actions {
+  display: flex;
+  align-items: center;
+  gap: 0 5px;
+}
+
+section.spotlight .actions .btn-lichess {
+  color: var(--brand-info-darker);
+  background: var(--brand-warning-light);
+  border-color: var(--brand-warning-light);
+}
+
+section.spotlight .actions .btn-stream {
+  display: none;
+  color: var(--body-bg);
+  background: var(--brand-info-dark);
+  border-color: var(--brand-info-dark);
+}
+
+section.spotlight .pending {
+  display: none;
+}
+
+section.spotlight .units {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+section.spotlight .digits {
+  display: flex;
+  gap: 4px;
+}
+
+section.spotlight .digit {
+  min-width: 24px;
+  padding: 6px;
+  font-size: 1.25em;
+  line-height: 1.25;
+  text-align: center;
+  background: var(--brand-primary);
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+section.spotlight .sep {
+  padding: 6px 0;
+  font-size: 1.25em;
+  line-height: 1.25;
+}
+
+section.spotlight .name {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8em;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+section.spotlight .side {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+section.spotlight .commentary {
+  min-width: 0;
+}
+
+section.spotlight .heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 8px 0;
+  font-weight: 400;
+}
+
+section.spotlight .heading a {
+  font-size: 0.875em;
+  color: var(--brand-info-light);
+  text-decoration: underline;
+}
+
+section.spotlight .box {
+  aspect-ratio: 16 / 9;
+  height: 180px;
+  border: 1px solid var(--brand-warning-light);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+section.spotlight .box iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+section.spotlight .links {
+  flex: 0 0 120px;
+}
+
+section.spotlight .links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Bootstrap SM Breakpoint */
+@media (max-width: 768px) {
+  section.spotlight::before {
+    background: linear-gradient(130deg, var(--brand-info-darker) 0%, var(--brand-info-darker) 45%, rgb(from var(--brand-info-darker) r g b / 0.95) 60%, rgb(from var(--brand-info-darker) r g b / 0.5) 85%, transparent 100%),
+      url("data:image/svg+xml,%3Csvg width='16' height='20' viewBox='0 0 16 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f9bb73' fill-opacity='0.18' fill-rule='evenodd'%3E%3Cpath d='M8 0v20L0 10M16 0v10L8 0M16 10v10H8'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  section.spotlight header {
+    font-size: 1.75em;
+    margin: 0 0 15px 0;
+  }
+
+  section.spotlight .side {
+    display: none;
+  }
+
+  section.spotlight .actions {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  section.spotlight .actions .btn {
+    padding: 6px 9px;
+    font-size: 13px;
+    line-height: 1.5;
+    border-radius: 3px;
+  }
+
+  section.spotlight .actions .btn-stream {
+    display: inline-block;
+  }
+}
+
+
 /* Homepage Links */
 .home-page-links>.mobile-links {
   display: none;

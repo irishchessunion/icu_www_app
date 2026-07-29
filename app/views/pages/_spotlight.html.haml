@@ -1,0 +1,46 @@
+%section{class: "spotlight full-width", "aria-label": "Spotlight: #{@spotlight.title}"}
+  .container
+    .wrap
+      .main
+        %header
+          .eyebrow
+            %span.highlight= Spotlight::EYEBROW_HIGHLIGHT
+            = " | #{@spotlight.eyebrow_dates}"
+          - @spotlight.title_lines.each_with_index do |line, i|
+            = line
+            - unless i == @spotlight.title_lines.size - 1
+              %br
+        - unless @spotlight.started?
+          .countdown{"data-spotlight-start" => @spotlight.starts_at.iso8601}
+            .units
+        .actions{class: ("pending" unless @spotlight.started?)}
+          - if @spotlight.lichess_url
+            %a.btn.btn-lichess{href: @spotlight.lichess_url, target: "event"}
+              Watch live on Lichess
+          - if @spotlight.stream_url
+            %a.btn.btn-stream{href: @spotlight.stream_url, target: "event"}
+              = @spotlight.stream_label ? "Live Commentary | #{@spotlight.stream_label}" : "Watch the live stream"
+      .side
+        - if @spotlight.stream_url
+          .commentary
+            .heading
+              = t("event.streaming_embed")
+              - if @spotlight.stream_label
+                = link_to @spotlight.stream_label, @spotlight.stream_url, target: "event"
+            .box
+              - if @spotlight.youtube_video_id
+                %iframe{src: "https://www.youtube-nocookie.com/embed/#{@spotlight.youtube_video_id}?controls=0",
+                        title: "YouTube video player", frameborder: "0",
+                        allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+                        referrerpolicy: "strict-origin-when-cross-origin", allowfullscreen: true}
+              - elsif @spotlight.twitch_channel_id
+                %iframe{src: "https://player.twitch.tv/?channel=#{@spotlight.twitch_channel_id}&parent=icu.ie&parent=www.icu.ie&autoplay=false",
+                        title: "Twitch.tv video player", allowfullscreen: true}
+        .links
+          .heading Links
+          %ul
+            - if @spotlight.results_url
+              %li= link_to "Standings", @spotlight.results_url, target: "event", class: "btn btn-primary btn-block"
+            - if @spotlight.pairings_url
+              %li= link_to "Pairings", @spotlight.pairings_url, target: "event", class: "btn btn-primary btn-block"
+            %li= link_to "Event Page", event_path(@spotlight.event), class: "btn btn-primary btn-block"
