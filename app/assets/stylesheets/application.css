@@ -702,7 +702,7 @@ section.spotlight::before {
   z-index: 1;
   inset: 0;
   content: "";
-  background: linear-gradient(160deg, var(--brand-info-darker) 0%, var(--brand-info-darker) 45%, rgb(from var(--brand-info-darker) r g b / 0.95) 60%, rgb(from var(--brand-info-darker) r g b / 0.5) 85%, transparent 100%),
+  background: linear-gradient(160deg, var(--brand-info-darker) 0%, var(--brand-info-darker) 45%, color-mix(in oklab, var(--brand-info-darker), transparent 5%) 60%, color-mix(in oklab, var(--brand-info-darker), transparent 50%) 85%, transparent 100%),
     url("data:image/svg+xml,%3Csvg width='16' height='20' viewBox='0 0 16 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f9bb73' fill-opacity='0.18' fill-rule='evenodd'%3E%3Cpath d='M8 0v20L0 10M16 0v10L8 0M16 10v10H8'/%3E%3C/g%3E%3C/svg%3E");
 }
 
@@ -852,7 +852,7 @@ section.spotlight .links ul {
 /* Bootstrap SM Breakpoint */
 @media (max-width: 768px) {
   section.spotlight::before {
-    background: linear-gradient(130deg, var(--brand-info-darker) 0%, var(--brand-info-darker) 45%, rgb(from var(--brand-info-darker) r g b / 0.95) 60%, rgb(from var(--brand-info-darker) r g b / 0.5) 85%, transparent 100%),
+    background: linear-gradient(130deg, var(--brand-info-darker) 0%, var(--brand-info-darker) 45%, color-mix(in oklab, var(--brand-info-darker), transparent 5%) 60%, color-mix(in oklab, var(--brand-info-darker), transparent 50%) 85%, transparent 100%),
       url("data:image/svg+xml,%3Csvg width='16' height='20' viewBox='0 0 16 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f9bb73' fill-opacity='0.18' fill-rule='evenodd'%3E%3Cpath d='M8 0v20L0 10M16 0v10L8 0M16 10v10H8'/%3E%3C/g%3E%3C/svg%3E");
   }
 
