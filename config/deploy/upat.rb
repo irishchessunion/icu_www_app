@@ -12,6 +12,7 @@ set :deploy_to, "/var/apps/www"
 set :rails_env, 'upat'
 set :branch, "master"
 
+# TODO: Define server name and username
 server "icu_upat", user: "etagwerker", roles: %w{app db web}
 
 # role-based syntax
