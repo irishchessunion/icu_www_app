@@ -1036,6 +1036,11 @@ input:checked+.slider:before {
   border: solid 1px #bbb;
   padding: 0.4em;
 }
+#article img
+{
+  max-width: 100%;
+  height: auto;
+}
 
 /* For news items. */
 .news dd {
@@ -1063,6 +1068,11 @@ input:checked+.slider:before {
 {
   border: solid 1px #bbb;
   padding: 0.4em;
+}
+.news img
+{
+  max-width: 100%;
+  height: auto;
 }
 
 
