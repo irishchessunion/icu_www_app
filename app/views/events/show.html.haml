@@ -20,8 +20,8 @@
         = render "events/show_livestream"
         = render "events/show_description"
         = render "events/show_contact"
-        - if @entries.present?
-          %button{type: "button", "data-toggle": "collapse", "data-target": "#changeLog", class: "btn btn-primary"}
+        - if @entries.present? && can?(:read, @event)
+          %button{type: "button", "data-toggle": "collapse", "data-target": "#changeLog", class: "btn btn-sm btn-pastel-primary"}
             View changelog
           %div{id: "changeLog", class: "collapse"}
             = render "admin/journal_entries/changes", entries: @entries
