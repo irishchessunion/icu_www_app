@@ -20,7 +20,7 @@
         = render "events/show_livestream"
         = render "events/show_description"
         = render "events/show_contact"
-        - if @entries.present? && can?(:read, @event)
+        - if @entries.present? && can?(:show, entries.matches.first)
           %button{type: "button", "data-toggle": "collapse", "data-target": "#changeLog", class: "btn btn-sm btn-pastel-primary"}
             View changelog
           %div{id: "changeLog", class: "collapse"}
