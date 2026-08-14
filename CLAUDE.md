@@ -53,7 +53,7 @@ Auth is hand-rolled, not Devise — `User` stores `encrypted_password`/`salt` di
 ### Frontend styling
 Use the existing Bootstrap 3.2.0 and Bootswatch 3.2.0 theme classes and components before adding custom CSS. Refer to the relevant  documentation (https://bootstrapdocs.com/v3.0.2/docs/ & https://bootswatch.com/3/) if needed.
 Users can toggle between all Bootswatch themes. Flatly is the default and is used by most users and all guests.
-Each theme’s app/assets/stylesheets/variables_{theme}.css defines the same CSS variable names with theme-specific values, so use css variables such as var(--brand-primary) rather than hard-coded colours to preserve theme compatibility.
+Each theme’s `app/assets/stylesheets/variables_{theme}.css` defines the same CSS variable names with theme-specific values, so use css variables such as var(--brand-primary) rather than hard-coded colours to preserve theme compatibility.
 Add rules to `app/assets/stylesheets/application.css` only when the framework does not provide the required behavior or a genuine site-specific override is needed. Never use !important flags.
 
 ### Shared model behaviour via concerns (`app/models/concerns/`)
