@@ -241,7 +241,7 @@ describe Expandable do
 
     it "defaults" do
       result = d.expand_all("[IMG:#{image.id}]")
-      expect(result).to match /\A<div class="[^"]+"><a href="[^"]+"><img src="[^"]+" width="[^"]+" height="[^"]+" alt="[^"]+"><\/a><\/div>\z/
+      expect(result).to match /\A<div class="[^"]+"><a href="[^"]+"><img src="[^"]+" class="[^"]+" width="[^"]+" height="[^"]+" alt="[^"]+"><\/a><\/div>\z/
       expect(result).to match /class="#{fleft} #{mright}"/
       expect(result).to match /href="#{href}"/
       expect(result).to match /src="#{Regexp.escape(image.data.url)}"/
@@ -276,6 +276,7 @@ describe Expandable do
 
     it "explicit align left" do
       result = d.expand_all("[IMG:#{image.id}:align=left]")
+      expect(result).to match /<img[^>]+class="img-responsive"/
       expect(result).to match /class="#{fleft} #{mright}"/
     end
 
@@ -286,6 +287,7 @@ describe Expandable do
 
     it "explicit align right" do
       result = d.expand_all("[IMG:#{image.id}:align=right]")
+      expect(result).to match /<img[^>]+class="img-responsive"/
       expect(result).to match /class="#{fright} #{mleft}"/
     end
 
@@ -296,13 +298,13 @@ describe Expandable do
 
     it "explicit align center" do
       result = d.expand_all("[IMG:#{image.id}:align=center]")
-      expect(result).to_not match /class=/
+      expect(result).to match /<img[^>]+class="img-responsive"/
       expect(result).to match /\A<center><a[^>]+><img[^>]+><\/a><\/center>\z/
     end
 
     it "implicit align center" do
       result = d.expand_all("[IMG:#{image.id}:center]")
-      expect(result).to_not match /class=/
+      expect(result).to match /<img[^>]+class="img-responsive"/
       expect(result).to match /\A<center><a[^>]+><img[^>]+><\/a><\/center>\z/
     end
 
