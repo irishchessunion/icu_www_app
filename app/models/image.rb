@@ -90,6 +90,7 @@ class Image < ApplicationRecord
       img_atrs = []
       wrp_atrs = []
       img_atrs.push %Q/src="#{data.url}"/
+      img_atrs.push 'class="img-responsive"'
       unless opt[:align] == "center" && opt[:responsive] == "true"
         img_atrs.push %Q/width="#{width}"/
         img_atrs.push %Q/height="#{height}"/
@@ -102,7 +103,6 @@ class Image < ApplicationRecord
         wrp_atrs.push 'class="float-right%s"' % (margin == "yes" ? " left-margin" : "")
       else
         wrp = "center"
-        img_atrs.push 'class="img-responsive"' if opt[:responsive] == "true"
       end
       img_atrs.push %Q/alt="#{alt}"/
       img_atrs = (img_atrs.any?? " " : "") + img_atrs.join(" ")
