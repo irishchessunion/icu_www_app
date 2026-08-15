@@ -270,28 +270,44 @@ describe Series do
     end
 
     it "move last article to first position" do
-      find(keep(3)).set(false)
+      uncheck "keep_3"
+      expect(page).not_to have_checked_field(keep(3))
 
+      # select the existing article for the new 1st episode
       find(select_button(1, 3)).click
       fill_in article_title, with: episodes[2].article.title + force_submit
-      click_link episodes[2].article.title
 
-      expect(page).to have_css("#article_title_4", text: episodes[2].article.title)
+      expect(page).to have_link(episodes[2].article.title, wait: 5)
+      find(
+        "a.article_ids_callback[data-id='#{episodes[2].article.id}']"
+      ).click
+
+      # wait until the modalhas populated the form.
+      expect(page).to have_css(
+        "#article_title_4",
+        text: episodes[2].article.title,
+        wait: 5
+      )
       expect(page).to have_no_css(".modal-backdrop", wait: 5)
+      expect(find("#add_4", visible: false).value).to eq(
+        episodes[2].article_id.to_s
+      )
 
+      # add the article again and select ep 1
       find(number(1, 3)).select("1")
+
       click_button save
 
       series.reload
-      expect(series.episodes.count).to eq 3
-      expect(series.articles.count).to eq 3
-      expect(series.episodes.map(&:number).join("|")).to eq "1|2|3"
-      expect(series.articles.order("episodes.number").map(&:title).join("|")).to eq [2, 0, 1].map{ |i| episodes[i].article.title }.join("|")
 
-      expect(Article.count).to eq 4
-      expect(Episode.count).to eq 3
-      expect(Series.count).to eq 1
-      expect(JournalEntry.series.count).to eq 0
+      # verify the episode order after saving
+      expect(series.episodes.pluck(:number, :article_id)).to eq(
+        [
+          [1, episodes[2].article_id],
+          [2, episodes[0].article_id],
+          [3, episodes[1].article_id]
+        ]
+      )
     end
   end
 

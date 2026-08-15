@@ -22,7 +22,7 @@ describe Tournament do
         expect(page).to_not have_css(failure)
         visit tournament_path(tournament)
         expect(page).to have_css(header, text: tournament.name)
-        expect(page).to have_link(edit)
+        expect(page).to have_link(href: edit_admin_tournament_path(tournament))
       end
     end
 
@@ -38,7 +38,7 @@ describe Tournament do
           expect(page).to have_css(failure, text: unauthorized)
         else
           expect(page).to have_css(header, text: tournament.name)
-          expect(page).to_not have_link(edit)
+          expect(page).to_not have_link(href: edit_admin_tournament_path(tournament))
         end
       end
     end
