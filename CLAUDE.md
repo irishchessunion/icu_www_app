@@ -51,7 +51,7 @@ Auth is hand-rolled, not Devise — `User` stores `encrypted_password`/`salt` di
 `config/routes.rb` defines a public-facing resource set (mostly `index`/`show`, read-heavy) and a parallel `namespace :admin` with the fuller CRUD for the same models (e.g. `resources :clubs, only: [:index, :show]` publicly vs `resources :clubs, only: [:new, :create, :edit, :update]` under admin). Controllers/views mirror this split (`app/controllers/admin/...`, `app/views/admin/...`). When adding a resource, expect to touch both sides.
 
 ### Frontend styling
-Use the existing Bootstrap 3.2.0 and Bootswatch 3.2.0 theme classes and components before adding custom CSS. Refer to the relevant  documentation (https://bootstrapdocs.com/v3.0.2/docs/ & https://bootswatch.com/3/) if needed.
+Use the existing Bootstrap 3.0.2 and Bootswatch 3.2.0 theme classes and components before adding custom CSS. Refer to the relevant  documentation (https://bootstrapdocs.com/v3.0.2/docs/ & https://bootswatch.com/3/) if needed.
 Users can toggle between all Bootswatch themes. Flatly is the default and is used by most users and all guests.
 Each theme’s `app/assets/stylesheets/variables_{theme}.css` defines the same CSS variable names with theme-specific values, so use css variables such as var(--brand-primary) rather than hard-coded colours to preserve theme compatibility.
 Add rules to `app/assets/stylesheets/application.css` only when the framework does not provide the required behavior or a genuine site-specific override is needed. Never use !important flags.
