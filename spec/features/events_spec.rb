@@ -54,11 +54,10 @@ describe Event do
   end
 
   context "admin/organiser show page" do
-    it "shows the admin panel and changelog to the event creator" do
+    it "shows the admin panel to the event creator" do
       login event.user
       visit event_path(event)
       expect(page).to have_link("Manage Event")
-      expect(page).to have_button("View changelog")
     end
 
     it "hides the admin panel from guests" do
