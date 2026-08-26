@@ -256,6 +256,7 @@ describe Series do
       expect(page).to have_no_css(".modal-backdrop", wait: 5)
 
       click_button save
+      expect(page).to have_css(success, text: updated)
 
       series.reload
       expect(series.episodes.count).to eq 3
@@ -282,7 +283,7 @@ describe Series do
         "a.article_ids_callback[data-id='#{episodes[2].article.id}']"
       ).click
 
-      # wait until the modalhas populated the form.
+      # wait until the modal has populated the form.
       expect(page).to have_css(
         "#article_title_4",
         text: episodes[2].article.title,
@@ -297,6 +298,7 @@ describe Series do
       find(number(1, 3)).select("1")
 
       click_button save
+      expect(page).to have_css(success, text: updated)
 
       series.reload
 

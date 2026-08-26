@@ -47,8 +47,10 @@ class Admin::SeriesController < ApplicationController
   end
 
   def update_episodes
-    delete_episodes
-    add_episodes
+    ActiveRecord::Base.transaction do
+      delete_episodes
+      add_episodes
+    end
   end
 
   def delete_episodes
@@ -61,7 +63,7 @@ class Admin::SeriesController < ApplicationController
   end
 
   def add_episodes
-    article_ids = @series.articles.all.map(&:id)
+    article_ids = Article.joins(:episodes).where(episodes: { series_id: @series.id }).pluck(:id)
     new_ids = id_num_pairs.reject{ |pair| article_ids.include?(pair[:id]) }
     new_ids.each do |pair|
       article = Article.find_by(id: pair[:id])
