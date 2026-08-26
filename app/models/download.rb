@@ -8,7 +8,7 @@ class Download < ApplicationRecord
   attr_accessor :dir_to_remove
 
   MIN_SIZE = 500
-  MAX_SIZE = 5.megabytes
+  MAX_SIZE = 100.megabytes
   TYPES = {
     csv:  "text/csv",
     doc:  "application/msword",
