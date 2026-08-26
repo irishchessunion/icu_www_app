@@ -70,6 +70,10 @@ IcuWwwApp::Application.routes.draw do
     get :verify, on: :member
   end
 
+  namespace :api, defaults: { format: :json } do
+    resources :events, only: [:index]
+  end
+
   namespace :admin do
     %w[session_info system_info test_email].each do |page|
       get page => "pages##{page}"
