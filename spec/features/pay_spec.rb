@@ -5,10 +5,10 @@ describe "Pay", js: true do
 
   let(:add_to_cart)           { I18n.t("item.add") }
   # let(:bad_cvc)               { I18n.t("shop.payment.error.cvc") }
-  let(:bad_cvc)               { "Your card’s security code is incomplete." }
+  let(:bad_cvc)               { "Your security code is incomplete." }
   let(:bad_email)             { I18n.t("shop.payment.error.email") }
   # let(:bad_expiry)            { I18n.t("shop.payment.error.expiry") }
-  let(:bad_expiry)            { "Your card’s expiry date is incomplete" }
+  let(:bad_expiry)            { "Your expiry date is incomplete" }
   let(:bad_name)              { I18n.t("shop.payment.error.name") }
   # let(:bad_number)            { I18n.t("shop.payment.error.number") }
   let(:bad_number)            { "Your card number is incomplete" }

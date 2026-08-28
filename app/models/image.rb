@@ -7,7 +7,7 @@ class Image < ApplicationRecord
   serialize :dimensions, coder: YAML, type: Hash
 
   TYPES = "jpe?g|gif|png"
-  MAX_PIXELS = 4000
+  MAX_PIXELS = 10000
   MIN_PIXELS = 30
   THUMB_SIZE = 100
   STYLES = { :thumbnail => "#{THUMB_SIZE}x#{THUMB_SIZE}>" }
