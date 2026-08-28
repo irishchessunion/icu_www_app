@@ -11,8 +11,8 @@ class Ability
     end
 
     can :view, :special_membership # Used in IcuController to hide life members and current members
-    can :index, [Article, Arbiter, Download, Game, Image, Series, Tournament]
-    can :show, [Article, Arbiter, Game, Series, Tournament]
+    can :index, [Article, Arbiter, Download, Document, Game, Image, Series, Tournament]
+    can :show, [Article, Arbiter, Document, Game, Series, Tournament]
     can [:edit, :update], Arbiter, player_id: user.player_id
     can [:edit, :update], Club, secretary_id: user.player_id if user.player_id.present?
 
