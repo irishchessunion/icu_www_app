@@ -24,7 +24,7 @@ class PagesController < ApplicationController
   end
 
   def beginners
-    @news = News.active.beginners
+    @news = News.active.beginners.ordered
     @junior_clubs = Club.active.junior
     @clubs = Club.active
   end
@@ -39,17 +39,17 @@ class PagesController < ApplicationController
 
   # this method can't be called parents as this is already a ruby method
   def for_parents
-    @news = News.active.for_parents
+    @news = News.active.for_parents.ordered
     @junior_clubs = Club.active.junior
   end
 
   def primary_schools
-    @news = News.active.primary
+    @news = News.active.primary.ordered
     @junior_clubs = Club.active.junior
   end
 
   def secondary_schools
-    @news = News.active.secondary
+    @news = News.active.secondary.ordered
     @junior_clubs = Club.active.junior
   end
 
