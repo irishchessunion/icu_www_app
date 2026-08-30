@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
     redirect_to switch_to_tls(:sign_in), alert: exception.message, allow_other_host: true
   end
 
+  rescue_from ActionController::InvalidAuthenticityToken do
+    redirect_to root_path, alert: "Your session expired, please try again."
+  end
+
   # Sets up values in the session for lib/util/prev_next.rb and last_search in helpers/applicaion_helper.rb.
   def save_last_search(results, key)
     session["last_search_path_#{key}".to_sym] = request.fullpath

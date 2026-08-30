@@ -28,9 +28,6 @@ class Failure < ApplicationRecord
     if %w[ActiveRecord::RecordNotFound ActionController::UnknownFormat].include?(name)
       # Too common to log.
       true
-    elsif name == "ActionController::InvalidAuthenticityToken" && action == "not_found"
-      # Spammers POST-ing to non-existant URLs raises this instead of getting a 404.
-      true
     elsif name == "ActionController::InvalidCrossOriginRequest" && action == "control"
       # Bots trying to follow the banner control button get this.
       true
