@@ -5,6 +5,17 @@
 window.wysiwygEditor = null;
 window.wysiwygEditorSavedRange = null;
 
+// Escapes text pulled from a data-* attribute (e.g. a linked record's title)
+// before it gets embedded in a [ART:1:Title] shortcode, so a malicious title
+// can't break out of the shortcode and inject markup when it's later expanded.
+function escapeWysiwygHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 // Inserts plain text (e.g. an [ART:1:Title] shortcode) at the cursor position the
 // editor had when one of the "Link Article" / "Link Event" / "Insert Image" buttons
 // was pressed (captured on mousedown, before the modal steals focus).

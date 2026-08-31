@@ -12,8 +12,9 @@ class News < ApplicationRecord
   belongs_to :user
 
   before_validation :normalize_attributes
+  before_validation :sanitize_summary
   validates :headline, presence: true, on: :create, length: { maximum: 100 }
-  validates :summary, presence: true, on: :create
+  validate :summary_must_be_present, on: :create
   validates :date, date: { on_or_before: :today }
   validate :expansions
 
@@ -84,6 +85,14 @@ class News < ApplicationRecord
 
   def normalize_attributes
     normalize_newlines(:summary)
+  end
+
+  def sanitize_summary
+    self.summary = sanitize_editor_html(summary) unless markdown?
+  end
+
+  def summary_must_be_present
+    errors.add(:summary, "can't be blank") if html_content_blank?(summary)
   end
 
   def expansions

@@ -1,3 +1,5 @@
+require "cgi"
+
 class Image < ApplicationRecord
   include Journalable
   include Pageable
@@ -82,10 +84,10 @@ class Image < ApplicationRecord
     lnk = "a"
     lnk_atrs = %Q{ href="/images/#{id}"}
     if opt[:type] == "IML"
-      "<#{lnk}#{lnk_atrs}>#{opt[:text] || 'image'}</#{lnk}>"
+      "<#{lnk}#{lnk_atrs}>#{CGI.escapeHTML(opt[:text] || 'image')}</#{lnk}>"
     elsif opt[:type] == "IMG"
       width, height = resize(opt)
-      alt = (opt[:alt] || caption).gsub(/"/, '\"')
+      alt = CGI.escapeHTML(opt[:alt] || caption)
       margin = opt[:margin] || "yes"
       img_atrs = []
       wrp_atrs = []

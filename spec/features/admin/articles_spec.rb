@@ -164,6 +164,23 @@ describe Article do
       expect(JournalEntry.articles.where(action: "create", by: user.signature, journalable_id: article.id).count).to eq 1
     end
 
+    it "includes a CSRF token on the image upload form" do
+      # Regression check: remote (AJAX) forms don't embed an authenticity_token
+      # by default (Rails' embed_authenticity_token_in_remote_forms is false),
+      # which broke the image picker's upload tab - it needs
+      # authenticity_token: true explicitly. Forgery protection is disabled
+      # app-wide in the test env (config/environments/test.rb), which would
+      # otherwise hide this field regardless of the fix, so it's temporarily
+      # re-enabled just for this check and a fresh render.
+      begin
+        ActionController::Base.allow_forgery_protection = true
+        visit new_admin_article_path
+        expect(page).to have_css("#image_ids_upload_form input[name='authenticity_token']", visible: false)
+      ensure
+        ActionController::Base.allow_forgery_protection = false
+      end
+    end
+
     it "invalid expansions" do
       fill_in title, with: data.title
       fill_in year, with: data.year

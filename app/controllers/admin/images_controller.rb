@@ -3,7 +3,7 @@ class Admin::ImagesController < ApplicationController
   authorize_resource
 
   def new
-    @image = Image.new
+    @image = Image.new(year: Date.today.year, credit: current_user.name)
   end
 
   def create
@@ -17,7 +17,7 @@ class Admin::ImagesController < ApplicationController
         format.js
       end
     else
-      flash_first_error(@image, base_only: true)
+      flash_first_error(@image)
       respond_to do |format|
         format.html { render action: "new" }
         format.js
@@ -30,7 +30,7 @@ class Admin::ImagesController < ApplicationController
       @image.journal(:update, current_user, request.remote_ip)
       redirect_to @image, notice: "Image was successfully updated"
     else
-      flash_first_error(@image, base_only: true)
+      flash_first_error(@image)
       render action: "edit"
     end
   end

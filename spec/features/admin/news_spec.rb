@@ -87,6 +87,18 @@ describe News do
       expect(JournalEntry.news.where(action: "create", by: user.signature, journalable_id: news.id).count).to eq 1
     end
 
+    it "includes a CSRF token on the image upload form" do
+      # See spec/features/admin/articles_spec.rb for why this matters, and why
+      # forgery protection needs to be temporarily re-enabled here.
+      begin
+        ActionController::Base.allow_forgery_protection = true
+        visit new_admin_news_path
+        expect(page).to have_css("#image_ids_upload_form input[name='authenticity_token']", visible: false)
+      ensure
+        ActionController::Base.allow_forgery_protection = false
+      end
+    end
+
     it "invalid expansion" do
       fill_in headline, with: data.headline
       fill_in summary, with: data.summary + "\n\n[ART:99:Further details].\n"

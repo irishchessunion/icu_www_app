@@ -18,8 +18,9 @@ class Article < ApplicationRecord
   has_many :series, through: :episodes
 
   before_validation :normalize_attributes
+  before_validation :sanitize_text
 
-  validates :text, presence: true
+  validate :text_must_be_present
   validates :title, presence: true, on: :create, length: { maximum: 150 }
   validates :year, numericality: { integer_only: true, greater_than_or_equal_to: Global::MIN_YEAR }
   validate :expansions
@@ -104,6 +105,14 @@ class Article < ApplicationRecord
   def normalize_attributes
     normalize_blanks(:author)
     normalize_newlines(:text)
+  end
+
+  def sanitize_text
+    self.text = sanitize_editor_html(text) unless markdown?
+  end
+
+  def text_must_be_present
+    errors.add(:text, "can't be blank") if html_content_blank?(text)
   end
 
   def expansions
