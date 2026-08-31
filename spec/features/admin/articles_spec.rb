@@ -206,7 +206,11 @@ describe Article do
       article.reload
       expect(article.title).to eq data.title
 
-      expect(JournalEntry.articles.where(action: "update", by: user.signature, journalable_id: article.id).count).to eq 1
+      # 2, not 1: the article was created with the markdown flag on (the DB
+      # default), and any save through the admin form now converts the text
+      # to plain HTML for the WYSIWYG editor - so this save journals both the
+      # title change and that one-time text format conversion.
+      expect(JournalEntry.articles.where(action: "update", by: user.signature, journalable_id: article.id).count).to eq 2
     end
 
     it "access" do
@@ -244,7 +248,10 @@ describe Article do
       article.reload
       expect(article.access).to eq "all"
 
-      expect(JournalEntry.articles.where(action: "update", journalable_id: article.id).count).to eq 4
+      # 5, not 4: the first of these 4 saves also converts the article's text
+      # from markdown to HTML (see the "title" test above for why), adding
+      # one extra journal entry on top of the 4 access changes.
+      expect(JournalEntry.articles.where(action: "update", journalable_id: article.id).count).to eq 5
     end
   end
 
@@ -313,7 +320,7 @@ describe Article do
       click_button save
 
       expect(page).to have_css(success, text: created)
-      article = Article.first
+      article = Article.find_by!(title: "My Article")
       expect(article.markdown).to be false
       expect(article.text).to include("Some intro text.")
       expect(article.text).to include("[ART:#{linked_article.id}:#{linked_article.title}]")
