@@ -56,6 +56,9 @@ Users can toggle between all Bootswatch themes. Flatly is the default and is use
 Each theme’s `app/assets/stylesheets/variables_{theme}.css` defines the same CSS variable names with theme-specific values, so use css variables such as var(--brand-primary) rather than hard-coded colours to preserve theme compatibility.
 Add rules to `app/assets/stylesheets/application.css` only when the framework does not provide the required behavior or a genuine site-specific override is needed. Never use !important flags.
 
+### Hotwire (Turbo & Stimulus)
+`turbo-rails` (~> 2.0) and `stimulus-rails` (~> 1.3) are loaded from `app/views/layouts/application.html.haml` as two ES module scripts: `turbo` standalone, plus `hotwire.js` (a sprockets bundle containing stimulus and boot). They cannot be combined into one file as turbo.js and stimulus.js declare conflicting top-level helpers, which breaks terser minification. Turbo Drive is **globally disabled** in the bundle (`Turbo.session.drive = false`), so all links/forms keep their current full-page/jQuery-UJS behaviour until a feature explicitly opts in. Stimulus is started in the bundle and exposed as `window.Stimulus`. Register controllers from additional files required into `app/assets/javascripts/hotwire.js`. Migrate features to Hotwire page-by-page only when requested rather than removing the legacy `jquery_ujs` behaviour.
+
 ### Shared model behaviour via concerns (`app/models/concerns/`)
 Several cross-cutting behaviors are implemented as concerns rather than gems:
 - **Journalable** — opt-in audit log. A model calls `journalize(columns, path)` to declare which columns are tracked; changes are recorded as `JournalEntry` records via an explicit `.journal(action, by, ip)` call (not an automatic callback) with diffs computed by `Util::Diff`.
