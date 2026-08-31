@@ -45,7 +45,7 @@ docker-compose down
 
 Run the full test suite:
 ```bash
-docker-compose run --rm test
+docker-compose run --rm -e web bundle exec rspec
 ```
 
 Run specific tests:
@@ -53,6 +53,12 @@ Run specific tests:
 docker-compose run --rm test bundle exec rspec spec/models/
 docker-compose run --rm test bundle exec rspec spec/features/some_feature_spec.rb
 ```
+
+Run the suite with code coverage (SimpleCov) enabled by setting the `COVERAGE` env var:
+```bash
+docker-compose run --rm -e COVERAGE=1 web bundle exec rspec
+```
+Open `coverage/index.html` afterwards to view the report. Coverage is off by default since instrumenting it slows down every run.
 
 ### Useful Commands
 

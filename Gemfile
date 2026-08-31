@@ -80,6 +80,7 @@ group :test do
   gem "launchy"
   gem "faker"
   gem "database_cleaner", ">= 2.1"
+  gem "simplecov", require: false
 end
 
 # Avoiding CVE problems - these are found with `bundle audit`
