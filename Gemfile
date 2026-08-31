@@ -32,6 +32,8 @@ gem "sass-rails"
 gem "terser", "~> 1.2.6"
 gem "mini_racer", platforms: :ruby
 gem "jquery-rails"
+gem "turbo-rails", "~> 2.0" # Hotwire Turbo (opt-in; Drive disabled in hotwire.js)
+gem "stimulus-rails", "~> 1.3" # Hotwire Stimulus
 gem "cancancan" # cancan is no longer maintained, newer version is cancancan
 gem "redis"
 # gem "therubyracer", platforms: :ruby # (no longer needed)
