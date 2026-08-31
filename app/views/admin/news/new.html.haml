@@ -1,4 +1,7 @@
 - content_for :title, "New News"
+- content_for :includes do
+  = javascript_include_tag "quill", "wysiwyg_editor"
+  = stylesheet_link_tag "quill"
 - add_help("markdown")
 - add_help("shortcuts")
 = render "form"

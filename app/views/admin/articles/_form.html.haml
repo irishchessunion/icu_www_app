@@ -17,15 +17,11 @@
             .col-sm-12.text-center= f.label :text, t("article.text"), class: "control-label"
           .row
             .col-sm-12.voffset1
-              .btn-toolbar.voffset1#article_toolbar_extra
+              .btn-toolbar.voffset1#wysiwyg_toolbar_extra
                 %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#article_ids_modal"} Link Article
                 %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#event_ids_modal"} Link Event
                 %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#image_ids_modal"} Insert Image
-              = f.text_area :text, id: "article_text", value: @article.editor_html, class: "form-control insignificant-space", rows: 20
+              = f.text_area :text, id: "article_text", value: @article.editor_html, class: "form-control insignificant-space wysiwyg-editor", rows: 20
       = render "utils/form_buttons", form: f, object: @article
 
-= render "admin/article_ids/modal", title: "Link to an Article"
-= render "admin/event_ids/modal", title: "Link to an Event"
-= render "admin/image_ids/modal", title: "Insert an Image"
-%script
-  = render(:partial => "editor_callbacks", :handlers => [:erb], :formats => [:js])
+= render "admin/wysiwyg_editor_extras"

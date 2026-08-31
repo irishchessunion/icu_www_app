@@ -16,4 +16,17 @@ describe News do
       expect(str).to match /Entries to me via <script>liame\([^)]+\)<\/script>/
     end
   end
+
+  context "#editor_html" do
+    it "renders markdown summary to HTML without expanding shortcodes" do
+      news = build(:news, markdown: true, summary: "**Bold** [ART:1:Some Title]")
+      expect(news.editor_html).to include("<strong>Bold</strong>")
+      expect(news.editor_html).to include("[ART:1:Some Title]")
+    end
+
+    it "returns HTML summary as-is without expanding shortcodes" do
+      news = build(:news, markdown: false, summary: "<p>Hello</p> [IMG:1]")
+      expect(news.editor_html).to eq("<p>Hello</p> [IMG:1]")
+    end
+  end
 end

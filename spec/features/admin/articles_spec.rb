@@ -277,8 +277,8 @@ describe Article do
     let!(:linked_image)    { create(:image, caption: "Linked Image") }
 
     def set_editor_html(html)
-      expect(page).to have_css("#article-editor .ql-editor", wait: 5)
-      page.execute_script("document.querySelector('#article-editor').__quill.root.innerHTML = #{html.to_json};")
+      expect(page).to have_css("#wysiwyg_editor_mount .ql-editor", wait: 5)
+      page.execute_script("document.querySelector('#wysiwyg_editor_mount').__quill.root.innerHTML = #{html.to_json};")
     end
 
     before(:each) do
@@ -296,21 +296,21 @@ describe Article do
 
       set_editor_html("<p>Some intro text.</p>")
 
-      find("#article_toolbar_extra button", text: "Link Article").click
+      find("#wysiwyg_toolbar_extra button", text: "Link Article").click
       within "#article_ids_modal" do
         fill_in title, with: linked_article.title + force_submit
         click_link linked_article.title
       end
       wait_a_second(0.5)
 
-      find("#article_toolbar_extra button", text: "Link Event").click
+      find("#wysiwyg_toolbar_extra button", text: "Link Event").click
       within "#event_ids_modal" do
         fill_in I18n.t("event.name"), with: linked_event.name + force_submit
         click_link linked_event.name
       end
       wait_a_second(0.5)
 
-      find("#article_toolbar_extra button", text: "Insert Image").click
+      find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
       within "#image_ids_modal" do
         fill_in I18n.t("image.caption"), with: linked_image.caption + force_submit
         click_link linked_image.caption

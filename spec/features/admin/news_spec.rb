@@ -168,4 +168,58 @@ describe News do
       expect(JournalEntry.news.where(action: "destroy", by: user.signature, journalable_id: news.id).count).to eq 1
     end
   end
+
+  context "editor", js: true do
+    let!(:linked_article) { create(:article, title: "Linked Article") }
+    let!(:linked_event)   { create(:event, name: "Linked Event") }
+    let!(:linked_image)   { create(:image, caption: "Linked Image") }
+
+    def set_editor_html(html)
+      expect(page).to have_css("#wysiwyg_editor_mount .ql-editor", wait: 5)
+      page.execute_script("document.querySelector('#wysiwyg_editor_mount').__quill.root.innerHTML = #{html.to_json};")
+    end
+
+    before(:each) do
+      login user
+      wait_a_second(0.2)
+      visit new_admin_news_path
+    end
+
+    it "creates a news item with quick-links inserted via the pickers" do
+      fill_in headline, with: "My News"
+
+      set_editor_html("<p>Some intro text.</p>")
+
+      find("#wysiwyg_toolbar_extra button", text: "Link Article").click
+      within "#article_ids_modal" do
+        fill_in I18n.t("article.title"), with: linked_article.title + force_submit
+        click_link linked_article.title
+      end
+      wait_a_second(0.5)
+
+      find("#wysiwyg_toolbar_extra button", text: "Link Event").click
+      within "#event_ids_modal" do
+        fill_in I18n.t("event.name"), with: linked_event.name + force_submit
+        click_link linked_event.name
+      end
+      wait_a_second(0.5)
+
+      find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
+      within "#image_ids_modal" do
+        fill_in I18n.t("image.caption"), with: linked_image.caption + force_submit
+        click_link linked_image.caption
+      end
+      wait_a_second(0.5)
+
+      click_button save
+
+      expect(page).to have_css(success, text: created)
+      news = News.find_by!(headline: "My News")
+      expect(news.markdown).to be false
+      expect(news.summary).to include("Some intro text.")
+      expect(news.summary).to include("[ART:#{linked_article.id}:#{linked_article.title}]")
+      expect(news.summary).to include("[EVT:#{linked_event.id}:#{linked_event.name}]")
+      expect(news.summary).to include("[IMG:#{linked_image.id}]")
+    end
+  end
 end

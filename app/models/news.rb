@@ -13,7 +13,7 @@ class News < ApplicationRecord
 
   before_validation :normalize_attributes
   validates :headline, presence: true, on: :create, length: { maximum: 100 }
-  validates :summary, presence: true, on: :create, length: { maximum: 140, too_long: 'The summary is too long. Please create an article, and link to it so: [ART:123:My Article]' }
+  validates :summary, presence: true, on: :create
   validates :date, date: { on_or_before: :today }
   validate :expansions
 
@@ -41,11 +41,20 @@ class News < ApplicationRecord
   end
 
   def html
-    to_html(expand_all(summary), filter_html: false)
+    expanded = expand_all(summary)
+    markdown ? to_html(expanded, filter_html: false) : expanded.html_safe
   end
 
   def html2
-    to_html(expand_all("#{date.strftime('%d-%m-%Y')}: #{summary}"), filter_html: false)
+    expanded = expand_all("#{date.strftime('%d-%m-%Y')}: #{summary}")
+    markdown ? to_html(expanded, filter_html: false) : expanded.html_safe
+  end
+
+  # HTML to seed the admin WYSIWYG editor with. Unlike #html, this does not
+  # expand [ART:...]/[EVT:...]/[IMG:...] shortcodes, since those need to
+  # survive as editable literal text in the editor.
+  def editor_html
+    markdown? ? to_html(summary, filter_html: false) : summary.to_s.html_safe
   end
 
   def expand(opt)
