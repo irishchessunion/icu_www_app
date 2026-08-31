@@ -54,6 +54,12 @@ docker-compose run --rm test bundle exec rspec spec/models/
 docker-compose run --rm test bundle exec rspec spec/features/some_feature_spec.rb
 ```
 
+Run the suite with code coverage (SimpleCov) enabled by setting the `COVERAGE` env var:
+```bash
+docker-compose run --rm -e COVERAGE=1 test
+```
+Open `coverage/index.html` afterwards to view the report. Coverage is off by default since instrumenting it slows down every run.
+
 ### Useful Commands
 
 Access Rails console:
