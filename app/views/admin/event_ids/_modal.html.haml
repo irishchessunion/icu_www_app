@@ -1,0 +1,11 @@
+#event_ids_modal{class: "modal fade", tabindex: "-1", role: "dialog", "aria-labelledby" => "event_modal_label", "aria-hidden" => "true"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button{type: "button", class: "close", "data-dismiss" => "modal", "aria-hidden" => "true"} &times;
+        %h4.modal-title#event_modal_label= title
+      .modal-body
+        = render "admin/event_ids/search_form"
+        #event_ids_results
+%script
+  = render(:partial => "admin/event_ids/attach_callbacks", :handlers => [:erb], :formats => [:js])

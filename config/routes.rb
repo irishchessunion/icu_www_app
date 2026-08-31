@@ -89,6 +89,7 @@ IcuWwwApp::Application.routes.draw do
     resources :events do
       resources :event_users, only: [:create, :destroy]
     end
+    resources :event_ids,      only: [:index]
     resources :failures,        only: [:index, :show, :new, :update, :destroy]
     resources :fees do
       get :rollover, on: :member
@@ -96,6 +97,7 @@ IcuWwwApp::Application.routes.draw do
     end
     resources :games,           only: [:edit, :update, :destroy]
     resources :images,          only: [:new, :create, :edit, :update, :destroy]
+    resources :image_ids,      only: [:index]
     resources :items,           only: [:index, :edit, :update] do
       get :sales_ledger, on: :collection
     end

@@ -62,6 +62,13 @@ class Article < ApplicationRecord
     markdown ? to_html(expanded, filter_html: false) : expanded.html_safe
   end
 
+  # HTML to seed the admin WYSIWYG editor with. Unlike #html, this does not
+  # expand [ART:...]/[EVT:...]/[IMG:...] shortcodes, since those need to
+  # survive as editable literal text in the editor.
+  def editor_html
+    markdown? ? to_html(text, filter_html: false) : text.to_s.html_safe
+  end
+
   def expand(opt)
     %q{<a href="/articles/%d">%s</a>} % [id, opt[:title] || title]
   end

@@ -111,4 +111,17 @@ describe Article do
     end
 
   end
+
+  context "#editor_html" do
+    it "renders markdown text to HTML without expanding shortcodes" do
+      article = build(:article, markdown: true, text: "**Bold** [ART:#{image1.id}:Some Title]")
+      expect(article.editor_html).to include("<strong>Bold</strong>")
+      expect(article.editor_html).to include("[ART:#{image1.id}:Some Title]")
+    end
+
+    it "returns HTML text as-is without expanding shortcodes" do
+      article = build(:article, markdown: false, text: "<p>Hello</p> [IMG:#{image1.id}]")
+      expect(article.editor_html).to eq("<p>Hello</p> [IMG:#{image1.id}]")
+    end
+  end
 end

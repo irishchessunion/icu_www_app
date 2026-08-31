@@ -1,4 +1,7 @@
 - content_for :title, "New Article"
+- content_for :includes do
+  = javascript_include_tag "quill", "article_editor"
+  = stylesheet_link_tag "quill", skip_pipeline: true
 - add_help("markdown")
 - add_help("shortcuts")
 = render "form"

@@ -1,0 +1,12 @@
+- if @events.count > 0
+  .row
+    .col-sm-12
+      %table{class: "table table-striped", id: "results"}
+        %thead
+          %tr
+            %th= t("event.name")
+        %tbody
+          - @events.matches.each do |event|
+            %tr
+              %td= link_to event.name, "#", "data-id" => event.id, "data-name" => event.name, class: "event_ids_callback"
+          = render "utils/pagination_links", pager: @events, columns: 1

@@ -10,6 +10,7 @@ class Admin::ArticlesController < ApplicationController
     @article = Article.new(article_params)
     set_selected_categories
     @article.user_id = current_user.id
+    @article.markdown = false
 
     if @article.save
       @article.journal(:create, current_user, request.remote_ip)
@@ -23,6 +24,7 @@ class Admin::ArticlesController < ApplicationController
   def update
     normalize_newlines(:article, :text)
     set_selected_categories
+    @article.markdown = false
     if @article.update(article_params)
       @article.journal(:update, current_user, request.remote_ip)
       redirect_to @article, notice: "Article was successfully updated"
@@ -45,7 +47,7 @@ class Admin::ArticlesController < ApplicationController
   end
 
   def article_params
-    params[:article].permit(:access, :active, :author, :markdown, :text, :title, :year)
+    params[:article].permit(:access, :active, :author, :text, :title, :year)
   end
 
   def set_selected_categories

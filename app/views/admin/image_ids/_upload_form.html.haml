@@ -1,0 +1,11 @@
+- image = local_assigns[:image] || Image.new
+#image_ids_upload_form_wrapper
+  = form_for image, url: admin_images_path, remote: true, html: { multipart: true, id: "image_ids_upload_form", class: "form-horizontal" } do |f|
+    - locals = { form: f, object: image, col: "sm", pad: 3, mark: "required" }
+    = render "utils/file_field_for", locals.merge(param: :data, text: t("file"), width: 6)
+    = render "utils/text_field_for", locals.merge(param: :caption, text: t("image.caption"), width: 6)
+    = render "utils/text_field_for", locals.merge(param: :year, text: t("year"), width: 2)
+    = render "utils/text_field_for", locals.merge(param: :credit, text: t("image.credit"), width: 4, mark: "none")
+    .form-group
+      .col-sm-offset-3.col-sm-6
+        = f.submit "Upload", class: "btn btn-primary", data: { disable_with: "Uploading..." }

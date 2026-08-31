@@ -12,10 +12,16 @@ class Admin::ImagesController < ApplicationController
 
     if @image.save
       @image.journal(:create, current_user, request.remote_ip)
-      redirect_to @image, notice: "Image was successfully created"
+      respond_to do |format|
+        format.html { redirect_to @image, notice: "Image was successfully created" }
+        format.js
+      end
     else
       flash_first_error(@image, base_only: true)
-      render action: "new"
+      respond_to do |format|
+        format.html { render action: "new" }
+        format.js
+      end
     end
   end
 

@@ -1,0 +1,14 @@
+function article_ids_callback(id, title) {
+  insertArticleEditorToken('[ART:' + id + ':' + title + ']');
+  $('#article_ids_modal').modal('hide');
+}
+
+function event_ids_callback(id, name) {
+  insertArticleEditorToken('[EVT:' + id + ':' + name + ']');
+  $('#event_ids_modal').modal('hide');
+}
+
+function image_ids_callback(id, caption) {
+  insertArticleEditorToken('[IMG:' + id + ']');
+  $('#image_ids_modal').modal('hide');
+}
