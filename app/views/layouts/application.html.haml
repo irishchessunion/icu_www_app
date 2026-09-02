@@ -9,6 +9,10 @@
     = stylesheet_link_tag "variables_#{current_user.preferred_theme.downcase}", media: "all"
     = stylesheet_link_tag "application", media: "all"
     = javascript_include_tag "application"
+    -# Hotwire: stimulus/boot module + turbo module.
+    -# two module scripts because turbo.js and stimulus.js declare conflicting top-level helpers
+    = javascript_include_tag "turbo", type: "module"
+    = javascript_include_tag "hotwire", type: "module", debug: false
     - if content_for?(:includes)
       = yield :includes
     - if content_for?(:javascript)
