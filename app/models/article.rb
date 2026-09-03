@@ -5,6 +5,7 @@ class Article < ApplicationRecord
   include Normalizable
   include Pageable
   include Remarkable
+  include WysiwygEditable
 
 
   include CategoriesOwner
@@ -18,9 +19,8 @@ class Article < ApplicationRecord
   has_many :series, through: :episodes
 
   before_validation :normalize_attributes
-  before_validation :sanitize_text
 
-  validate :text_must_be_present
+  wysiwyg_editable :text
   validates :title, presence: true, on: :create, length: { maximum: 150 }
   validates :year, numericality: { integer_only: true, greater_than_or_equal_to: Global::MIN_YEAR }
   validate :expansions
@@ -58,18 +58,6 @@ class Article < ApplicationRecord
     paginate(matches, params, path, opt)
   end
 
-  def html
-    expanded = expand_all(text)
-    markdown ? to_html(expanded, filter_html: false) : expanded.html_safe
-  end
-
-  # HTML to seed the admin WYSIWYG editor with. Unlike #html, this does not
-  # expand [ART:...]/[EVT:...]/[IMG:...] shortcodes, since those need to
-  # survive as editable literal text in the editor.
-  def editor_html
-    markdown? ? to_html(text, filter_html: false) : text.to_s.html_safe
-  end
-
   def expand(opt)
     %q{<a href="/articles/%d">%s</a>} % [id, opt[:title] || title]
   end
@@ -105,14 +93,6 @@ class Article < ApplicationRecord
   def normalize_attributes
     normalize_blanks(:author)
     normalize_newlines(:text)
-  end
-
-  def sanitize_text
-    self.text = sanitize_editor_html(text) unless markdown?
-  end
-
-  def text_must_be_present
-    errors.add(:text, "can't be blank") if html_content_blank?(text)
   end
 
   def expansions

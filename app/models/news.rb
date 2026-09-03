@@ -4,6 +4,7 @@ class News < ApplicationRecord
   include Pageable
   include Remarkable
   include Journalable
+  include WysiwygEditable
 
   include CategoriesOwner
 
@@ -12,9 +13,9 @@ class News < ApplicationRecord
   belongs_to :user
 
   before_validation :normalize_attributes
-  before_validation :sanitize_summary
+
+  wysiwyg_editable :summary, on: :create
   validates :headline, presence: true, on: :create, length: { maximum: 100 }
-  validate :summary_must_be_present, on: :create
   validates :date, date: { on_or_before: :today }
   validate :expansions
 
@@ -41,21 +42,8 @@ class News < ApplicationRecord
     paginate(matches, params, path, opt)
   end
 
-  def html
-    expanded = expand_all(summary)
-    markdown ? to_html(expanded, filter_html: false) : expanded.html_safe
-  end
-
   def html2
-    expanded = expand_all("#{date.strftime('%d-%m-%Y')}: #{summary}")
-    markdown ? to_html(expanded, filter_html: false) : expanded.html_safe
-  end
-
-  # HTML to seed the admin WYSIWYG editor with. Unlike #html, this does not
-  # expand [ART:...]/[EVT:...]/[IMG:...] shortcodes, since those need to
-  # survive as editable literal text in the editor.
-  def editor_html
-    markdown? ? to_html(summary, filter_html: false) : summary.to_s.html_safe
+    render_wysiwyg_content(expand_all("#{date.strftime('%d-%m-%Y')}: #{summary}"))
   end
 
   def expand(opt)
@@ -85,14 +73,6 @@ class News < ApplicationRecord
 
   def normalize_attributes
     normalize_newlines(:summary)
-  end
-
-  def sanitize_summary
-    self.summary = sanitize_editor_html(summary) unless markdown?
-  end
-
-  def summary_must_be_present
-    errors.add(:summary, "can't be blank") if html_content_blank?(summary)
   end
 
   def expansions
