@@ -42,6 +42,25 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  # Capture what the browser actually shows on a failed js: true example, so
+  # an intermittent Capybara::ElementNotFound can be diagnosed from real
+  # evidence (was it an error page? a login/auth redirect? the right page but
+  # missing content?) instead of guesswork. Saved under tmp/capybara/.
+  config.after(:each) do |example|
+    next unless example.exception && example.metadata[:js]
+
+    dir = Rails.root.join("tmp", "capybara")
+    FileUtils.mkdir_p(dir)
+    name = "#{Time.now.strftime('%Y%m%d%H%M%S')}_#{example.full_description.parameterize(separator: '_')[0, 80]}"
+    begin
+      page.save_screenshot(dir.join("#{name}.png"))
+      File.write(dir.join("#{name}.html"), page.html)
+      puts "Saved failure screenshot/HTML: #{dir.join(name)}.{png,html}"
+    rescue => e
+      warn "Could not save failure screenshot for #{example.full_description}: #{e.message}"
+    end
+  end
+
   config.infer_spec_type_from_file_location!
 end
 
@@ -55,6 +74,16 @@ def login(user_or_roles=nil, options={})
   fill_in I18n.t("email"), with: options[:email] || user.email
   fill_in I18n.t("user.password"), with: options[:password] || "password"
   click_button I18n.t("session.sign_in")
+
+  # Signing in either redirects (session#create -> last_page_before_sign_in_or_home
+  # -> GET, on success) or re-renders "new" in the same response (on failure,
+  # e.g. expired subscription/bad password - some specs deliberately login with
+  # bad credentials to check the resulting Login record). If the caller's next
+  # step is another `visit`/`click` before whichever of those has finished, the
+  # browser can resolve to a stale pre-visit target instead of the page the
+  # caller asks for next. Wait for a flash message - present in both the
+  # success and failure case - so we only return once that has settled.
+  expect(page).to have_css("#flash_messages .text-center", wait: 5)
   user
 end
 
@@ -73,4 +102,17 @@ end
 # General purpose wait for a while.
 def wait_a_second(delay=0.3)
   sleep(delay)
+end
+
+# Opens the "select member" modal (used throughout the shop/cart flow - see
+# app/views/items/_player_ids_button.html.haml), searches for the given
+# player and picks them. Waits for the modal to actually finish opening
+# (Bootstrap's fade transition) instead of a fixed sleep, which flakes under
+# any variation in page load time.
+def pick_cart_member(player)
+  click_button I18n.t("item.member.select")
+  expect(page).to have_css("#player_ids_modal.in", wait: 5)
+  fill_in I18n.t("player.last_name"), with: player.last_name + "\n"
+  fill_in I18n.t("player.first_name"), with: player.first_name + "\n"
+  click_link player.id.to_s
 end

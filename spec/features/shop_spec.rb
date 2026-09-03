@@ -65,13 +65,7 @@ describe "Shop" do
       click_link standard_sub.description
 
       expect(page).to_not have_button(add_to_cart)
-      click_button select_member
-      wait_a_second(0.1)
-
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-
-      click_link player.id.to_s
+      pick_cart_member(player)
 
       click_button add_to_cart
       wait_a_second(0.2)
@@ -189,12 +183,7 @@ describe "Shop" do
 
       visit shop_path
       click_link standard_sub.description
-      click_button select_member
-      wait_a_second(0.1)
-
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: lifetime_error)
@@ -209,12 +198,7 @@ describe "Shop" do
 
       visit shop_path
       click_link standard_sub.description
-      click_button select_member
-      wait_a_second(0.1)
-
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: exists_error)
@@ -227,11 +211,7 @@ describe "Shop" do
     it "blocked by cart duplicate" do
       visit shop_path
       click_link standard_sub.description
-      click_button select_member
-      wait_a_second(0.1)
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -242,10 +222,7 @@ describe "Shop" do
 
       visit shop_path
       click_link unemployed_sub.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: in_cart_error)
@@ -258,11 +235,7 @@ describe "Shop" do
     it "too old" do
       visit shop_path
       click_link under_12_sub.description
-      click_button select_member
-      wait_a_second(0.1)
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: too_old_error)
@@ -271,10 +244,7 @@ describe "Shop" do
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 0
 
-      click_button select_member
-      fill_in last_name, with: junior.last_name + force_submit
-      fill_in first_name, with: junior.first_name + force_submit
-      click_link junior.id.to_s
+      pick_cart_member(junior)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -287,11 +257,7 @@ describe "Shop" do
     it "too young" do
       visit shop_path
       click_link over_65_sub.description
-      click_button select_member
-      wait_a_second(0.1)
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: too_young_error)
@@ -300,10 +266,7 @@ describe "Shop" do
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 0
 
-      click_button select_member
-      fill_in last_name, with: oldie.last_name + force_submit
-      fill_in first_name, with: oldie.first_name + force_submit
-      click_link oldie.id.to_s
+      pick_cart_member(oldie)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -316,11 +279,7 @@ describe "Shop" do
     it "delete" do
       visit shop_path
       click_link standard_sub.description
-      click_button select_member
-      wait_a_second(0.1)
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_xpath(xpath("th", total, standard_sub.amount))
@@ -331,10 +290,7 @@ describe "Shop" do
 
       visit shop_path
       click_link unemployed_sub.description
-      click_button select_member
-      fill_in last_name, with: player2.last_name + force_submit
-      fill_in first_name, with: player2.first_name + force_submit
-      click_link player2.id.to_s
+      pick_cart_member(player2)
       click_button add_to_cart
 
       expect(page).to have_xpath(xpath("th", total, standard_sub.amount + unemployed_sub.amount))
@@ -366,11 +322,7 @@ describe "Shop" do
       cart_count = Cart.count
       visit shop_path
       click_link standard_sub.description
-      click_button select_member
-      wait_a_second(0.1)
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
       wait_a_second(0.2)
 
@@ -432,12 +384,7 @@ describe "Shop" do
       click_link entry_fee.description
 
       expect(page).to_not have_button(add_to_cart)
-      click_button select_member
-
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-
-      click_link player.id.to_s
+      pick_cart_member(player)
 
       click_button add_to_cart
       wait_a_second(0.2)
@@ -468,10 +415,7 @@ describe "Shop" do
     it "discount" do
       visit shop_path
       click_link discount_entry_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_selector('s', text: "€50.00")
@@ -489,10 +433,7 @@ describe "Shop" do
 
       visit shop_path
       click_link entry_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: exists_error)
@@ -505,10 +446,7 @@ describe "Shop" do
     it "blocked by cart duplicate" do
       visit shop_path
       click_link entry_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -519,10 +457,7 @@ describe "Shop" do
 
       visit shop_path
       click_link entry_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: in_cart_error)
@@ -535,10 +470,7 @@ describe "Shop" do
     it "blocked by lack of subscription" do
       visit event_path(id: event.id)
       click_link fee_requires_sub.amount.to_s
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: sub_required_error)
@@ -546,10 +478,7 @@ describe "Shop" do
       
       visit event_path(id: event.id)
       click_link fee_requires_sub.amount.to_s
-      click_button select_member
-      fill_in last_name, with: subscribed_player.last_name + force_submit
-      fill_in first_name, with: subscribed_player.first_name + force_submit
-      click_link subscribed_player.id.to_s
+      pick_cart_member(subscribed_player)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -562,18 +491,12 @@ describe "Shop" do
     it "too strong" do
       visit shop_path
       click_link u1400_fee.description
-      click_button select_member
-      fill_in last_name, with: master.last_name + force_submit
-      fill_in first_name, with: master.first_name + force_submit
-      click_link master.id.to_s
+      pick_cart_member(master)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: too_high_error)
 
-      click_button select_member
-      fill_in last_name, with: beginner.last_name + force_submit
-      fill_in first_name, with: beginner.first_name + force_submit
-      click_link beginner.id.to_s
+      pick_cart_member(beginner)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -584,10 +507,7 @@ describe "Shop" do
 
       visit shop_path
       click_link u1400_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -600,18 +520,12 @@ describe "Shop" do
     it "too weak" do
       visit shop_path
       click_link premier_fee.description
-      click_button select_member
-      fill_in last_name, with: beginner.last_name + force_submit
-      fill_in first_name, with: beginner.first_name + force_submit
-      click_link beginner.id.to_s
+      pick_cart_member(beginner)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: too_low_error)
 
-      click_button select_member
-      fill_in last_name, with: master.last_name + force_submit
-      fill_in first_name, with: master.first_name + force_submit
-      click_link master.id.to_s
+      pick_cart_member(master)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -622,10 +536,7 @@ describe "Shop" do
 
       visit shop_path
       click_link premier_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -638,26 +549,17 @@ describe "Shop" do
     it "too old or young" do
       visit shop_path
       click_link junior_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: too_old_error)
 
-      click_button select_member
-      fill_in last_name, with: u10.last_name + force_submit
-      fill_in first_name, with: u10.first_name + force_submit
-      click_link u10.id.to_s
+      pick_cart_member(u10)
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: too_young_error)
 
-      click_button select_member
-      fill_in last_name, with: u16.last_name + force_submit
-      fill_in first_name, with: u16.first_name + force_submit
-      click_link u16.id.to_s
+      pick_cart_member(u16)
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
@@ -723,10 +625,7 @@ describe "Shop" do
         visit shop_path
         click_link entry_fee.description
 
-        click_button select_member
-        fill_in last_name, with: player1.last_name + force_submit
-        fill_in first_name, with: player1.first_name + force_submit
-        click_link player1.id.to_s
+        pick_cart_member(player1)
         check half_point_bye.label
         click_button add_to_cart
         wait_a_second(0.2)
@@ -741,10 +640,7 @@ describe "Shop" do
         click_link continue
         click_link entry_fee.description
 
-        click_button select_member
-        fill_in last_name, with: player2.last_name + force_submit
-        fill_in first_name, with: player2.first_name + force_submit
-        click_link player2.id.to_s
+        pick_cart_member(player2)
         click_button add_to_cart
         wait_a_second(0.2)
 
@@ -826,10 +722,7 @@ describe "Shop" do
         before(:each) do
           visit shop_path
           click_link rating_fee.description
-          click_button select_member
-          fill_in last_name, with: player.last_name + force_submit
-          fill_in first_name, with: player.first_name + force_submit
-          click_link player.id.to_s
+          pick_cart_member(player)
           fill_in tournament_name.label, with: my_name
         end
 
