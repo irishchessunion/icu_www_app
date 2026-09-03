@@ -344,5 +344,39 @@ describe Article do
       expect(article.text).to include("[EVT:#{linked_event.id}:#{linked_event.name}]")
       expect(article.text).to include("[IMG:#{linked_image.id}]")
     end
+
+    it "uploads a new image via the picker's upload tab (Turbo frame) and inserts it" do
+      fill_in title, with: "My Article"
+      fill_in year, with: Date.today.year
+      select I18n.t("article.category.general"), from: categories
+      select I18n.t("access.all"), from: access
+      check active
+
+      set_editor_html("<p>Some intro text.</p>")
+
+      find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
+      within "#image_ids_modal" do
+        click_link "Upload new"
+        within "#image_ids_upload_form" do
+          # make_visible: true - the file input is deliberately invisible
+          # (opacity: 0, see .btn-file in application.css) and nested inside
+          # a modal/tab/turbo-frame here, which throws off Capybara's normal
+          # visibility check for it more than on the plain admin/images page.
+          attach_file file, Rails.root.join("spec/files/images/fractal.jpg"), make_visible: true
+          fill_in I18n.t("image.caption"), with: "Freshly Uploaded"
+          fill_in year, with: "2020"
+          click_button "Upload"
+        end
+      end
+
+      expect(page).to have_no_css("#image_ids_modal.in", wait: 5)
+
+      click_button save
+
+      expect(page).to have_css(success, text: created)
+      image = Image.find_by!(caption: "Freshly Uploaded")
+      article = Article.find_by!(title: "My Article")
+      expect(article.text).to include("[IMG:#{image.id}]")
+    end
   end
 end

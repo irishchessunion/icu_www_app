@@ -12,15 +12,20 @@ class Admin::ImagesController < ApplicationController
 
     if @image.save
       @image.journal(:create, current_user, request.remote_ip)
-      respond_to do |format|
-        format.html { redirect_to @image, notice: "Image was successfully created" }
-        format.js
+      if turbo_frame_request?
+        uploaded_image = @image
+        # Reset the frame to a fresh, blank form ready for the next upload.
+        @image = Image.new(year: Date.today.year, credit: current_user.name)
+        render partial: "admin/image_ids/upload_form", locals: { image: @image, uploaded_image: uploaded_image }
+      else
+        redirect_to @image, notice: "Image was successfully created"
       end
     else
       flash_first_error(@image)
-      respond_to do |format|
-        format.html { render action: "new" }
-        format.js
+      if turbo_frame_request?
+        render partial: "admin/image_ids/upload_form", locals: { image: @image }, status: :unprocessable_entity
+      else
+        render action: "new"
       end
     end
   end

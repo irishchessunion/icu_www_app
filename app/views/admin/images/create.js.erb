@@ -1,6 +1,0 @@
-<% if @image.persisted? %>
-image_ids_callback(<%= @image.id %>, "<%= escape_javascript(@image.caption) %>");
-$('#image_ids_modal').modal('hide');
-<% else %>
-$('#image_ids_upload_form_wrapper').html("<%= j render('admin/image_ids/upload_form', image: @image) %>");
-<% end %>

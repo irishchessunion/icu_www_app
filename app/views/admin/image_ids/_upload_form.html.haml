@@ -1,13 +1,15 @@
 - image = local_assigns[:image] || Image.new(year: Date.today.year, credit: current_user.name)
-#image_ids_upload_form_wrapper
-  - if image.errors.any?
-    .alert.alert-danger= image.errors.full_messages.join(", ")
-  = form_for image, url: admin_images_path, remote: true, authenticity_token: true, html: { multipart: true, id: "image_ids_upload_form", class: "form-horizontal" } do |f|
-    - locals = { form: f, object: image, col: "sm", pad: 3, mark: "required" }
-    = render "utils/file_field_for", locals.merge(param: :data, text: t("file"), width: 6)
-    = render "utils/text_field_for", locals.merge(param: :caption, text: t("image.caption"), width: 6)
-    = render "utils/text_field_for", locals.merge(param: :year, text: t("year"), width: 2)
-    = render "utils/text_field_for", locals.merge(param: :credit, text: t("image.credit"), width: 4, mark: "none")
-    .form-group
-      .col-sm-offset-3.col-sm-6
-        = f.submit "Upload", class: "btn btn-primary", data: { disable_with: "Uploading..." }
+- uploaded_image = local_assigns[:uploaded_image]
+%turbo-frame#image_ids_upload_frame
+  #image_ids_upload_form_wrapper{data: uploaded_image ? { controller: "image-upload", image_upload_id_value: uploaded_image.id, image_upload_caption_value: uploaded_image.caption } : {}}
+    - if image.errors.any?
+      .alert.alert-danger= image.errors.full_messages.join(", ")
+    = form_for image, url: admin_images_path, authenticity_token: true, html: { multipart: true, id: "image_ids_upload_form", class: "form-horizontal" } do |f|
+      - locals = { form: f, object: image, col: "sm", pad: 3, mark: "required" }
+      = render "utils/file_field_for", locals.merge(param: :data, text: t("file"), width: 6)
+      = render "utils/text_field_for", locals.merge(param: :caption, text: t("image.caption"), width: 6)
+      = render "utils/text_field_for", locals.merge(param: :year, text: t("year"), width: 2)
+      = render "utils/text_field_for", locals.merge(param: :credit, text: t("image.credit"), width: 4, mark: "none")
+      .form-group
+        .col-sm-offset-3.col-sm-6
+          = f.submit "Upload", class: "btn btn-primary", data: { disable_with: "Uploading..." }
