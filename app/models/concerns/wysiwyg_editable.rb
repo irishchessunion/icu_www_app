@@ -5,22 +5,22 @@
 # Remarkable, for #to_html/#sanitize_editor_html/#html_content_blank?.
 #
 #   wysiwyg_editable :text
-#   wysiwyg_editable :summary, on: :create
+#   wysiwyg_editable :summary
 #
 # Provides, for the declared field:
 # - #editor_html: seeds the admin editor, without expanding shortcodes
 # - #html: the public rendering (expands shortcodes, then respects markdown)
 # - a before_validation sanitizing the field when markdown: false
-# - a validation rejecting blank/empty-Quill-placeholder content
+# - a validation rejecting blank/empty-Quill-placeholder content, on every save
 module WysiwygEditable
   extend ActiveSupport::Concern
 
   class_methods do
-    def wysiwyg_editable(field, on: nil)
+    def wysiwyg_editable(field)
       field = field.to_sym
 
       before_validation :"sanitize_#{field}_for_wysiwyg"
-      validate(:"#{field}_must_be_present_for_wysiwyg", **(on ? { on: on } : {}))
+      validate(:"#{field}_must_be_present_for_wysiwyg")
 
       define_method(:editor_html) do
         raw = public_send(field)

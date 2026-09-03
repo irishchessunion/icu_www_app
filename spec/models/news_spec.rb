@@ -23,6 +23,13 @@ describe News do
       expect(news).to_not be_valid
       expect(news.errors[:summary]).to include("can't be blank")
     end
+
+    it "also rejects a blank summary when updating an existing news item" do
+      news = create(:news, markdown: false)
+      news.summary = "<p><br></p>"
+      expect(news).to_not be_valid
+      expect(news.errors[:summary]).to include("can't be blank")
+    end
   end
 
   context "summary sanitization" do

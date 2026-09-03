@@ -14,7 +14,7 @@ class News < ApplicationRecord
 
   before_validation :normalize_attributes
 
-  wysiwyg_editable :summary, on: :create
+  wysiwyg_editable :summary
   validates :headline, presence: true, on: :create, length: { maximum: 100 }
   validates :date, date: { on_or_before: :today }
   validate :expansions
