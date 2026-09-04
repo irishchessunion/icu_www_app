@@ -36,21 +36,14 @@ describe "Revoke", js: true do
     before(:each) do
       @treasurer = login("treasurer")
       visit shop_path
-      wait_a_second(0.2)
 
       click_link subscription_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       click_link continue
       click_link entry_fee.description
-      click_button select_member
-      fill_in last_name, with: player.last_name + force_submit
-      fill_in first_name, with: player.first_name + force_submit
-      click_link player.id.to_s
+      pick_cart_member(player)
       click_button add_to_cart
 
       click_link received
