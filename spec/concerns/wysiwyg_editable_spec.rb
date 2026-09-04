@@ -17,24 +17,14 @@ describe WysiwygEditable do
         record.valid?
         expect(record.errors[field]).to include("can't be blank")
       end
+
+      it "rejects a blank #{field} on update too, not just create" do
+        record = create(klass.name.underscore.to_sym)
+        record.markdown = false
+        record.public_send("#{field}=", "<p><br></p>")
+        expect(record).to_not be_valid
+        expect(record.errors[field]).to include("can't be blank")
+      end
     end
-  end
-
-  # Article's presence check applies on every save; News's only on create -
-  # this predates WysiwygEditable and is preserved deliberately (see
-  # app/models/news.rb: wysiwyg_editable :summary, on: :create).
-  it "checks Article's text on every save, not just create" do
-    article = create(:article)
-    article.markdown = false
-    article.text = "<p><br></p>"
-    expect(article).to_not be_valid
-    expect(article.errors[:text]).to include("can't be blank")
-  end
-
-  it "only checks News's summary on create (existing behaviour)" do
-    news = create(:news)
-    news.markdown = false
-    news.summary = "<p><br></p>"
-    expect(news).to be_valid
   end
 end
