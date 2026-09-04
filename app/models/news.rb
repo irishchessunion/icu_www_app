@@ -4,6 +4,7 @@ class News < ApplicationRecord
   include Pageable
   include Remarkable
   include Journalable
+  include WysiwygEditable
 
   include CategoriesOwner
 
@@ -12,8 +13,9 @@ class News < ApplicationRecord
   belongs_to :user
 
   before_validation :normalize_attributes
+
+  wysiwyg_editable :summary
   validates :headline, presence: true, on: :create, length: { maximum: 100 }
-  validates :summary, presence: true, on: :create, length: { maximum: 140, too_long: 'The summary is too long. Please create an article, and link to it so: [ART:123:My Article]' }
   validates :date, date: { on_or_before: :today }
   validate :expansions
 
@@ -40,12 +42,8 @@ class News < ApplicationRecord
     paginate(matches, params, path, opt)
   end
 
-  def html
-    to_html(expand_all(summary), filter_html: false)
-  end
-
   def html2
-    to_html(expand_all("#{date.strftime('%d-%m-%Y')}: #{summary}"), filter_html: false)
+    render_wysiwyg_content(expand_all("#{date.strftime('%d-%m-%Y')}: #{summary}"))
   end
 
   def expand(opt)

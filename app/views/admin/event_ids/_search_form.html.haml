@@ -1,0 +1,10 @@
+= form_tag admin_event_ids_path, method: :get, id: "event_ids_form", class: "form-horizontal", role: "form", remote: true do
+  - locals = { col: "sm", pad: 3, width: 9 }
+  .row
+    .col-sm-12
+      = render "utils/text_field_tag", locals.merge(param: :name, text: t("event.name"))
+
+%hr
+
+%script
+  = render(:partial => "admin/event_ids/onchange", :handlers => [:erb], :formats => [:js], :locals => { :form_id => "event_ids_form" })

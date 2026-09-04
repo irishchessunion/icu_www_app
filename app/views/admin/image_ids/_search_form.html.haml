@@ -1,0 +1,10 @@
+= form_tag admin_image_ids_path, method: :get, id: "image_ids_form", class: "form-horizontal", role: "form", remote: true do
+  - locals = { col: "sm", pad: 3, width: 9 }
+  .row
+    .col-sm-12
+      = render "utils/text_field_tag", locals.merge(param: :caption, text: t("image.caption"))
+
+%hr
+
+%script
+  = render(:partial => "admin/image_ids/onchange", :handlers => [:erb], :formats => [:js], :locals => { :form_id => "image_ids_form" })

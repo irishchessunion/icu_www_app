@@ -40,8 +40,8 @@ describe Image do
 
   context "authorization" do
     let(:level1) { ["admin", user] }
-    let(:level2) { ["editor"] }
-    let(:level3) { User::ROLES.reject { |r| r == "admin" || r == "editor" }.append("guest") }
+    let(:level2) { ["editor", "organiser"] }
+    let(:level3) { User::ROLES.reject { |r| r == "admin" || r == "editor" || r == "organiser" }.append("guest") }
     let(:user)   { create(:user, roles: "editor") }
     let!(:image) { create(:image, user: user) }
 

@@ -3,7 +3,7 @@ class Admin::ImagesController < ApplicationController
   authorize_resource
 
   def new
-    @image = Image.new
+    @image = Image.new(year: Date.today.year, credit: current_user.name)
   end
 
   def create
@@ -12,10 +12,21 @@ class Admin::ImagesController < ApplicationController
 
     if @image.save
       @image.journal(:create, current_user, request.remote_ip)
-      redirect_to @image, notice: "Image was successfully created"
+      if turbo_frame_request?
+        uploaded_image = @image
+        # Reset the frame to a fresh, blank form ready for the next upload.
+        @image = Image.new(year: Date.today.year, credit: current_user.name)
+        render partial: "admin/image_ids/upload_form", locals: { image: @image, uploaded_image: uploaded_image }
+      else
+        redirect_to @image, notice: "Image was successfully created"
+      end
     else
-      flash_first_error(@image, base_only: true)
-      render action: "new"
+      flash_first_error(@image)
+      if turbo_frame_request?
+        render partial: "admin/image_ids/upload_form", locals: { image: @image }, status: :unprocessable_entity
+      else
+        render action: "new"
+      end
     end
   end
 
@@ -24,7 +35,7 @@ class Admin::ImagesController < ApplicationController
       @image.journal(:update, current_user, request.remote_ip)
       redirect_to @image, notice: "Image was successfully updated"
     else
-      flash_first_error(@image, base_only: true)
+      flash_first_error(@image)
       render action: "edit"
     end
   end

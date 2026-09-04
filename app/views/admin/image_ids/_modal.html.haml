@@ -1,0 +1,22 @@
+#image_ids_modal{class: "modal fade", style: "display: none;", tabindex: "-1", role: "dialog", "aria-labelledby" => "image_modal_label", "aria-hidden" => "true"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button{type: "button", class: "close", "data-dismiss" => "modal", "aria-hidden" => "true"} &times;
+        %h4.modal-title#image_modal_label= title
+      .modal-body
+        %ul.nav.nav-tabs{role: "tablist"}
+          %li.active{role: "presentation"}
+            %a{href: "#image_ids_search_pane", "aria-controls" => "search", role: "tab", "data-toggle" => "tab"} Search
+          %li{role: "presentation"}
+            %a{href: "#image_ids_upload_pane", "aria-controls" => "upload", role: "tab", "data-toggle" => "tab"} Upload new
+        .tab-content
+          #image_ids_search_pane.tab-pane.active{role: "tabpanel"}
+            .voffset1
+              = render "admin/image_ids/search_form"
+              #image_ids_results
+          #image_ids_upload_pane.tab-pane{role: "tabpanel"}
+            .voffset1
+              = render "admin/image_ids/upload_form"
+%script
+  = render(:partial => "admin/image_ids/attach_callbacks", :handlers => [:erb], :formats => [:js])

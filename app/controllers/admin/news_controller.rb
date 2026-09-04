@@ -10,6 +10,7 @@ class Admin::NewsController < ApplicationController
     @news = News.new(news_params)
     @news.date = Date.today
     @news.user_id = current_user.id
+    @news.markdown = false
     set_selected_categories
 
     if @news.save
@@ -24,6 +25,7 @@ class Admin::NewsController < ApplicationController
   def update
     normalize_newlines(:news, :summary)
     set_selected_categories
+    @news.markdown = false
     if @news.update(news_params(false))
       @news.journal(:update, current_user, request.remote_ip)
       redirect_to @news, notice: "News was successfully updated"

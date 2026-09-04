@@ -71,7 +71,7 @@ class Ability
       can :manage, Item::Entry, :fee_entry => {:event => { :user_id => user.id }}
       can :manage, Arbiter
 
-      can :create, [Article, News]
+      can :create, [Article, Image, News]
       can [:destroy, :update], [Article, News], user_id: user.id
     end
 

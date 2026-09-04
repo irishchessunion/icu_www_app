@@ -164,6 +164,23 @@ describe Article do
       expect(JournalEntry.articles.where(action: "create", by: user.signature, journalable_id: article.id).count).to eq 1
     end
 
+    it "includes a CSRF token on the image upload form" do
+      # Regression check: remote (AJAX) forms don't embed an authenticity_token
+      # by default (Rails' embed_authenticity_token_in_remote_forms is false),
+      # which broke the image picker's upload tab - it needs
+      # authenticity_token: true explicitly. Forgery protection is disabled
+      # app-wide in the test env (config/environments/test.rb), which would
+      # otherwise hide this field regardless of the fix, so it's temporarily
+      # re-enabled just for this check and a fresh render.
+      begin
+        ActionController::Base.allow_forgery_protection = true
+        visit new_admin_article_path
+        expect(page).to have_css("#image_ids_upload_form input[name='authenticity_token']", visible: false)
+      ensure
+        ActionController::Base.allow_forgery_protection = false
+      end
+    end
+
     it "invalid expansions" do
       fill_in title, with: data.title
       fill_in year, with: data.year
@@ -206,7 +223,11 @@ describe Article do
       article.reload
       expect(article.title).to eq data.title
 
-      expect(JournalEntry.articles.where(action: "update", by: user.signature, journalable_id: article.id).count).to eq 1
+      # 2, not 1: the article was created with the markdown flag on (the DB
+      # default), and any save through the admin form now converts the text
+      # to plain HTML for the WYSIWYG editor - so this save journals both the
+      # title change and that one-time text format conversion.
+      expect(JournalEntry.articles.where(action: "update", by: user.signature, journalable_id: article.id).count).to eq 2
     end
 
     it "access" do
@@ -244,7 +265,10 @@ describe Article do
       article.reload
       expect(article.access).to eq "all"
 
-      expect(JournalEntry.articles.where(action: "update", journalable_id: article.id).count).to eq 4
+      # 5, not 4: the first of these 4 saves also converts the article's text
+      # from markdown to HTML (see the "title" test above for why), adding
+      # one extra journal entry on top of the 4 access changes.
+      expect(JournalEntry.articles.where(action: "update", journalable_id: article.id).count).to eq 5
     end
   end
 
@@ -260,6 +284,99 @@ describe Article do
 
       expect(Article.count).to be 0
       expect(JournalEntry.articles.where(action: "destroy", by: user.signature, journalable_id: article.id).count).to eq 1
+    end
+  end
+
+  context "editor", js: true do
+    let(:user)             { create(:user, roles: "editor") }
+    let!(:linked_article)  { create(:article, title: "Linked Article") }
+    let!(:linked_event)    { create(:event, name: "Linked Event") }
+    let!(:linked_image)    { create(:image, caption: "Linked Image") }
+
+    def set_editor_html(html)
+      expect(page).to have_css("#wysiwyg_editor_mount .ql-editor", wait: 5)
+      page.execute_script("document.querySelector('#wysiwyg_editor_mount').__quill.root.innerHTML = #{html.to_json};")
+    end
+
+    before(:each) do
+      login user
+      wait_a_second(0.2)
+      visit new_admin_article_path
+    end
+
+    it "creates an article with quick-links inserted via the pickers" do
+      fill_in title, with: "My Article"
+      fill_in year, with: Date.today.year
+      select I18n.t("article.category.general"), from: categories
+      select I18n.t("access.all"), from: access
+      check active
+
+      set_editor_html("<p>Some intro text.</p>")
+
+      find("#wysiwyg_toolbar_extra button", text: "Link Article").click
+      within "#article_ids_modal" do
+        fill_in title, with: linked_article.title + force_submit
+        click_link linked_article.title
+      end
+      wait_a_second(0.5)
+
+      find("#wysiwyg_toolbar_extra button", text: "Link Event").click
+      within "#event_ids_modal" do
+        fill_in I18n.t("event.name"), with: linked_event.name + force_submit
+        click_link linked_event.name
+      end
+      wait_a_second(0.5)
+
+      find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
+      within "#image_ids_modal" do
+        fill_in I18n.t("image.caption"), with: linked_image.caption + force_submit
+        click_link linked_image.caption
+      end
+      wait_a_second(0.5)
+
+      click_button save
+
+      expect(page).to have_css(success, text: created)
+      article = Article.find_by!(title: "My Article")
+      expect(article.markdown).to be false
+      expect(article.text).to include("Some intro text.")
+      expect(article.text).to include("[ART:#{linked_article.id}:#{linked_article.title}]")
+      expect(article.text).to include("[EVT:#{linked_event.id}:#{linked_event.name}]")
+      expect(article.text).to include("[IMG:#{linked_image.id}]")
+    end
+
+    it "uploads a new image via the picker's upload tab (Turbo frame) and inserts it" do
+      fill_in title, with: "My Article"
+      fill_in year, with: Date.today.year
+      select I18n.t("article.category.general"), from: categories
+      select I18n.t("access.all"), from: access
+      check active
+
+      set_editor_html("<p>Some intro text.</p>")
+
+      find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
+      within "#image_ids_modal" do
+        click_link "Upload new"
+        within "#image_ids_upload_form" do
+          # make_visible: true - the file input is deliberately invisible
+          # (opacity: 0, see .btn-file in application.css) and nested inside
+          # a modal/tab/turbo-frame here, which throws off Capybara's normal
+          # visibility check for it more than on the plain admin/images page.
+          attach_file file, Rails.root.join("spec/files/images/fractal.jpg"), make_visible: true
+          fill_in I18n.t("image.caption"), with: "Freshly Uploaded"
+          fill_in year, with: "2020"
+          click_button "Upload"
+        end
+      end
+
+      expect(page).to have_no_css("#image_ids_modal.in", wait: 5)
+
+      click_button save
+
+      expect(page).to have_css(success, text: created)
+      image = Image.find_by!(caption: "Freshly Uploaded")
+      article = Article.find_by!(title: "My Article")
+      expect(article.text).to include("[IMG:#{image.id}]")
     end
   end
 end

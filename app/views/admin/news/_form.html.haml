@@ -10,9 +10,16 @@
           = render "utils/text_field_for", locals.merge(param: :date, text: t("date_label"), width: 3)
         = render "utils/select_for", locals.merge(param: :selected_categories, text: t("categories"), menu: categories_menu(@news.selected_categories), multiple: true, width: 4, size: 12)
         = render "utils/check_box_for", locals.merge(param: :active, text: t("active"), width: 1, mark: "none")
-        .form-group{class: @news.errors[:text].any? ? "has-error" : ""}
+        .form-group{class: @news.errors[:summary].any? ? "has-error" : ""}
           .row
             .col-sm-12.text-center= f.label :summary, t("news.summary"), class: "control-label"
           .row
-            .col-sm-12.voffset1= f.text_area :summary, class: "form-control insignificant-space", rows: 10
+            .col-sm-12.voffset1
+              .btn-toolbar.voffset1#wysiwyg_toolbar_extra
+                %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#article_ids_modal"} Link Article
+                %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#event_ids_modal"} Link Event
+                %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#image_ids_modal"} Insert Image
+              = f.text_area :summary, id: "news_summary", value: @news.editor_html, class: "form-control insignificant-space wysiwyg-editor", rows: 10
       = render "utils/form_buttons", form: f, object: @news
+
+= render "admin/wysiwyg_editor_extras"

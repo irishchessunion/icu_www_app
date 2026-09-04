@@ -5,6 +5,7 @@ class Article < ApplicationRecord
   include Normalizable
   include Pageable
   include Remarkable
+  include WysiwygEditable
 
 
   include CategoriesOwner
@@ -19,7 +20,7 @@ class Article < ApplicationRecord
 
   before_validation :normalize_attributes
 
-  validates :text, presence: true
+  wysiwyg_editable :text
   validates :title, presence: true, on: :create, length: { maximum: 150 }
   validates :year, numericality: { integer_only: true, greater_than_or_equal_to: Global::MIN_YEAR }
   validate :expansions
@@ -55,11 +56,6 @@ class Article < ApplicationRecord
     matches = matches.where(active: false) if params[:active] == "false"
     matches = matches.where(sql_condition_for_flag(params[:category].to_sym, "categories")) if CategoriesOwner::CATEGORIES.include?(params[:category])
     paginate(matches, params, path, opt)
-  end
-
-  def html
-    expanded = expand_all(text)
-    markdown ? to_html(expanded, filter_html: false) : expanded.html_safe
   end
 
   def expand(opt)

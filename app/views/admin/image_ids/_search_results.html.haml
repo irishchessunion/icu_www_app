@@ -1,0 +1,14 @@
+- if @images.count > 0
+  .row
+    .col-sm-12
+      %table{class: "table table-striped", id: "results"}
+        %thead
+          %tr
+            %th
+            %th= t("image.caption")
+        %tbody
+          - @images.matches.each do |image|
+            %tr
+              %td= link_to image_tag(image.data.url(:thumbnail)), "#", "data-id" => image.id, "data-caption" => image.caption, class: "image_ids_callback"
+              %td= link_to image.caption, "#", "data-id" => image.id, "data-caption" => image.caption, class: "image_ids_callback"
+          = render "utils/pagination_links", pager: @images, columns: 2

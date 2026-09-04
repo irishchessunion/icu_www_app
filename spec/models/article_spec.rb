@@ -71,6 +71,26 @@ describe Article do
       article = build(:article, access: "INVALID")
       expect(article).to_not be_valid
     end
+
+    it "rejects an empty Quill editor's placeholder markup as blank text" do
+      article = build(:article, markdown: false, text: "<p><br></p>")
+      expect(article).to_not be_valid
+      expect(article.errors[:text]).to include("can't be blank")
+    end
+  end
+
+  context "text sanitization" do
+    it "strips script tags and event handler attributes from HTML text on save" do
+      article = create(:article, markdown: false, text: %q{<p onmouseover="alert(1)">Hi<script>alert(1)</script></p>})
+      expect(article.text).to_not include("<script>")
+      expect(article.text).to_not include("onmouseover")
+      expect(article.text).to include("Hi")
+    end
+
+    it "leaves markdown-source text untouched" do
+      article = create(:article, markdown: true, text: "Some *markdown* text")
+      expect(article.text).to eq("Some *markdown* text")
+    end
   end
 
   context "categories" do
@@ -110,5 +130,18 @@ describe Article do
       expect(article.thumbnail_image).to be_nil
     end
 
+  end
+
+  context "#editor_html" do
+    it "renders markdown text to HTML without expanding shortcodes" do
+      article = build(:article, markdown: true, text: "**Bold** [ART:#{image1.id}:Some Title]")
+      expect(article.editor_html).to include("<strong>Bold</strong>")
+      expect(article.editor_html).to include("[ART:#{image1.id}:Some Title]")
+    end
+
+    it "returns HTML text as-is without expanding shortcodes" do
+      article = build(:article, markdown: false, text: "<p>Hello</p> [IMG:#{image1.id}]")
+      expect(article.editor_html).to eq("<p>Hello</p> [IMG:#{image1.id}]")
+    end
   end
 end
