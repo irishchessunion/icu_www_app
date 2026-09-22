@@ -1297,11 +1297,11 @@ a.no-underline {
   height: 600px;
 }
 
-#map-canvas hr {
+.event_info hr {
   margin: 10px 0;
 }
 
-#map-canvas .event_info {
+.event_info {
   font-weight: 400;
   font-size: 15px;
 }
@@ -1309,7 +1309,7 @@ a.no-underline {
   outline: 0;
 }
 
-#map-canvas .time_controls_list {
+.event_info .time_controls_list {
   font-size: 15px;
   margin: 0;
   padding: 0;
@@ -1319,7 +1319,7 @@ a.no-underline {
   align-items: center;
 }
 
-#map-canvas .time_controls_list > span::before {
+.event_info .time_controls_list > span::before {
   padding-right: 5px;
   content: "•";
   font-size: 20px;
