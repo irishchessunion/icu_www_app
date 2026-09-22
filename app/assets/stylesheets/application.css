@@ -292,7 +292,24 @@ section h2 {
 section.events-search {
   background: var(--gray-lighter);
   padding: 32px 0;
-  margin: 0 0 10px 0;
+  margin: 0;
+}
+
+.list-map-tabs {
+  display: none;
+}
+
+.list-map-content {
+  margin: 10px 0 0 0;
+}
+
+.list-map-view {
+  aspect-ratio: 1 / 1;
+  background: var(--gray-lighter);
+}
+
+.list-map-view > div {
+  height: 100%;
 }
 
 section.static-panel {
@@ -1412,6 +1429,26 @@ td.enter {
 
 /* Bootstrap SM Breakpoint */
 @media (max-width: 768px) {
+  .list-map-tabs {
+    display: block;
+  }
+
+  .list-map-tabs.nav-tabs > li {
+    width: 50%;
+    margin: 0;
+  }
+
+  .list-map-tabs.nav-tabs > li > a {
+    display: flex;
+    justify-content: center;
+    padding: 14px 15px 11px;
+    color: var(--gray-light);
+  }
+
+  .list-map-content {
+    margin-top: 0;
+  }
+
   .no-gutters-xs {
     padding-right: 0;
     padding-left: 0
