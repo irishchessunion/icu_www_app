@@ -550,7 +550,7 @@ section.entries .nav.nav-tabs {
   border-top: 1px solid var(--gray-lighter)
 }
 
-section.entries .nav.nav-tabs li a {
+.underline-tabs.nav-tabs > li > a {
   color: var(--gray);
   border: 0;
   border-bottom: 3px solid var(--body-bg);
@@ -561,19 +561,27 @@ section.entries .nav.nav-tabs li a {
   padding: 0.5em;
 }
 
-section.entries .nav.nav-tabs li a:focus {
+.underline-tabs.nav-tabs > li > a:focus {
   outline: 0;
 }
 
-section.entries .nav.nav-tabs li a:hover {
+.underline-tabs.nav-tabs > li > a:focus-visible {
+  outline: 2px solid var(--brand-info);
+  outline-offset: -4px;
+}
+
+.underline-tabs.nav-tabs > li > a:hover {
   background: inherit;
   color: var(--brand-info);
   border-color: var(--brand-info);
 }
 
-section.entries .nav.nav-tabs li.active a {
+.underline-tabs.nav-tabs > li.active > a,
+.underline-tabs.nav-tabs > li.active > a:hover,
+.underline-tabs.nav-tabs > li.active > a:focus {
   color: var(--gray-base);
-  border-color: var(--gray-base);
+  border: 0;
+  border-bottom: 3px solid var(--gray-base);
 }
 
 section.entries .nav.nav-tabs li.invalid-entries a {
