@@ -1,5 +1,16 @@
 document.addEventListener("DOMContentLoaded", function() {
   var data = ICU.Maps.readData("map-data");
   data.center = data.center && [data.center[0], data.center[1]];
-  ICU.Maps.init("map-canvas", data);
+  if (!window.matchMedia("(max-width: 768px)").matches) {
+    ICU.Maps.init("map-canvas", data);
+  }
+
+  var mobileMap;
+  $("#events-map-tab").on("shown.bs.tab", function() {
+    if (!mobileMap) {
+      mobileMap = ICU.Maps.init("mobile-map-canvas", data);
+    } else {
+      mobileMap.resize();
+    }
+  });
 });

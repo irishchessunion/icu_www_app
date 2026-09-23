@@ -45,8 +45,16 @@ RSpec.describe "events/index", type: :view do
     expect(rendered).to have_button("Search")
   end
 
-  it "renders the map" do
+  it "renders the desktop and mobile maps" do
     expect(rendered).to have_selector("#map-canvas")
+    expect(rendered).to have_selector("#mobile-map-canvas")
+  end
+
+  it "renders mobile list and map tabs" do
+    expect(rendered).to have_link(I18n.t("list"), href: "#events-list")
+    expect(rendered).to have_link(I18n.t("map"), href: "#events-map")
+    expect(rendered).to have_selector("#events-list.active")
+    expect(rendered).to have_selector("#events-map:not(.active)")
   end
 
 end

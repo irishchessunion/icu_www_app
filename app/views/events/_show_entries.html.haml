@@ -37,7 +37,7 @@
       - unsectioned = @entries_by_section[nil] || []
       - invalid_sections = @paid_entries.reject { |e| e.section.nil? || section_names.include?(e.section) }
 
-      %ul.nav.nav-tabs
+      %ul.nav.nav-tabs.underline-tabs
         - section_names.each_with_index do |section, index|
           - section_id = section.parameterize
           - section_entries = @entries_by_section[section] || []
