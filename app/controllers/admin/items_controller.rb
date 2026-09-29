@@ -78,7 +78,7 @@ class Admin::ItemsController < ApplicationController
 
   def csv_data
     generator = Admin::EntryListCsvGenerator.new
-    generator.generate_from_items(@items, params[:description], can?(:show, Cart))
+    generator.generate_from_items(@items.includes(fee: :event), params[:description], can?(:show, Cart))
   end
 
   def txt_data
