@@ -49,6 +49,15 @@ class Item::Subscription < Item
     end
   end
 
+  def season_ticket
+    t = SeasonTicket.new(player.id, end_date.at_end_of_year)
+    raise t.error if t.error
+    t.to_s
+  rescue => e
+    Failure.log("SubscriptionSeasonTicket", cart: cart.present? && cart.id, player: player.present? && player.id, end_date: end_date.present? && end_date.to_s, error: e.message, exception: e.class.to_s)
+    nil
+  end
+
   private
 
   def no_duplicates
@@ -75,14 +84,5 @@ class Item::Subscription < Item
         errors.add(:base, I18n.t("errors.alerts.application"))
       end
     end
-  end
-
-  def season_ticket
-    t = SeasonTicket.new(player.id, end_date.at_end_of_year)
-    raise t.error if t.error
-    t.to_s
-  rescue => e
-    Failure.log("SubscriptionSeasonTicket", cart: cart.present? && cart.id, player: player.present? && player.id, end_date: end_date.present? && end_date.to_s, error: e.message, exception: e.class.to_s)
-    nil
   end
 end
