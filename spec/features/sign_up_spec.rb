@@ -295,4 +295,17 @@ describe "Sign up" do
       nothing_happened
     end
   end
+
+  context "prefilled from receipt link" do
+    before(:each) do
+      visit sign_up_path(player_id: player.id, ticket: season_ticket.to_s, email: data.email)
+    end
+
+    it "fills in ICU ID, season ticket and email" do
+      expect(page).to have_field(icu_id, with: player.id.to_s)
+      expect(page).to have_field(ticket, with: season_ticket.to_s)
+      expect(page).to have_field(email, with: data.email)
+      expect(find_field(password).value).to be_blank
+    end
+  end
 end

@@ -16,7 +16,7 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @user = User.new(params.permit(:player_id, :ticket, :email))
   end
 
   def create
