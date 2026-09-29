@@ -24,7 +24,7 @@ class Item < ApplicationRecord
 
   def self.search(params, path)
     params[:status] = "active" if params[:status].nil?
-    matches = includes(:player).references(:players).order(created_at: :desc).includes(:cart)
+    matches = includes(:player).references(:players).order(created_at: :desc).includes(:cart, fee: :event)
     matches = matches.where(type: params[:type]) if params[:type].present?
     if STATUSES.include?(params[:status])
       matches = matches.where(status: params[:status])

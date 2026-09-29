@@ -19,6 +19,12 @@
               - note_references = item.note_references(all_notes)
               - if note_references.any?
                 %sup= "[#{note_references.join(',')}]"
+              %br
+              %small.text-muted
+                - if item.is_a?(Item::Entry) && (event = item.fee&.event)
+                  = link_to event.name, event
+                  = "(#{[event.start_date, event.end_date].compact.uniq.join(' to ')}),"
+                = "Fee ID: #{item.fee_id || 'none'}, Item ID: #{item.id}"
             - player = item.player
             %td= link_to_if can?(:show, player), player.name(id: true), [:admin, player] if player.present?
             %td= t("shop.payment.status.#{item.status}")
