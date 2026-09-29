@@ -15,58 +15,73 @@
 
 - extra = can?(:create, Event)
 
-%section{class: "container", "aria-label": t("event.upcoming") }
-  .row
-    .col-md-12.no-gutters-xs
-      - if @events.count > 0
-        %table{class: "table table-striped", id: "results"}
-          %thead
-            %tr
-              %th.cell-no-wrap= t("dates")
-              %th= t("event.name")
-              -# Shows only when screen width > 768px
-              %th.event-location-col= t("event.location")
-              - if extra
-                %th.cell-no-wrap.text-center= t("active")
-          %tbody
-            - @events.matches.each do |event|
-              %tr
-                - if event.start_date.year == event.end_date.year
-                  %td.cell-no-wrap.text-right= event.dates
-                - else
-                  %td
-                    %span.dates-as-spans
-                      - event.multiyear_dates_as_spans.each do |span|
-                        %span= span
-                %td
-                  = link_to event.name, event
-                  %br
-                  %span.event-metadata.text-muted
-                    -# Time Controls, if any
-                    - if event.time_controls.present?
-                      %span
-                        - event.time_controls.each_with_index do |control, i|
-                          = t("event.time_controls.#{control}")
-                          - if i < event.time_controls.size - 1
-                            = ", "
-                    -# Category, if any and not the default/assumed value
-                    - if event.category.present? && event.category != "irish"
-                      %span
-                        =t("event.category.#{event.category}")
-                    -# Event is FIDE-rated?
-                    - if event.is_fide_rated.present? && event.is_fide_rated
-                      %span
-                        =t("event.fide_rated_event")
-                  -# Shows only when screen width <= 768px
-                  %br.event-location-span
-                  %span.event-location-span
-                    %span.glyphicon.glyphicon-map-marker
-                    =link_to_if event.geocodes?, event.location, events_map_path(event)
+%ul.nav.nav-tabs.underline-tabs.list-map-tabs{role: "tablist", "aria-label": t("event.upcoming")}
+  %li.active{role: "presentation"}
+    %a#events-list-tab{href: "#events-list", role: "tab", "aria-controls": "events-list", "data-toggle": "tab"}
+      %span.glyphicon.glyphicon-list{"aria-hidden": "true"}
+      = t("list")
+  %li{role: "presentation"}
+    %a#events-map-tab{href: "#events-map", role: "tab", "aria-controls": "events-map", "data-toggle": "tab"}
+      %span.glyphicon.glyphicon-map-marker{"aria-hidden": "true"}
+      = t("map")
 
-                -# Shows only when screen width > 768px
-                %td.event-location-col= link_to_if event.geocodes?, event.location, events_map_path(event)
-                - if extra
-                  %td.text-center= ok_ko(event.active)
-            = render "utils/pagination_links", pager: @events, columns: 3 + (extra ? 1 : 0)
+.tab-content.list-map-content
+  #events-list.tab-pane.fade.in.active.list-map-list{role: "tabpanel", "aria-labelledby": "events-list-tab"}
+    %section{class: "container", "aria-label": t("event.upcoming") }
+      .row
+        .col-md-12.no-gutters-xs
+          - if @events.count > 0
+            %table{class: "table table-striped", id: "results"}
+              %thead
+                %tr
+                  %th.cell-no-wrap= t("dates")
+                  %th= t("event.name")
+                  -# Shows only when screen width > 768px
+                  %th.event-location-col= t("event.location")
+                  - if extra
+                    %th.cell-no-wrap.text-center= t("active")
+              %tbody
+                - @events.matches.each do |event|
+                  %tr
+                    - if event.start_date.year == event.end_date.year
+                      %td.cell-no-wrap.text-right= event.dates
+                    - else
+                      %td
+                        %span.dates-as-spans
+                          - event.multiyear_dates_as_spans.each do |span|
+                            %span= span
+                    %td
+                      = link_to event.name, event
+                      %br
+                      %span.event-metadata.text-muted
+                        -# Time Controls, if any
+                        - if event.time_controls.present?
+                          %span
+                            - event.time_controls.each_with_index do |control, i|
+                              = t("event.time_controls.#{control}")
+                              - if i < event.time_controls.size - 1
+                                = ", "
+                        -# Category, if any and not the default/assumed value
+                        - if event.category.present? && event.category != "irish"
+                          %span
+                            =t("event.category.#{event.category}")
+                        -# Event is FIDE-rated?
+                        - if event.is_fide_rated.present? && event.is_fide_rated
+                          %span
+                            =t("event.fide_rated_event")
+                      -# Shows only when screen width <= 768px
+                      %br.event-location-span
+                      %span.event-location-span
+                        %span.glyphicon.glyphicon-map-marker
+                        =link_to_if event.geocodes?, event.location, events_map_path(event)
+
+                    -# Shows only when screen width > 768px
+                    %td.event-location-col= link_to_if event.geocodes?, event.location, events_map_path(event)
+                    - if extra
+                      %td.text-center= ok_ko(event.active)
+                = render "utils/pagination_links", pager: @events, columns: 3 + (extra ? 1 : 0)
+  #events-map.tab-pane.fade.list-map-map{role: "tabpanel", "aria-labelledby": "events-map-tab"}
+    %aside.list-map-view{"aria-label": t("event.map_aria")}
+      #mobile-map-canvas
 
 %script{type: "application/json", id: "map-data"}= raw json_escape(JSON.generate({ "center" => @center, "zoom" => @zoom, "cluster" => true, "fit" => false, "markers" => markers }))
