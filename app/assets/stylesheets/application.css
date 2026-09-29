@@ -312,6 +312,18 @@ section.events-search {
   height: 100%;
 }
 
+/* The list/map tabs are hidden above the mobile breakpoint, so always show the list, whichever tab was last selected. */
+@media (min-width: 769px) {
+  .tab-content.list-map-content > .list-map-list {
+    display: block;
+    opacity: 1;
+  }
+
+  .tab-content.list-map-content > .list-map-map {
+    display: none;
+  }
+}
+
 section.static-panel {
   background: var(--gray-lighter);
   padding: 32px 0;

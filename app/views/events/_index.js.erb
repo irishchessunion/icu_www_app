@@ -1,15 +1,34 @@
 document.addEventListener("DOMContentLoaded", function() {
   var data = ICU.Maps.readData("map-data");
   data.center = data.center && [data.center[0], data.center[1]];
-  if (!window.matchMedia("(max-width: 768px)").matches) {
-    ICU.Maps.init("map-canvas", data);
+  var mobile = window.matchMedia("(max-width: 768px)");
+  var desktopMap, mobileMap;
+
+  function showDesktopMap() {
+    if (!desktopMap) {
+      desktopMap = ICU.Maps.init("map-canvas", data);
+    } else {
+      desktopMap.resize();
+    }
   }
 
-  var mobileMap;
+  if (!mobile.matches) {
+    showDesktopMap();
+  }
+
   $("#events-map-tab").on("shown.bs.tab", function() {
     if (!mobileMap) {
       mobileMap = ICU.Maps.init("mobile-map-canvas", data);
     } else {
+      mobileMap.resize();
+    }
+  });
+
+  // The window can cross the breakpoint after loading (e.g. when resized), so set up or resize whichever map becomes visible.
+  mobile.addEventListener("change", function(e) {
+    if (!e.matches) {
+      showDesktopMap();
+    } else if (mobileMap && $("#events-map").hasClass("active")) {
       mobileMap.resize();
     }
   });
