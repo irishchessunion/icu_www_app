@@ -10,11 +10,18 @@ This is a receipt from the ICU for your payment of <%= euros(cart.total) %> on <
 Your purchased item is:
 
   <%= cart.items.first.full_description %>
+<%- item_reference_lines(cart.items.first).each do |line| %>
+  <%= line %>
+<%- end %>
 <%- else %>
 Your purchased items are as follows:
 
 <%- cart.items.each_with_index do |item, i| %>
   <%= i + 1 %>. <%= item.full_description %>
+<%- indent = " " * "#{i + 1}. ".length %>
+<%- item_reference_lines(item).each do |line| %>
+  <%= indent %><%= line %>
+<%- end %>
 <%- end %>
 <%- end %>
 
