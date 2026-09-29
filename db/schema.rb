@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_31_125501) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -131,6 +131,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_125501) do
     t.index ["image_id"], name: "fk_rails_4b4d78bb46"
     t.index ["winners"], name: "index_champions_on_winners"
     t.index ["year"], name: "index_champions_on_year"
+  end
+
+  create_table "club_meetings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "audience", default: "open", null: false
+    t.integer "club_id", null: false
+    t.datetime "created_at", null: false
+    t.string "day_of_week", null: false
+    t.text "notes"
+    t.time "start_time", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.boolean "welcomes_juniors", default: true, null: false
+    t.index ["club_id"], name: "index_club_meetings_on_club_id"
+    t.index ["day_of_week", "club_id"], name: "index_club_meetings_on_day_of_week_and_club_id"
   end
 
   create_table "clubs", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
