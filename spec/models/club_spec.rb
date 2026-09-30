@@ -116,4 +116,18 @@ describe Club do
       expect(club.long).to be_nil
     end
   end
+
+  context "meeting day search" do
+    it "finds clubs by meeting day without duplicates" do
+      tuesday = create(:club, name: "Tuesday Club")
+      other = create(:club, name: "Wednesday Club")
+      tuesday.club_meetings.create!(day_of_week: "tuesday", start_time: "19:00")
+      tuesday.club_meetings.create!(day_of_week: "tuesday", start_time: "20:00")
+      other.club_meetings.create!(day_of_week: "wednesday", start_time: "19:00")
+
+      results = Club.search({ day_of_week: "tuesday" }, "/clubs")
+      expect(results.count).to eq(1)
+      expect(results.matches.to_a).to eq([tuesday])
+    end
+  end
 end
