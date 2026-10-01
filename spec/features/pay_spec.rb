@@ -45,7 +45,8 @@ describe "Pay", js: true do
 
   let(:cvc)     { "123" }
   let(:expiry)  { "01 / #{((Date.today.year + 2).to_s)[2..4]}" }
-  let(:number)  { "4000 0027 6000 3184" }
+  let(:number)  { "4000 0027 6000 3184" } # always requires 3D Secure
+  let(:no_3ds_number) { "4242 4242 4242 4242" }
   let(:stripe)  { "stripe" }
   let(:account) { Cart.current_payment_account }
 
@@ -99,6 +100,11 @@ describe "Pay", js: true do
     end
   end
 
+  # Wait for Stripe's card form to load in its iframe, rather than sleeping.
+  def wait_for_card_form
+    within_frame { expect(page).to have_field(number_id, wait: 10) }
+  end
+
   def fill_in_number_and_click_pay(number)
     within_frame do
       fill_in number_id, with: number
@@ -118,7 +124,7 @@ describe "Pay", js: true do
     before(:each) do
       add_something_to_cart
       click_link checkout
-      wait_a_second(2)
+      wait_for_card_form
     end
 
     it "successful" do
@@ -138,8 +144,7 @@ describe "Pay", js: true do
 
       fill_in_all_and_click_pay
 
-      wait_a_second(5)
-      expect(page).to have_css(title, text: completed)
+      expect(page).to have_css(title, text: completed, wait: 20)
       expect(page).to have_css(item, text: /\A#{total}: €#{"%.2f" % subscription.cost}\z/)
       expect(page).to have_css(item, text: /\A#{payment_time}: 20\d\d-\d\d-\d\d \d\d:\d\d GMT\z/)
       expect(page).to have_css(item, text: /\A#{confirmation_email_to}: #{player.email}\z/)
@@ -177,11 +182,10 @@ describe "Pay", js: true do
 
     it "stripe errors" do
       fill_in_all_and_click_pay(number: "4000000000000002")
-      wait_a_second(2)
-      expect(page).to have_css(failure, text: card_declined)
+      expect(page).to have_css(failure, text: card_declined, wait: 10)
+      wait_for_browser # the PaymentError is recorded by a request after the message appears
       subscription = Item::Subscription.last
       expect(subscription).to be_unpaid
-      wait_a_second(0.5)
       cart = Cart.include_errors.last
       expect(cart).to be_unpaid
       expect(cart.user).to be_nil
@@ -194,8 +198,8 @@ describe "Pay", js: true do
       expect(ActionMailer::Base.deliveries).to be_empty
 
       fill_in_number_and_click_pay(number: "4000000000000069")
-      wait_a_second(2)
-      expect(page).to have_css(failure, text: expired_card)
+      expect(page).to have_css(failure, text: expired_card, wait: 10)
+      wait_for_browser # the PaymentError is recorded by a request after the message appears
       subscription.reload
       expect(subscription).to be_unpaid
       cart.reload
@@ -215,8 +219,8 @@ describe "Pay", js: true do
       click_link checkout
 
       fill_in_all_and_click_pay(number: "4000000000000127")
-      wait_a_second(2)
-      expect(page).to have_css(failure, text: incorrect_cvc)
+      expect(page).to have_css(failure, text: incorrect_cvc, wait: 10)
+      wait_for_browser # the PaymentError is recorded by a request after the message appears
       subscription.reload
       expect(subscription).to be_unpaid
       cart.reload
@@ -234,8 +238,8 @@ describe "Pay", js: true do
 
     it "client side errors" do
       expect(PaymentError.count).to eq 0
+      wait_for_card_form
       iframe = find('iframe')
-      wait_a_second(3)
 
       fill_in name_id, with: player.name
 
@@ -289,7 +293,7 @@ describe "Pay", js: true do
       click_button pay
       expect(page).to have_css(failure, text: bad_name)
 
-      wait_a_second(0.01) # allows time for ActiveRecord to populate the last PaymentError
+      wait_for_browser # the last PaymentError is recorded by a request after the message appears
 
       expect(PaymentError.count).to eq 6
       expect(ActionMailer::Base.deliveries).to be_empty
@@ -386,7 +390,6 @@ describe "Pay", js: true do
       visit shop_path
       click_link subscription_fee.description
       click_button new_member
-      wait_a_second(0.1)
       fill_in last_name, with: newbie.last_name
       fill_in first_name, with: newbie.first_name
       fill_in dob, with: newbie.dob.to_s
@@ -394,7 +397,7 @@ describe "Pay", js: true do
       select newbie_fed, from: fed
       fill_in email, with: newbie.email
       click_button save
-      wait_a_second(0.2)
+      wait_for_browser
       expect(page).to_not have_css(failure)
       click_button add_to_cart
       click_link checkout
@@ -405,10 +408,9 @@ describe "Pay", js: true do
       expect(subscription.player_id).to be_nil
       expect(subscription.player_data).to be_present
 
-      fill_in_all_and_click_pay
+      fill_in_all_and_click_pay(number: no_3ds_number) # 3D Secure is covered by "with card successful"
 
-      wait_a_second(5)
-      expect(page).to have_css(title, text: completed)
+      expect(page).to have_css(title, text: completed, wait: 20)
       subscription.reload
       expect(subscription).to be_paid
 
@@ -446,10 +448,9 @@ describe "Pay", js: true do
 
     it "card", stripe: true do
       click_link checkout
-      fill_in_all_and_click_pay
+      fill_in_all_and_click_pay(number: no_3ds_number) # 3D Secure is covered by "with card successful"
 
-      wait_a_second(5)
-      expect(page).to have_css(title, text: completed)
+      expect(page).to have_css(title, text: completed, wait: 20)
 
       expect(Item::Subscription.count).to eq 1
       subscription = Item::Subscription.first
