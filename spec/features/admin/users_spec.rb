@@ -323,8 +323,11 @@ describe User do
         expect(Login.where(user_id: user.id).count).to eq 0
         login "admin"
         visit admin_user_path(user)
-        click_link delete
-        confirm_dialog if js
+        if js
+          accept_confirm { click_link delete }
+        else
+          click_link delete
+        end
         expect(page).to have_css(success, text: deleted)
         expect(User.where(id: user.id).count).to eq 0
       end

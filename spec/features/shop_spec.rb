@@ -33,7 +33,6 @@ describe "Shop" do
 
       visit cart_path
       expect(page).to have_css(warning, text: empty)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq cart_count + 1
     end
@@ -68,7 +67,7 @@ describe "Shop" do
       pick_cart_member(player)
 
       click_button add_to_cart
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.count).to eq 1
@@ -98,7 +97,6 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button new_member
-      wait_a_second(0.1)
 
       fill_in first_name, with: newbie.first_name
       fill_in last_name, with: newbie.last_name
@@ -111,7 +109,7 @@ describe "Shop" do
       expect(page).to_not have_css(failure)
 
       click_button add_to_cart
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.count).to eq 1
@@ -121,7 +119,6 @@ describe "Shop" do
       subscription = Item::Subscription.last
 
       expect(page).to have_xpath(xpath("th", item, member, cost))
-      sleep(1) # Extra pause to allow page to catch up.
       expect(page).to have_xpath(xpath("td", subscription.description, newbie.name, subscription.cost))
       expect(page).to have_xpath(xpath("th", total, standard_sub.amount))
 
@@ -164,7 +161,6 @@ describe "Shop" do
       visit shop_path
       click_link standard_sub.description
       click_button new_member
-      wait_a_second(0.1)
 
       fill_in first_name, with: player.first_name
       fill_in last_name, with: player.last_name
@@ -173,7 +169,6 @@ describe "Shop" do
       select newbie_fed, from: fed
 
       click_button save
-      sleep(1)
       expect(page).to have_css(failure, text: /matches.*#{player.id}/)
       expect(page).to_not have_button(add_to_cart)
     end
@@ -187,7 +182,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: lifetime_error)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 0
@@ -202,7 +196,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: exists_error)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 0
@@ -215,7 +208,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 1
@@ -226,7 +219,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: in_cart_error)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 1
@@ -239,7 +231,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: too_old_error)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 0
@@ -248,7 +239,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 1
@@ -261,7 +252,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: too_young_error)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 0
@@ -270,7 +260,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 1
@@ -283,7 +273,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_xpath(xpath("th", total, standard_sub.amount))
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 1
@@ -294,25 +283,20 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_xpath(xpath("th", total, standard_sub.amount + unemployed_sub.amount))
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 2
 
-      click_link delete_cross, match: :first
-      confirm_dialog
+      accept_confirm { click_link delete_cross, match: :first }
 
       expect(page).to have_xpath(xpath("th", total, unemployed_sub.amount))
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 1
 
-      click_link delete_cross, match: :first
-      confirm_dialog
+      accept_confirm { click_link delete_cross, match: :first }
 
       expect(page).to have_css(warning, text: empty)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 0
@@ -324,7 +308,7 @@ describe "Shop" do
       click_link standard_sub.description
       pick_cart_member(player)
       click_button add_to_cart
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq cart_count + 1
       expect(Item::Subscription.inactive.count).to eq 1
@@ -338,11 +322,9 @@ describe "Shop" do
       expect(cart.items.count).to eq 0
       expect(other_cart.items.count).to eq 1
 
-      click_link delete_cross, match: :first
-      confirm_dialog
+      accept_confirm { click_link delete_cross, match: :first }
 
       expect(page).to have_link(cart_link)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 2
       expect(Item::Subscription.inactive.count).to eq 1
@@ -387,7 +369,7 @@ describe "Shop" do
       pick_cart_member(player)
 
       click_button add_to_cart
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.where(fee: entry_fee, player: player).count).to eq 1
@@ -437,7 +419,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: exists_error)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 0
@@ -450,7 +431,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 1
@@ -461,7 +442,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: in_cart_error)
-      wait_a_second(0.2)
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 1
@@ -474,7 +454,6 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to have_css(failure, text: sub_required_error)
-      wait_a_second(0.2)
       
       visit event_path(id: event.id)
       click_link fee_requires_sub.amount.to_s
@@ -482,7 +461,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 1
@@ -500,7 +479,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 1
@@ -511,7 +490,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 2
@@ -529,7 +508,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 1
@@ -540,7 +519,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 2
@@ -563,7 +542,7 @@ describe "Shop" do
       click_button add_to_cart
 
       expect(page).to_not have_css(failure)
-      wait_a_second(0.2)
+      wait_for_browser
 
       expect(Cart.count).to eq 1
       expect(Item::Entry.inactive.count).to eq 1
@@ -590,7 +569,6 @@ describe "Shop" do
 
     it "logged in" do
       login(user)
-      wait_a_second(0.2)
 
       visit shop_path
       click_link subscription_fee.description
@@ -628,7 +606,7 @@ describe "Shop" do
         pick_cart_member(player1)
         check half_point_bye.label
         click_button add_to_cart
-        wait_a_second(0.2)
+        wait_for_browser
 
         expect(Item::Entry.inactive.where(fee: entry_fee, player: player1).count).to eq 1
         entry = Item::Entry.last
@@ -642,7 +620,7 @@ describe "Shop" do
 
         pick_cart_member(player2)
         click_button add_to_cart
-        wait_a_second(0.2)
+        wait_for_browser
 
         expect(Item::Entry.inactive.where(fee: entry_fee, player: player2).count).to eq 1
         entry = Item::Entry.last
@@ -670,7 +648,7 @@ describe "Shop" do
         it "valid amount" do
           fill_in amount.label, with: "1234.567"
           click_button add_to_cart
-          wait_a_second(0.2)
+          wait_for_browser
 
           expect(Cart.count).to eq 1
           expect(Item::Other.inactive.where(fee: donation_fee).count).to eq 1
@@ -729,7 +707,7 @@ describe "Shop" do
         it "valid date" do
           fill_in tournament_start.label, with: date
           click_button add_to_cart
-          wait_a_second(0.2)
+          wait_for_browser
 
           expect(Cart.count).to eq 1
           expect(Item::Other.inactive.where(fee: rating_fee).count).to eq 1
@@ -782,7 +760,7 @@ describe "Shop" do
 
           it "skip" do
             click_button add_to_cart
-            wait_a_second(0.2)
+            wait_for_browser
 
             expect(Item::Other.inactive.where(fee: donation_fee).count).to eq 1
             donation = Item::Other.last
@@ -793,7 +771,7 @@ describe "Shop" do
           it "fill in" do
             fill_in comment.label, with: message
             click_button add_to_cart
-            wait_a_second(0.2)
+            wait_for_browser
 
             expect(Item::Other.inactive.where(fee: donation_fee).count).to eq 1
             donation = Item::Other.last
@@ -819,7 +797,7 @@ describe "Shop" do
 
             fill_in comment.label, with: message
             click_button add_to_cart
-            wait_a_second(0.2)
+            wait_for_browser
 
             expect(page).to_not have_css(failure)
             expect(Item::Other.inactive.where(fee: donation_fee).count).to eq 1
@@ -842,7 +820,7 @@ describe "Shop" do
           it "fill in" do
             fill_in comment.label, with: "12345678901234567890"
             click_button add_to_cart
-            wait_a_second(0.2)
+            wait_for_browser
 
             expect(Item::Other.inactive.where(fee: donation_fee).count).to eq 1
             donation = Item::Other.last

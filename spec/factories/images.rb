@@ -1,5 +1,23 @@
 FactoryBot.define do
   factory :image do
+    # Skip Paperclip's thumbnail processing (several ImageMagick calls, ~0.1s per image) unless
+    # a spec needs the thumbnail: use the :with_thumbnail trait for those (see issue #238).
+    initialize_with { new.tap { |image| image.data.post_processing = false } }
+
+    # Pages still show thumbnails, and a request for a missing file raises an error in specs,
+    # so stand in a copy of the original (a file copy is far cheaper than resizing).
+    after(:create) do |image|
+      thumbnail = image.data.path(:thumbnail)
+      unless File.exist?(thumbnail)
+        FileUtils.mkdir_p(File.dirname(thumbnail))
+        FileUtils.cp(image.data.path, thumbnail)
+      end
+    end
+
+    trait :with_thumbnail do
+      initialize_with { new }
+    end
+
     caption { "Fractal" }
     credit  { "Mark Orr" }
     year    { 2014 }

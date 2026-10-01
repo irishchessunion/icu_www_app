@@ -5,10 +5,15 @@
     %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}
     %meta{name:"chesstempo_path", content: "#{chesstempo_image_path}"}
     %title= content_for?(:title) ? yield(:title) : t("icu.icu")
+    -# Test-only (the gem is in the :test group): lets Capybara wait for page loads and AJAX. Must come before other scripts.
+    = capybara_lockstep if defined?(Capybara::Lockstep)
     = stylesheet_link_tag "#{current_user.preferred_theme.downcase}.min", media: "all"
     = stylesheet_link_tag "variables_#{current_user.preferred_theme.downcase}", media: "all"
     = stylesheet_link_tag "application", media: "all"
     = javascript_include_tag "application"
+    - if Rails.env.test?
+      -# Make Bootstrap's fades instant in specs, so modals and tabs open and close before Capybara's next step.
+      = javascript_tag "$(function() { $.support.transition = false; });"
     -# Hotwire: stimulus/boot module + turbo module.
     -# two module scripts because turbo.js and stimulus.js declare conflicting top-level helpers
     = javascript_include_tag "turbo", type: "module"

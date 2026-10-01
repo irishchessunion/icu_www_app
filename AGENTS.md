@@ -26,6 +26,7 @@ docker-compose down        # stop; add -v to also wipe volumes/reset the db
 docker-compose run --rm test                                              # full suite
 docker-compose run --rm test bundle exec rspec spec/models/               # a directory
 docker-compose run --rm test bundle exec rspec spec/models/user_spec.rb:42  # single test by line
+docker-compose run --rm -e STRIPE=1 test                                  # include the slow Stripe checkout specs (skipped by default)
 
 # Console / migrations / shell
 docker-compose run --rm web bundle exec rails console
