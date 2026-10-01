@@ -1,5 +1,13 @@
 FactoryBot.define do
   factory :image do
+    # Skip Paperclip's thumbnail processing (several ImageMagick calls, ~0.1s per image) unless
+    # a spec needs the thumbnail: use the :with_thumbnail trait for those (see issue #238).
+    initialize_with { new.tap { |image| image.data.post_processing = false } }
+
+    trait :with_thumbnail do
+      initialize_with { new }
+    end
+
     caption { "Fractal" }
     credit  { "Mark Orr" }
     year    { 2014 }
