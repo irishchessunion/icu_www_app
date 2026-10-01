@@ -287,16 +287,14 @@ describe "Shop" do
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 2
 
-      click_link delete_cross, match: :first
-      confirm_dialog
+      accept_confirm { click_link delete_cross, match: :first }
 
       expect(page).to have_xpath(xpath("th", total, unemployed_sub.amount))
 
       expect(Cart.count).to eq 1
       expect(Item::Subscription.inactive.count).to eq 1
 
-      click_link delete_cross, match: :first
-      confirm_dialog
+      accept_confirm { click_link delete_cross, match: :first }
 
       expect(page).to have_css(warning, text: empty)
 
@@ -324,8 +322,7 @@ describe "Shop" do
       expect(cart.items.count).to eq 0
       expect(other_cart.items.count).to eq 1
 
-      click_link delete_cross, match: :first
-      confirm_dialog
+      accept_confirm { click_link delete_cross, match: :first }
 
       expect(page).to have_link(cart_link)
 

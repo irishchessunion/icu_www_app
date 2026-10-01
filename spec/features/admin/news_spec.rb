@@ -193,7 +193,6 @@ describe News do
 
     before(:each) do
       login user
-      wait_a_second(0.2)
       visit new_admin_news_path
     end
 
@@ -207,21 +206,21 @@ describe News do
         fill_in I18n.t("article.title"), with: linked_article.title + force_submit
         click_link linked_article.title
       end
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
 
       find("#wysiwyg_toolbar_extra button", text: "Link Event").click
       within "#event_ids_modal" do
         fill_in I18n.t("event.name"), with: linked_event.name + force_submit
         click_link linked_event.name
       end
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
 
       find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
       within "#image_ids_modal" do
         fill_in I18n.t("image.caption"), with: linked_image.caption + force_submit
         click_link linked_image.caption
       end
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
 
       click_button save
 
