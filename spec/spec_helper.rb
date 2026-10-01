@@ -30,6 +30,10 @@ RSpec.configure do |config|
   # end
   config.example_status_persistence_file_path = "spec/examples.txt"
 
+  # Specs tagged stripe: true go through Stripe's real test-mode checkout and are
+  # slow, so they're skipped unless STRIPE=1. Run them before merging (see issue #238).
+  config.filter_run_excluding stripe: true unless ENV["STRIPE"] == "1"
+
   # Print the 10 slowest examples and example groups at the
   # end of the spec run, to help surface which specs are running
   # particularly slow.

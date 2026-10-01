@@ -114,7 +114,7 @@ describe "Pay", js: true do
     ActionMailer::Base.deliveries.clear
   end
 
-  context "with card" do
+  context "with card", stripe: true do
     before(:each) do
       add_something_to_cart
       click_link checkout
@@ -377,7 +377,7 @@ describe "Pay", js: true do
     end
   end
 
-  context "new member" do
+  context "new member", stripe: true do
     let(:newbie)     { create(:new_player) }
     let(:newbie_fed) { ICU::Federation.find(newbie.fed).name }
     let(:newbie_sex) { I18n.t("player.gender.#{newbie.gender}") }
@@ -444,7 +444,7 @@ describe "Pay", js: true do
       click_button add_to_cart
     end
 
-    it "card" do
+    it "card", stripe: true do
       click_link checkout
       fill_in_all_and_click_pay
 
