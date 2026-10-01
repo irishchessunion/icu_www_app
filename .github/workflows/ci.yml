@@ -86,7 +86,7 @@ jobs:
 
       - name: Run RSpec tests
         run: |
-          docker compose run --rm -e RAILS_ENV=test -e STRIPE=1 -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress
+          docker compose run --rm -e RAILS_ENV=test -e STRIPE=1 -e BUNDLE_GEMFILE=${{ matrix.gemfile }} web bundle exec rspec --format progress --profile 20
         env:
           BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
