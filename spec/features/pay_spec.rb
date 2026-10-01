@@ -82,19 +82,23 @@ describe "Pay", js: true do
       # 3D secure - bypass capybara-lockstep, which deadlocks here because
       # stripe.confirmPayment() holds a pending fetch open until 3DS completes.
       # Raw Selenium navigates the 3-level nested iframe without going through lockstep.
+      # This card always requires 3DS, so any failure here is real: report which step failed.
       browser = page.driver.browser
       wait = Selenium::WebDriver::Wait.new(timeout: 15)
+      started = Time.now
+      step = "3DS challenge iframe"
       begin
         wait.until { browser.find_elements(:css, "iframe[src*='three-ds-2-challenge']").any? }
         browser.switch_to.frame(browser.find_element(:css, "iframe[src*='three-ds-2-challenge']"))
+        step = "#challengeFrame inside the 3DS iframe"
         wait.until { browser.find_elements(:css, '#challengeFrame').any? }
         browser.switch_to.frame(browser.find_element(:css, '#challengeFrame'))
+        step = "#test-source-authorize-3ds button"
         wait.until { browser.find_elements(:css, '#test-source-authorize-3ds').any? }
         browser.find_element(:css, '#test-source-authorize-3ds').click
-        browser.switch_to.default_content
-      rescue Selenium::WebDriver::Error::TimeoutError, Selenium::WebDriver::Error::NoSuchFrameError
-        # 3DS challenge didn't appear or frame navigation failed - payment may have
-        # completed via frictionless authentication, or iframe structure changed.
+      rescue Selenium::WebDriver::Error::WebDriverError => e
+        raise "3DS step failed at #{step} after #{(Time.now - started).round(1)}s: #{e.class}: #{e.message.lines.first&.strip}"
+      ensure
         browser.switch_to.default_content rescue nil
       end
     end
