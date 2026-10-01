@@ -104,6 +104,12 @@ def wait_a_second(delay=0.3)
   sleep(delay)
 end
 
+# Wait until the browser has finished loading pages and AJAX requests, e.g. before
+# checking the database after a click. Prefer this to wait_a_second (see issue #238).
+def wait_for_browser
+  Capybara::Lockstep.synchronize
+end
+
 # Opens the "select member" modal (used throughout the shop/cart flow - see
 # app/views/items/_player_ids_button.html.haml), searches for the given
 # player and picks them. Waits for the modal to actually finish opening

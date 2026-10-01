@@ -69,7 +69,6 @@ describe Series do
 
     before(:each) do
       login user
-      wait_a_second(0.2)
       visit new_admin_series_path
     end
 
@@ -98,13 +97,13 @@ describe Series do
       fill_in article_title, with: articles[0].title + force_submit
       click_link articles[0].title
 
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
 
       find(select_button(2)).click
       fill_in article_title, with: articles[1].title + force_submit
       click_link articles[1].title
 
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
       click_button save
 
       expect(page).to have_css(success, text: created)
@@ -128,13 +127,13 @@ describe Series do
       fill_in article_title, with: articles[0].title + force_submit
       click_link articles[0].title
 
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
 
       find(select_button(2)).click
       fill_in article_title, with: articles[1].title + force_submit
       click_link articles[1].title
 
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
 
       expect(page).to_not have_css(select_button(3))
       click_link(more)
@@ -143,7 +142,7 @@ describe Series do
       fill_in article_title, with: articles[2].title + force_submit
       click_link articles[2].title
 
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
 
       expect(page).to_not have_css(select_button(4))
       click_link(more)
@@ -152,7 +151,7 @@ describe Series do
       fill_in article_title, with: articles[3].title + force_submit
       click_link articles[3].title
 
-      wait_a_second(0.5)
+      expect(page).to have_no_css(".modal-backdrop")
 
       click_button save
 
@@ -187,7 +186,6 @@ describe Series do
 
     before(:each) do
       login user
-      wait_a_second(0.2)
       visit series_path(series)
       click_link edit
     end
@@ -197,7 +195,7 @@ describe Series do
       fill_in series_title, with: new_title, fill_options: { clear: :backspace }
       click_button save
 
-      wait_a_second(0.4)
+      wait_for_browser
       series.reload
       expect(series.title).to eq new_title
       expect(series.episodes.count).to eq 3
@@ -212,7 +210,7 @@ describe Series do
       fill_in article_title, with: article.title + force_submit
       click_link article.title
 
-      wait_a_second(0.8)
+      expect(page).to have_no_css(".modal-backdrop")
 
       click_button save
 
@@ -232,7 +230,7 @@ describe Series do
       find(keep(2)).set(false)
 
       click_button save
-      wait_a_second(0.1)
+      wait_for_browser
 
       series.reload
       expect(series.episodes.count).to eq 2
