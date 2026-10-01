@@ -83,6 +83,7 @@ group :test do
   gem "faker"
   gem "database_cleaner", ">= 2.1"
   gem "simplecov", require: false
+  gem "test-prof" # Spec profiling, e.g. FPROF=1 for factory usage (see issue #238).
 end
 
 # Avoiding CVE problems - these are found with `bundle audit`
