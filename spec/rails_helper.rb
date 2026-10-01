@@ -26,6 +26,9 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+    # Start each run without uploads left over from earlier runs, like CI's fresh checkout.
+    # Paperclip keeps test uploads under public/system/test (see config/initializers/paperclip.rb).
+    FileUtils.rm_rf(Rails.root.join("public", "system", "test"))
   end
 
   config.before(:each) do |example|
