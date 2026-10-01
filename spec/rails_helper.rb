@@ -31,7 +31,8 @@ RSpec.configure do |config|
   config.before(:each) do |example|
     # Use truncation only for capybara/selenium tests
     if example.metadata[:js]
-      DatabaseCleaner.strategy = :truncation
+      # pre_count: only truncate tables that have rows, rather than all of them (see issue #238).
+      DatabaseCleaner.strategy = :truncation, { pre_count: true }
     else
       DatabaseCleaner.strategy = :transaction
     end
