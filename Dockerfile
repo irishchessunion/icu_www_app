@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ruby:3.2-bookworm
+FROM ruby:3.2-bookworm
 
 # Install base dependencies
 RUN apt-get update -qq && \
