@@ -6,7 +6,8 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: www_development
     ports:
-      - "3306:3306"
+      # Host port 3307, so it doesn't clash with a MySQL already running on the Mac (3306).
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -18,7 +19,8 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      # Host port 6380, so it doesn't clash with a Redis already running on the Mac (6379).
+      - "6380:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -52,6 +54,17 @@ services:
         condition: service_healthy
     stdin_open: true
     tty: true
+
+  # Runs the specs: `docker compose run --rm test` (or add an rspec command and path).
+  # Same setup as web but in the test environment. The "test" profile keeps
+  # `docker compose up` from starting it.
+  test:
+    extends:
+      service: web
+    profiles: ["test"]
+    command: bundle exec rspec
+    environment:
+      RAILS_ENV: test
 
 volumes:
   mysql_data:

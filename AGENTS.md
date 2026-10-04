@@ -37,6 +37,12 @@ docker-compose logs -f web
 docker-compose build web   # rebuild after Gemfile changes
 ```
 
+Docker notes:
+- Docker's MySQL and Redis are published on host ports **3307** and **6380**, so they can run alongside a MySQL (3306) or Redis (6379) already running on the Mac. Inside Docker, services still use the standard ports.
+- The image builds natively for the machine (arm64 on Apple Silicon, amd64 on CI). Don't pin `--platform=linux/amd64`: under emulation Chromium crashes and every JS feature spec fails.
+- The `test` service is in a `test` profile, so `docker-compose up` doesn't start it; `docker-compose run --rm test` works without naming the profile.
+- Running the specs directly on the Mac (`bundle exec rspec`) is about twice as fast as in Docker. To use one `config/database.yml` for both, read the connection settings from the env vars that `web` and `test` set, with local defaults, e.g. `host: <%= ENV.fetch("DATABASE_HOST", "127.0.0.1") %>` (likewise `DATABASE_USERNAME` and `DATABASE_PASSWORD`).
+
 Tests use RSpec + Capybara/Selenium (feature specs) with `database_cleaner` (transaction strategy normally, truncation for `:js` specs — see `spec/rails_helper.rb`). Spec helpers `login(user_or_roles)` and `logout` are globally available in feature specs.
 
 ### Dual Rails version (`Gemfile.next`)
