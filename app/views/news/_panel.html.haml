@@ -1,4 +1,4 @@
-.panel.panel-default.panel-news
+.panel.panel-default.panel-news{data: { controller: "show-more", show_more_more_value: t("pages.news.show_more"), show_more_less_value: t("pages.news.show_less"), action: "resize@window->show-more#update" }}
   .panel-heading
     %strong
       = news.headline
@@ -9,4 +9,6 @@
       .visible-lg-inline-block.right-margin-thin{data: {news_id: news.id}}= like_button(current_user, news)
       .visible-lg-inline-block.right-margin-thin= news.date.strftime('%d-%m-%Y')
   .panel-body.news
-    = news.html
+    .show-more-content{data: { show_more_target: "content" }}
+      = news.html
+    %a.hidden{href: "#", role: "button", "aria-expanded": "false", data: { show_more_target: "button", action: "show-more#toggle" }}= t("pages.news.show_more")
