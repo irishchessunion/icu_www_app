@@ -44,13 +44,24 @@ class Item < ApplicationRecord
     matches = matches.where("players.last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
     matches = matches.where("players.first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
     matches = matches.where("description LIKE ?", "%#{params[:description]}%") if params[:description].present?
-    matches = matches.where("items.created_at >= ?", params[:from_date]) if params[:from_date].present?
-    matches = matches.where("items.created_at <= ?", params[:to_date]) if params[:to_date].present?
+    from_date, to_date = search_date(params[:from_date]), search_date(params[:to_date])
+    if from_date || to_date
+      date_column = params[:date_type] == "paid" ? "carts.payment_completed" : "items.created_at"
+      matches = matches.references(:carts) if params[:date_type] == "paid"
+      matches = matches.where("#{date_column} >= ?", from_date.in_time_zone) if from_date
+      matches = matches.where("#{date_column} <= ?", to_date.in_time_zone.end_of_day) if to_date
+    end
     if params[:format] == 'csv'
       matches
     else
       paginate(matches, params, path)
     end
+  end
+
+  def self.search_date(param)
+    Date.parse(param) if param.present?
+  rescue Date::Error
+    nil
   end
 
   def complete(payment_method)

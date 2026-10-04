@@ -2,10 +2,13 @@ require 'csv'
 
 module Admin
   class EntryListCsvGenerator
-    def generate_from_items(items, description = nil, show_charge_id = false)
+    # The paid date is for the treasurer's items CSV only, so the event entry downloads, which organisers
+    # import into pairing software, keep their columns.
+    def generate_from_items(items, description = nil, show_charge_id = false, show_paid_date: false)
       CSV.generate do |csv|
         csv << ["Items for #{description} generated on #{Time.now}", '', '', '', '']
         headings = ["Date"]
+        headings << "Paid-Date" if show_paid_date
         if show_charge_id
           headings.concat(%w(Charge# Cart#))
         end
@@ -21,6 +24,7 @@ module Admin
             name, id, rating, email = nil, nil, nil, ''
           end
           row = [item.created_at.strftime("%Y-%m-%d")]
+          row << item.cart&.payment_completed&.strftime("%Y-%m-%d") if show_paid_date
           if show_charge_id
             latest_charge = item.cart.present? && item.cart.latest_charge.present? ? item.cart.latest_charge : "(was not stored pre-update)"
             latest_charge = "N/A" unless !item.cost.nil? and item.cost > 0
