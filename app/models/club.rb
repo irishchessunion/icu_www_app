@@ -7,7 +7,9 @@ class Club < ApplicationRecord
   journalize %w[name web meet address district city county lat long contact email phone active description notes secretary_id], "/clubs/%d"
 
   has_many :players
+  has_many :club_meetings, dependent: :destroy
   belongs_to :secretary, class_name: "Player", optional: true
+  accepts_nested_attributes_for :club_meetings, allow_destroy: true, reject_if: :all_blank
 
   default_scope { order(:name) }
   scope :active, -> { where(active: true) }
@@ -54,6 +56,9 @@ class Club < ApplicationRecord
     case params[:junior]
       when "junior_only" then matches = matches.where(junior_only: true)
       when "has_junior_section" then matches = matches.where(has_junior_section: true)
+    end
+    if ClubMeeting::DAYS_OF_WEEK.include?(params[:day_of_week])
+      matches = matches.where("EXISTS (SELECT 1 FROM club_meetings WHERE club_meetings.club_id = clubs.id AND club_meetings.day_of_week = ?)", params[:day_of_week])
     end
     paginate(matches, params, path)
   end

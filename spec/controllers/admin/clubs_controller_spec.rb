@@ -40,6 +40,21 @@ RSpec.describe Admin::ClubsController, type: :controller do
           expect(club.eircode).to eq("D02 XY45")
         end
 
+        it "adds and removes meetings" do
+          patch :update, params: { id: club.id, club: { club_meetings_attributes: {
+            "0" => { day_of_week: "tuesday", start_time: "19:00", title: "Junior Club", audience: "juniors_only" }
+          } } }, session: valid_session
+
+          meeting = club.reload.club_meetings.first
+          expect(meeting.title).to eq("Junior Club")
+
+          patch :update, params: { id: club.id, club: { club_meetings_attributes: {
+            "0" => { id: meeting.id, _destroy: "1" }
+          } } }, session: valid_session
+
+          expect(club.reload.club_meetings).to be_empty
+        end
+
         it "redirects to the club" do
           patch :update, params: { id: club.id, club: valid_attributes }, session: valid_session
           expect(response).to redirect_to(club_path(club))
