@@ -48,6 +48,8 @@ class Admin::FeesController < ApplicationController
 
   def create
     @fee = Fee.new(fee_params(:new_record))
+    # authorize_resource only checks the class for create, so check the event this fee is for too
+    authorize! :create, @fee
 
     if @fee.save
       @fee.journal(:create, current_user, request.remote_ip)
@@ -64,7 +66,11 @@ class Admin::FeesController < ApplicationController
   end
 
   def update
-    if @fee.update(fee_params)
+    @fee.assign_attributes(fee_params)
+    # Stop a fee being moved to an event the user can't manage
+    authorize! :update, @fee
+
+    if @fee.save
       @fee.journal(:update, current_user, request.remote_ip)
       redirect_to admin_fee_path(@fee), notice: "Fee was successfully updated"
     else

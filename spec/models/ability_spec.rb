@@ -58,7 +58,7 @@ describe Ability do
     let(:full_user) { create(:user, roles: "organiser") }
     let(:limited_user) { create(:user, roles: "organiser") }
     let(:other_user) { create(:user) }
-    let(:event) { create(:event, user: creator) }
+    let(:event) { create(:event, user: creator, subscription_required: false) }
 
     before do
       create(:event_user, event: event, user: full_user, role: "full_access")
@@ -96,6 +96,28 @@ describe Ability do
         expect(ability.can?(:create, event_user)).to be false
         expect(ability.can?(:destroy, event_user)).to be false
       end
+
+      it "can create, read and update fees the creator added, but not delete them" do
+        fee = create(:entry_fee, event: event)
+        expect(ability.can?(:create, Fee::Entry.new(event: event))).to be true
+        expect(ability.can?(:read, fee)).to be true
+        expect(ability.can?(:update, fee)).to be true
+        expect(ability.can?(:destroy, fee)).to be false
+        expect(Fee::Entry.accessible_by(ability)).to eq [fee]
+      end
+
+      it "can read and update the event's entries" do
+        item = create(:entry_item, fee: create(:entry_fee, event: event))
+        expect(ability.can?(:read, item)).to be true
+        expect(ability.can?(:update, item)).to be true
+        expect(ability.can?(:destroy, item)).to be false
+      end
+
+      it "cannot touch fees or entries for other events" do
+        other_fee = create(:entry_fee, name: "Other", event: create(:event, subscription_required: false))
+        expect(ability.can?(:update, other_fee)).to be false
+        expect(ability.can?(:update, create(:entry_item, fee: other_fee))).to be false
+      end
     end
 
     context "limited_access user" do
@@ -106,6 +128,12 @@ describe Ability do
         expect(ability.can?(:show, event)).to be true
         expect(ability.can?(:update, event)).to be false
         expect(ability.can?(:destroy, event)).to be false
+      end
+
+      it "cannot update fees or entries" do
+        fee = create(:entry_fee, event: event)
+        expect(ability.can?(:update, fee)).to be false
+        expect(ability.can?(:update, create(:entry_item, fee: fee))).to be false
       end
     end
 
