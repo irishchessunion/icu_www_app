@@ -179,7 +179,7 @@ describe Image do
     let(:april)     { attributes_for(:image_april) }
     let(:suzanne)   { attributes_for(:image_suzanne) }
     let(:gearoidin) { attributes_for(:image_gearoidin) }
-    let!(:image)    { create(:image_april, user: user) }
+    let!(:image)    { create(:image_april, :with_thumbnail, user: user) }
 
     before(:each) do
       login user

@@ -76,8 +76,7 @@ describe "Revoke", js: true do
       expect(page).to have_xpath(total, text: "%.2f" % cart.total)
 
       check "item_#{subscription.id}"
-      click_button revoke_button
-      confirm_dialog
+      accept_confirm { click_button revoke_button }
 
       expect(page).to have_css(success, text: revoke_ok)
 
@@ -102,8 +101,7 @@ describe "Revoke", js: true do
       expect(page).to have_xpath(total, text: "%.2f" % cart.total)
 
       check "item_#{entry.id}"
-      click_button revoke_button
-      confirm_dialog
+      accept_confirm { click_button revoke_button }
 
       expect(page).to have_css(success, text: revoke_ok)
       expect(page).to_not have_link(revoke_button)
@@ -146,8 +144,7 @@ describe "Revoke", js: true do
       expect(page).to have_xpath(total, text: "%.2f" % cart.total)
 
       check "all_items"
-      click_button revoke_button
-      confirm_dialog
+      accept_confirm { click_button revoke_button }
 
       expect(page).to have_css(success, text: revoke_ok)
       expect(page).to_not have_link(revoke_button)
