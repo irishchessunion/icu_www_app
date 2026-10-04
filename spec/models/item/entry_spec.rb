@@ -105,4 +105,30 @@ describe Item::Entry do
       expect(item).to_not be_valid
     end
   end
+
+  context "moving sections" do
+    let(:event)   { create(:event, sections: "Masters, Major, Minor", subscription_required: false) }
+    let(:masters) { create(:entry_fee, name: "Masters", event: event, sections: "Masters", amount: 60) }
+    let(:major)   { create(:entry_fee, name: "Major", event: event, sections: "Major", amount: 50) }
+    let!(:minor)  { create(:entry_fee, name: "Minor", event: event, sections: "Minor", amount: 50) }
+    let(:item)    { create(:paid_entry_item, fee: major, section: "Major") }
+
+    it "can move to any of the event's sections, not just its fee's" do
+      expect(item.movable_sections).to eq %w[Masters Major Minor]
+    end
+
+    it "flags only sections whose fees differ from what was paid" do
+      masters
+      expect(item.sections_with_different_fees).to eq("Masters" => [masters])
+    end
+
+    it "flags sections that no fee covers" do
+      expect(item.sections_with_different_fees).to eq("Masters" => [])
+    end
+
+    it "accepts a matching discounted amount" do
+      masters.update!(discounted_amount: 50, discount_deadline: Date.today)
+      expect(item.sections_with_different_fees).to be_empty
+    end
+  end
 end
