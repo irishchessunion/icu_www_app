@@ -239,4 +239,35 @@ describe Event do
     end
   end
 
+  context "note editing" do
+    it "renders legacy Markdown notes without raw HTML" do
+      event = create(:event, note: "**Bold** <script>alert(1)</script>")
+      expect(event.markdown).to be true
+      expect(event.html).to include("<strong>Bold</strong>")
+      expect(event.html).to_not include("<script>")
+    end
+
+    it "sanitizes notes saved from the editor" do
+      event = create(:event, markdown: false, note: "<p><strong>Bold</strong></p><script>alert(1)</script>")
+      expect(event.note).to start_with "<p><strong>Bold</strong></p>"
+      expect(event.note).to_not include("<script>")
+    end
+
+    it "clears an empty editor, since the note is optional" do
+      expect(create(:event, markdown: false, note: "<p><br></p>").note).to be_nil
+    end
+
+    it "rejects invalid shortcuts" do
+      event = build(:event, markdown: false, note: "<p>[IMG:999999]</p>")
+      expect(event).to_not be_valid
+      expect(event.errors[:note].first).to match(/not a valid image/)
+    end
+
+    it "can still update the note after the event has ended, converting it to HTML" do
+      event = create(:event, note: "Old **Markdown**")
+      event.update_columns(start_date: Date.today.days_ago(10), end_date: Date.today.days_ago(8))
+      event.markdown = false
+      expect(event.update(note: "<p>Results are in</p>")).to be true
+    end
+  end
 end

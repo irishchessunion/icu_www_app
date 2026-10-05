@@ -61,7 +61,7 @@
         = render "utils/text_field_for", locals.merge(param: :results_url, text: t("event.results_url"), width: 6, mark: "none")
         = render "utils/text_field_for", locals.merge(param: :report_url, text: t("event.report_url"), width: 6, mark: "none")
         %hr
-        = render "utils/text_area_for",  locals.merge(param: :note, text: t("notes"), width: 9, rows: 10)
+        = render "utils/wysiwyg_area_for", locals.merge(param: :note, text: t("notes"), width: 9)
         %hr
         = render "utils/select_for",     locals.merge(param: :user_id, text: t("event.user"), width: 4, menu: user_menu(@event.user_id || current_user.id), disabled: has_ended)
         = render "utils/check_box_for",  locals.merge(param: :active, text: t("active"), width: 1, disabled: has_ended)

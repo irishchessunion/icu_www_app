@@ -70,7 +70,7 @@
       - if @club.notes.present?
         %tr
           %th= t("club.notes")
-          %td= @club.notes
+          %td= @club.html
       %tr
         %th= t("player.players")
         - clubs = @club.players.where(status: "active").count

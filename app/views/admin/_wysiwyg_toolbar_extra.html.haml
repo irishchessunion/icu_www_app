@@ -1,0 +1,8 @@
+-# Extra buttons above a WYSIWYG editor, shown only to users who can use the modal behind each one
+.btn-toolbar.voffset1#wysiwyg_toolbar_extra
+  - if can?(:index, Article)
+    %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#article_ids_modal"} Link Article
+  - if can?(:index, Event)
+    %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#event_ids_modal"} Link Event
+  - if can?(:index, Image)
+    %button.btn.btn-default.btn-sm{type: "button", "data-toggle" => "modal", "data-target" => "#image_ids_modal"} Insert Image
