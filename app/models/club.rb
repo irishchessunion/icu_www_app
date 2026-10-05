@@ -1,8 +1,11 @@
 class Club < ApplicationRecord
+  include Expandable
   include Geocodable
   include Journalable
   include Normalizable
   include Pageable
+  include Remarkable
+  include WysiwygEditable
 
   journalize %w[name web meet address district city county lat long contact email phone active description notes secretary_id], "/clubs/%d"
 
@@ -18,6 +21,9 @@ class Club < ApplicationRecord
   scope :with_geocodes, -> { where.not(lat: nil).where.not(long: nil) }
 
   before_validation :normalize_attributes
+
+  wysiwyg_editable :notes, required: false, filter_html: true
+  validate :notes_expansions
 
   validate :has_contact_method
 
@@ -78,6 +84,12 @@ class Club < ApplicationRecord
   end
 
   private
+
+  def notes_expansions
+    expand_all(notes, true) if notes.present?
+  rescue => e
+    errors.add(:notes, e.message)
+  end
 
   def secretary_exists
     if secretary_id.present? && !Player.exists?(secretary_id)

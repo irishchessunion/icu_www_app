@@ -19,7 +19,7 @@ json.events @events do |event|
   json.max_participants event.max_participants
   json.registration_deadline event.registration_deadline
   json.external_registration_url event_url(event, host: "www.icu.ie", protocol: "https")
-  json.description event.note_html.presence
+  json.description event.html.presence
   json.contact event.contact
   json.sections event.fees_by_section do |name, fees|
     json.name name
