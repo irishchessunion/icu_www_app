@@ -1,9 +1,11 @@
 class Event < ApplicationRecord
+  include Expandable
   include Geocodable
   include Journalable
   include Normalizable
   include Pageable
   include Remarkable
+  include WysiwygEditable
 
   journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date time_controls is_fide_rated
               active category contact email phone url pairings_url results_url report_url live_games_url live_games_url2 prize_fund note
@@ -15,8 +17,8 @@ class Event < ApplicationRecord
   TIME_CONTROLS = %w[classical rapid blitz].freeze
   EDIT_AFTER_STARTED = %w[name end_date location lat long
                          time_controls category sections short_event is_fide_rated prize_fund flyer contact email phone
-                         url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note].freeze
-  EDIT_AFTER_ENDED = %w[url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note].freeze
+                         url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note markdown].freeze
+  EDIT_AFTER_ENDED = %w[url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note markdown].freeze
   TYPES = {
     pdf:  "application/pdf",
     doc:  "application/msword",
@@ -52,6 +54,8 @@ class Event < ApplicationRecord
   before_validation :ensure_time_controls_is_array
   before_validation :normalize_attributes
 
+  wysiwyg_editable :note, required: false, filter_html: true
+
   validates_attachment :flyer, content_type: { file_name: EXTENSIONS, content_type: CONTENT_TYPES }, size: { in: MIN_SIZE..MAX_SIZE }
   validates :name, presence: true, length: { maximum: 75 }
   validates :location, presence: true, length: { maximum: 100 }
@@ -77,6 +81,7 @@ class Event < ApplicationRecord
   validate :restrict_edits_if_started, on: :update
   validate :restrict_edits_if_ended, on: :update
   validate :time_controls_must_be_valid
+  validate :note_expansions
 
   scope :include_player, -> { includes(user: :player) }
   scope :ordered, -> { order(:start_date, :end_date, :name) }
@@ -184,10 +189,6 @@ class Event < ApplicationRecord
     (sections || '').split(',').map {|s| s.strip}
   end
 
-  def note_html
-    to_html(note)
-  end
-
   def expand(opt)
     %q{<a href="/events/%d">%s</a>} % [id, opt[:name] || opt[:title] || name]
   end
@@ -291,6 +292,12 @@ class Event < ApplicationRecord
     if disallowed_changes.any?
       errors.add(:end_date, "Trying to change a field that can no longer by edited as event has ended")
     end
+  end
+
+  def note_expansions
+    expand_all(note, true) if note.present?
+  rescue => e
+    errors.add(:note, e.message)
   end
 
   def time_controls_must_be_valid

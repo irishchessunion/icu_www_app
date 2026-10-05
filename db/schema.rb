@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_05_120000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -162,6 +162,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
     t.boolean "junior_only", default: false
     t.decimal "lat", precision: 10, scale: 7
     t.decimal "long", precision: 10, scale: 7
+    t.boolean "markdown", default: true
     t.string "meet"
     t.string "name", limit: 50
     t.text "notes"
@@ -252,6 +253,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
     t.string "live_games_url2"
     t.string "location", limit: 100
     t.decimal "long", precision: 10, scale: 7
+    t.boolean "markdown", default: true
     t.string "name", limit: 75
     t.text "note"
     t.string "pairings_url"
