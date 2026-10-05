@@ -20,8 +20,11 @@ class Admin::FeesController < ApplicationController
   def new
     @fee = Fee.new
     @fee.type = params[:type] if Fee::TYPES.include?(params[:type])
-    if params[:event_id]
-      @fee.event_id = params[:event_id]
+    if @fee.type == "Fee::Entry"
+      # Entry fees can only be added from their event's page
+      event = Event.find_by(id: params[:event_id])
+      return redirect_to admin_events_path, alert: t("fee.entry.from_event") unless event
+      @fee.event_id = event.id
       Fee::Entry.init_default_attributes(@fee)
     end
   end
@@ -48,6 +51,10 @@ class Admin::FeesController < ApplicationController
 
   def create
     @fee = Fee.new(fee_params(:new_record))
+    if @fee.is_a?(Fee::Entry) && @fee.event_id.blank?
+      redirect_to admin_events_path, alert: t("fee.entry.from_event")
+      return
+    end
     # authorize_resource only checks the class for create, so check the event this fee is for too
     authorize! :create, @fee
 
@@ -101,13 +108,15 @@ class Admin::FeesController < ApplicationController
   def fee_params(new_record=false)
     attrs = case params[:fee][:type]
       when "Fee::Subscription" then %i[years]
-      when "Fee::Entry"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url event_id sections organizer_only]
+      when "Fee::Entry"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url sections organizer_only]
       when "Fee::Other"        then %i[start_date end_date sale_start sale_end discounted_amount discount_deadline min_rating max_rating age_ref_date url days player_required]
       else []
     end
     if attrs.any?
       attrs += %i[name amount min_age max_age active]
       attrs.push(:type) if new_record
+      # An entry fee's event is set when it's created and can't be changed
+      attrs.push(:event_id) if new_record && params[:fee][:type] == "Fee::Entry"
     end
     params[:fee].permit(attrs)
   end

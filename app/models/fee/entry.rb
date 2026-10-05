@@ -27,17 +27,9 @@ class Fee::Entry < Fee
     fee.becomes(Fee)
   end
 
+  # Entry fees can't be rolled over: they belong to one event, and new ones are only added from an event's page
   def rolloverable?
-    dups = Fee::Entry.where(name: name)
-    dups = dups.where(year: year + 1) if year
-    dups = dups.where(years: season.next.to_s) if years
-    dups.count == 0
-  end
-
-  def rollover
-    fee = self.dup
-    fee.advance_1_year
-    fee.becomes(Fee)
+    false
   end
 
   def applies_to?(user)

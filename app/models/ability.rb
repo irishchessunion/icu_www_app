@@ -70,9 +70,9 @@ class Ability
       can :manage, Fee::Entry, :event => { :user_id => user.id }
       can :manage, Item::Entry, :fee_entry => {:event => { :user_id => user.id }}
 
-      # Full-access event users can manage fees and entries for the event, but not delete fees
+      # Full-access event users can manage fees (including cloning) and entries for the event, but not delete fees
       full_access = { :event_users => { :user_id => user.id, :role => "full_access" } }
-      can [:read, :create, :update], Fee::Entry, :event => full_access
+      can [:read, :create, :update, :clone], Fee::Entry, :event => full_access
       can [:read, :update], Item::Entry, :fee_entry => { :event => full_access }
       can :manage, Arbiter
 

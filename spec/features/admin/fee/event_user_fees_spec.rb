@@ -47,6 +47,25 @@ describe "Fees for full-access event users" do
     expect(other_event.fee_entries).to be_empty
   end
 
+  it "can clone a fee" do
+    visit admin_fee_path(fee)
+    click_link I18n.t("fee.clone")
+    fill_in fee_name, with: "Ennis U16"
+    fill_in amount, with: "20"
+    click_button save
+
+    expect(page).to have_css(success, text: "created")
+    expect(event.fee_entries.pluck(:name)).to contain_exactly("Ennis Open", "Ennis U16")
+  end
+
+  it "can't move a fee to another event" do
+    their_other_event = create(:event, name: "Ennis Rapid", user: full_user)
+    page.driver.submit :patch, admin_fee_path(fee), { fee: { type: "Fee::Entry", name: "Ennis Open", event_id: their_other_event.id } }
+
+    expect(page).to have_css(success, text: "updated")
+    expect(fee.reload.event).to eq event
+  end
+
   it "can't delete a fee" do
     visit admin_fee_path(fee, show_delete_button_for_test: true)
     expect(page).to_not have_link(delete)
