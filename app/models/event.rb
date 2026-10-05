@@ -13,6 +13,8 @@ class Event < ApplicationRecord
   MAX_SIZE = 3.megabytes
   CATEGORIES = %w[irish junior women foreign junint]
   TIME_CONTROLS = %w[classical rapid blitz].freeze
+  # Events lasting up to this many days (counting the first and last) are short, so they show in the homepage event lists
+  MAX_SHORT_EVENT_DAYS = 13
   EDIT_AFTER_STARTED = %w[name end_date location lat long
                          time_controls category sections short_event is_fide_rated prize_fund flyer contact email phone
                          url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note].freeze
@@ -51,6 +53,7 @@ class Event < ApplicationRecord
 
   before_validation :ensure_time_controls_is_array
   before_validation :normalize_attributes
+  before_validation :set_short_event
 
   validates_attachment :flyer, content_type: { file_name: EXTENSIONS, content_type: CONTENT_TYPES }, size: { in: MIN_SIZE..MAX_SIZE }
   validates :name, presence: true, length: { maximum: 75 }
@@ -271,6 +274,11 @@ class Event < ApplicationRecord
         errors.add(:end_date, "must end in the same or next year it starts")
       end
     end
+  end
+
+  def set_short_event
+    return if start_date.blank? || end_date.blank?
+    self.short_event = (end_date - start_date).to_i + 1 <= MAX_SHORT_EVENT_DAYS
   end
 
   def restrict_edits_if_started
