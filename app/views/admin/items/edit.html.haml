@@ -1,6 +1,7 @@
 - content_for :title, t("fee.type.#{@fee.subtype}")
 - content_for :javascript do
   = render(:partial => "items/utils", :formats => [:js])
+  = render(:partial => "admin/items/section_fee_warnings", :formats => [:js])
 
 = form_for @item, url: admin_item_path(@item.id), method: 'put' do |form|
   .row
@@ -11,7 +12,13 @@
             = @item.fee.description(:full)
             .pull-right= euros(@item.fee.current_amount)
         .panel-body
-          = render "fees/#{@item.fee.subtype}", fee: @item.fee, player_name: @player_name
+          = render "fees/#{@item.fee.subtype}", fee: @item.fee, player_name: @player_name, sections: @item.movable_sections, selected: @item.section
+          - @item.sections_with_different_fees.each do |section, fees|
+            .alert.alert-warning.section-fee-warning.hidden{data: { section: section }}
+              - if fees.empty?
+                = t("item.move.no_fee", section: section)
+              - else
+                = t("item.move.different_fee", section: section, fees: fees.map { |f| "#{f.name} #{euros(f.amount)}" }.join(", "), paid: euros(@item.cost))
           = render "items/notes", fee: @item.fee, notes: @item.notes
           = render "fees/more_info", fee: @item.fee
         .panel-footer

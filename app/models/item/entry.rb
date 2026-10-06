@@ -19,7 +19,30 @@ class Item::Entry < Item
     Season.new(start_date || created_at.to_date)
   end
 
+  # @return [Array<String>] The sections this entry can be moved to: all of the event's sections, not just its fee's.
+  def movable_sections
+    fee.event&.section_names.presence || fee.section_names
+  end
+
+  # Sections this entry could be moved to where none of the event's entry fees for that section match
+  # what was paid for this entry, mapped to the fees for that section (empty if no fee covers it).
+  # @return [Hash{String => Array<Fee::Entry>}]
+  def sections_with_different_fees
+    return {} unless fee.event
+    fees = fee.event.fee_entries.to_a
+    movable_sections.each_with_object({}) do |name, different|
+      next if name == section || covers_section?(fee, name)
+      section_fees = fees.select { |f| covers_section?(f, name) }
+      next if section_fees.any? { |f| [f.amount, f.discounted_amount].compact.include?(cost) }
+      different[name] = section_fees
+    end
+  end
+
   private
+
+  def covers_section?(entry_fee, name)
+    entry_fee.section_names.empty? || entry_fee.section_names.include?(name)
+  end
 
   def membership_check
     if fee.event&.subscription_required && !player.is_subscribed?(true)
