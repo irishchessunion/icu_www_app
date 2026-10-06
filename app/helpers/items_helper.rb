@@ -23,6 +23,14 @@ module ItemsHelper
     options_for_select(statuses, selected)
   end
 
+  def item_date_type_menu(selected)
+    types = [
+      [t("item.date_type.created"), ""],
+      [t("item.date_type.paid"), "paid"],
+    ]
+    options_for_select(types, selected)
+  end
+
   def admin_items_path_for_fee(fee)
     item_type = fee.type.sub('Fee::', 'Item::')
     admin_items_path(description: fee.name, type: item_type)
