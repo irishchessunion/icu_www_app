@@ -9,6 +9,7 @@ en:
     entry:
       end:
         label: End date of event
+      from_event: Tournament entry fees are added from the event's page, using its Add New Fee button.
       organizer_only:
         hint: Only the organizer can enter this fee
         label: Only organizers
@@ -25,7 +26,6 @@ en:
         label: Start date of event
     event: Event
     event_id:
-      hint: Setting the event will set the start and end dates
       label: Event
     event_id_no_hint: Event ID
     fees: Fees

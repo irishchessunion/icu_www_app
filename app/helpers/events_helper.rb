@@ -15,10 +15,6 @@ module EventsHelper
     options_for_select(years, selected)
   end
 
-  def events_menu(selected_event_id, events)
-    options_for_select(([Event.new(name: '')] + events).map { |event| [event.name, event.id] }, selected_event_id)
-  end
-
   def user_menu(selected_user_id, default=nil)
     users = User.vips.by_name.map { |user| [user.name, user.id] }
     users.unshift([default, ""]) if default

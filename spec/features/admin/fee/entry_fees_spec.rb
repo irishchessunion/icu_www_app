@@ -36,11 +36,26 @@ describe Fee::Entry do
   end
 
   context "create" do
-    let(:fee) { create(:entry_fee) }
+    let(:event) { create(:event, name: "Bunratty", start_date: next_year, end_date: next_year.days_since(2)) }
+    let(:fee)   { create(:entry_fee, event: event) }
+
+    it "only from an event's page" do
+      visit new_admin_fee_path
+      expect(page).to_not have_link(entry)
+      expect(page).to have_text(I18n.t("fee.entry.from_event"))
+
+      visit new_admin_fee_path(type: "Fee::Entry")
+      expect(page).to have_css(failure, text: I18n.t("fee.entry.from_event"))
+    end
+
+    it "shows the event, which can't be changed" do
+      visit new_admin_fee_path(type: "Fee::Entry", event_id: event.id)
+      expect(page).to have_link("Bunratty")
+      expect(page).to_not have_select("fee[event_id]")
+    end
 
     it "new" do
-      visit new_admin_fee_path
-      click_link entry
+      visit new_admin_fee_path(type: "Fee::Entry", event_id: event.id)
       fill_in fee_name, with: "Bunratty Masters"
       fill_in amount, with: "50"
       fill_in start_date, with: next_year.to_s
@@ -76,8 +91,7 @@ describe Fee::Entry do
     it "duplicate" do
       fee = create(:entry_fee)
 
-      visit new_admin_fee_path
-      click_link entry
+      visit new_admin_fee_path(type: "Fee::Entry", event_id: event.id)
       fill_in fee_name, with: fee.name
       fill_in amount, with: fee.amount.to_s
       fill_in start_date, with: fee.start_date.to_s
@@ -108,29 +122,20 @@ describe Fee::Entry do
       expect(page).to have_css(success, text: "created")
 
       expect(Fee::Entry.count).to eq 2
+      expect(Fee::Entry.last.event).to eq event
       expect(JournalEntry.where(journalable_type: "Fee", action: "create").count).to eq 1
     end
 
-    it "rollover" do
+    it "no rollover" do
       visit admin_fee_path(fee)
-      click_link rollover
-      click_button save
-
-      expect(page).to have_css(success, text: "created")
-
-      expect(Fee::Entry.count).to eq 2
-      expect(JournalEntry.where(journalable_type: "Fee", action: "create").count).to eq 1
-
-      visit admin_fee_path(fee)
-      expect(page).not_to have_button(rollover)
+      expect(page).to_not have_link(rollover)
 
       visit rollover_admin_fee_path(fee)
       expect(page).to have_css(failure, text: "can't be rolled over")
     end
 
     it "discount, rating and age" do
-      visit new_admin_fee_path
-      click_link entry
+      visit new_admin_fee_path(type: "Fee::Entry", event_id: event.id)
       fill_in fee_name, with: "Bangor U12"
       fill_in amount, with: "35"
       fill_in discounted_amount, with: "30"
@@ -192,8 +197,7 @@ describe Fee::Entry do
     end
 
     it "bad age" do
-      visit new_admin_fee_path
-      click_link entry
+      visit new_admin_fee_path(type: "Fee::Entry", event_id: event.id)
       fill_in fee_name, with: "Leinster U15"
       fill_in amount, with: "30"
       fill_in start_date, with: next_year.to_s
@@ -217,8 +221,7 @@ describe Fee::Entry do
     end
 
     it "bad rating" do
-      visit new_admin_fee_path
-      click_link entry
+      visit new_admin_fee_path(type: "Fee::Entry", event_id: event.id)
       fill_in fee_name, with: "Bunratty Challengers"
       fill_in amount, with: "30"
       fill_in start_date, with: next_year.to_s
