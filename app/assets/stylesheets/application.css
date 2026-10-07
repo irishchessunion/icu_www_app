@@ -775,6 +775,25 @@ section.stats-panel .list-col {
   margin: 0 0 8px 0;
 }
 
+/* Long news items on the home page are capped at 6 lines until "Show more" is clicked (show_more_controller.js).
+   The em value is the fallback for browsers without the lh unit: 6 lines of Bootstrap's 1.428571 line height. */
+.show-more-content.collapsed {
+  max-height: 8.6em;
+  max-height: 6lh;
+  overflow: hidden;
+}
+
+/* Otherwise the last paragraph's bottom margin counts as overflow, so exactly 6 lines would get a pointless "Show more" */
+.show-more-content > :last-child {
+  margin-bottom: 0;
+}
+
+/* Fade out the cut-off text; a mask rather than a gradient overlay works with every theme's background */
+.show-more-content.collapsed.overflowing {
+  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent);
+  mask-image: linear-gradient(to bottom, black 75%, transparent);
+}
+
 .result-icon {
   /* display: none; */
 }
