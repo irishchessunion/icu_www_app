@@ -33,6 +33,6 @@ class Api::V1::EventsController < Api::BaseController
     @per_page = integer_param(:per_page, min: 1, max: MAX_PER_PAGE) || DEFAULT_PER_PAGE
     @total = events.count
     # The id makes the order, and so the pages, stable for events with the same dates and name.
-    @events = events.ordered.order(:id).offset((@page - 1) * @per_page).limit(@per_page)
+    @events = events.includes(:fee_entries).ordered.order(:id).offset((@page - 1) * @per_page).limit(@per_page)
   end
 end

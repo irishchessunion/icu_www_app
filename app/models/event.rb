@@ -7,17 +7,19 @@ class Event < ApplicationRecord
 
   journalize %w[flyer_file_name flyer_content_type flyer_file_size name location lat long start_date end_date time_controls is_fide_rated
               active category contact email phone url pairings_url results_url report_url live_games_url live_games_url2 prize_fund note
-              sections subscription_required streaming_url], "/events/%d"
+              sections subscription_required streaming_url tournament_type time_control_details icu_rated max_participants], "/events/%d"
 
   MIN_SIZE = 1.kilobyte
   MAX_SIZE = 3.megabytes
   CATEGORIES = %w[irish junior women foreign junint]
   TIME_CONTROLS = %w[classical rapid blitz].freeze
+  TOURNAMENT_TYPES = %w[swiss round_robin knockout].freeze
   # Events lasting up to this many days (counting the first and last) are short, so they show in the homepage event lists
   MAX_SHORT_EVENT_DAYS = 13
   EDIT_AFTER_STARTED = %w[name end_date location lat long
                          time_controls category sections short_event is_fide_rated prize_fund flyer contact email phone
-                         url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note].freeze
+                         url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note
+                         tournament_type time_control_details icu_rated max_participants].freeze
   EDIT_AFTER_ENDED = %w[url pairings_url live_games_url live_games_url2 streaming_url results_url report_url note].freeze
   TYPES = {
     pdf:  "application/pdf",
@@ -65,6 +67,9 @@ class Event < ApplicationRecord
   validates :lat,  numericality: { greater_than_or_equal_to: -80.0, less_than_or_equal_to: 80.0, message: "must be between ±80.0" }, allow_nil: true
   validates :long, numericality: { greater_than_or_equal_to: -180.0, less_than_or_equal_to: 180.0, message: "must be between ±180.0" }, allow_nil: true
   validates :prize_fund, numericality: { greater_than: 0.0 }, allow_nil: true
+  validates :tournament_type, inclusion: { in: TOURNAMENT_TYPES }
+  validates :time_control_details, length: { maximum: 50 }
+  validates :max_participants, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :start_date, :end_date, presence: true
   validates :url, url: true, allow_blank: true
   validates :pairings_url, url: true, allow_blank: true
@@ -187,6 +192,20 @@ class Event < ApplicationRecord
     (sections || '').split(',').map {|s| s.strip}
   end
 
+  # The active entry fees that apply to each section. An event without sections has one, called "all", with every fee.
+  # As on the event page, a fee with no sections of its own isn't listed under any of the event's sections.
+  # @return [Hash{String => Array<Fee::Entry>}]
+  def fees_by_section
+    fees = fee_entries.select(&:active).sort_by { |f| [f.name.to_s, f.id] }
+    return { "all" => fees } if section_names.empty?
+    section_names.index_with { |name| fees.select { |f| f.section_names.include?(name) } }
+  end
+
+  # @return [Date, nil] the last day any of the active entry fees is on sale
+  def registration_deadline
+    fee_entries.select(&:active).filter_map(&:sale_end).max
+  end
+
   def note_html
     to_html(note)
   end
@@ -258,7 +277,7 @@ class Event < ApplicationRecord
   private
 
   def normalize_attributes
-    normalize_blanks(:contact, :phone, :email, :url, :note)
+    normalize_blanks(:contact, :phone, :email, :url, :note, :time_control_details)
   end
 
   # For old records with NULL value for time_controls

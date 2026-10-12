@@ -75,6 +75,16 @@ en:
     creator: Creator
     user: Organizer
     is_fide_rated: FIDE Rated?
+    icu_rated: ICU Rated?
+    max_participants: Maximum entries
+    time_control_details:
+      label: Time control details
+      hint: "For example: 90+30"
+    tournament_type:
+      label: Tournament type
+      swiss: Swiss
+      round_robin: Round robin
+      knockout: Knockout
     fide_true: 'Yes'
     fide_false: 'No'
     fide_rated_event: FIDE-rated

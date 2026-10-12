@@ -58,8 +58,12 @@ describe "Events API", type: :request do
         lat: 53.2590000,
         long: -9.0770000,
         time_controls: %w[rapid blitz],
+        time_control_details: "15+10",
+        tournament_type: "round_robin",
         is_fide_rated: true,
-        note: "Six rounds",
+        icu_rated: false,
+        max_participants: 120,
+        note: "Six *rounds*",
         contact: "Mary Murphy",
         url: "http://galwaychess.example.com",
       )
@@ -78,29 +82,31 @@ describe "Events API", type: :request do
 
     it "includes the event's details" do
       expect(events.first).to include(
-        "external_id"   => "ICU-EVENT-#{event.id}",
-        "name"          => "Galway Congress",
-        "start_date"    => day(10).to_s,
-        "end_date"      => day(12).to_s,
-        "address"       => "Salthill Hotel, Galway",
-        "time_control"  => %w[rapid blitz],
-        "format"        => "rapid",
-        "is_fide_rated" => true,
-        "description"   => "Six rounds",
-        "contact"       => "Mary Murphy",
-        "image"         => "http://galwaychess.example.com",
-        "external_registration_url" => "https://icu.ie/events/#{event.id}",
+        "external_id"         => "ICU-EVENT-#{event.id}",
+        "name"                => "Galway Congress",
+        "start_date"          => day(10).to_s,
+        "end_date"            => day(12).to_s,
+        "country_code"        => "IRL",
+        "address"             => "Salthill Hotel, Galway",
+        "tournament_type"     => "round_robin",
+        "format"              => "rapid",
+        "time_control"        => "15+10",
+        "is_fide_rated"       => true,
+        "is_nationally_rated" => false,
+        "max_participants"    => 120,
+        "contact"             => "Mary Murphy",
+        "external_registration_url" => "https://www.icu.ie/events/#{event.id}",
       )
       expect(events.first["latitude"].to_f).to eq 53.259
       expect(events.first["longitude"].to_f).to eq(-9.077)
     end
 
-    it "includes the fixed values" do
-      expect(events.first).to include(
-        "country_code"        => "IRL",
-        "tournament_type"     => "swiss",
-        "is_nationally_rated" => true,
-      )
+    it "renders the description" do
+      expect(events.first["description"]).to include "<em>rounds</em>"
+    end
+
+    it "has no image, state, city or country" do
+      expect(events.first.keys & %w[image state city country]).to be_empty
     end
 
     it "is JSON even when another format is asked for" do
@@ -109,13 +115,136 @@ describe "Events API", type: :request do
     end
   end
 
-  context "format" do
-    it "defaults to classical when the event has no time controls" do
-      event = create(:event)
+  context "defaults" do
+    let!(:event) { create(:event) }
+
+    it "are a nationally rated swiss with no published time control or limit" do
+      fetch
+      expect(events.first).to include(
+        "tournament_type"       => "swiss",
+        "is_nationally_rated"   => true,
+        "is_fide_rated"         => false,
+        "format"                => "classical",
+        "time_control"          => "",
+        "max_participants"      => nil,
+        "registration_deadline" => nil,
+        "description"           => nil,
+      )
+    end
+
+    it "format is classical when the event has no time controls" do
       event.update_column(:time_controls, [])
       fetch
       expect(events.first["format"]).to eq "classical"
-      expect(events.first["time_control"]).to eq []
+    end
+  end
+
+  context "sections" do
+    def sections
+      events.first["sections"]
+    end
+
+    def fee_names(section)
+      sections.find { |s| s["name"] == section }["fees"].map { |f| f["name"] }
+    end
+
+    context "for an event without any" do
+      let!(:event) { create(:event, start_date: day(10), end_date: day(12)) }
+
+      it "is one called all, with no fees if there aren't any" do
+        fetch
+        expect(sections).to eq [{ "name" => "all", "fees" => [] }]
+      end
+
+      it "has every fee" do
+        create(:entry_fee, name: "Open", event: event, amount: 40)
+        create(:entry_fee, name: "Junior", event: event, amount: 20)
+        fetch
+        expect(sections.map { |s| s["name"] }).to eq %w[all]
+        expect(fee_names("all")).to eq %w[Junior Open]
+      end
+    end
+
+    context "for an event with some" do
+      let!(:event)   { create(:event, sections: "Masters, Major, Minor", start_date: day(10), end_date: day(12)) }
+      let!(:masters) { create(:entry_fee, name: "Masters", event: event, sections: "Masters", amount: 60, min_rating: 1900) }
+      let!(:lower)   { create(:entry_fee, name: "Major and Minor", event: event, sections: "Major, Minor", amount: 45, max_rating: 1899) }
+      let!(:junior)  { create(:entry_fee, name: "Junior Minor", event: event, sections: "Minor", amount: 25, max_age: 17, age_ref_date: day(10)) }
+
+      it "lists them in the event's order, each with the fees that apply to it" do
+        fetch
+        expect(sections.map { |s| s["name"] }).to eq %w[Masters Major Minor]
+        expect(fee_names("Masters")).to eq ["Masters"]
+        expect(fee_names("Major")).to eq ["Major and Minor"]
+        expect(fee_names("Minor")).to eq ["Junior Minor", "Major and Minor"]
+      end
+
+      it "leaves out inactive fees" do
+        lower.update_column(:active, false)
+        fetch
+        expect(fee_names("Major")).to eq []
+        expect(fee_names("Minor")).to eq ["Junior Minor"]
+      end
+
+      it "doesn't put a fee without sections in any section" do
+        masters.update_column(:sections, nil)
+        fetch
+        expect(fee_names("Masters")).to eq []
+      end
+    end
+
+    context "fee details" do
+      let!(:event) { create(:event, start_date: day(30), end_date: day(32)) }
+      let!(:fee) do
+        create(:entry_fee,
+          name: "Open",
+          event: event,
+          amount: 50,
+          discounted_amount: 40,
+          discount_deadline: day(10),
+          min_rating: 1200,
+          max_rating: 2000,
+          min_age: 12,
+          max_age: 65,
+          age_ref_date: day(30),
+          sale_start: day(-5),
+          sale_end: day(29),
+        )
+      end
+
+      it "are all included" do
+        fetch
+        expect(sections.first["fees"]).to eq [{
+          "name"              => "Open",
+          "amount"            => 50.0,
+          "currency"          => "EUR",
+          "discounted_amount" => 40.0,
+          "discount_deadline" => day(10).to_s,
+          "rating_min"        => 1200,
+          "rating_max"        => 2000,
+          "age_min"           => 12,
+          "age_max"           => 65,
+          "age_ref_date"      => day(30).to_s,
+          "sale_start"        => day(-5).to_s,
+          "sale_end"          => day(29).to_s,
+        }]
+      end
+
+      it "are null when the fee doesn't have them" do
+        fee.update_columns(discounted_amount: nil, discount_deadline: nil, min_rating: nil, max_rating: nil, min_age: nil, max_age: nil, age_ref_date: nil)
+        fetch
+        expect(sections.first["fees"].first).to include(
+          "amount" => 50.0, "discounted_amount" => nil, "discount_deadline" => nil,
+          "rating_min" => nil, "rating_max" => nil, "age_min" => nil, "age_max" => nil, "age_ref_date" => nil,
+        )
+      end
+
+      it "give the registration deadline as the last day any active fee is on sale" do
+        create(:entry_fee, name: "Late", event: event, amount: 60, sale_end: day(30))
+        create(:entry_fee, name: "Withdrawn", event: event, amount: 60, sale_end: day(30)).update_columns(active: false, sale_end: day(31))
+        fetch
+        expect(events.first["registration_deadline"]).to eq day(30).to_s
+      end
     end
   end
 

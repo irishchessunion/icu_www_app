@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_13_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_13_130000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -258,12 +258,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_120000) do
     t.string "flyer_file_name"
     t.integer "flyer_file_size"
     t.datetime "flyer_updated_at", precision: nil
+    t.boolean "icu_rated", default: true, null: false
     t.boolean "is_fide_rated", default: false
     t.decimal "lat", precision: 10, scale: 7
     t.string "live_games_url"
     t.string "live_games_url2"
     t.string "location", limit: 100
     t.decimal "long", precision: 10, scale: 7
+    t.integer "max_participants"
     t.string "name", limit: 75
     t.text "note"
     t.string "pairings_url"
@@ -277,7 +279,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_120000) do
     t.date "start_date"
     t.string "streaming_url"
     t.boolean "subscription_required", default: true
+    t.string "time_control_details", limit: 50
     t.json "time_controls"
+    t.string "tournament_type", limit: 20, default: "swiss", null: false
     t.datetime "updated_at", precision: nil
     t.string "url"
     t.integer "user_id"
