@@ -22,10 +22,10 @@
         %span.glypicon.glyphicon-plus
 
   - (@news[0..2] || []).each do |news|
-    = render 'news/panel', news: news
+    = render 'news/panel', news: news, show_more: true
 
   - if @reports.present? && @reports.length > 0
     = render 'recent_reports'
 
   - (@news[3..-1] || []).each do |news|
-    = render 'news/panel', news: news
+    = render 'news/panel', news: news, show_more: true

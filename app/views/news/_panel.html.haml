@@ -1,4 +1,8 @@
-.panel.panel-default.panel-news{data: { controller: "show-more", show_more_more_value: t("pages.news.show_more"), show_more_less_value: t("pages.news.show_less"), action: "resize@window->show-more#update" }}
+-# Pages that list several news items pass show_more: true to cap long ones (show_more_controller.js)
+- show_more = local_assigns.fetch(:show_more, false)
+- panel_data = show_more ? { controller: "show-more", show_more_more_value: t("pages.news.show_more"), show_more_less_value: t("pages.news.show_less"), action: "resize@window->show-more#update" } : {}
+
+.panel.panel-default.panel-news{data: panel_data}
   .panel-heading
     %strong
       = news.headline
@@ -9,6 +13,9 @@
       .visible-lg-inline-block.right-margin-thin{data: {news_id: news.id}}= like_button(current_user, news)
       .visible-lg-inline-block.right-margin-thin= news.date.strftime('%d-%m-%Y')
   .panel-body.news
-    .show-more-content{data: { show_more_target: "content" }}
+    - if show_more
+      .show-more-content{data: { show_more_target: "content", action: "focusin->show-more#reveal" }}
+        = news.html
+      %a.hidden{href: "#", role: "button", "aria-expanded": "false", data: { show_more_target: "button", action: "show-more#toggle" }}= t("pages.news.show_more")
+    - else
       = news.html
-    %a.hidden{href: "#", role: "button", "aria-expanded": "false", data: { show_more_target: "button", action: "show-more#toggle" }}= t("pages.news.show_more")
