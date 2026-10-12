@@ -1,4 +1,8 @@
-json.array! @events do |event|
+json.page @page
+json.per_page @per_page
+json.total @total
+json.total_pages (@total.to_f / @per_page).ceil
+json.events @events do |event|
   json.external_id "ICU-EVENT-#{event.id}"
   json.name event.name
   json.start_date event.start_date

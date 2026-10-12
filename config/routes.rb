@@ -71,7 +71,9 @@ IcuWwwApp::Application.routes.draw do
   end
 
   namespace :api, defaults: { format: :json } do
-    resources :events, only: [:index]
+    namespace :v1 do
+      resources :events, only: [:index]
+    end
   end
 
   namespace :admin do
