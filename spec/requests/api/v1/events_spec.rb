@@ -356,11 +356,19 @@ describe "Events API", type: :request do
 
     context "category" do
       let!(:junior)  { create(:event, name: "Junior", category: "junior", start_date: day(5), end_date: day(5)) }
-      let!(:foreign) { create(:event, name: "Foreign", category: "foreign", start_date: day(6), end_date: day(9)) }
+      let!(:women)   { create(:event, name: "Women", category: "women", start_date: day(6), end_date: day(6)) }
+      let!(:foreign) { create(:event, name: "Foreign", category: "foreign", start_date: day(7), end_date: day(9)) }
+      let!(:junint)  { create(:event, name: "Junint", category: "junint", start_date: day(8), end_date: day(9)) }
 
-      it "is every category by default" do
+      it "leaves out events abroad by default" do
         fetch
-        expect(names).to eq %w[Junior Foreign Sooner Later]
+        expect(names).to eq %w[Junior Women Sooner Later]
+        expect(json["total"]).to eq 4
+      end
+
+      it "uses the default when blank" do
+        fetch(category: "")
+        expect(names).to eq %w[Junior Women Sooner Later]
       end
 
       it "can be one category" do
@@ -368,9 +376,22 @@ describe "Events API", type: :request do
         expect(names).to eq %w[Sooner Later]
       end
 
+      it "can be events abroad" do
+        fetch(category: "foreign")
+        expect(names).to eq %w[Foreign]
+
+        fetch(category: "junint")
+        expect(names).to eq %w[Junint]
+      end
+
       it "can be several categories" do
         fetch(category: "junior, foreign")
         expect(names).to eq %w[Junior Foreign]
+      end
+
+      it "can be every category" do
+        fetch(category: Event::CATEGORIES.join(","))
+        expect(names).to eq %w[Junior Women Foreign Junint Sooner Later]
       end
 
       it "combines with dates" do
