@@ -40,12 +40,16 @@
             %div
               %input.form-check-input{ type: "checkbox", id: "time_controls_#{control}", name: "event[time_controls][]", value: control, checked: checked, disabled: has_ended }
               %label.form-check-label{ for: "time_controls_#{control}" }= t("event.time_controls.#{control}")
+        = render "utils/text_field_for", locals.merge(param: :time_control_details, ttext: "event.time_control_details", width: 3, mark: "none", disabled: has_ended)
+        = render "utils/select_for",     locals.merge(param: :tournament_type, text: t("event.tournament_type.label"), width: 3, menu: event_tournament_type_menu(@event.tournament_type), disabled: has_ended)
         %hr
         = render "utils/select_for",     locals.merge(param: :category, text: t("category"), width: 3, menu: event_category_menu(@event.category), disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :sections, ttext: "event.sections", width: 6, disabled: has_ended)
         = render "utils/check_box_for",  locals.merge(param: :is_fide_rated, text: t("event.is_fide_rated"), width: 1, disabled: has_ended)
+        = render "utils/check_box_for",  locals.merge(param: :icu_rated, text: t("event.icu_rated"), width: 1, disabled: has_ended)
         = render "utils/check_box_for",  locals.merge(param: :subscription_required, text: t("event.subscription_required"), width: 1, disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :prize_fund, text: t("event.prize_fund"), width: 2, mark: "none", disabled: has_ended)
+        = render "utils/text_field_for", locals.merge(param: :max_participants, text: t("event.max_participants"), width: 2, mark: "none", disabled: has_ended)
         %hr
         = render "utils/file_field_for", locals.merge(param: :flyer, text: t("event.flyer"), width: 2, mark: "none", disabled: has_ended)
         = render "utils/text_field_for", locals.merge(param: :url, text: t("event.url"), width: 6, mark: "none")

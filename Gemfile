@@ -27,6 +27,7 @@ gem "sprockets-rails"
 gem "tzinfo-data" # new requirement
 gem "mysql2"
 gem "haml-rails"
+gem "jbuilder"
 gem "sass-rails"
 #gem "uglifier", ">= 1.3.0"
 gem "terser", "~> 1.2.6"

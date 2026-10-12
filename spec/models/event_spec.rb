@@ -261,4 +261,75 @@ describe Event do
       expect(Event.short).to eq [tournament]
     end
   end
+
+  context "details for third party listings" do
+    let(:user) { create(:user) }
+
+    it "defaults to an ICU-rated swiss with nothing else known" do
+      event = create(:event)
+      expect(event.tournament_type).to eq "swiss"
+      expect(event.icu_rated).to be true
+      expect(event.time_control_details).to be_nil
+      expect(event.max_participants).to be_nil
+    end
+
+    it "needs a known tournament type" do
+      Event::TOURNAMENT_TYPES.each { |type| expect(build(:event, user: user, tournament_type: type)).to be_valid }
+      expect(build(:event, user: user, tournament_type: "arena")).to_not be_valid
+      expect(build(:event, user: user, tournament_type: nil)).to_not be_valid
+    end
+
+    it "stores a blank time control as nil and limits its length" do
+      expect(create(:event, time_control_details: " ").time_control_details).to be_nil
+      expect(build(:event, user: user, time_control_details: "90+30")).to be_valid
+      expect(build(:event, user: user, time_control_details: "x" * 51)).to_not be_valid
+    end
+
+    it "needs maximum entries to be a positive whole number, if given" do
+      expect(build(:event, user: user, max_participants: 80)).to be_valid
+      expect(build(:event, user: user, max_participants: 0)).to_not be_valid
+      expect(build(:event, user: user, max_participants: 10.5)).to_not be_valid
+    end
+
+    it "can be changed after the event has started but not after it has ended" do
+      event = create(:event)
+      event.update_columns(start_date: Date.today.days_ago(1), end_date: Date.today.days_since(1))
+      expect(event.update(time_control_details: "90+30", tournament_type: "knockout", icu_rated: false, max_participants: 50)).to be true
+
+      event.update_columns(end_date: Date.today.days_ago(1))
+      expect(event.update(time_control_details: "60+30")).to be false
+    end
+  end
+
+  context "fees_by_section" do
+    let(:event)   { create(:event, sections: "Masters, Major") }
+    let!(:masters) { create(:entry_fee, name: "Masters", event: event, sections: "Masters") }
+    let!(:both)    { create(:entry_fee, name: "Both", event: event, sections: "Masters, Major") }
+
+    it "gives each section its active fees" do
+      expect(event.fees_by_section).to eq("Masters" => [both, masters], "Major" => [both])
+      masters.update_column(:active, false)
+      expect(event.reload.fees_by_section).to eq("Masters" => [both], "Major" => [both])
+    end
+
+    it "puts every fee in a section called all when the event has none" do
+      event = create(:event, name: "Open")
+      fee = create(:entry_fee, name: "Open", event: event)
+      expect(event.fees_by_section).to eq("all" => [fee])
+      expect(create(:event, name: "Free").fees_by_section).to eq("all" => [])
+    end
+  end
+
+  context "registration_deadline" do
+    let(:event) { create(:event) }
+
+    it "is the last day an active fee is on sale" do
+      expect(event.registration_deadline).to be_nil
+      early = create(:entry_fee, name: "Early", event: event, sale_end: event.start_date.days_ago(10))
+      late = create(:entry_fee, name: "Late", event: event, sale_end: event.start_date.days_ago(2))
+      expect(event.reload.registration_deadline).to eq late.sale_end
+      late.update_column(:active, false)
+      expect(event.reload.registration_deadline).to eq early.sale_end
+    end
+  end
 end

@@ -120,6 +120,25 @@ describe Event do
       expect(event.start_date).to eq start
       expect(event.url).to be_nil
       expect(event.user).to eq @user
+      expect(event.tournament_type).to eq "swiss"
+      expect(event.time_control_details).to be_nil
+      expect(event.icu_rated).to be true
+      expect(event.max_participants).to be_nil
+    end
+
+    it "details for third party listings" do
+      fill_in I18n.t("event.time_control_details.label"), with: "90+30"
+      select I18n.t("event.tournament_type.round_robin"), from: I18n.t("event.tournament_type.label")
+      uncheck I18n.t("event.icu_rated")
+      fill_in I18n.t("event.max_participants"), with: "64"
+      click_button save
+
+      expect(page).to have_css(success, text: created)
+      event = Event.first
+      expect(event.time_control_details).to eq "90+30"
+      expect(event.tournament_type).to eq "round_robin"
+      expect(event.icu_rated).to be false
+      expect(event.max_participants).to eq 64
     end
 
     it "maximum data" do

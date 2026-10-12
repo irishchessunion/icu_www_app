@@ -1,0 +1,13 @@
+en:
+  api_key:
+    api_key: API Key
+    api_keys: API Keys
+    key: Key
+    name: Used by
+    new: New API Key
+    new_key: "This is the new key. Copy it now, as it can't be shown again:"
+    none: None
+    permission:
+      events: Access Events
+    permissions: Permissions
+    prefix: Key starts with

@@ -52,6 +52,7 @@ class Admin::EventsController < ApplicationController
   def event_params
     params[:event].permit(:flyer, :name, :category, :is_fide_rated, :location, :start_date, :end_date, :contact, :phone, :email,
                           :url, :pairings_url, :live_games_url, :live_games_url2, :streaming_url, :results_url, :report_url,
-                          :lat, :long, :prize_fund, :active, :note, :sections, :subscription_required, :user_id, time_controls: [])
+                          :lat, :long, :prize_fund, :active, :note, :sections, :subscription_required, :user_id,
+                          :tournament_type, :time_control_details, :icu_rated, :max_participants, time_controls: [])
   end
 end

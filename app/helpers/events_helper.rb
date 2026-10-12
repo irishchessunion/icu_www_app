@@ -5,6 +5,11 @@ module EventsHelper
     options_for_select(cats, selected)
   end
 
+  def event_tournament_type_menu(selected)
+    types = Event::TOURNAMENT_TYPES.map { |type| [t("event.tournament_type.#{type}"), type] }
+    options_for_select(types, selected)
+  end
+
   def event_month_menu(selected)
     months = (1..12).map { |m| m = "%02d" % m; [t("month.m#{m}"), m] }
     options_for_select(months, selected)
