@@ -40,8 +40,9 @@ class Item::Entry < Item
 
   private
 
+  # A fee with no sections of its own doesn't cover any, the same as on the event page's list of fees.
   def covers_section?(entry_fee, name)
-    entry_fee.section_names.empty? || entry_fee.section_names.include?(name)
+    entry_fee.section_names.include?(name)
   end
 
   def membership_check

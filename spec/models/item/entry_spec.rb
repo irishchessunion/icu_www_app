@@ -126,6 +126,15 @@ describe Item::Entry do
       expect(item.sections_with_different_fees).to eq("Masters" => [])
     end
 
+    it "doesn't count a fee without sections as covering a section" do
+      masters
+      open_fee = create(:entry_fee, name: "Open", event: event, amount: 50)
+      open_fee.update_column(:sections, nil)
+      unsectioned = create(:paid_entry_item, fee: open_fee, section: nil)
+      expect(unsectioned.sections_with_different_fees.keys).to eq %w[Masters Major]
+      expect(unsectioned.sections_with_different_fees["Masters"]).to eq [masters]
+    end
+
     it "accepts a matching discounted amount" do
       masters.update!(discounted_amount: 50, discount_deadline: Date.today)
       expect(item.sections_with_different_fees).to be_empty
