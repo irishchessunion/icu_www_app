@@ -239,4 +239,26 @@ describe Event do
     end
   end
 
+  context "short_event" do
+    let(:start) { Date.today.days_since(30) }
+
+    it "is set from the dates, ignoring what was passed in" do
+      expect(create(:event, start_date: start, end_date: start, short_event: false).short_event).to be true
+      expect(create(:event, start_date: start, end_date: start.days_since(12)).short_event).to be true
+      expect(create(:event, start_date: start, end_date: start.days_since(13), short_event: true).short_event).to be false
+    end
+
+    it "is recalculated when the end date changes after the event has started" do
+      event = create(:event, start_date: start, end_date: start.days_since(2))
+      event.update_columns(start_date: Date.today.days_ago(1), end_date: Date.today.days_since(1))
+      event.update!(end_date: Date.today.days_since(20))
+      expect(event.reload.short_event).to be false
+    end
+
+    it "is used for the home page's upcoming events" do
+      tournament = create(:event, start_date: start, end_date: start.days_since(2))
+      create(:event, name: "League", start_date: start, end_date: start.days_since(60))
+      expect(Event.short).to eq [tournament]
+    end
+  end
 end

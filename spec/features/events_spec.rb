@@ -66,4 +66,19 @@ describe Event do
       expect(page).not_to have_button("View changelog")
     end
   end
+
+  context "search form" do
+    it "offers future years but defaults to the current year and month" do
+      today = Date.today
+      visit events_path
+
+      years = page.all("select#year option").map(&:text)
+      expect(years.first).to eq (today.year + 2).to_s
+      expect(years).to include (today.year + 1).to_s
+      expect(years.last).to eq "2005"
+
+      expect(page).to have_select("year", selected: today.year.to_s)
+      expect(page).to have_select("month", selected: I18n.t("month.m#{today.strftime('%m')}"))
+    end
+  end
 end

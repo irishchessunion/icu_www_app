@@ -1,6 +1,12 @@
 = render "utils/text_field_for", locals.merge(param: :name, text: t("fee.name"), mark: "required", width: 4)
 = render "utils/text_field_for", locals.merge(param: :amount, text: t("fee.amount"), mark: "required")
-= render "utils/select_for",     locals.merge(param: :event_id, ttext: "fee.event_id", width: 4, menu: events_menu(@fee.event_id, Event.upcoming))
+- if @fee.event
+  -# The event is chosen by adding the fee from the event's page and can't be changed here
+  = f.hidden_field :event_id if @fee.new_record?
+  .form-group
+    %label{class: "control-label col-#{locals[:col]}-#{locals[:pad]}"}= t("fee.event_id.label")
+    %div{class: "col-#{locals[:col]}-4"}
+      %p.form-control-static= link_to @fee.event.name, @fee.event
 - if @fee.event_id
   = render "utils/text_field_for", locals.merge(param: :sections, ttext: "fee.entry.sections", width: 6)
 = render "utils/text_field_for", locals.merge(param: :start_date, ttext: "fee.entry.start", mark: "required", placeholder: t("date_format"), width: 3)
