@@ -1,0 +1,33 @@
+- content_for :title, @api_key.name
+
+.row
+  .col-sm-8.col-sm-offset-2
+    %h1.text-center= @api_key.name
+    - if @api_key.key
+      .alert.alert-warning#new_api_key
+        %p= t("api_key.new_key")
+        %p
+          %code= @api_key.key
+    %table.table.table-striped
+      %tr
+        %th= t("api_key.name")
+        %td= @api_key.name
+      %tr
+        %th= t("api_key.prefix")
+        %td
+          %code= @api_key.key_prefix
+      %tr
+        %th= t("api_key.permissions")
+        %td= @api_key.human_permissions.presence || t("api_key.none")
+      %tr
+        %th= t("active")
+        %td= @api_key.active ? t("yes") : t("no")
+      %tr
+        %th= t("created_at")
+        %td= @api_key.created_at.to_date
+
+.text-center
+  = link_to t("edit"), edit_admin_api_key_path(@api_key), class: "btn btn-primary"
+  = link_to t("api_key.api_keys"), admin_api_keys_path, class: "btn btn-default"
+
+= render "admin/journal_entries/changes", entries: @entries

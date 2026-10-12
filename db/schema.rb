@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_12_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_13_120000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -37,6 +37,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_120000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "api_keys", charset: "utf8mb3", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.string "key_digest", limit: 64, null: false
+    t.string "key_prefix", limit: 8, null: false
+    t.string "name", limit: 100, null: false
+    t.string "permissions"
+    t.datetime "updated_at", null: false
+    t.index ["key_digest"], name: "index_api_keys_on_key_digest", unique: true
+    t.index ["name"], name: "index_api_keys_on_name", unique: true
   end
 
   create_table "arbiters", charset: "utf8mb3", force: :cascade do |t|

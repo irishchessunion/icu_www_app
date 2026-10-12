@@ -1,6 +1,7 @@
 - unless current_user.guest? || current_user.roles.nil?
   - links = 0
   - links += 1 if logins  = can?(:manage, Login)
+  - links += 1 if apikeys = can?(:index, ApiKey)
   - links += 1 if bdlgns  = can?(:manage, BadLogin)
   - links += 1 if entries = can?(:index, JournalEntry)
   - links += 1 if users   = can?(:manage, User)
@@ -32,6 +33,8 @@
         Admin
         %b.caret
       %ul.dropdown-menu
+        - if apikeys
+          %li{class: active("admin/api_keys")}= link_to t("api_key.api_keys"), admin_api_keys_path
         - if carts
           %li{class: active("admin/carts")}= link_to "Carts", admin_carts_path
         - if bdlgns

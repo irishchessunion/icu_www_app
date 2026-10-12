@@ -1,8 +1,10 @@
 require 'rails_helper'
 
 describe "Events API", type: :request do
-  let(:json) { JSON.parse(response.body) }
-  let(:names) { json.map { |e| e["name"] } }
+  let(:api_key) { create(:api_key, permissions: "events") }
+  let(:headers) { { "Authorization" => "Bearer #{api_key.key}" } }
+  let(:json)    { JSON.parse(response.body) }
+  let(:names)   { json.map { |e| e["name"] } }
 
   def day(n)
     Date.today.days_since(n)
@@ -26,7 +28,7 @@ describe "Events API", type: :request do
     end
 
     before(:each) do
-      get "/api/events"
+      get "/api/events", headers: headers
     end
 
     it "responds with JSON" do
@@ -63,7 +65,7 @@ describe "Events API", type: :request do
     end
 
     it "is JSON even when another format is asked for" do
-      get "/api/events", headers: { "Accept" => "text/html" }
+      get "/api/events", headers: headers.merge("Accept" => "text/html")
       expect(response.media_type).to eq "application/json"
     end
   end
@@ -72,7 +74,7 @@ describe "Events API", type: :request do
     it "defaults to classical when the event has no time controls" do
       event = create(:event)
       event.update_column(:time_controls, [])
-      get "/api/events"
+      get "/api/events", headers: headers
       expect(json.first["format"]).to eq "classical"
       expect(json.first["time_control"]).to eq []
     end
@@ -84,56 +86,99 @@ describe "Events API", type: :request do
     let!(:inactive) { create(:event, name: "Inactive", start_date: day(30), end_date: day(32), active: false) }
 
     it "lists active events in date order" do
-      get "/api/events"
+      get "/api/events", headers: headers
       expect(names).to eq %w[Sooner Later]
     end
 
     it "is empty when there are none" do
       Event.update_all(active: false)
-      get "/api/events"
+      get "/api/events", headers: headers
       expect(response).to have_http_status(:ok)
       expect(json).to eq []
     end
 
-    it "doesn't need a login" do
-      get "/api/events"
-      expect(response).to have_http_status(:ok)
-    end
-
     context "start_date" do
       it "leaves out events that end before it" do
-        get "/api/events", params: { start_date: day(23).to_s }
+        get "/api/events", params: { start_date: day(23).to_s }, headers: headers
         expect(names).to eq %w[Later]
       end
 
       it "includes an event that ends on it" do
-        get "/api/events", params: { start_date: day(22).to_s }
+        get "/api/events", params: { start_date: day(22).to_s }, headers: headers
         expect(names).to eq %w[Sooner Later]
       end
     end
 
     context "end_date" do
       it "leaves out events that start after it" do
-        get "/api/events", params: { end_date: day(39).to_s }
+        get "/api/events", params: { end_date: day(39).to_s }, headers: headers
         expect(names).to eq %w[Sooner]
       end
 
       it "includes an event that starts on it" do
-        get "/api/events", params: { end_date: day(40).to_s }
+        get "/api/events", params: { end_date: day(40).to_s }, headers: headers
         expect(names).to eq %w[Sooner Later]
       end
     end
 
     it "combines start_date and end_date" do
       create(:event, name: "Latest", start_date: day(60), end_date: day(62))
-      get "/api/events", params: { start_date: day(30).to_s, end_date: day(50).to_s }
+      get "/api/events", params: { start_date: day(30).to_s, end_date: day(50).to_s }, headers: headers
       expect(names).to eq %w[Later]
     end
 
     it "ignores dates it can't parse" do
-      get "/api/events", params: { start_date: "next week", end_date: "2026-13-45" }
+      get "/api/events", params: { start_date: "next week", end_date: "2026-13-45" }, headers: headers
       expect(response).to have_http_status(:ok)
       expect(names).to eq %w[Sooner Later]
+    end
+  end
+
+  context "API key" do
+    let!(:event) { create(:event) }
+
+    def expect_error(status)
+      expect(response).to have_http_status(status)
+      expect(response.media_type).to eq "application/json"
+      expect(json.keys).to eq %w[error]
+      expect(response.body).to_not include event.name
+    end
+
+    it "is required" do
+      get "/api/events"
+      expect_error(:unauthorized)
+      expect(response.headers["WWW-Authenticate"]).to eq "Bearer"
+    end
+
+    it "must be right" do
+      get "/api/events", headers: { "Authorization" => "Bearer #{'0' * 64}" }
+      expect_error(:unauthorized)
+    end
+
+    it "must be active" do
+      api_key.update!(active: false)
+      get "/api/events", headers: headers
+      expect_error(:unauthorized)
+    end
+
+    it "must be sent as a bearer token" do
+      get "/api/events", headers: { "Authorization" => api_key.key }
+      expect_error(:unauthorized)
+
+      get "/api/events", params: { key: api_key.key, api_key: api_key.key }
+      expect_error(:unauthorized)
+    end
+
+    it "must have permission to access events" do
+      api_key.update!(permissions: nil)
+      get "/api/events", headers: headers
+      expect_error(:forbidden)
+    end
+
+    it "works without a login" do
+      get "/api/events", headers: headers
+      expect(response).to have_http_status(:ok)
+      expect(names).to eq [event.name]
     end
   end
 end

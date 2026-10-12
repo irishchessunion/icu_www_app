@@ -75,6 +75,7 @@ IcuWwwApp::Application.routes.draw do
   end
 
   namespace :admin do
+    resources :api_keys,        only: [:index, :show, :new, :create, :edit, :update]
     %w[session_info system_info test_email].each do |page|
       get page => "pages##{page}"
     end

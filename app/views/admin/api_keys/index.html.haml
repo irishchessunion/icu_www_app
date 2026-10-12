@@ -1,0 +1,25 @@
+- content_for :title, t("api_key.api_keys")
+
+.row
+  .col-sm-10.col-sm-offset-1
+    %h1.text-center= t("api_key.api_keys")
+    %hr
+    %table{class: "table table-striped"}
+      %thead
+        %tr
+          %th= t("api_key.name")
+          %th= t("api_key.prefix")
+          %th= t("api_key.permissions")
+          %th= t("active")
+          %th= t("created_at")
+      %tbody
+        - @api_keys.each do |api_key|
+          %tr
+            %td= link_to api_key.name, [:admin, api_key]
+            %td
+              %code= api_key.key_prefix
+            %td= api_key.human_permissions.presence || t("api_key.none")
+            %td= api_key.active ? t("yes") : t("no")
+            %td= api_key.created_at.to_date
+
+= render "utils/index_buttons", klass: ApiKey, text: t("api_key.new")

@@ -1,4 +1,6 @@
-class Api::EventsController < ApplicationController
+class Api::EventsController < Api::BaseController
+  requires_permission "events"
+
   def index
     @events = Event.active.ordered
 
