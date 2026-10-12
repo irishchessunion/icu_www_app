@@ -6,7 +6,7 @@ FactoryBot.define do
     dob                { Date.new(1955, 11, 9) }
     joined             { Date.new(1976, 9, 1) }
     fed                { "IRL" }
-    email              { Faker::Internet.email }
+    email              { Faker::Internet.email(domain: "example.com") }  # events, clubs and players limit email to 50 characters
     source             { "officer" }
     status             { "active" }
 

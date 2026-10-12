@@ -11,7 +11,7 @@ class Admin::EventsController < ApplicationController
   end
 
   def new
-    @event = Event.new(short_event: true)
+    @event = Event.new
   end
 
   def create
@@ -50,7 +50,7 @@ class Admin::EventsController < ApplicationController
   end
 
   def event_params
-    params[:event].permit(:flyer, :name, :short_event, :category, :is_fide_rated, :location, :start_date, :end_date, :contact, :phone, :email,
+    params[:event].permit(:flyer, :name, :category, :is_fide_rated, :location, :start_date, :end_date, :contact, :phone, :email,
                           :url, :pairings_url, :live_games_url, :live_games_url2, :streaming_url, :results_url, :report_url,
                           :lat, :long, :prize_fund, :active, :note, :sections, :subscription_required, :user_id, time_controls: [])
   end
