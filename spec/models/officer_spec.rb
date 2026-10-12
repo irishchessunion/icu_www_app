@@ -5,14 +5,38 @@ describe Officer do
   let(:bob)   { "bob@yahoo.com" }
   let(:mark)  { "mark@gmail.com" }
 
-  let(:fide_ecu) { create(:officer, role: "fide_ecu") }
+  let(:fide_ecu) { create(:officer, name: "FIDE & ECU Delegate") }
   let!(:to_fide) { create(:relay, from: "fide@icu.ie", officer: fide_ecu, to: alice) }
   let!(:to_ecu)  { create(:relay, from: "ecu@icu.ie", officer: fide_ecu, to: "#{alice}, #{bob}") }
 
-  let(:ratings)     { create(:officer, role: "ratings") }
+  let(:ratings)     { create(:officer, name: "Rating Officer") }
   let!(:to_ratings) { create(:relay, from: "ratings@icu.ie", officer: ratings, to: mark) }
 
-  let(:ulster) { create(:officer, role: "ulster") }
+  let(:ulster) { create(:officer, name: "Ulster Delegate") }
+
+  context "validation" do
+    it "needs a name" do
+      expect(build(:officer, name: " ")).to_not be_valid
+    end
+
+    it "needs a unique name" do
+      expect(build(:officer, name: ratings.name)).to_not be_valid
+    end
+
+    it "tidies the name" do
+      expect(create(:officer, name: "  Arbiters   Officer ").name).to eq "Arbiters Officer"
+    end
+
+    it "doesn't need a role" do
+      create(:officer, role: nil)
+      expect(build(:officer, role: "")).to be_valid
+    end
+
+    it "needs a unique role if it has one" do
+      create(:officer, role: "women")
+      expect(build(:officer, role: "women")).to_not be_valid
+    end
+  end
 
   context "emails" do
     context "enabled" do

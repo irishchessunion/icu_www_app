@@ -8,14 +8,14 @@
     %table{class: "table table-striped"}
       %thead
         %tr
-          %th= t("officer.role.role")
+          %th= t("officer.role")
           %th= t("officer.rank")
           %th= t("email")
           %th= t("officer.incumbent")
       %tbody
         - @officers.each do |officer|
           %tr
-            %td= link_to "#{t("officer.role.#{officer.role}")}#{officer.executive ? "" : "*"}", [:admin, officer]
+            %td= link_to "#{officer.name}#{officer.executive ? "" : "*"}", [:admin, officer]
             %td{class: officer.active ? nil : "text-done"}= officer.rank
             %td= officer.emails.join(", ")
             %td= officer.player.name(id: true) if officer.player.present?
@@ -23,3 +23,5 @@
   = "*"
   = t("officer.non_exec")
   = t("officer.officer")
+
+= render "utils/index_buttons", klass: Officer, text: t("officer.new")

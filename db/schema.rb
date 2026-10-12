@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_04_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_12_120000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -555,6 +555,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_04_120000) do
     t.boolean "active", default: true
     t.datetime "created_at", precision: nil
     t.boolean "executive", default: true
+    t.string "name", limit: 50, null: false
     t.integer "player_id"
     t.integer "rank", limit: 1
     t.string "role", limit: 20
@@ -860,7 +861,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_04_120000) do
     t.index ["verified_at"], name: "index_users_on_verified_at"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "champions", "images"
   add_foreign_key "documents", "documents", column: "previous_version_id"
