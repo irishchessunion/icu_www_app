@@ -11,6 +11,7 @@
   = render "utils/inline_text_field", param: :last_name, text: t("player.last_name"), size: 8
   = render "utils/inline_text_field", param: :first_name, text: t("player.first_name"), size: 8
   .voffset2
+  = render "utils/inline_select", param: :date_type, text: t("item.date_type.date_type"), menu: item_date_type_menu(params[:date_type])
   = render "utils/inline_date_field", param: :from_date, text: t("item.from_date"), size: 8
   = render "utils/inline_date_field", param: :to_date, text: t("item.to_date"), size: 8
   .inline-flex.pull-right

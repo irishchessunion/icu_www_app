@@ -4,12 +4,17 @@ en:
     confirm_delete: Sure you want to delete this item?
     cost: Cost
     csv: Generate CSV Report
+    date_type:
+      created: Dates added
+      date_type: Dates
+      paid: Dates paid
     from_date: From
     to_date: To
     event_not_found: Event not found
     fee_not_found: Fee not found
     item: Item
     items: Items
+    paid_date: Paid
     items_for_event: Items for %{event}
     items_for_fee: Items for %{fee}
     lifetime_create: New Lifetime Member
