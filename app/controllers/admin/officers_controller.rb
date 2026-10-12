@@ -20,6 +20,22 @@ class Admin::OfficersController < ApplicationController
     @entries = @officer.journal_search if can?(:update, Officer)
   end
 
+  def new
+    @officer = Officer.new(rank: 20)
+  end
+
+  def create
+    @officer = Officer.new(officer_params)
+
+    if @officer.save
+      @officer.journal(:create, current_user, request.remote_ip)
+      redirect_to [:admin, @officer], notice: "Officer was successfully created"
+    else
+      flash_first_error(@officer, base_only: true)
+      render action: "new"
+    end
+  end
+
   def update
     if @officer.update(officer_params)
       @officer.journal(:update, current_user, request.remote_ip)
@@ -37,6 +53,6 @@ class Admin::OfficersController < ApplicationController
   end
 
   def officer_params
-    params[:officer].permit(:player_id, :rank, :active, :executive)
+    params[:officer].permit(:name, :player_id, :rank, :active, :executive)
   end
 end

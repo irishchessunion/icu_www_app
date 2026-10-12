@@ -38,10 +38,10 @@ describe Relay do
   end
 
   context "edit" do
-    let!(:ratings)  { create(:officer, role: "ratings", rank: 1, executive: false) }
-    let!(:fide_ecu) { create(:officer, role: "fide_ecu", rank: 2) }
-    let!(:ecu)      { create(:officer, role: "ecu", rank: 2, active: false) }
-    let!(:fide)     { create(:officer, role: "fide", rank: 2, active: false) }
+    let!(:ratings)  { create(:officer, name: "Rating Officer", rank: 1, executive: false) }
+    let!(:fide_ecu) { create(:officer, name: "FIDE & ECU Delegate", rank: 2) }
+    let!(:ecu)      { create(:officer, name: "ECU Delegate", rank: 2, active: false) }
+    let!(:fide)     { create(:officer, name: "FIDE Delegate", rank: 2, active: false) }
 
     let!(:relay) { %i[ecu fide ratings].each_with_object({}){ |r, h| h[r] = create(:relay, from: "#{r}@icu.ie", officer: nil) } }
 
@@ -49,7 +49,7 @@ describe Relay do
     let(:officers) { I18n.t("officer.officers") }
     let(:relays)   { I18n.t("relay.relays") }
     let(:to)       { I18n.t("relay.to") }
-    let(:role)     { %i[ratings fide_ecu fide ecu].each_with_object({}){ |r, h| h[r] = I18n.t("officer.role.#{r}") } }
+    let(:role)     { { ratings: ratings.name, fide_ecu: fide_ecu.name, fide: fide.name, ecu: ecu.name } }
 
     before(:each) do
       login("admin")

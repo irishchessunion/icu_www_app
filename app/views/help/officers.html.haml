@@ -47,7 +47,7 @@
   %li one relay (the usual case) — then the ICU address of the relay will be listed for that officer,
   %li
     more than one relay (rare, but see the
-    %em= t("officer.role.fide_ecu")
+    %em FIDE & ECU Delegate
     example below) — then the ICU addresses of the relays will all be listed for that officer.
 
 %a{name: "who"}
@@ -154,16 +154,26 @@ webmaster must first login to this or the service provider's website.
 %h3 Creating, Deleting and Updating Officers
 
 %p
-  Officers change so rarely that there is no website function to create new positions or delete positions no longer required
-  (a small amount of programming effort would be required to achieve either of these).
-  However, officers can be edited in the following ways:
+  New positions can be created by clicking the
+  %em= t("officer.new")
+  button at the bottom of the
+  %em= t("officer.officers")
+  page and entering the name of the role (e.g.
+  = succeed("),") do
+    %em Arbiters Officer
+  its rank and whether or not it is an executive position. If the new officer should have an ICU email address,
+  a relay for it must first be created (see below) and then linked to the officer.
+%p Existing officers can be edited in the following ways:
 %ul
   %li as already discussed, they can be linked to different players,
+  %li the name of their role can be changed,
   %li
     their
     %em rank
     can be altered to change the order in which they are listed (the lower the rank the higher up they appear),
-  %li their status can be set to inactive, in which case they won't be listed at all (soft delete).
+  %li
+    their status can be set to inactive, in which case they won't be listed at all. This is how to retire a position
+    that is no longer required, as officers can't be deleted.
 
 %a{name: "relays"}
 %h3 Creating, Deleting and Updating Relays
@@ -181,7 +191,7 @@ webmaster must first login to this or the service provider's website.
   It's fairly rare that one would need to change the links between officers and relays because, for the
   most part, one relay has been created for each officer and the links will already have been established.
   The
-  %em= t("officer.role.fide_ecu")
+  %em FIDE & ECU Delegate
   example below describes a scenario where some relinking of officers and relays would be required.
 
 %a{name: "disable"}
@@ -254,7 +264,7 @@ webmaster must first login to this or the service provider's website.
 %a{name: "fide_ecu"}
 %h3
   Extended Example:
-  %em= t("officer.role.fide_ecu")
+  %em FIDE & ECU Delegate
 
 %p This officer is a special case for two reasons:
 %ol
@@ -269,50 +279,50 @@ webmaster must first login to this or the service provider's website.
   %li
     it's theoretically possible that the position could be split in two
     = precede("(") do
-      %em= t("officer.role.fide")
+      %em FIDE Delegate
     and
     = succeed(")") do
-      %em= t("officer.role.ecu")
+      %em ECU Delegate
     sometime in the future.
 %p At the time this documentation was written:
 %ul
   %li
     the
-    %em= t("officer.role.fide_ecu")
+    %em FIDE & ECU Delegate
     officer was active, linked to a player and linked to both relays (which forwarded to personal emails of that player),
   %li
     the
-    %em= t("officer.role.fide")
+    %em FIDE Delegate
     and
-    %em= t("officer.role.ecu")
+    %em ECU Delegate
     officers were both inactive (so not listed) and not linked to any players or relays.
 %p If the position were to be split between two different players (A and B) here is how that could be managed:
 %ol
   %li
     make the
-    %em= t("officer.role.fide")
+    %em FIDE Delegate
     and
-    %em= t("officer.role.ecu")
+    %em ECU Delegate
     roles active and link them to players A and B respectively,
   %li
     edit the
     %em fide@icu.ie
     relay, link it to the
-    %em= t("officer.role.fide")
+    %em FIDE Delegate
     officer (instead of
     = succeed(")") do
-      %em= t("officer.role.fide_ecu")
+      %em FIDE & ECU Delegate
     and forward it to A's personal address,
   %li
     edit the
     %em ecu@icu.ie
     relay and link it to the
-    %em= t("officer.role.ecu")
+    %em ECU Delegate
     officer (instead of
     = succeed(")") do
-      %em= t("officer.role.fide_ecu")
+      %em FIDE & ECU Delegate
     and forward it to B's personal address,
   %li
     make the
-    %em= t("officer.role.fide_ecu")
+    %em FIDE & ECU Delegate
     officer inactive and unlink it from the former incumbent.

@@ -107,7 +107,7 @@ IcuWwwApp::Application.routes.draw do
     resources :logins,          only: [:index, :show]
     resources :mail_events,     only: [:index]
     resources :news,            only: [:new, :create, :edit, :update, :destroy]
-    resources :officers,        only: [:index, :show, :edit, :update]
+    resources :officers,        only: [:index, :show, :new, :create, :edit, :update]
     resources :payment_errors,  only: [:index]
     resources :pgns
     resources :players,         only: [:show, :new, :create, :edit, :update]
