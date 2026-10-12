@@ -56,6 +56,10 @@ class Admin::ItemsController < ApplicationController
   end
 
   def update
+    unless @item.is_a?(Item::Entry) && @item.movable_sections.include?(item_params[:section])
+      redirect_to edit_admin_item_path(@item), alert: t("item.move.invalid_section")
+      return
+    end
     @item.update(item_params)
     redirect_to event_path(@item.fee.event_id) if @item.fee.event_id
   end
