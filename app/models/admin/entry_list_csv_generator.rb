@@ -2,8 +2,9 @@ require 'csv'
 
 module Admin
   class EntryListCsvGenerator
-    # The paid date is for the treasurer's items CSV only, so the event entry downloads, which organisers
-    # import into pairing software, keep their columns.
+    # Only the Admin > Items CSV (used by the treasurer, and by organisers for their own events) asks for the
+    # paid date. The event entry downloads (EventsController#csv_list), which organisers import into pairing
+    # software, don't ask for it and so keep their columns.
     def generate_from_items(items, description = nil, show_charge_id = false, show_paid_date: false)
       CSV.generate do |csv|
         csv << ["Items for #{description} generated on #{Time.now}", '', '', '', '']
