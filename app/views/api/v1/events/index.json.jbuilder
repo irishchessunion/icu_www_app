@@ -8,8 +8,8 @@ json.events @events do |event|
   json.start_date event.start_date
   json.end_date event.end_date
   json.country_code "IRL"
-  json.latitude event.lat
-  json.longitude event.long
+  json.latitude event.lat&.to_f
+  json.longitude event.long&.to_f
   json.address event.location
   json.tournament_type event.tournament_type
   json.format event.time_controls.blank? ? "classical" : event.time_controls.first

@@ -97,8 +97,8 @@ describe "Events API", type: :request do
         "contact"             => "Mary Murphy",
         "external_registration_url" => "https://www.icu.ie/events/#{event.id}",
       )
-      expect(events.first["latitude"].to_f).to eq 53.259
-      expect(events.first["longitude"].to_f).to eq(-9.077)
+      expect(events.first["latitude"]).to eq 53.259
+      expect(events.first["longitude"]).to eq(-9.077)
     end
 
     it "renders the description" do
@@ -127,6 +127,8 @@ describe "Events API", type: :request do
         "format"                => "classical",
         "time_control"          => "",
         "max_participants"      => nil,
+        "latitude"              => nil,
+        "longitude"             => nil,
         "registration_deadline" => nil,
         "description"           => nil,
       )
