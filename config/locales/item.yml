@@ -71,3 +71,7 @@ en:
         subscription: Subscriptions
         total: Total
     change_section: "Change Section"
+    move:
+      different_fee: "The %{section} section's entry fees (%{fees}) differ from the %{paid} paid for this entry. Moving won't charge or refund the difference."
+      invalid_section: "That isn't one of this event's sections."
+      no_fee: "No entry fee covers the %{section} section, so it's not clear what this entry should cost there. Moving won't charge or refund anything."
