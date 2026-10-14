@@ -90,157 +90,81 @@ describe Club do
       expect(page).to have_css("div.alert-warning", text: "No matches")
     end
 
-    it "remember last search" do
+    it "returns to all clubs from a club page" do
       fill_in name, with: "Aer"
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       click_link "Aer Lingus"
-      click_link last_search
-      expect(page).to have_xpath(@row, count: 1)
+      click_link "All Clubs"
+      expect(page).to have_xpath(@row, count: 3)
     end
   end
 
   context "show" do
-    def xpath(label)
-      %Q{//table//th[.="#{label}"]/following-sibling::td}
+    let(:bangor) do
+      create(:club,
+        name: "Bangor",
+        web: "https://chess.bangor.net/about",
+        meet: "7pm Tuesdays and Thursdays",
+        address: "McKee Clock, Marina",
+        district: "Marina",
+        city: "Bangor",
+        county: "down",
+        eircode: "BT20 5ED",
+        contact: "Mark Orr",
+        email: "mark@bangor.net",
+        phone: "07968 537010",
+        notes: "Players of all abilities are welcome.",
+        active: true
+      )
     end
 
-    it "all fields" do
-      params = {
-        name:      "Bangor",
-        web:       "http://chess.bangor.net/",
-        meet:      "7pm Tuesdays and Thursdays",
-        address:   "McKee Clock",
-        district:  "Marina",
-        city:      "Bangor",
-        county:    "down",
-        contact:   "Mark Orr",
-        email:     "mark@bangor.net",
-        phone:     "07968 537010",
-        active:    true,
-      }
-      bangor = create(:club, params)
+    it "displays the public club details in the event-style layout" do
       visit club_path(bangor)
-      params.each do |param, value|
-        label = %i(active address city contact email name).include?(param) ? I18n.t(param) : I18n.t("club.#{param}")
-        case param
-        when :name
-          expect(page).to have_css("h1", text: bangor.name)
-        when :web
-          expect(page).to have_xpath(xpath(label), text: "chess.bangor.net")
-        when :county
-          expect(page).to have_xpath(xpath(label), text: I18n.t("ireland.co.#{value}"))
-        when :active
-          expect(page).to have_xpath(xpath(label), text: I18n.t(value ? "yes" : "no"))
-        else
-          expect(page).to have_xpath(xpath(label), text: value)
-        end
-      end
-    end
-  end
 
-  context "previous and next links" do
-    11.times do |i|
-      let!("club#{i}".to_sym) { create(:club, name: "Club #{(i + 65).chr}", lat: nil, long: nil) }
+      expect(page).to have_css(".show-panel h2", text: bangor.name)
+      expect(page.all(".show-panel .subtitle div").map(&:text)).to eq ["McKee Clock,", "Marina,", "Bangor,", "Co. Down,", "BT20 5ED"]
+      expect(page).to have_link("chess.bangor.net", href: bangor.web)
+      expect(page).to have_css("#description", text: bangor.notes)
+      expect(page).to have_css("aside.side-content #contact", text: bangor.contact)
+      expect(page).to have_link(bangor.contact, href: "mailto:#{bangor.email}")
+      expect(page).to have_css("aside.side-content #contact", text: bangor.phone)
+      expect(page).to have_link("All Clubs", href: clubs_path)
+      expect(page).not_to have_css(".show-panel .details")
+      expect(page).to have_css("aside.side-content #meetings", text: bangor.meet)
+      expect(page).to have_link(I18n.t("club.meet"), href: "#meetings")
     end
 
-    let(:header)    { "h1" }
-    let(:prev_link) { "☜" }
-    let(:next_link) { "☞" }
+    it "shows all structured meetings in weekday and time order instead of the legacy text" do
+      bangor.club_meetings.create!(day_of_week: "friday", start_time: "19:30", title: "Women’s chess", audience: "women_only")
+      bangor.club_meetings.create!(day_of_week: "tuesday", start_time: "19:00", title: "Club night", notes: "All levels welcome")
+      bangor.club_meetings.create!(day_of_week: "tuesday", start_time: "18:00", title: "Junior coaching", audience: "juniors_only")
 
-    it "first few" do
-      visit clubs_path
-      click_link club0.name
+      visit club_path(bangor)
 
-      expect(page).to have_css(header, text: club0.name)
-      click_link next_link
-
-      expect(page).to have_css(header, text: club1.name)
-      click_link next_link
-
-      expect(page).to have_css(header, text: club2.name)
-      expect(page).to have_link(next_link)
-      click_link prev_link
-
-      expect(page).to have_css(header, text: club1.name)
-      click_link prev_link
-
-      expect(page).to have_css(header, text: club0.name)
-      expect(page).to_not have_link(prev_link)
+      expect(page.all("aside.side-content #meetings .list-group-item strong").map(&:text)).to eq ["Tuesdays at 18:00", "Tuesdays at 19:00", "Fridays at 19:30"]
+      expect(page).to have_css("#meetings .label.panel-pastel-info", text: "Juniors only")
+      expect(page).to have_css("#meetings .label.panel-pastel-danger", text: "Women only")
+      expect(page).to have_css("#meetings .label", count: 2)
+      expect(page).to have_css("#meetings", text: "All levels welcome")
+      expect(page).not_to have_css("#meetings", text: bangor.meet)
     end
 
-    it "last few" do
-      visit clubs_path
-      click_link club8.name
+    it "shows an empty state when there are no structured or legacy meetings" do
+      club = create(:club, meet: nil)
 
-      expect(page).to have_css(header, text: club8.name)
-      click_link next_link
+      visit club_path(club)
 
-      expect(page).to have_css(header, text: club9.name)
-      click_link last_search
-
-      expect(page).to have_button(search)
-      click_link club10.name
-
-      expect(page).to_not have_link(next_link)
-      click_link last_search
-
-      expect(page).to have_button(search)
-      click_link club9.name
-
-      expect(page).to have_css(header, text: club9.name)
-      click_link prev_link
-
-      expect(page).to have_css(header, text: club8.name)
-      expect(page).to have_link(prev_link)
+      expect(page).to have_css("aside.side-content #meetings", text: I18n.t("club.no_meetings"))
     end
 
-    it "only enough for one page" do
-      club10.destroy
-      visit clubs_path
+    it "shows the map only when geocoded" do
+      ungeocoded = create(:club, lat: nil, long: nil)
+      visit club_path(ungeocoded)
+      expect(page).not_to have_css("#map-canvas")
 
-      visit club_path(club0)
-      expect(page).to have_css(header, text: club0.name)
-      expect(page).to_not have_link(prev_link)
-      expect(page).to have_link(next_link)
-
-      visit club_path(club9)
-      expect(page).to have_css(header, text: club9.name)
-      expect(page).to have_link(prev_link)
-      expect(page).to_not have_link(next_link)
-    end
-
-    it "one is destroyed after the search is saved" do
-      visit clubs_path
-
-      visit club_path(club3)
-      expect(page).to have_css(header, text: club3.name)
-      expect(page).to have_link(prev_link)
-      expect(page).to have_link(next_link)
-
-      visit club_path(club5)
-      expect(page).to have_css(header, text: club5.name)
-      expect(page).to have_link(prev_link)
-      expect(page).to have_link(next_link)
-
-      club4.destroy
-
-      visit club_path(club3)
-      expect(page).to have_css(header, text: club3.name)
-      expect(page).to have_link(prev_link)
-      expect(page).to_not have_link(next_link)
-
-      visit club_path(club5)
-      expect(page).to have_css(header, text: club5.name)
-      expect(page).to_not have_link(prev_link)
-      expect(page).to have_link(next_link)
-    end
-
-    it "none without a search" do
-      visit club_path(club3)
-
-      expect(page).to_not have_link(prev_link)
-      expect(page).to_not have_link(next_link)
+      visit club_path(bangor)
+      expect(page).to have_css("#map-canvas")
     end
   end
 end

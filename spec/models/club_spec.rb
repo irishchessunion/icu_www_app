@@ -102,6 +102,22 @@ describe Club do
     end
   end
 
+  context "location" do
+    it "includes the address, distinct city, county and Eircode" do
+      club = build(:club, address: "McKee Clock, Marina", city: "Bangor", county: "down", district: "Marina", eircode: "BT20 5ED")
+
+      expect(club.location_parts).to eq ["McKee Clock", "Marina", "Bangor", "Co. Down", "BT20 5ED"]
+      expect(club.location).to eq "McKee Clock, Marina, Bangor, Co. Down, BT20 5ED"
+    end
+
+    it "omits the city when it is the same as the county" do
+      club = build(:club, address: "Trinity Sports & Leisure Club", city: "Dublin", county: "dublin", eircode: "D13 X651")
+
+      expect(club.location_parts).to eq ["Trinity Sports & Leisure Club", "Co. Dublin", "D13 X651"]
+      expect(club.location).to eq "Trinity Sports & Leisure Club, Co. Dublin, D13 X651"
+    end
+  end
+
   context "blank attributes" do
     it "are normalised" do
       club = create(:club, web: "", meet: "", address: "\s", district: " ", lat: "", long: "", contact: "", email: "", phone: "", active: false)
