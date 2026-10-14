@@ -86,7 +86,12 @@ class Cart < ApplicationRecord
 
     if intent and intent.status == 'succeeded'  
       latest_charge = intent.latest_charge
-      Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),})
+      begin
+        Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),})
+      rescue => e
+        # The money has been taken, so the cart must still be marked as paid.
+        Failure.log("UpdatePaymentIntentFailure", exception: e, cart_id: id, payment_intent_id: intent.id)
+      end
       successful_payment("stripe", intent.id, latest_charge, Cart.current_payment_account)
     elsif intent and not intent.status == 'succeeded'
       add_payment_error(intent, name, email, "Something went wrong, please contact webmaster@icu.ie")

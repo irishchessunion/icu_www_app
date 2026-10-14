@@ -26,6 +26,15 @@ describe Cart do
       expect(cart.items.map(&:status)).to eq ["paid"]
     end
 
+    it "the cart is still paid for if the payment's description can't be updated" do
+      allow(Stripe::PaymentIntent).to receive(:update).and_raise(Stripe::APIConnectionError.new("connection failed"))
+
+      cart.purchase(params, user)
+
+      expect(cart.reload).to be_paid
+      expect(Failure.pluck(:name)).to eq ["UpdatePaymentIntentFailure"]
+    end
+
     it "a payment can't be used for a second cart" do
       cart.purchase(params, user)
       other = create(:cart)
