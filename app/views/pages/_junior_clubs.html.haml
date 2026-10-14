@@ -1,7 +1,7 @@
-.panel.panel-primary.clubs
+.panel.panel-default.compact-list.with-margin
   .panel-heading
-    .text-center= t('junior.clubs')
+    = t('junior.clubs')
   .panel-body
-    %ul
+    %ul.list-unstyled
       - @junior_clubs.each do |club|
         %li= link_to club.name, club

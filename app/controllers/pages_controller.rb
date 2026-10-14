@@ -21,6 +21,7 @@ class PagesController < ApplicationController
     @junior_events = Event.active.short.junior.where('end_date >= ?', Date.today).ordered.limit(4)
     @international_events = Event.active.short.junint.where('end_date >= ?', Date.today).ordered.limit(4)
     @junior_clubs = Club.active.junior
+    @officer = Officer.active.include_players.find_by(role: "juniors")
   end
 
   def beginners

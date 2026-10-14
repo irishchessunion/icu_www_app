@@ -1,5 +1,5 @@
 - if champion
-  .panel.panel-primary.panel-champion
+  .panel.panel-primary.panel-champion{class: (local_assigns.fetch(:compact, true) ? "panel-champion-compact" : nil)}
     - if champion.image
       .panel-body= champion.image.expand(type: "IMG", align: "center", responsive: "true", alt: champion.winners).html_safe
     .panel-footer
