@@ -47,4 +47,46 @@ describe Cart do
       expect(other.payment_errors.map(&:message)).to eq ["Something went wrong, please contact webmaster@icu.ie"]
     end
   end
+
+  context "#refund" do
+    let(:fee)   { create(:subscription_fee) }
+    let(:user)  { create(:user) }
+    let(:cart)  { create(:cart, status: "paid", payment_method: "stripe", payment_ref: "pi_3QMTIr9JTJmjex", payment_account: account, total: fee.amount, original_total: fee.amount) }
+    let!(:item) { create(:paid_subscription_item, fee: fee, cart: cart) }
+
+    context "a cart paid for with an old Stripe account" do
+      let(:account) { "pk_live_an_old_account" }
+
+      it "is revoked without asking Stripe to send the money back" do
+        expect(Stripe::PaymentIntent).to_not receive(:retrieve)
+        expect(Stripe::Refund).to_not receive(:create)
+
+        refund = cart.refund([item.id], user)
+
+        expect(refund.error).to be_nil
+        expect(refund.automatic).to be false
+        expect(refund.amount).to eq fee.amount
+        expect(cart.reload).to be_refunded
+        expect(item.reload).to be_refunded
+      end
+    end
+
+    context "a cart paid for with the current Stripe account" do
+      let(:account) { Cart.current_payment_account }
+      let(:intent)  { double(id: cart.payment_ref, amount: (fee.amount * 100).to_i, latest_charge: "ch_3QMTIr9JTJmjex") }
+
+      it "is refunded through Stripe" do
+        allow(Stripe::PaymentIntent).to receive(:retrieve).and_return(intent)
+        allow(Stripe::Charge).to receive(:retrieve).and_return(double(amount_refunded: 0))
+        expect(Stripe::Refund).to receive(:create).with({ payment_intent: intent.id, amount: intent.amount }).and_return(double(status: "succeeded"))
+
+        refund = cart.refund([item.id], user)
+
+        expect(refund.error).to be_nil
+        expect(refund.automatic).to be true
+        expect(cart.reload).to be_refunded
+        expect(item.reload).to be_refunded
+      end
+    end
+  end
 end
