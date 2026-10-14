@@ -4,8 +4,6 @@ describe Club do
   include_context "features"
 
   let(:county)        { I18n.t("club.county") }
-  let(:district)      { I18n.t("club.district") }
-  let(:meetings)      { I18n.t("club.meet") }
   let(:phone)         { I18n.t("club.phone") }
   let(:website)       { I18n.t("club.web") }
 

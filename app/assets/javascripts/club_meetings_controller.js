@@ -1,5 +1,5 @@
 class ClubMeetingsController extends Controller {
-  static targets = ["list", "template"]
+  static targets = ["list", "template", "count"]
 
   connect() {
     this.nextIndex = Date.now();
