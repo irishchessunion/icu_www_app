@@ -18,6 +18,7 @@ en:
     long: Longitude
     map: Clubs Map
     meet: Meetings
+    no_meetings: This club currently has no meetings.
     notes: Notes
     phone: Phone
     province: Province

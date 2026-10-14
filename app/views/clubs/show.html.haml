@@ -1,81 +1,33 @@
-- content_for :title, t("club.club")
+- content_for :title, t("club.club") + " | " + @club.name
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
+- content_for :includes do
+  = javascript_include_tag "maplibre-gl"
+  = stylesheet_link_tag "maplibre-gl", skip_pipeline: true
+- content_for :javascript do
+  = render(partial: "show", handlers: [:erb], formats: [:js])
 
-= render "utils/prev_next", prev_next: @prev_next
+= render "clubs/show_panel"
+= render "clubs/show_nav"
 
-.row
-  .col-md-8.col-md-offset-2
-    %h1.text-center= @club.name
-    %table.table.table-bordered
-      - if @club.description.present?
-        %tr
-          %th= t("description")
-          %td= @club.description
-      %tr
-        %th= t("club.web")
-        %td= link_to simple_url(@club.web), @club.web, target: "club" if @club.web.present?
-      %tr
-        %th= t("club.meet")
-        %td= @club.meet
-      %tr
-        %th= t("address")
-        %td= @club.address
-      %tr
-        %th= t("club.district")
-        %td= @club.district
-      %tr
-        %th= t("city")
-        %td= @club.city
-      %tr
-        %th= t("club.county")
-        %td= t("ireland.co.#{@club.county}")
-      %tr
-        %th= t("club.province")
-        %td= t("ireland.prov.#{@club.province}")
-      %tr
-        %th= t("club.location")
-        %td
-          - if @club.geocodes?
-            = link_to clubs_map_path(@club) do
-              = precede("(") do
-                = succeed(",") do
-                  = @club.lat
-              = succeed(")") do
-                = @club.long
-      %tr
-        %th= t("eircode")
-        %td
-          - if @club.eircode.present?
-            = link_to @club.eircode, google_maps_search(@club)
-      %tr
-        %th= t("contact")
-        %td= @club.contact
-      %tr
-        %th= t("email")
-        %td= mail_to @club.email, @club.email if @club.email.present?
-      %tr
-        %th= t("club.phone")
-        %td= @club.phone
-      %tr
-        %th= t("club.secretary")
-        %td= @club.secretary.name if @club.secretary
-      %tr
-        %th= t("club.junior_only")
-        %td= t(@club.junior_only ? "yes" : "no")
-      %tr
-        %th= t("club.has_junior_section")
-        %td= t(@club.has_junior_section ? "yes" : "no")
-      %tr
-        %th= t("active")
-        %td= t(@club.active ? "yes" : "no")
-      - if @club.notes.present?
-        %tr
-          %th= t("club.notes")
-          %td= @club.notes
-      %tr
-        %th= t("player.players")
-        - clubs = @club.players.where(status: "active").count
-        %td= link_to_if clubs > 0, clubs, players_path(club_id: @club.id, status: "active")
-      = render "utils/timestamps", object: @club, ability: :manage
-    = render "utils/show_buttons", object: @club, delete: false
+.container
+  .row
+    .col-md-12.flex-row
 
-= render "admin/journal_entries/changes", entries: @entries
+      .primary-content
+        = render "clubs/show_description"
+        - if @entries.present? && can?(:show, @entries.matches.first)
+          %button{type: "button", "data-toggle": "collapse", "data-target": "#changeLog", class: "btn btn-sm btn-pastel-primary"}
+            View changelog
+          %div{id: "changeLog", class: "collapse"}
+            = render "admin/journal_entries/changes", entries: @entries
+
+      %aside{class: "side-content"}
+        = render "clubs/show_admin"
+        = render "clubs/show_meetings"
+        = render "clubs/show_contact"
+
+- if @club.geocodes?
+  - popup_html = render(partial: "clubs/marker_popup", locals: { club: @club }, formats: [:html], handlers: [:haml])
+  - markers = [{ "lat" => @club.lat, "lng" => @club.long, "title" => @club.name, "iconUrl" => asset_path("svg/marker_other.svg"), "popupHtml" => popup_html }]
+  %script{type: "application/json", id: "map-data"}= raw json_escape(JSON.generate({ "center" => [@club.lat, @club.long], "zoom" => 13, "fit" => false, "markers" => markers }))
