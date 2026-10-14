@@ -11,6 +11,7 @@ class Admin::ClubsController < ApplicationController
 
     if @club.save
       @club.journal(:create, current_user, request.remote_ip)
+      journal_meetings("")
       redirect_to @club, notice: "Club was successfully created"
     else
       render action: "new"
@@ -18,8 +19,10 @@ class Admin::ClubsController < ApplicationController
   end
 
   def update
+    previous_meetings = meeting_summary
     if @club.update(club_params)
       @club.journal(:update, current_user, request.remote_ip)
+      journal_meetings(previous_meetings)
       redirect_to @club, notice: "Club was successfully updated"
     else
       flash_first_error(@club, base_only: true)
@@ -28,6 +31,22 @@ class Admin::ClubsController < ApplicationController
   end
 
   private
+
+  def meeting_summary
+    @club.club_meetings.order(:id).map do |meeting|
+      [meeting.id, meeting.day_of_week, meeting.start_time&.strftime("%H:%M"), meeting.audience,
+       meeting.welcomes_juniors, meeting.notes, meeting.title].join(" / ")
+    end.join("; ")
+  end
+
+  def journal_meetings(before)
+    after = meeting_summary
+    return if before == after
+
+    from, to = Util::Diff.new(before, after).difference
+    @club.journal_entries.create!(action: "update", column: "meetings", from: from, to: to,
+                                  by: current_user.signature, ip: request.remote_ip)
+  end
 
   def set_club
     @club = Club.find(params[:id])
