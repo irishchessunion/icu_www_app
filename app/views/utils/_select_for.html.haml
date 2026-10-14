@@ -2,12 +2,13 @@
 - defined?(mark)     || mark     = "none"
 - defined?(multiple) || multiple = false
 - defined?(size)     || size     = multiple ? 4 : 1
+- defined?(small)    || small    = true
 - if defined?(ttext); text = t(ttext + ".label"); hint = t(ttext + ".hint", default: ""); end
 
 .form-group{class: object.errors[param].any? ? "has-error" : ""}
   = form.label param, text + mark(mark), class: "control-label col-#{col}-#{pad}"
   %div{class: "col-#{col}-#{width}"}
-    = form.select param, menu, {}, class: "form-control input-sm", multiple: multiple, size: size, disabled: disabled
+    = form.select param, menu, {}, class: (small ? "form-control input-sm" : "form-control"), multiple: multiple, size: size, disabled: disabled
     - unless hint.blank?
       %br
       .help-block= hint
