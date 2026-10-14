@@ -1,18 +1,7 @@
 source "https://rubygems.org"
 
-# def next?
-#   File.basename(__FILE__) == "Gemfile.next"
-# end
-
 gem "rake"
-
-# if next?
 gem "rails", "~> 8.1.0"
-# else
-#   gem "rails", "~> 8.0.0"
-# end
-
-gem "next_rails"
 
 # Ruby 3.2 includes `base64` as a default gem (0.1.1). Under Passenger it may be
 # activated before Bundler loads, causing "already activated base64 0.1.1" errors
@@ -63,7 +52,6 @@ group :development do
   gem "capistrano-rvm"
   gem "capistrano-rails"
   gem 'capistrano-maintenance', '~> 1.2', require: false
-  gem "wirble"
   # The following 2 gems are needed to support ed25519 encrypted keys for capistrano installs.
   gem "bcrypt_pbkdf"
   gem "ed25519"
