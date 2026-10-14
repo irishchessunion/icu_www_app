@@ -11,7 +11,7 @@ FactoryBot.define do
     lat       { rand(51.4..55.4) }
     long      { rand(-10.4..-5.5) }
     contact   { Faker::Name.name }
-    email     { Faker::Internet.email }
+    email     { Faker::Internet.email(domain: "example.com") }  # events, clubs and players limit email to 50 characters
     phone     { Faker::PhoneNumber.phone_number }
     active    { true }
   end

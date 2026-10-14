@@ -2,36 +2,10 @@ en:
   officer:
     exec: Executive
     incumbent: Incumbent
+    new: New Officer
     non_exec: Non-Executive
     officer: Officer
     officers: Officers
     select_incumbent: Select Incumbent
     rank: Rank
-    role:
-      arbitration: Arbitration Officer
-      chairperson: Chairperson
-      connaught: Connaught Delegate
-      development: Development Officer
-      ecu: "ECU Delegate"
-      fide: "FIDE Delegate"
-      fide_ecu: "FIDE & ECU Delegate"
-      gameskeeper: Gameskeeper
-      juniors: Junior Officer
-      leinster: Leinster Delegate
-      membership: Membership Officer
-      membership-connaught: Connaught Membership Officer
-      membership-leinster: Leinster Membership Officer
-      membership-munster: Munster Membership Officer
-      munster: Munster Delegate
-      president: President
-      publicrelations: Public Relations Officer
-      ratings: Rating Officer
-      role: Role
-      secretary: Secretary
-      selections: Selection Committee Chairperson
-      tournaments: Tournament Officer
-      treasurer: Treasurer
-      ulster: Ulster Delegate
-      vicechairperson: Vice Chairperson
-      webmaster: Webmaster
-      women: Women's Officer
+    role: Role

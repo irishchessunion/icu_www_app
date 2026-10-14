@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_13_130000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -37,6 +37,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "api_keys", charset: "utf8mb3", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.string "key_digest", limit: 64, null: false
+    t.string "key_prefix", limit: 8, null: false
+    t.string "name", limit: 100, null: false
+    t.string "permissions"
+    t.datetime "updated_at", null: false
+    t.index ["key_digest"], name: "index_api_keys_on_key_digest", unique: true
+    t.index ["name"], name: "index_api_keys_on_name", unique: true
   end
 
   create_table "arbiters", charset: "utf8mb3", force: :cascade do |t|
@@ -246,12 +258,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
     t.string "flyer_file_name"
     t.integer "flyer_file_size"
     t.datetime "flyer_updated_at", precision: nil
+    t.boolean "icu_rated", default: true, null: false
     t.boolean "is_fide_rated", default: false
     t.decimal "lat", precision: 10, scale: 7
     t.string "live_games_url"
     t.string "live_games_url2"
     t.string "location", limit: 100
     t.decimal "long", precision: 10, scale: 7
+    t.integer "max_participants"
     t.string "name", limit: 75
     t.text "note"
     t.string "pairings_url"
@@ -265,7 +279,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
     t.date "start_date"
     t.string "streaming_url"
     t.boolean "subscription_required", default: true
+    t.string "time_control_details", limit: 50
     t.json "time_controls"
+    t.string "tournament_type", limit: 20, default: "swiss", null: false
     t.datetime "updated_at", precision: nil
     t.string "url"
     t.integer "user_id"
@@ -555,6 +571,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
     t.boolean "active", default: true
     t.datetime "created_at", precision: nil
     t.boolean "executive", default: true
+    t.string "name", limit: 50, null: false
     t.integer "player_id"
     t.integer "rank", limit: 1
     t.string "role", limit: 20
@@ -860,7 +877,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_120000) do
     t.index ["verified_at"], name: "index_users_on_verified_at"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "champions", "images"
   add_foreign_key "documents", "documents", column: "previous_version_id"

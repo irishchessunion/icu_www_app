@@ -1,0 +1,23 @@
+.row
+  .col-sm-1
+  .col-sm-10
+    .h1.text-center= title
+    %hr
+    = form_for [:admin, @api_key], html: { class: "form-horizontal", role: "form" } do |f|
+      %fieldset
+        - locals = { form: f, object: @api_key, col: "sm", pad: 2, width: 2 }
+        = render "utils/text_field_for", locals.merge(param: :name, text: t("api_key.name"), width: 5)
+        .form-group
+          %label.control-label.col-sm-2= t("api_key.permissions")
+          .col-sm-5
+            = hidden_field_tag "api_key[permissions][]", "", id: nil
+            - ApiKey::PERMISSIONS.each do |permission|
+              .checkbox
+                = label_tag "api_key_permissions_#{permission}" do
+                  = check_box_tag "api_key[permissions][]", permission, @api_key.permits?(permission), id: "api_key_permissions_#{permission}"
+                  = t("api_key.permission.#{permission}")
+        = render "utils/check_box_for", locals.merge(param: :active, text: t("active"))
+      %hr
+      .text-center
+        = f.submit t("save"), class: "btn btn-primary"
+        = link_to t("cancel"), @api_key.new_record? ? admin_api_keys_path : [:admin, @api_key], class: "btn btn-default"

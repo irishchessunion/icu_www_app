@@ -398,9 +398,9 @@ if seed_sample_data
     end
 
     # Sample data for officers
-    5.times do |i|
+    ["President", "Chairperson", "Secretary", "Treasurer", "Rating Officer"].each_with_index do |name, i|
       Officer.create!(
-        role: Officer::ROLES[i],
+        name: name,
         player_id: Player.all.sample.id,
         rank: i + 1,
         executive: [true, false].sample,

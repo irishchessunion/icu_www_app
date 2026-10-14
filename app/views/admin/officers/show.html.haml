@@ -1,4 +1,4 @@
-- content_for :title, t("officer.role.#{@officer.role}")
+- content_for :title, @officer.name
 
 .text-center
   .btn-group
@@ -11,7 +11,7 @@
 
 .row
   .col-sm-8.col-sm-offset-2
-    %h1.text-center= t("officer.role.#{@officer.role}")
+    %h1.text-center= @officer.name
     %table.table.table-striped
       %tr
         %th Active

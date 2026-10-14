@@ -5,18 +5,19 @@ module EventsHelper
     options_for_select(cats, selected)
   end
 
+  def event_tournament_type_menu(selected)
+    types = Event::TOURNAMENT_TYPES.map { |type| [t("event.tournament_type.#{type}"), type] }
+    options_for_select(types, selected)
+  end
+
   def event_month_menu(selected)
     months = (1..12).map { |m| m = "%02d" % m; [t("month.m#{m}"), m] }
     options_for_select(months, selected)
   end
 
   def event_year_menu(selected)
-    years = (2005..Date.today.year).to_a.reverse.map { |y| [y, y] }
+    years = (2005..Date.today.year + 2).to_a.reverse.map { |y| [y, y] }
     options_for_select(years, selected)
-  end
-
-  def events_menu(selected_event_id, events)
-    options_for_select(([Event.new(name: '')] + events).map { |event| [event.name, event.id] }, selected_event_id)
   end
 
   def user_menu(selected_user_id, default=nil)

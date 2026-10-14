@@ -10,7 +10,7 @@
       %tr
         %td
           = succeed(officer.executive ? "" : "*") do
-            = t("officer.role.#{officer.role}")
+            = officer.name
         %td= officer.player.name if officer.player
         %td= officer.html_emails
         %td= officer.player.phones(filter: true) if officer.player

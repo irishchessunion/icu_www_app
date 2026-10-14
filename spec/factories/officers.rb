@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :officer do
-    role         { "ratings" }
+    sequence(:name) { |n| "Officer #{n}" }
     rank         { 10 }
     executive    { true }
     player
