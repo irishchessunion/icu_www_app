@@ -56,6 +56,12 @@ class Cart < ApplicationRecord
     false
   end
 
+  # Someone else may have paid for the same thing for the same player since an item was added to this cart.
+  # @return [String, nil] The error message for the first such item.
+  def paid_duplicate_error
+    items.filter_map(&:paid_duplicate_error).first
+  end
+
   def last_payment_error_message
     payment_errors.last.try(:message).presence || "None"
   end

@@ -38,6 +38,13 @@ class Item::Entry < Item
     end
   end
 
+  # @return [String, nil] An error message if this player has already paid for this entry.
+  def paid_duplicate_error
+    return unless [player, fee].all?(&:present?)
+    return unless self.class.any_duplicates(fee, player).where.not(id: id).exists?
+    I18n.t("item.error.entry.already_entered", member: player.name(id: true))
+  end
+
   private
 
   # A fee with no sections of its own doesn't cover any, the same as on the event page's list of fees.
@@ -52,10 +59,8 @@ class Item::Entry < Item
   end
 
   def no_duplicates
-    if new_record? && [player, fee].all?(&:present?)
-      if self.class.any_duplicates(fee, player).count > 0
-        errors.add(:base, I18n.t("item.error.entry.already_entered", member: player.name(id: true)))
-      end
-    end
+    return unless new_record?
+    error = paid_duplicate_error
+    errors.add(:base, error) if error
   end
 end
