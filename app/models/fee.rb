@@ -10,7 +10,7 @@ class Fee < ApplicationRecord
 
   has_many :items, dependent: :nullify
   has_many :user_inputs, dependent: :destroy
-  belongs_to :event # Only used by Fee::Entry
+  belongs_to :event, touch: true # Only used by Fee::Entry. Its fees are part of what the API says about an event, so changing one changes the event.
   before_validation :normalize_attributes
 
   validates :type, inclusion: { in: TYPES }
