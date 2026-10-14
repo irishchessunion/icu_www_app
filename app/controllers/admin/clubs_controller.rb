@@ -8,6 +8,7 @@ class Admin::ClubsController < ApplicationController
 
   def create
     @club = Club.new(club_params)
+    clear_legacy_meet_if_first_meeting
 
     if @club.save
       @club.journal(:create, current_user, request.remote_ip)
@@ -20,7 +21,9 @@ class Admin::ClubsController < ApplicationController
 
   def update
     previous_meetings = meeting_summary
-    if @club.update(club_params)
+    @club.assign_attributes(club_params)
+    clear_legacy_meet_if_first_meeting
+    if @club.save
       @club.journal(:update, current_user, request.remote_ip)
       journal_meetings(previous_meetings)
       redirect_to @club, notice: "Club was successfully updated"
@@ -31,6 +34,11 @@ class Admin::ClubsController < ApplicationController
   end
 
   private
+
+  def clear_legacy_meet_if_first_meeting
+    meetings = @club.club_meetings.to_a
+    @club.meet = nil if meetings.any?(&:new_record?) && meetings.none?(&:persisted?)
+  end
 
   def meeting_summary
     @club.club_meetings.order(:id).map do |meeting|
