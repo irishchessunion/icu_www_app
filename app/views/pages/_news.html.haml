@@ -5,9 +5,14 @@
 %section{class: "latest-news", "aria-label": "Latest News Feed"}
   %header
     %h3= t("pages.news.latest")
-    %a{class: "inline-glyph", href: news_index_path}
-      =t("pages.news.all")
-      %span.glyphicon.glyphicon-chevron-right.glyphicon-xs
+    .inline-flex
+      %a{class: "inline-glyph", href: news_index_path}
+        =t("pages.news.all")
+        %span.glyphicon.glyphicon-chevron-right.glyphicon-xs
+      - if can?(:create, News)
+        %a{class: "btn btn-info btn-sm inline-glyph", href: new_admin_news_path}
+          =t("pages.news.add")
+          %span.glyphicon-plus
 
   - if @results.present? && @results.length > 0
     - (@results[0..3] || []).each do |result|
@@ -19,7 +24,7 @@
         = link_to t("pages.results.manage"), admin_results_path, class: "text-primary"
       %a{class: "btn btn-primary btn-sm inline-glyph", href: new_admin_result_path}
         =t("pages.results.add")
-        %span.glypicon.glyphicon-plus
+        %span.glyphicon-plus
 
   - (@news[0..2] || []).each do |news|
     = render 'news/panel', news: news, show_more: true
