@@ -7,6 +7,7 @@ class ClubMeeting < ApplicationRecord
   validates :club, presence: true
   validates :day_of_week, inclusion: { in: DAYS_OF_WEEK }
   validates :start_time, presence: true
+  validates :notes, length: { maximum: 100 }
   validates :audience, inclusion: { in: AUDIENCES }
   validates :welcomes_juniors, inclusion: { in: [true, false] }
 end
