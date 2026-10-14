@@ -1,83 +1,90 @@
 - content_for :javascript do
   = render(:partial => "player_ids_callback", :handlers => [:erb], :formats => [:js])
 
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
+
+= render "utils/title_panel", header_text: content_for(:title)
+
+
 = render "player_ids/modal", title: t("club.select_secretary")
 
-.row
-  .col-sm-12
-    = form_for [:admin, @club], html: { class: "form-horizontal", role: "form" } do |f|
-      %fieldset
-        = render "utils/form_header", object: @club, atr: :name
-        - locals = { form: f, object: @club, col: "sm", pad: 1, width: 4 }
-        = render "utils/text_field_for", locals.merge(param: :name, text: t("name"))
-        = render "utils/text_field_for", locals.merge(param: :web, text: t("club.web"))
+.container
+  .row
+    .col-sm-12
+      = form_for [:admin, @club], html: { class: "form-horizontal", role: "form" } do |f|
+        %fieldset
+          - locals = { form: f, object: @club, col: "sm", pad: 1, width: 4 }
+          = render "utils/text_field_for", locals.merge(param: :name, text: t("name"))
+          = render "utils/text_field_for", locals.merge(param: :web, text: t("club.web"))
 
-        %hr
-        = render "utils/text_field_for", locals.merge(param: :meet, text: t("club.meet"), width: 8)
+          %hr
+          = render "utils/text_field_for", locals.merge(param: :meet, text: t("club.meet"), width: 8)
 
-        %hr
-        = render "utils/text_field_for", locals.merge(param: :address, text: t("address"), width: 8)
+          %hr
+          = render "utils/text_field_for", locals.merge(param: :address, text: t("address"), width: 8)
 
-        -# Inline: County[Select] | Eircode
-        = render "utils/text_field_for", locals.merge(param: :city, text: t("city"), width: 3)
-        .form-group{class: (@club.errors[:county].any? || @club.errors[:eircode].any?) ? "has-error" : ""}
-          = f.label :county, t("club.county"), class: "control-label col-sm-1"
-          .col-sm-2
-            = f.select :county, club_county_menu(@club.county, "please_select"), {}, class: "form-control"
-            - if @club.errors[:county].any?
-              .help-block= @club.errors[:county].first
-          = f.label :eircode, t("eircode"), class: "control-label col-sm-1"
-          .col-sm-2
-            = f.text_field :eircode, class: "form-control"
-            - if @club.errors[:eircode].any?
-              .help-block= @club.errors[:eircode].first
+          -# Inline: County[Select] | Eircode
+          = render "utils/text_field_for", locals.merge(param: :city, text: t("city"), width: 3)
+          .form-group{class: (@club.errors[:county].any? || @club.errors[:eircode].any?) ? "has-error" : ""}
+            = f.label :county, t("club.county"), class: "control-label col-sm-1"
+            .col-sm-2
+              = f.select :county, club_county_menu(@club.county, "please_select"), {}, class: "form-control"
+              - if @club.errors[:county].any?
+                .help-block= @club.errors[:county].first
+            = f.label :eircode, t("eircode"), class: "control-label col-sm-1"
+            .col-sm-2
+              = f.text_field :eircode, class: "form-control"
+              - if @club.errors[:eircode].any?
+                .help-block= @club.errors[:eircode].first
 
-        -# Inline: Latitude | Longitude
-        .form-group{class: (@club.errors[:lat].any? || @club.errors[:long].any?) ? "has-error" : ""}
-          = f.label :lat, t("latitude"), class: "control-label col-sm-1"
-          .col-sm-2
-            = f.text_field :lat, class: "form-control"
-            - if @club.errors[:lat].any?
-              .help-block= @club.errors[:lat].first
-          = f.label :long, t("longitude"), class: "control-label col-sm-1"
-          .col-sm-2
-            = f.text_field :long, class: "form-control"
-            - if @club.errors[:long].any?
-              .help-block= @club.errors[:long].first
-        .form-group
-          .col-sm-5.col-sm-offset-1
-            .panel.panel-pastel-warning
-              .panel-body
-                This club will not appear in the clubs page map unless Lat/Long values are provided.
+          -# Inline: Latitude | Longitude
+          .form-group{class: (@club.errors[:lat].any? || @club.errors[:long].any?) ? "has-error" : ""}
+            = f.label :lat, t("latitude"), class: "control-label col-sm-1"
+            .col-sm-2
+              = f.text_field :lat, class: "form-control"
+              - if @club.errors[:lat].any?
+                .help-block= @club.errors[:lat].first
+            = f.label :long, t("longitude"), class: "control-label col-sm-1"
+            .col-sm-2
+              = f.text_field :long, class: "form-control"
+              - if @club.errors[:long].any?
+                .help-block= @club.errors[:long].first
+          .form-group
+            .col-sm-5.col-sm-offset-1
+              .panel.panel-pastel-warning
+                .panel-body
+                  This club will not appear in the clubs page map unless Lat/Long values are provided.
 
-        %hr
-        -# Inline: Contact | Phone
-        .form-group{class: (@club.errors[:contact].any? || @club.errors[:phone].any?) ? "has-error" : ""}
-          = f.label :contact, t("contact"), class: "control-label col-sm-1"
-          .col-sm-3
-            = f.text_field :contact, class: "form-control"
-            - if @club.errors[:contact].any?
-              .help-block= @club.errors[:contact].first
-          = f.label :phone, t("club.phone"), class: "control-label col-sm-1"
-          .col-sm-2
-            = f.text_field :phone, class: "form-control"
-            - if @club.errors[:phone].any?
-              .help-block= @club.errors[:phone].first
+          %hr
+          -# Inline: Contact | Phone
+          .form-group{class: (@club.errors[:contact].any? || @club.errors[:phone].any?) ? "has-error" : ""}
+            = f.label :contact, t("contact"), class: "control-label col-sm-1"
+            .col-sm-3
+              = f.text_field :contact, class: "form-control"
+              - if @club.errors[:contact].any?
+                .help-block= @club.errors[:contact].first
+            = f.label :phone, t("club.phone"), class: "control-label col-sm-1"
+            .col-sm-2
+              = f.text_field :phone, class: "form-control"
+              - if @club.errors[:phone].any?
+                .help-block= @club.errors[:phone].first
 
-        = render "utils/text_field_for", locals.merge(param: :email, text: t("email"), width: 6)
-        -# Inline: Secretary ID | Select_Secretary[Button]
-        .form-group{class: @club.errors[:secretary_id].any? ? "has-error" : ""}
-          = f.label :secretary_id, t("club.secretary"), class: "control-label col-sm-1"
-          .col-sm-2
-            = f.text_field :secretary_id, class: "form-control"
-            - if @club.errors[:secretary_id].any?
-              .help-block= @club.errors[:secretary_id].first
-          .col-sm-2
-            = render "player_ids_button"
+          = render "utils/text_field_for", locals.merge(param: :email, text: t("email"), width: 6)
+          -# Inline: Secretary ID | Select_Secretary[Button]
+          .form-group{class: @club.errors[:secretary_id].any? ? "has-error" : ""}
+            = f.label :secretary_id, t("club.secretary"), class: "control-label col-sm-1"
+            .col-sm-2
+              = f.text_field :secretary_id, class: "form-control"
+              - if @club.errors[:secretary_id].any?
+                .help-block= @club.errors[:secretary_id].first
+            .col-sm-2
+              = render "player_ids_button"
 
-        %hr
-        = render "utils/text_area_for", locals.merge(param: :notes, text: t("club.notes"), width: 8)
+          %hr
+          = render "utils/text_area_for", locals.merge(param: :notes, text: t("club.notes"), width: 8)
 
-        %hr
-        = render "utils/check_box_for", locals.merge(param: :active, text: t("active"), width: 1, small: true)
-      = render "utils/form_buttons", form: f, object: @club
+          %hr
+          = render "utils/check_box_for", locals.merge(param: :active, text: t("active"), width: 1, small: true)
+        .col-sm-10.col-sm-offset-1
+          = render "utils/form_buttons", form: f, object: @club, center: false
