@@ -21,17 +21,18 @@ class PaymentsController < ApplicationController
       redirect_to shop_path
       return
     end
-    if @cart.total_cost == 0
-      render "zero_cost_card"
-    end
-
     if @cart.has_expired_items?
       # Only should occur if the user gets to /card without going through /cart
       flash[:warning] = t("shop.payment.expired_items")
       redirect_to cart_path
+      return
+    end
+    if @cart.total_cost == 0
+      render "zero_cost_card"
+      return
     end
 
-    @intent = @cart.create_intent if @cart.total_cost > 0
+    @intent = @cart.create_intent
   end
 
   def charge
