@@ -78,6 +78,12 @@ class Cart < ApplicationRecord
       return
     end
 
+    # A payment can only pay for one cart, otherwise the ID of an earlier payment for the same amount could be sent again.
+    if intent and Cart.where(payment_ref: intent.id).where.not(id: id).exists?
+      add_payment_error({message: "Payment intent already used"}, name, email, "Something went wrong, please contact webmaster@icu.ie")
+      return
+    end
+
     if intent and intent.status == 'succeeded'  
       latest_charge = intent.latest_charge
       Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),})
