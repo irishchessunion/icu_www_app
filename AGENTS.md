@@ -76,8 +76,8 @@ Several cross-cutting behaviors are implemented as concerns rather than gems:
 ### Payments (Cart / Item / Fee)
 `Fee` is STI (`Fee::Subscription`, `Fee::Entry`, `Fee::Other`) defining what can be bought (membership subs, tournament entries, etc.); `Item` (also STI-mirrored: `Item::Subscription`, `Item::Entry`, `Item::Other`) is a purchased instance of a `Fee` belonging to a `Cart`. Checkout goes through Stripe (`payments` controller: `shop`/`cart`/`card`/`charge`/`confirm`/`completed`) or offline via admin `CashPayment`. Refunds and payment errors are tracked separately (`Refund`, `PaymentError`, `MailEvent`/`MailControl` for related email).
 
-### Legacy data (`lib/icu/legacy/`)
-This code performed a one-time sync from the ICU's old (`www1`) site/database into this one. The sync is complete and `Ability`/`Global::SOURCES` (`www1`/`www2`) still distinguish records by origin, but `lib/icu/legacy/database.rb`'s DB connection methods now deliberately `raise` — the legacy DB is no longer reachable/used. Don't attempt to "fix" these raises; the legacy sync is intentionally disabled.
+### Legacy data
+The site's data was converted once, in 2014, from the ICU's old (`www1`) site and database. The conversion code has been removed (it's in git history), but `Ability` and `Global::SOURCES` (`www1`/`www2`) still distinguish records by origin. All that's left in `lib/icu/legacy/` is `check.rb`, run with `bin/rake sync:check`, which reports broken links between players, users, clubs and games in the current database.
 
 ### Global constants
 `app/models/global.rb` centralizes app-wide lists used by routing and views: static ICU document/page names (`ICU_DOCS`, `ICU_PAGES`), help page names (`HELP_PAGES`), and shared validators (`Global.valid_url?`, `Global.valid_email?`). Routes for these pages are generated dynamically from these lists in `config/routes.rb`, so adding a new static ICU/help page is a matter of adding it to the relevant `Global` list plus a view, not a new route.
