@@ -1,6 +1,6 @@
-%div{class: "panel panel-default with-margin club-meeting-fields", "data-new-record" => meeting_form.object.new_record? ? "true" : "false"}
+%div{class: "panel panel-default with-margin club-meeting-fields #{'hidden' if meeting_form.object.marked_for_destruction?}", "data-new-record" => meeting_form.object.new_record? ? "true" : "false"}
   .panel-body
-    = meeting_form.hidden_field :_destroy, value: "0"
+    = meeting_form.hidden_field :_destroy, value: meeting_form.object.marked_for_destruction? ? "1" : "0"
     .inline-flex
       .flex-grow
         .row

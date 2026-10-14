@@ -319,5 +319,26 @@ describe Club do
       expect(retained.audience).to eq "women_only"
       expect(ClubMeeting.exists?(removed.id)).to be false
     end
+
+    it "keeps a meeting removed when another field fails validation" do
+      club = create(:club)
+      meeting = club.club_meetings.create!(day_of_week: "tuesday", start_time: "18:00")
+      visit edit_admin_club_path(club)
+
+      within find(".club-meeting-fields") do
+        find("button[aria-label='Remove meeting']").click
+      end
+      fill_in name, with: ""
+      click_button save
+
+      expect(page).to have_css(field_error, text: "blank")
+      expect(page).to have_no_css(".club-meeting-fields")
+      expect(page).to have_css(".club-meeting-fields input[name$='[_destroy]'][value='1']", visible: false)
+
+      fill_in name, with: club.name
+      click_button save
+      expect(page).to have_css(success, text: updated)
+      expect(ClubMeeting.exists?(meeting.id)).to be false
+    end
   end
 end
