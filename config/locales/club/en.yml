@@ -22,6 +22,8 @@ en:
       add: Add meeting
       audience: Restricted to
       day: Day
+      is_at: s at
+      is_at_sm: s
       notes: Notes
       remove: Remove meeting
       select_day: Select day

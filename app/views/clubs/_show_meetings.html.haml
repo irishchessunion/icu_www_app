@@ -7,7 +7,7 @@
         - meetings.each do |meeting|
           %li.list-group-item
             %div.inline-between
-              %strong= "#{meeting.day_of_week.capitalize}s at #{meeting.start_time.strftime('%H:%M')}"
+              %strong= "#{meeting.day_of_week.capitalize}#{t('club.meetings.is_at')} #{meeting.start_time.strftime('%H:%M')}"
               %div.inline-flex
                 - unless meeting.audience == "open"
                   - if meeting.audience == "juniors_only"
