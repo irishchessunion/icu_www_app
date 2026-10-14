@@ -1123,6 +1123,10 @@ input:checked+.slider:before {
 
 /* BUTTONS */
 
+.btn-rounded {
+  border-radius: calc(infinity * 1px);
+}
+
 .btn.btn-pastel-primary,
 .panel-pastel-primary {
   color: var(--brand-primary-dark);

@@ -19,7 +19,7 @@
           = render "utils/text_field_for", locals.merge(param: :web, text: t("club.web"))
 
           %hr
-          = render "utils/text_field_for", locals.merge(param: :meet, text: t("club.meet"), width: 8)
+          = render "admin/clubs/meeting_form", form: f
 
           %hr
           = render "utils/text_field_for", locals.merge(param: :address, text: t("address"), width: 8)
