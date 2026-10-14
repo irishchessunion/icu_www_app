@@ -205,6 +205,25 @@ describe Club do
   context "meetings form", js: true do
     before(:each) { login "editor" }
 
+    it "keeps an unsaved meeting on the form after a validation error" do
+      visit new_admin_club_path
+      click_button "Add meeting"
+      within find(".club-meeting-fields") do
+        select "Monday", from: "Day"
+        fill_in "Start time", with: "18:00"
+        fill_in "Notes", with: "New meeting"
+      end
+      click_button "Add meeting"
+      within all(".club-meeting-fields").last do
+        fill_in "Notes", with: "Missing day and time"
+      end
+
+      click_button save
+
+      expect(page).to have_css(field_error, text: "blank")
+      expect(page.all(".club-meeting-fields input[name$='[notes]']").map(&:value)).to eq ["New meeting", "Missing day and time"]
+    end
+
     it "shows a full-width remove button at the bottom on mobile" do
       club = create(:club)
       club.club_meetings.create!(day_of_week: "tuesday", start_time: "18:00")

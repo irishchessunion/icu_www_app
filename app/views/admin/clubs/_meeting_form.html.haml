@@ -3,9 +3,7 @@
   .col-sm-10
     %button.btn.btn-pastel-info{type: "button", "data-action" => "club-meetings#add"}= t("club.meetings.add")
     %div.voffset1{"data-club-meetings-target" => "list"}
-      - days = ClubMeeting::DAYS_OF_WEEK
-      - meetings = @club.club_meetings.sort_by { |meeting| [days.index(meeting.day_of_week) || days.size, meeting.start_time&.strftime("%H:%M:%S").to_s] }
-      = form.fields_for :club_meetings, meetings do |meeting_form|
+      = form.fields_for :club_meetings, ordered_club_meetings(@club.club_meetings) do |meeting_form|
         = render "admin/clubs/meeting_fields", meeting_form: meeting_form
     %template{"data-club-meetings-target" => "template"}
       = form.fields_for :club_meetings, ClubMeeting.new, child_index: "NEW_RECORD" do |meeting_form|

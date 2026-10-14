@@ -1,10 +1,10 @@
-- meetings = @club.club_meetings.to_a
+- meetings = ordered_club_meetings(@club.club_meetings)
 %section{"id": "meetings", "aria-label": "#{t('club.club')} #{t('club.meet')}"}
   %h4= t("club.meet")
   .panel.panel-pastel-primary.no-margin
     - if meetings.any?
       %ul.list-group
-        - meetings.sort_by { |meeting| [ClubMeeting::DAYS_OF_WEEK.index(meeting.day_of_week), meeting.start_time] }.each do |meeting|
+        - meetings.each do |meeting|
           %li.list-group-item
             %div.inline-between
               %strong= "#{meeting.day_of_week.capitalize}s at #{meeting.start_time.strftime('%H:%M')}"
