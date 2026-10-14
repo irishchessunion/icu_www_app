@@ -1,4 +1,7 @@
 class SessionsController < ApplicationController
+  # Slows down password guessing. Counted per IP address.
+  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to sign_in_path, alert: t("session.too_many_attempts") }
+
   def create
     begin
       user = User.authenticate!(params[:email], params[:password], request.remote_ip)
