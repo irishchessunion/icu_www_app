@@ -173,4 +173,54 @@ describe PaymentsController do
       end
     end
   end
+
+  context "the current cart has an item whose discount has expired" do
+    let(:cart) { create(:cart) }
+
+    before(:each) do
+      session[:cart_id] = cart.id
+      allow(Stripe::PaymentIntent).to receive(:create)
+    end
+
+    def add_item(discounted_amount)
+      fee = create(:entry_fee, amount: 50.0, discounted_amount: discounted_amount, discount_deadline: Date.today.days_ago(1))
+      create(:entry_item, fee: fee, cart: cart, cost: discounted_amount)
+    end
+
+    it "card page goes back to the cart without creating a payment" do
+      add_item(40.0)
+
+      get "card"
+
+      expect(response).to redirect_to cart_path
+      expect(flash[:warning]).to eq I18n.t("shop.payment.expired_items")
+      expect(Stripe::PaymentIntent).to_not have_received(:create)
+    end
+
+    it "card page goes back to the cart even when the discount made the item free" do
+      add_item(0.0)
+
+      get "card"
+
+      expect(response).to redirect_to cart_path
+      expect(Stripe::PaymentIntent).to_not have_received(:create)
+    end
+  end
+
+  context "the current cart only has free items" do
+    let(:cart) { create(:cart) }
+
+    before(:each) do
+      session[:cart_id] = cart.id
+      allow(Stripe::PaymentIntent).to receive(:create)
+      create(:entry_item, fee: create(:entry_fee, amount: 0.0), cart: cart)
+    end
+
+    it "card page shows the zero cost version without creating a payment" do
+      get "card"
+
+      expect(response).to render_template("zero_cost_card")
+      expect(Stripe::PaymentIntent).to_not have_received(:create)
+    end
+  end
 end

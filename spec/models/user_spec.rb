@@ -172,6 +172,22 @@ describe User do
     end
   end
 
+  context "#used_site_now" do
+    it "records the time with one query and leaves updated_at alone" do
+      user = create(:user)
+      user.update_column(:updated_at, 1.week.ago)
+      updated_at = user.reload.updated_at
+
+      queries = []
+      callback = ->(*, payload) { queries << payload[:sql] unless payload[:name] == "SCHEMA" }
+      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { user.used_site_now }
+
+      expect(queries.size).to eq 1
+      expect(user.reload.last_used_at).to be_within(5.seconds).of(Time.now)
+      expect(user.updated_at).to eq updated_at
+    end
+  end
+
   context "#verification_param" do
     let(:user) { create(:user) }
 

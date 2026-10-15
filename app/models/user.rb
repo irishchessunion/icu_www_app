@@ -87,9 +87,9 @@ class User < ApplicationRecord
     t.valid? ? t.to_s : t.error
   end
 
-  # Updates the last_used_at attribute with the current time.
+  # Updates the last_used_at attribute with the current time. Runs on every request, so skips validations and callbacks.
   def used_site_now
-    self.update(last_used_at: Time.now)
+    update_column(:last_used_at, Time.now)
   end
 
   # Cater for a theme getting removed, as Ameila was in Aug 2014 after Bootswatch announced they were dropping it.
