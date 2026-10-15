@@ -98,7 +98,7 @@ class Cart < ApplicationRecord
         # The money has been taken, so the cart must still be marked as paid.
         Failure.log("UpdatePaymentIntentFailure", exception: e, cart_id: id, payment_intent_id: intent.id)
       end
-      successful_payment("stripe", intent.id, latest_charge, Cart.current_payment_account)
+      payment = ["stripe", intent.id, latest_charge, Cart.current_payment_account]
     elsif intent and not intent.status == 'succeeded'
       add_payment_error(intent, name, email, "Something went wrong, please contact webmaster@icu.ie")
       return
@@ -107,10 +107,21 @@ class Cart < ApplicationRecord
       add_payment_error({message: "Payment intent missing"}, name, email, "Something went wrong, please contact webmaster@icu.ie")
       return
     else
-      successful_payment("free", nil, nil, Cart.current_payment_account)
+      payment = ["free", nil, nil, Cart.current_payment_account]
     end
 
-    update_cart(total_cost, name, email, user)
+    # Together, so that if the unique index on payment_ref rejects the cart, the items aren't left paid for either.
+    begin
+      transaction do
+        successful_payment(*payment)
+        update_cart(total_cost, name, email, user)
+      end
+    rescue ActiveRecord::RecordNotUnique
+      # Another request used the same payment for a different cart between the check above and here.
+      reload
+      add_payment_error({message: "Payment intent already used"}, name, email, "Something went wrong, please contact webmaster@icu.ie")
+      return
+    end
     send_receipt
   end
 

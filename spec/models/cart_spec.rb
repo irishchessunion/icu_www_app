@@ -48,6 +48,35 @@ describe Cart do
     end
   end
 
+  context "#purchase when another cart takes the same payment at the same time" do
+    let(:fee)    { create(:subscription_fee) }
+    let(:player) { create(:player) }
+    let!(:user)  { create(:user, player: player, expires_on: Date.today.end_of_year) }
+    let(:cart)   { create(:cart) }
+    let(:other)  { create(:cart, status: "paid", payment_method: "stripe") }
+    let(:params) { { payment_intent_id: "pi_3QMTIr9JTJmjex", confirmation_email: "mark@markorr.net", payment_name: "Mark Orr" } }
+    let(:intent) { double(id: params[:payment_intent_id], amount: (fee.amount * 100).to_i, status: "succeeded", latest_charge: "ch_3QMTIr9JTJmjex") }
+
+    before(:each) do
+      create(:subscription_item, fee: fee, player: player, cart: cart)
+      allow(Stripe::PaymentIntent).to receive(:retrieve).and_return(intent)
+      # This is called after the check for a payment already used, so it's where the other request can get in first.
+      allow(Stripe::PaymentIntent).to receive(:update) { other.update_column(:payment_ref, intent.id) }
+    end
+
+    it "leaves the cart, its items and the member's subscription as they were" do
+      cart.purchase(params, User::Guest.new)
+
+      expect(cart).to be_unpaid
+      expect(cart.reload).to be_unpaid
+      expect(cart.payment_ref).to be_nil
+      expect(cart.items.map(&:status)).to eq ["unpaid"]
+      expect(user.reload.expires_on).to eq Date.today.end_of_year
+      expect(cart.payment_errors.map(&:message)).to eq ["Something went wrong, please contact webmaster@icu.ie"]
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+  end
+
   context "#refund" do
     let(:fee)   { create(:subscription_fee) }
     let(:user)  { create(:user) }
