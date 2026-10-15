@@ -1900,9 +1900,13 @@
     %ul
       %li check to see if the rating officer has requested a rating run and, if so, start one,
   %li
-    daily:
+    hourly:
     %ul
       %li import new and updated data from the <em>www</em> database (players, users, subscriptions, foreign rating fees),
+  %li
+    daily:
+    %ul
+      %li push the latest ratings to the <em>www</em> database (twice a day),
       %li export the latest published and live ratings to a file that tournament controllers can download,
       %li
         = render "link", topic: "appendix.webalizer"
