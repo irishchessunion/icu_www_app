@@ -32,7 +32,7 @@ class Admin::EventsController < ApplicationController
     @event.markdown = false
     if @event.update(event_params)
       @event.journal(:update, current_user, request.remote_ip)
-      redirect_to @event, notice: "Event was successfully updated"
+      redirect_to admin_event_path(@event), notice: "Event was successfully updated"
     else
       flash_first_error(@event, base_only: true)
       render action: "edit"

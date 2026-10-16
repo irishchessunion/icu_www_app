@@ -31,9 +31,12 @@ describe "WYSIWYG notes for events and clubs", js: true do
     click_button save
 
     expect(page).to have_css(success, text: "updated")
+    expect(page).to have_current_path(admin_event_path(event))
     event.reload
     expect(event.markdown).to be false
     expect(event.note).to include("Bring a clock", "[EVT:#{event.id}:#{event.name}]")
+
+    visit event_path(event)
     expect(page).to have_css("#description strong", text: "Bring a clock")
     expect(page).to have_css("#description a[href='/events/#{event.id}']", text: event.name)
   end
