@@ -8,16 +8,6 @@
           = link_to @event.streaming_url, target: "event", class: "inline-glyph" do
             %span.glyphicon.glyphicon-facetime-video.glyphicon-sm
             = t("event.streaming_embed")
-      - if @event.pairings_url.present?
-        %li
-          = link_to @event.pairings_url, target: "event", class: "inline-glyph" do
-            %span.glyphicon.glyphicon-list.glyphicon-sm
-            = t('event.pairings')
-      - if @event.results_url.present?
-        %li
-          = link_to @event.results_url, target: "event", class: "inline-glyph" do
-            %span.glyphicon.glyphicon-stats.glyphicon-sm
-            = t('event.results')
       - if @event.report_url.present?
         %li
           = link_to @event.report_url, target: "event", class: "inline-glyph" do
