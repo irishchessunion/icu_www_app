@@ -23,3 +23,12 @@
           allowfullscreen: true,
           class: "video-embed"
         }
+- elsif @event.live_games_url2.present? && @event.start_date <= Date.today
+  %section{"id": "livestream", "class": "show-stream hidden-xs"}
+    %h4.inline-between
+      = t('event.live_games')
+      %a.btn.btn-sm.btn-pastel-primary
+        Lichess
+        %span.glyphicon.glyphicon-xs.glyphicon-new-window
+    %div{style: "border-radius: 8px; overflow: hidden; border: 2px solid var(--brand-primary-lighter)"}
+      %iframe{scrolling: "no", style: "width: 100%;aspect-ratio: 9/6", frameborder: "0", src: @event.live_games_url2}
