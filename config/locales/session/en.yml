@@ -10,4 +10,5 @@ en:
     signed_in_as: Logged in as
     signed_out: Logged out!
     subscription_expired: Subscription expired
+    too_many_attempts: Too many attempts, please wait a few minutes and try again
     unverified_email: Unverified email

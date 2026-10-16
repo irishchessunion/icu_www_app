@@ -1,4 +1,7 @@
 class PasswordsController < ApplicationController
+  # Stops the form being used to flood members with emails or to search for registered addresses. Counted per IP address.
+  rate_limit to: 5, within: 3.minutes, only: :create, with: -> { redirect_to new_password_path, alert: t("session.too_many_attempts") }
+
   # GET /password/new
   # Just displays a forgot password form with a single field for the email address.
   def new

@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
   def new
     unless @fee
-      @fee = Fee.on_sale.where(id: params[:fee_id]).first
+      @fee = fee_for_sale(params[:fee_id])
       if @fee
         @item = Item.new(fee: @fee, type: @fee.subtype(:item)).becomes(Item)
         @new_player, @player_name = new_player(@fee)
@@ -13,7 +13,11 @@ class ItemsController < ApplicationController
 
   def create
     @item = Item.new(item_params)
-    @fee = @item.fee
+    @fee = fee_for_sale(@item.fee_id)
+    unless @fee
+      redirect_to shop_path
+      return
+    end
     cart = current_cart(:create)
     original_notes = @item.notes.dup
 
@@ -43,6 +47,12 @@ class ItemsController < ApplicationController
 
   def item_params
     params.required(:item).permit(:type, :fee_id, :player_id, :player_data, :section, notes: [])
+  end
+
+  # Only fees which are on sale can be added to a cart, and organiser only fees just by those allowed to see them.
+  def fee_for_sale(id)
+    fee = Fee.on_sale.find_by(id: id)
+    fee if fee && (!fee.organizer_only || can?(:show, fee))
   end
 
   def new_player(fee, item=nil)

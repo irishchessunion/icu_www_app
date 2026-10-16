@@ -167,6 +167,13 @@ class Item < ApplicationRecord
     notes.join(", ").truncate(max)
   end
 
+  # Items are only checked for duplicates when they're added to a cart, and only against what was paid for by then.
+  # This is for checking again later. Overridden by the types of item which can't be bought twice.
+  # @return [String, nil]
+  def paid_duplicate_error
+    nil
+  end
+
   def subtype
     (type.presence || self.class.to_s).split("::").last.downcase
   end

@@ -1,10 +1,10 @@
 class BadLogin < ApplicationRecord
   include Pageable
 
-  validates_presence_of :email, :encrypted_password, :ip
+  validates_presence_of :email, :ip
 
-  def self.new_record(email, password, ip)
-    create!(email: email, encrypted_password: Digest::MD5.hexdigest(password), ip: ip)
+  def self.new_record(email, ip)
+    create!(email: email, ip: ip)
   end
 
   def self.search(params, path)

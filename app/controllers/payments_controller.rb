@@ -21,6 +21,10 @@ class PaymentsController < ApplicationController
       redirect_to shop_path
       return
     end
+    if (error = @cart.paid_duplicate_error)
+      redirect_to cart_path, alert: error
+      return
+    end
     if @cart.has_expired_items?
       # Only should occur if the user gets to /card without going through /cart
       flash[:warning] = t("shop.payment.expired_items")

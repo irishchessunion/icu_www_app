@@ -442,6 +442,17 @@ describe "Events API", type: :request do
         expect(names).to eq %w[Past Later]
       end
 
+      it "counts a change to one of an event's fees as a change to the event" do
+        fee = create(:entry_fee, event: sooner)
+        sooner.update_column(:updated_at, Time.zone.parse("2026-03-01 09:00:00"))
+        fetch(updated_since: "2026-03-02")
+        expect(names).to eq %w[Later]
+
+        fee.update!(amount: fee.amount + 5)
+        fetch(updated_since: "2026-03-02")
+        expect(names).to eq %w[Sooner Later]
+      end
+
       it "must be a date or time" do
         ["yesterday", "2026-03-10 15:30", "2026-02-30", "1700000000"].each do |value|
           fetch(updated_since: value)
