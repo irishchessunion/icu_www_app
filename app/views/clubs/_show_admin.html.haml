@@ -1,0 +1,11 @@
+- if can?(:update, @club)
+  %section.show-admin
+    %h4 Admin
+    .panel.panel-pastel-info.no-margin
+      .panel-body
+        = link_to "Edit Club", edit_admin_club_path(@club), class: "btn btn-primary btn-sm"
+        %hr
+        - if @club.secretary.present?
+          %div= "#{t('club.secretary')}: #{@club.secretary.name} (#{@club.secretary.id})"
+        %div= "#{t('created_at')}: #{@club.created_at.to_date}"
+        %div= "#{t('updated_at')}: #{@club.updated_at.to_fs(:nosec)}"

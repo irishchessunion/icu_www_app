@@ -1,4 +1,5 @@
-- defined?(admin) || admin = ""
+- defined?(admin)  || admin  = ""
+- defined?(center) || center = true
 
 - type = object.class.to_s.underscore
 - if object.new_record?
@@ -7,6 +8,6 @@
   - cancel_path = admin.include?("show") ? [:admin, object] : object
 
 %hr
-.text-center
+%div{class: center ? "text-center" : nil}
   = form.submit t("save"), class: "btn btn-primary"
   = link_to t("cancel"), cancel_path, class: "btn btn-default"

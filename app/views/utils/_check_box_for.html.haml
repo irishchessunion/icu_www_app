@@ -1,12 +1,13 @@
 - defined?(disabled)  || disabled  = false
 - defined?(off)       || off       = 0
 - defined?(on)        || on        = 1
+- defined?(small)     || small     = false
 - if defined?(ttext); text = t(ttext + ".label"); hint = t(ttext + ".hint", default: ""); end
 
 .form-group{class: object.errors[param].any? ? "has-error" : ""}
   = form.label param, text, class: "control-label col-#{col}-#{pad}"
   %div{class: "col-#{col}-#{width}"}
-    = form.check_box param, { class: "form-control", disabled: disabled }, on, off
+    = form.check_box param, { class: (small ? "form-control input-sm" : "form-control"), disabled: disabled }, on, off
   %div{class: "col-#{col}-#{12-pad-width} help-block"}= object.errors[param].first
   - unless hint.blank?
     %br

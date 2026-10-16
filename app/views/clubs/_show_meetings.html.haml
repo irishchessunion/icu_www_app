@@ -1,0 +1,30 @@
+- meetings = ordered_club_meetings(@club.club_meetings)
+%section{"id": "meetings", "aria-label": "#{t('club.club')} #{t('club.meet')}"}
+  %h4= t("club.meet")
+  .panel.panel-pastel-primary.no-margin
+    - if meetings.any?
+      %ul.list-group
+        - meetings.each do |meeting|
+          %li.list-group-item
+            %div.inline-between
+              %strong= "#{meeting.day_of_week.capitalize}#{t('club.meetings.is_at')} #{meeting.start_time.strftime('%H:%M')}"
+              %div.inline-flex
+                - unless meeting.audience == "open"
+                  - if meeting.audience == "juniors_only"
+                    - audience_class = "panel-pastel-info"
+                  - elsif meeting.audience == "women_only"
+                    - audience_class = "panel-pastel-danger"
+                  - else
+                    - audience_class = "panel-pastel-primary"
+                  %span{class: "label label-rounded #{audience_class}"}
+                    = meeting.audience.humanize
+                - unless meeting.welcomes_juniors
+                  %span{class: "label label-rounded panel-pastel-primary"}
+                    Adults Only
+            %div
+              - if meeting.notes.present?
+                %span.text-muted= meeting.notes
+    - elsif @club.meet.present?
+      .panel-body= @club.meet
+    - else
+      .panel-body.text-center= t("club.no_meetings")

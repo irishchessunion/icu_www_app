@@ -1,0 +1,11 @@
+- if @club.contact.present? || @club.email.present? || @club.phone.present?
+  %section{"id": "contact", "aria-label": "#{t('club.club')} #{t('contact')}"}
+    %h4= t("contact")
+    .panel.panel-default.contact-panel
+      .panel-body
+        - if @club.email.present?
+          = mail_to @club.email, @club.contact.present? ? @club.contact : @club.email
+        - else
+          = @club.contact
+        - if @club.phone.present?
+          %div= @club.phone

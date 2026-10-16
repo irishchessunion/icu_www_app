@@ -18,6 +18,18 @@ en:
     long: Longitude
     map: Clubs Map
     meet: Meetings
+    meetings:
+      add: Add meeting
+      audience: Restricted to
+      day: Day
+      is_at: s at
+      is_at_sm: s
+      notes: Notes
+      remove: Remove meeting
+      select_day: Select day
+      time: Start time
+      welcomes_juniors: Welcomes juniors
+    no_meetings: This club currently has no meetings.
     notes: Notes
     phone: Phone
     province: Province

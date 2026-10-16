@@ -1,0 +1,8 @@
+.event-nav-sm
+  .col-md-12
+    %ul.no-margin
+      - if @club.notes.present?
+        %li= link_to t("description"), "#description"
+      %li= link_to t("club.meet"), "#meetings"
+      - if @club.contact.present? || @club.email.present? || @club.phone.present?
+        %li= link_to t("contact"), "#contact"

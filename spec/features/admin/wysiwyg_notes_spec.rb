@@ -58,6 +58,6 @@ describe "WYSIWYG notes for events and clubs", js: true do
 
     expect(page).to have_css(success, text: "updated")
     expect(club.reload.notes).to eq "<p>Meets <em>upstairs</em></p>"
-    expect(page).to have_css("td em", text: "upstairs")
+    expect(page).to have_css("#description em", text: "upstairs")
   end
 end

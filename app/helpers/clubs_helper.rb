@@ -27,4 +27,11 @@ module ClubsHelper
   def google_maps_search(club)
     "https://www.google.com/maps/search/?api=1&query=#{club.eircode}"
   end
+
+  def ordered_club_meetings(meetings)
+    days = ClubMeeting::DAYS_OF_WEEK
+    meetings.to_a.sort_by do |meeting|
+      [days.index(meeting.day_of_week) || days.size, meeting.start_time&.strftime("%H:%M:%S").to_s]
+    end
+  end
 end

@@ -49,7 +49,7 @@ class Club < ApplicationRecord
   end
 
   def self.search(params, path)
-    matches = all
+    matches = all.preload(:club_meetings)
     matches = matches.where("name LIKE ?", "%#{params[:name].squish}%") if params[:name].present?
     matches = matches.where("city LIKE ?", "%#{params[:city]}%") if params[:city].present?
     matches = matches.where(county: params[:county]) if Ireland.county?(params[:county])
@@ -74,13 +74,16 @@ class Club < ApplicationRecord
   end
 
   def location
-    location = []
-    location << address  if address
-    location << district if district
-    location << city     if city
-    location << I18n.t("club.co") + " " + I18n.t("ireland.co.#{county}")
-    location << I18n.t("ireland.prov.#{province}")
-    location.join(', ')
+    location_parts.join(", ")
+  end
+
+  def location_parts
+    county_name = I18n.t("ireland.co.#{county}")
+    parts = address.to_s.split(",").map(&:strip).reject(&:blank?)
+    parts << city if city.present? && ![county.to_s, county_name].any? { |name| city.casecmp?(name) }
+    parts << "#{I18n.t('club.co')} #{county_name}"
+    parts << eircode if eircode.present?
+    parts
   end
 
   private

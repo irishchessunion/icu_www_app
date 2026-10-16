@@ -1,0 +1,47 @@
+%div{class: "panel panel-default with-margin club-meeting-fields #{'hidden' if meeting_form.object.marked_for_destruction?}", "data-new-record" => meeting_form.object.new_record? ? "true" : "false"}
+  .panel-body
+    = meeting_form.hidden_field :_destroy, value: meeting_form.object.marked_for_destruction? ? "1" : "0"
+    .inline-flex
+      .flex-grow
+        .row
+          .col-sm-4{class: meeting_form.object.errors[:day_of_week].any? ? "has-error" : ""}
+            = meeting_form.label :day_of_week, t("club.meetings.day")
+            = meeting_form.select :day_of_week, ClubMeeting::DAYS_OF_WEEK.map { |day| [day.capitalize, day] }, { include_blank: t("club.meetings.select_day") }, class: "form-control"
+            - if meeting_form.object.errors[:day_of_week].any?
+              .help-block= meeting_form.object.errors[:day_of_week].first
+          .col-sm-4{class: meeting_form.object.errors[:start_time].any? ? "has-error" : ""}
+            = meeting_form.label :start_time, t("club.meetings.time")
+            = meeting_form.time_field :start_time, class: "form-control"
+            - if meeting_form.object.errors[:start_time].any?
+              .help-block= meeting_form.object.errors[:start_time].first
+          .col-sm-4{class: meeting_form.object.errors[:welcomes_juniors].any? ? "has-error" : ""}
+            .switch-group.voffset3
+              %label.switch
+                = meeting_form.check_box :welcomes_juniors
+                %span.slider
+              = meeting_form.label :welcomes_juniors, t("club.meetings.welcomes_juniors")
+            - if meeting_form.object.errors[:welcomes_juniors].any?
+              .help-block= meeting_form.object.errors[:welcomes_juniors].first
+      %button.btn.btn-sm.btn-pastel-danger.btn-rounded.hidden-xs{type: "button", "aria-label" => t("club.meetings.remove"), "data-action" => "club-meetings#remove"}
+        %span.glyphicon.glyphicon-remove{"aria-hidden" => "true"}
+    %hr
+    .row
+      .col-sm-12{class: meeting_form.object.errors[:notes].any? ? "has-error" : ""}
+        .inline-between
+          = meeting_form.label :notes, t("club.meetings.notes")
+          %span.text-muted{"data-club-meetings-target" => "count"}= "#{meeting_form.object.notes.to_s.length}/100"
+        = meeting_form.text_field :notes, class: "form-control", maxlength: 100, data: { action: "input->club-meetings#updateCount" }
+        - if meeting_form.object.errors[:notes].any?
+          .help-block= meeting_form.object.errors[:notes].first
+    .row.voffset2
+      .col-sm-12{class: meeting_form.object.errors[:audience].any? ? "has-error" : ""}
+        = meeting_form.label :audience, t("club.meetings.audience")
+        .inline-radio
+          - ClubMeeting::AUDIENCES.each do |audience|
+            = meeting_form.radio_button :audience, audience
+            = meeting_form.label :audience, audience.humanize, value: audience
+        - if meeting_form.object.errors[:audience].any?
+          .help-block= meeting_form.object.errors[:audience].first
+    %button.btn.btn-pastel-danger.btn-block.visible-xs-block.voffset2{type: "button", "data-action" => "club-meetings#remove"}
+      %span.glyphicon.glyphicon-remove{"aria-hidden" => "true"}
+      = t("club.meetings.remove")

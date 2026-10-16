@@ -6,15 +6,20 @@
   .col-md-10.col-md-offset-1
     - if @clubs.count > 0
       - @clubs.matches.each do |club|
+        - meetings = ordered_club_meetings(club.club_meetings)
         %div{class: "panel panel-default", id: "club_#{club.id}"}
           .panel-heading
-            = link_to club.name, club
+            %strong= link_to club.name, club
             = "(#{t('inactive')})" unless club.active
           %ul.list-group
             %li.list-group-item
               %em= "#{t('club.location')}:"
               = link_to_if club.geocodes?, club.location, clubs_map_path(club)
-            - if club.meet
+            - if meetings.any?
+              %li.list-group-item
+                %em= "#{t('club.meet')}:"
+                = meetings.map { |meeting| "#{meeting.day_of_week.capitalize}#{t('club.meetings.is_at_sm')} #{meeting.start_time.strftime('%H:%M')}" }.join(', ')
+            - elsif club.meet.present?
               %li.list-group-item
                 %em= "#{t('club.meet')}:"
                 = club.meet
