@@ -53,10 +53,8 @@ module EventsHelper
   end
 
   def event_has_links?(event)
-    event.pairings_url.present? ||
-      event.live_games_url.present? ||
+    event.live_games_url.present? ||
       event.live_games_url2.present? ||
-      event.results_url.present? ||
       event.report_url.present? ||
       event.streaming_url.present?
   end
