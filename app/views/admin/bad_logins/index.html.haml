@@ -8,14 +8,12 @@
         %thead
           %tr
             %th Email
-            %th Encrypted password
             %th IP
             %th Time (Ago)
         %tbody
           - @bad_logins.matches.each do |login|
             %tr
               %td= login.email
-              %td= login.encrypted_password
               %td= login.ip
               %td= "#{login.created_at.to_fs(:db)} (#{time_ago_in_words(login.created_at, include_seconds: true)})"
-          = render "utils/pagination_links", pager: @bad_logins, columns: 4
+          = render "utils/pagination_links", pager: @bad_logins, columns: 3

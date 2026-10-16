@@ -11,6 +11,7 @@ en:
     news:
       latest: Latest News
       all: All News
+      add: News item
       show_less: Show less
       show_more: Show more
     organisers: Organisers

@@ -173,4 +173,98 @@ describe PaymentsController do
       end
     end
   end
+
+  context "the current cart has an item whose discount has expired" do
+    let(:cart) { create(:cart) }
+
+    before(:each) do
+      session[:cart_id] = cart.id
+      allow(Stripe::PaymentIntent).to receive(:create)
+    end
+
+    def add_item(discounted_amount)
+      fee = create(:entry_fee, amount: 50.0, discounted_amount: discounted_amount, discount_deadline: Date.today.days_ago(1))
+      create(:entry_item, fee: fee, cart: cart, cost: discounted_amount)
+    end
+
+    it "card page goes back to the cart without creating a payment" do
+      add_item(40.0)
+
+      get "card"
+
+      expect(response).to redirect_to cart_path
+      expect(flash[:warning]).to eq I18n.t("shop.payment.expired_items")
+      expect(Stripe::PaymentIntent).to_not have_received(:create)
+    end
+
+    it "card page goes back to the cart even when the discount made the item free" do
+      add_item(0.0)
+
+      get "card"
+
+      expect(response).to redirect_to cart_path
+      expect(Stripe::PaymentIntent).to_not have_received(:create)
+    end
+  end
+
+  context "the current cart only has free items" do
+    let(:cart) { create(:cart) }
+
+    before(:each) do
+      session[:cart_id] = cart.id
+      allow(Stripe::PaymentIntent).to receive(:create)
+      create(:entry_item, fee: create(:entry_fee, amount: 0.0), cart: cart)
+    end
+
+    it "card page shows the zero cost version without creating a payment" do
+      get "card"
+
+      expect(response).to render_template("zero_cost_card")
+      expect(Stripe::PaymentIntent).to_not have_received(:create)
+    end
+  end
+
+  context "the current cart is unpaid and has items" do
+    let(:player)           { create(:player) }
+    let(:subscription_fee) { create(:subscription_fee) }
+    let(:entry_fee)        { create(:entry_fee) }
+    let(:cart)             { create(:cart) }
+
+    before(:each) do
+      session[:cart_id] = cart.id
+      allow(Stripe::PaymentIntent).to receive(:create).and_return(double(client_secret: "pi_123_secret_456"))
+    end
+
+    it "card page is shown" do
+      create(:subscription_item, fee: subscription_fee, player: player, cart: cart)
+      create(:entry_item, fee: entry_fee, player: player, cart: cart)
+
+      get "card"
+
+      expect(response).to_not be_redirect
+      expect(Stripe::PaymentIntent).to have_received(:create)
+    end
+
+    it "card page goes back to the cart if someone else has since paid for the same subscription" do
+      create(:subscription_item, fee: subscription_fee, player: player, cart: cart)
+      create(:paid_subscription_item, fee: subscription_fee, player: player, cart: create(:cart, status: "paid"))
+
+      get "card"
+
+      expect(response).to redirect_to cart_path
+      expect(flash[:alert]).to eq I18n.t("item.error.subscription.already_exists", member: player.name(id: true), season: subscription_fee.years)
+      expect(Stripe::PaymentIntent).to_not have_received(:create)
+    end
+
+    it "card page goes back to the cart if someone else has since paid for the same entry" do
+      create(:entry_item, fee: entry_fee, player: player, cart: cart)
+      create(:paid_entry_item, fee: entry_fee, player: player, cart: create(:cart, status: "paid"))
+
+      get "card"
+
+      expect(response).to redirect_to cart_path
+      expect(flash[:alert]).to eq I18n.t("item.error.entry.already_entered", member: player.name(id: true))
+      expect(Stripe::PaymentIntent).to_not have_received(:create)
+    end
+  end
 end

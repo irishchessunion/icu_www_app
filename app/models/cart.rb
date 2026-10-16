@@ -56,6 +56,12 @@ class Cart < ApplicationRecord
     false
   end
 
+  # Someone else may have paid for the same thing for the same player since an item was added to this cart.
+  # @return [String, nil] The error message for the first such item.
+  def paid_duplicate_error
+    items.filter_map(&:paid_duplicate_error).first
+  end
+
   def last_payment_error_message
     payment_errors.last.try(:message).presence || "None"
   end
@@ -78,10 +84,21 @@ class Cart < ApplicationRecord
       return
     end
 
+    # A payment can only pay for one cart, otherwise the ID of an earlier payment for the same amount could be sent again.
+    if intent and Cart.where(payment_ref: intent.id).where.not(id: id).exists?
+      add_payment_error({message: "Payment intent already used"}, name, email, "Something went wrong, please contact webmaster@icu.ie")
+      return
+    end
+
     if intent and intent.status == 'succeeded'  
       latest_charge = intent.latest_charge
-      Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),})
-      successful_payment("stripe", intent.id, latest_charge, Cart.current_payment_account)
+      begin
+        Stripe::PaymentIntent.update(intent.id, {description: ["Cart #{id}", name, email].reject { |d| d.nil? }.join(", "),})
+      rescue => e
+        # The money has been taken, so the cart must still be marked as paid.
+        Failure.log("UpdatePaymentIntentFailure", exception: e, cart_id: id, payment_intent_id: intent.id)
+      end
+      payment = ["stripe", intent.id, latest_charge, Cart.current_payment_account]
     elsif intent and not intent.status == 'succeeded'
       add_payment_error(intent, name, email, "Something went wrong, please contact webmaster@icu.ie")
       return
@@ -90,10 +107,21 @@ class Cart < ApplicationRecord
       add_payment_error({message: "Payment intent missing"}, name, email, "Something went wrong, please contact webmaster@icu.ie")
       return
     else
-      successful_payment("free", nil, nil, Cart.current_payment_account)
+      payment = ["free", nil, nil, Cart.current_payment_account]
     end
 
-    update_cart(total_cost, name, email, user)
+    # Together, so that if the unique index on payment_ref rejects the cart, the items aren't left paid for either.
+    begin
+      transaction do
+        successful_payment(*payment)
+        update_cart(total_cost, name, email, user)
+      end
+    rescue ActiveRecord::RecordNotUnique
+      # Another request used the same payment for a different cart between the check above and here.
+      reload
+      add_payment_error({message: "Payment intent already used"}, name, email, "Something went wrong, please contact webmaster@icu.ie")
+      return
+    end
     send_receipt
   end
 
@@ -116,8 +144,8 @@ class Cart < ApplicationRecord
     refund = Refund.new(user: user, cart: self, automatic: automatic)
     intent = nil
     charge = nil
-    is_old_charge = payment_ref&.start_with?("ch_") and automatic
-    is_pi = payment_ref&.start_with?("pi_") and automatic
+    is_old_charge = payment_ref&.start_with?("ch_") && automatic
+    is_pi = payment_ref&.start_with?("pi_") && automatic
     intent = Stripe::PaymentIntent.retrieve(payment_ref) if is_pi # new object
     charge = Stripe::Charge.retrieve(payment_ref) if is_old_charge # old object
     

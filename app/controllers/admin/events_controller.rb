@@ -17,6 +17,7 @@ class Admin::EventsController < ApplicationController
   def create
     @event = Event.new(event_params)
     @event.user_id = current_user.id
+    @event.markdown = false
 
     if @event.save
       @event.journal(:create, current_user, request.remote_ip)
@@ -28,9 +29,10 @@ class Admin::EventsController < ApplicationController
   end
 
   def update
+    @event.markdown = false
     if @event.update(event_params)
       @event.journal(:update, current_user, request.remote_ip)
-      redirect_to @event, notice: "Event was successfully updated"
+      redirect_to admin_event_path(@event), notice: "Event was successfully updated"
     else
       flash_first_error(@event, base_only: true)
       render action: "edit"

@@ -1,5 +1,32 @@
 require 'rails_helper'
 
+describe "News item button on the home page" do
+  let(:add_news) { I18n.t("pages.news.add") }
+
+  %w[admin editor organiser].each do |role|
+    it "is visible to users with the #{role} role" do
+      login role
+      visit home_path
+
+      within ".latest-news > header" do
+        expect(page).to have_link(add_news, href: new_admin_news_path)
+      end
+    end
+  end
+
+  %w[guest member reporter].each do |role|
+    it "is hidden from #{role} users" do
+      login role
+      visit home_path
+
+      within ".latest-news > header" do
+        expect(page).to_not have_link(add_news)
+        expect(page).to_not have_link(href: new_admin_news_path)
+      end
+    end
+  end
+end
+
 describe "News on the home page", js: true do
   let(:show_more) { I18n.t("pages.news.show_more") }
   let(:show_less) { I18n.t("pages.news.show_less") }

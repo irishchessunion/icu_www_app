@@ -87,9 +87,9 @@ class User < ApplicationRecord
     t.valid? ? t.to_s : t.error
   end
 
-  # Updates the last_used_at attribute with the current time.
+  # Updates the last_used_at attribute with the current time. Runs on every request, so skips validations and callbacks.
   def used_site_now
-    self.update(last_used_at: Time.now)
+    update_column(:last_used_at, Time.now)
   end
 
   # Cater for a theme getting removed, as Ameila was in Aug 2014 after Bootswatch announced they were dropping it.
@@ -171,7 +171,7 @@ class User < ApplicationRecord
     raise SessionError.new("enter_email") if email.blank?
     raise SessionError.new("enter_password") if password.blank?
     user = User.find_by(email: email)
-    self.bad_login(ip, email, password)            unless user
+    self.bad_login(ip, email)                      unless user
     user.add_login(ip, "invalid_password")         unless user.valid_password?(password)
     user.add_login(ip, "unverified_email")         unless user.verified?
     user.add_login(ip, "account_disabled")         unless user.status_ok?
@@ -179,8 +179,8 @@ class User < ApplicationRecord
     user.add_login(ip)
   end
 
-  def self.bad_login(ip, email, password)
-    BadLogin.new_record(email, password, ip)
+  def self.bad_login(ip, email)
+    BadLogin.new_record(email, ip)
     raise SessionError.new("invalid_email")
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_13_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_14_130000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -100,7 +100,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_130000) do
   create_table "bad_logins", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.string "email"
-    t.string "encrypted_password", limit: 32
     t.string "ip", limit: 50
     t.index ["created_at"], name: "index_bad_logins_on_created_at"
     t.index ["email"], name: "index_bad_logins_on_email"
@@ -127,6 +126,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_130000) do
     t.index ["confirmation_email"], name: "index_carts_on_confirmation_email"
     t.index ["payment_method"], name: "index_carts_on_payment_method"
     t.index ["payment_name"], name: "index_carts_on_payment_name"
+    t.index ["payment_ref"], name: "index_carts_on_payment_ref", unique: true
     t.index ["status"], name: "index_carts_on_status"
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
@@ -174,6 +174,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_130000) do
     t.boolean "junior_only", default: false
     t.decimal "lat", precision: 10, scale: 7
     t.decimal "long", precision: 10, scale: 7
+    t.boolean "markdown", default: true
     t.string "meet"
     t.string "name", limit: 50
     t.text "notes"
@@ -265,6 +266,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_130000) do
     t.string "live_games_url2"
     t.string "location", limit: 100
     t.decimal "long", precision: 10, scale: 7
+    t.boolean "markdown", default: true
     t.integer "max_participants"
     t.string "name", limit: 75
     t.text "note"

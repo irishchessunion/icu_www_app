@@ -1,4 +1,4 @@
 - if @club.notes.present?
   %section{"id": "description", "aria-label": "#{t('club.club')} #{t('description')}"}
     %h4= t("description")
-    = simple_format(@club.notes)
+    = @club.html

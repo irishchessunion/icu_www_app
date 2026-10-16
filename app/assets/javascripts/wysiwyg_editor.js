@@ -1,7 +1,7 @@
 // Progressively enhances a .wysiwyg-editor textarea into a Quill WYSIWYG editor.
 // Without JS the plain textarea (already seeded with rendered HTML - see
 // Article#editor_html / News#editor_html) still works exactly as before.
-// Used by app/views/admin/articles/_form.html.haml and admin/news/_form.html.haml.
+// Used by the article and news forms, and by the event and club forms via utils/_wysiwyg_area_for.
 window.wysiwygEditor = null;
 window.wysiwygEditorSavedRange = null;
 

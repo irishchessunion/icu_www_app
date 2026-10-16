@@ -1,0 +1,13 @@
+-# A Quill WYSIWYG editor (see wysiwyg_editor.js) for an attribute declared with wysiwyg_editable,
+-# laid out like utils/text_area_for. The page must include the quill and wysiwyg_editor assets
+-# and render admin/wysiwyg_editor_extras for the toolbar buttons' modals.
+- defined?(rows) || rows = 10
+
+.form-group{class: object.errors[param].any? ? "has-error" : ""}
+  = form.label param, text, class: "control-label col-#{col}-#{pad}"
+  %div{class: "col-#{col}-#{width}"}
+    = render "admin/wysiwyg_toolbar_extra"
+    = form.text_area param, value: object.editor_html, class: "form-control insignificant-space wysiwyg-editor", rows: rows
+  - unless object.errors[param].empty?
+    %div{class: "col-#{col}-#{pad} help-block"}
+    %div{class: "col-#{col}-#{width} help-block"}= object.errors[param].first

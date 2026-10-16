@@ -82,7 +82,7 @@
               = render "player_ids_button"
 
           %hr
-          = render "utils/text_area_for", locals.merge(param: :notes, text: t("club.notes"), width: 8)
+          = render "utils/wysiwyg_area_for", locals.merge(param: :notes, text: t("club.notes"), width: 8)
 
           %hr
           = render "utils/check_box_for", locals.merge(param: :active, text: t("active"), width: 1, small: true)

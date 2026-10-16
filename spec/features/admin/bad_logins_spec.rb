@@ -45,9 +45,9 @@ describe BadLogin do
       %Q{//table[@id="results"]/tbody/tr/td[.="#{text}"]}
     end
 
-    it "shows user, encryted password and IP" do
+    it "shows user and IP but nothing about the password" do
       expect(page).to have_xpath(xpath(bad_email), count: 1)
-      expect(page).to have_xpath(xpath(Digest::MD5.hexdigest(bad_password)), count: 1)
+      expect(page).to_not have_xpath(xpath(Digest::MD5.hexdigest(bad_password)))
       expect(page).to have_xpath(xpath(ip), count: 1)
     end
   end

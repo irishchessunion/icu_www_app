@@ -8,6 +8,7 @@ class Admin::ClubsController < ApplicationController
 
   def create
     @club = Club.new(club_params)
+    @club.markdown = false
     clear_legacy_meet_if_first_meeting
 
     if @club.save
@@ -21,6 +22,7 @@ class Admin::ClubsController < ApplicationController
 
   def update
     previous_meetings = meeting_summary
+    @club.markdown = false
     @club.assign_attributes(club_params)
     clear_legacy_meet_if_first_meeting
     if @club.save

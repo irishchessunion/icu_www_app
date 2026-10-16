@@ -58,16 +58,22 @@ class Item::Subscription < Item
     nil
   end
 
+  # @return [String, nil] An error message if this player has already paid for this season or is a life member.
+  def paid_duplicate_error
+    return unless player
+    if end_date.present? && self.class.season_duplicates(player, end_date).where.not(id: id).exists?
+      I18n.t("item.error.subscription.already_exists", member: player.name(id: true), season: season.to_s)
+    elsif self.class.lifetime_duplicates(player).where.not(id: id).exists?
+      I18n.t("item.error.subscription.lifetime_exists", member: player.name(id: true))
+    end
+  end
+
   private
 
   def no_duplicates
-    if player && new_record?
-      if end_date.present? && self.class.season_duplicates(player, end_date).count > 0
-        errors.add(:base, I18n.t("item.error.subscription.already_exists", member: player.name(id: true), season: season.to_s))
-      elsif self.class.lifetime_duplicates(player).count > 0
-        errors.add(:base, I18n.t("item.error.subscription.lifetime_exists", member: player.name(id: true)))
-      end
-    end
+    return unless new_record?
+    error = paid_duplicate_error
+    errors.add(:base, error) if error
   end
 
   def valid_player_data
