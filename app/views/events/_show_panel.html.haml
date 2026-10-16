@@ -4,10 +4,6 @@
       .col-md-12.flex-row
         .show-panel
 
-          %div
-            %a{href: events_path(), class: "inline-glyph"}
-              %span.glyphicon.glyphicon-chevron-left.glyphicon-xs
-              = t('event.upcoming')
           %h2= @event.name
           %div.subtitle= formatted_event_dates(@event)
 

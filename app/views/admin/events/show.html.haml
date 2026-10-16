@@ -2,9 +2,8 @@
 - content_for :header_bg_color, "var(--gray-lighter)"
 - @show_main_container = "false"
 
-= render "utils/title_panel", header_text: @event.name, back_button: true do
+= render "utils/title_panel", header_text: @event.name, back_button: true, back_text: t("event.event").downcase, back_path: event_path(@event) do
   %div.inline-flex
-    = link_to t("event.admin.view_event"), event_path(@event), class: "btn btn-default"
     - if can?(:edit, @event)
       = link_to t("edit"), edit_admin_event_path(@event), class: "btn btn-primary"
     - if can?(:destroy, @event)

@@ -36,7 +36,7 @@ describe "WYSIWYG notes for events and clubs", js: true do
     expect(event.markdown).to be false
     expect(event.note).to include("Bring a clock", "[EVT:#{event.id}:#{event.name}]")
 
-    click_link I18n.t("event.admin.view_event")
+    click_link "Back to event"
     expect(page).to have_current_path(event_path(event))
     expect(page).to have_css("#description strong", text: "Bring a clock")
     expect(page).to have_css("#description a[href='/events/#{event.id}']", text: event.name)
