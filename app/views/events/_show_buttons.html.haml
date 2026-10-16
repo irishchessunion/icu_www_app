@@ -1,0 +1,11 @@
+- if @event.pairings_url.present? || @event.results_url.present?
+  = render "utils/sub_panel_bar" do
+    .inline-flex
+      - if @event.pairings_url.present?
+        = link_to @event.pairings_url,target: "event", class: "btn btn-primary" do
+          %span.glyphicon.glyphicon-sort-by-order.glyphicon-sm
+          = t('event.pairings')
+      - if @event.results_url.present?
+        = link_to @event.results_url,target: "event", class: "btn btn-pastel-success" do
+          %span.glyphicon.glyphicon-list-alt.glyphicon-sm.glyphicon-margin
+          = t('event.results')
