@@ -102,10 +102,10 @@ RSpec.describe "events/show", type: :view do
   end
 
   describe "links section" do
-    it "renders links" do
+    it "renders links and pairings/results buttons" do
       expect(rendered).to have_selector("section#links")
-      expect(rendered).to have_link("Pairings", href: "http://chess-results.com/1234")
-      expect(rendered).to have_link("Results", href: "http://results.inishbofinchess.com")
+      expect(rendered).to have_css("a.btn[target='event'][href='#{event.pairings_url}']", text: "Pairings")
+      expect(rendered).to have_css("a.btn[target='event'][href='#{event.results_url}']", text: "Results")
     end
   end
 
