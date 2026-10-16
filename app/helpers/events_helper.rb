@@ -59,6 +59,13 @@ module EventsHelper
       event.streaming_url.present?
   end
 
+  def lichess_broadcast_embed_url(url)
+    uri = URI.parse(url.sub(%r{\A(https?://(?:www\.)?lichess\.org)/broadcast/}, '\1/embed/broadcast/'))
+    query = URI.decode_www_form(uri.query.to_s).reject { |key, _| key == "bg" }
+    uri.query = URI.encode_www_form(query << ["bg", "light"])
+    uri.to_s
+  end
+
   # @param entry_item [Item::Entry]
   def event_entry_item_description(entry_item)
     desc = ""
