@@ -1,4 +1,9 @@
 module IcuHelper
+  # Whether the current user can open the page for one of Global::ICU_DOCS (see Ability), so links to it are only shown if they'll work.
+  def can_see_icu_doc?(page)
+    can?(:show, Document.new(url: page.to_s, is_current: true))
+  end
+
   def icu_season_menu(selected)
     current = Season.new
     season = current

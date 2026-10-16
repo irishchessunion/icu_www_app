@@ -1,4 +1,4 @@
-- pages = Global::ICU_DOCS.keys
+- pages = Global::ICU_DOCS.keys.select { |p| can_see_icu_doc?(p) }
 - index = pages.index(page)
 
 .text-center

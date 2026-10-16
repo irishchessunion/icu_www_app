@@ -10,4 +10,5 @@
       = ((event.note || '').strip.split("\n").first || '').strip
   .panel-footer.text-center
     = link_to "More international events", events_path(category: "junint")
-  .panel-footer.text-center= link_to "Junior Eligibility Criteria", icu_junior_eligibility_criteria_path
+  - if can_see_icu_doc?(:junior_eligibility_criteria)
+    .panel-footer.text-center= link_to "Junior Eligibility Criteria", icu_junior_eligibility_criteria_path

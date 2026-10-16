@@ -20,7 +20,8 @@
           = event.dates
           %br
           = ((event.note || '').strip.split("\n").first || '').strip
-      .panel-footer.text-center= link_to "Junior Eligibility Criteria", icu_junior_eligibility_criteria_path
+      - if can_see_icu_doc?(:junior_eligibility_criteria)
+        .panel-footer.text-center= link_to "Junior Eligibility Criteria", icu_junior_eligibility_criteria_path
   .col-sm-6
     = render 'news'
   .col-sm-3

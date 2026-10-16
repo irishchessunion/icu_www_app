@@ -85,4 +85,54 @@ describe IcuController do
       expect(page).to have_link("View")
     end
   end
+
+  context "links to docs" do
+    let(:public_docs)  { Global::PUBLIC_ICU_DOCS }
+    let(:members_docs) { Global::ICU_DOCS.keys - public_docs }
+
+    def doc_link(key)
+      key == :privacy_policy ? help_privacy_path : send("icu_#{key}_path")
+    end
+
+    it "guests only see the public docs in the list" do
+      visit icu_documents_path
+      public_docs.each { |key| expect(page).to have_link(I18n.t("icu.#{key}"), href: doc_link(key)) }
+      members_docs.each { |key| expect(page).to_not have_link(href: doc_link(key)) }
+
+      login user
+      visit icu_documents_path
+      Global::ICU_DOCS.each_key { |key| expect(page).to have_link(I18n.t("icu.#{key}"), href: doc_link(key)) }
+    end
+
+    it "guests only step between the public docs" do
+      visit icu_constitution_path
+      expect(page).to_not have_link("☜")
+      expect(page).to have_link("☞", href: icu_membership_byelaws_path)
+
+      visit icu_membership_byelaws_path
+      expect(page).to have_link("☜", href: icu_constitution_path)
+      expect(page).to have_link("☞", href: icu_affiliation_byelaws_path)
+
+      login user
+      visit icu_membership_byelaws_path
+      expect(page).to have_link("☞", href: icu_code_of_conduct_path)
+    end
+
+    it "guests don't get links to the eligibility criteria on other pages" do
+      visit juniors_path
+      expect(page).to_not have_link("Junior Eligibility Criteria")
+      visit help_membership_path
+      expect(page).to have_link("Membership Bye-laws", href: icu_membership_byelaws_path)
+      expect(page).to_not have_link("adult")
+      expect(page).to_not have_link("junior", exact: true)
+      expect(page).to have_content("represent Ireland as an adult or as a junior")
+
+      login user
+      visit juniors_path
+      expect(page).to have_link("Junior Eligibility Criteria", href: icu_junior_eligibility_criteria_path)
+      visit help_membership_path
+      expect(page).to have_link("adult", href: icu_eligibility_criteria_path)
+      expect(page).to have_link("junior", href: icu_junior_eligibility_criteria_path, exact: true)
+    end
+  end
 end
