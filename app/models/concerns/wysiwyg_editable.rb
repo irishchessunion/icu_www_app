@@ -6,25 +6,37 @@
 #
 #   wysiwyg_editable :text
 #   wysiwyg_editable :summary
+#   wysiwyg_editable :note, required: false, filter_html: true
+#
+# Options:
+# - required: false skips the not-blank validation, for optional fields
+# - filter_html: true strips raw HTML from legacy Markdown content when it's rendered,
+#   for fields edited by less trusted users (event organisers, club secretaries)
 #
 # Provides, for the declared field:
 # - #editor_html: seeds the admin editor, without expanding shortcodes
 # - #html: the public rendering (expands shortcodes, then respects markdown)
-# - a before_validation sanitizing the field when markdown: false
-# - a validation rejecting blank/empty-Quill-placeholder content, on every save
+# - a before_validation sanitizing the field when markdown: false (and, for an optional
+#   field, clearing an empty Quill placeholder such as "<p><br></p>")
+# - a validation rejecting blank/empty-Quill-placeholder content, on every save (unless required: false)
 module WysiwygEditable
   extend ActiveSupport::Concern
 
+  included do
+    class_attribute :wysiwyg_filter_html, default: false
+  end
+
   class_methods do
-    def wysiwyg_editable(field)
+    def wysiwyg_editable(field, required: true, filter_html: false)
       field = field.to_sym
+      self.wysiwyg_filter_html = filter_html
 
       before_validation :"sanitize_#{field}_for_wysiwyg"
-      validate(:"#{field}_must_be_present_for_wysiwyg")
+      validate(:"#{field}_must_be_present_for_wysiwyg") if required
 
       define_method(:editor_html) do
         raw = public_send(field)
-        markdown? ? to_html(raw, filter_html: false) : raw.to_s.html_safe
+        markdown? ? to_html(raw, filter_html: wysiwyg_filter_html) : raw.to_s.html_safe
       end
 
       define_method(:html) do
@@ -32,7 +44,10 @@ module WysiwygEditable
       end
 
       define_method(:"sanitize_#{field}_for_wysiwyg") do
-        public_send(:"#{field}=", sanitize_editor_html(public_send(field))) unless markdown?
+        return if markdown?
+        value = sanitize_editor_html(public_send(field))
+        value = nil if !required && html_content_blank?(value)
+        public_send(:"#{field}=", value)
       end
 
       define_method(:"#{field}_must_be_present_for_wysiwyg") do
@@ -47,6 +62,6 @@ module WysiwygEditable
   # #html (above) uses this directly; models with more than one rendering of
   # the same field (e.g. News#html2) can reuse it too.
   def render_wysiwyg_content(expanded)
-    markdown? ? to_html(expanded, filter_html: false) : expanded.html_safe
+    markdown? ? to_html(expanded, filter_html: wysiwyg_filter_html) : expanded.html_safe
   end
 end

@@ -174,6 +174,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_14_130000) do
     t.boolean "junior_only", default: false
     t.decimal "lat", precision: 10, scale: 7
     t.decimal "long", precision: 10, scale: 7
+    t.boolean "markdown", default: true
     t.string "meet"
     t.string "name", limit: 50
     t.text "notes"
@@ -265,6 +266,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_14_130000) do
     t.string "live_games_url2"
     t.string "location", limit: 100
     t.decimal "long", precision: 10, scale: 7
+    t.boolean "markdown", default: true
     t.integer "max_participants"
     t.string "name", limit: 75
     t.text "note"

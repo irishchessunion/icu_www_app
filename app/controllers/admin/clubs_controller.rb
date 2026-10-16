@@ -8,6 +8,7 @@ class Admin::ClubsController < ApplicationController
 
   def create
     @club = Club.new(club_params)
+    @club.markdown = false
 
     if @club.save
       @club.journal(:create, current_user, request.remote_ip)
@@ -18,6 +19,7 @@ class Admin::ClubsController < ApplicationController
   end
 
   def update
+    @club.markdown = false
     if @club.update(club_params)
       @club.journal(:update, current_user, request.remote_ip)
       redirect_to @club, notice: "Club was successfully updated"
