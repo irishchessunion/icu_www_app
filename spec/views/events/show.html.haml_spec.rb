@@ -88,6 +88,17 @@ RSpec.describe "events/show", type: :view do
     end
   end
 
+  describe "livestream section" do
+    it "embeds the Lichess broadcast and links to the original URL" do
+      url = "https://lichess.org/broadcast/example/round-1/12345678"
+      event.assign_attributes(start_date: Date.today, live_games_url2: url)
+      render
+
+      expect(rendered).to have_css("section#livestream iframe[src='https://lichess.org/embed/broadcast/example/round-1/12345678?bg=light']")
+      expect(rendered).to have_css("section#livestream a[href='#{url}'][target='event']", text: "Lichess")
+    end
+  end
+
   describe "description section" do
     it "renders the note" do
       expect(rendered).to have_selector("section#description", text: "The best Irish tournament.")
