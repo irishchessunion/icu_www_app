@@ -7,6 +7,7 @@ class Ability
       can :show, Fee::Entry do |entry|
         !entry.organizer_only
       end
+      can :show, Document, is_current: true, url: Global::PUBLIC_ICU_DOCS.map(&:to_s)
       return
     end
 

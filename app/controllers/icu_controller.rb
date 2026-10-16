@@ -23,12 +23,14 @@ class IcuController < ApplicationController
 
   private
 
+  # Shows the current version from the documents table if there is one, otherwise the page in app/views/icu.
+  # Either way, guests can only see the public documents (see Ability).
   def redirect_to_document(page)
-    if Document.respond_to?(page)
-      doc = Document.send(page).current.first
-      if doc
-        redirect_to doc
-      end
+    doc = Document.send(page).current.first
+    if doc
+      redirect_to doc
+    else
+      authorize! :show, Document.new(url: page.to_s, is_current: true)
     end
   end
 end

@@ -6,5 +6,6 @@
   - if can?(:update, @document) && @document.is_current?
     = link_to t("edit"), edit_document_path(@document), class: "btn btn-primary"
 
-%hr
-= render 'versions'
+- if current_user.member?
+  %hr
+  = render 'versions'

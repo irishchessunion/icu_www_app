@@ -5,7 +5,7 @@
 .row
   .col-md-10.col-md-offset-1
     %ul
-      - Global::ICU_DOCS.keys.each do |page|
+      - Global::ICU_DOCS.keys.select { |page| can_see_icu_doc?(page) }.each do |page|
         %li
           = succeed(Global::ICU_DOCS[page].present? ? ":" : "") do
             = link_to t("icu.#{page}"), page == :privacy_policy ? help_privacy_path : send("icu_#{page}_path")

@@ -116,7 +116,7 @@
 
 %p
   In practice many subscribers pay late, even though the
-  = link_to "Membership Bye-laws", icu_membership_byelaws_path
+  = link_to_if can_see_icu_doc?(:membership_byelaws), "Membership Bye-laws", icu_membership_byelaws_path
   specify that subscriptions are due on or before September 1st.
   For the purposes of the September rating list and logging into the ICU websites only,
   members who subscribed for the previous season are considered to still be members for the months of September to December.
@@ -148,10 +148,10 @@
     %ol
       %li
         there are additional eligibility requirements to represent Ireland as an
-        = link_to "adult", icu_eligibility_criteria_path
+        = link_to_if can_see_icu_doc?(:eligibility_criteria), "adult", icu_eligibility_criteria_path
         or as a
         = succeed(",") do
-          = link_to "junior", icu_junior_eligibility_criteria_path
+          = link_to_if can_see_icu_doc?(:junior_eligibility_criteria), "junior", icu_junior_eligibility_criteria_path
       %li it can be expensive to change federation if you later change your mind.
   %li
     If you are

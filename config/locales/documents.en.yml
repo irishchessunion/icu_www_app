@@ -1,6 +1,7 @@
 en:
   document:
     authorized_by: Authorized by
+    changed_by: Changed by
     content: Content
     content_type: Format
     format:
@@ -10,3 +11,4 @@ en:
     preview: Preview
     reason_changed: Reason for change
     subtitle: Subtitle
+    url: ICU page

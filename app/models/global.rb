@@ -27,6 +27,9 @@ module Global
     privacy_policy: "Privacy policy",
   }
 
+  # The ICU documents anyone can read. The rest are for members only (decided by the executive, see issue #242).
+  PUBLIC_ICU_DOCS = %i[constitution membership_byelaws affiliation_byelaws allegro_rules privacy_policy]
+
   # A list of other ICU page names (which don't have notes).
   ICU_PAGES = %w[documents index life_members officers subscribers]
 
