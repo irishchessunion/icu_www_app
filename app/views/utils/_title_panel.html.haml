@@ -1,6 +1,7 @@
 - defined?(header_text) || header_text = "undefined"
 - defined?(back_button) || back_button = nil
 - defined?(back_text) || back_text = nil
+- defined?(back_path) || back_path = :back
 - defined?(subtitle) || subtitle = nil
 
 %section{class: "full-width title-only"}
@@ -10,7 +11,7 @@
         .form-panel
           - if back_button
             %div
-              %a{href: url_for(:back), class: "inline-glyph"}
+              %a{href: url_for(back_path), class: "inline-glyph"}
                 %span.glyphicon.glyphicon-chevron-left.glyphicon-xs
                 - if back_text
                   = "Back to #{back_text}"
