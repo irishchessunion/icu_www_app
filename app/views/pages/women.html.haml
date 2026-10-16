@@ -1,27 +1,36 @@
 - content_for :title, t("woman.chess")
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
 
-%h3.text-center= t("woman.chess")
-- unless @officer.nil?
-  %h4.text-center= t("Current Women’s Officer: #{@officer.player.name}")
-%p.text-center For any enquiries please email women@icu.ie
-.row
-  .col-sm-3
-    = render "home_page_links"
-    = render "woman_events"
-    = render 'woman_international_events'
-  .col-sm-6
-    = render 'news'
-    = render "champions/champion", champion: Champion.recent(:women).first
-    = render "champions/champion", champion: Champion.recent(:g19).first
-    = render "champions/champion", champion: Champion.recent(:g19).first
-    = render "champions/champion", champion: Champion.recent(:g16).first
-    = render "champions/champion", champion: Champion.recent(:g14).first
-    = render "champions/champion", champion: Champion.recent(:g12).first
-    = render "champions/champion", champion: Champion.recent(:g10).first
-    = render "champions/champion", champion: Champion.recent(:g8).first
-  .col-sm-3
-    = render("woman_organisations")
-    = render("disclaimer")
-.row
-  .col-sm-12
-    = render 'layouts/sponsors'
+= render "utils/title_panel", header_text: t("woman.chess")
+
+.container
+  .row
+    .col-sm-3
+      .panel.panel-pastel-primary
+        %ul.list-group
+          - unless @officer.nil?
+            %li.list-group-item
+              %strong Women’s Officer:
+              = @officer.player.name
+          %li.list-group-item
+            For any enquiries please email
+            = mail_to "women@icu.ie"
+      = render "home_page_links"
+      = render "woman_events"
+      = render 'woman_international_events'
+    .col-sm-6
+      = render 'news'
+    .col-sm-3
+      = render("woman_organisations")
+      = render "champions/champion", champion: Champion.recent(:women).first
+      = render "champions/champion", champion: Champion.recent(:g19).first
+      = render "champions/champion", champion: Champion.recent(:g16).first
+      = render "champions/champion", champion: Champion.recent(:g14).first
+      = render "champions/champion", champion: Champion.recent(:g12).first
+      = render "champions/champion", champion: Champion.recent(:g10).first
+      = render "champions/champion", champion: Champion.recent(:g8).first
+      = render("disclaimer")
+  .row
+    .col-sm-12
+      = render 'layouts/sponsors'

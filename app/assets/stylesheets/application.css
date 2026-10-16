@@ -821,6 +821,10 @@ section.stats-panel .list-col {
 }
 /* // Featured Results */
 
+.panel.panel-champion-compact:has(+ .panel-champion-compact) {
+  margin-bottom: 6px;
+}
+
 .panel.panel-champion .panel-body {
   padding: 0;
 }
@@ -841,6 +845,10 @@ section.stats-panel .list-col {
 .panel.home-links ul {
   padding: 0;
   list-style: none;
+}
+
+.panel.compact-list .panel-body {
+  padding: 10px 15px 0;
 }
 
 .irish-events .panel-body.last-panel-body {

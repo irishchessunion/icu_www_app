@@ -1,6 +1,6 @@
 .champions
-  = render "champions/champion", champion: Champion.recent(:open).first
-  = render "champions/champion", champion: Champion.recent(:women).first
+  = render "champions/champion", champion: Champion.recent(:open).first, compact: false
+  = render "champions/champion", champion: Champion.recent(:women).first, compact: false
 
 .panel.panel-primary
   .panel-body
@@ -13,4 +13,3 @@
       a <a href="https://twitter.com/IrishChessUnion">Twitter page</a>
       and a <a href="https://www.facebook.com/IrishChess">Facebook page</a>
       the ICU is not responsible for any other internet media relating to Irish chess.
-
