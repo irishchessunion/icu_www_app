@@ -142,5 +142,12 @@ describe Club do
       expect(create(:club, markdown: false, notes: "<p><em>Hi</em></p><img src=x onerror=alert(1)>").notes).to eq "<p><em>Hi</em></p>"
       expect(create(:club, name: "Empty Notes CC", markdown: false, notes: "<p><br></p>").notes).to be_nil
     end
+
+    it "rejects images" do
+      image = create(:image)
+      club = build(:club, markdown: false, notes: "<p>[IMG:#{image.id}]</p>")
+      expect(club).to_not be_valid
+      expect(club.errors[:notes]).to eq ["can't include images"]
+    end
   end
 end

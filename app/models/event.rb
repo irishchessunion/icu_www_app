@@ -322,7 +322,9 @@ class Event < ApplicationRecord
   end
 
   def note_expansions
-    expand_all(note, true) if note.present?
+    return unless note.present?
+    errors.add(:note, "can't include images") if note.include?("[IMG:")
+    expand_all(note, true)
   rescue => e
     errors.add(:note, e.message)
   end

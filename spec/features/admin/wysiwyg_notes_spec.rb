@@ -3,14 +3,12 @@ require 'rails_helper'
 describe "WYSIWYG notes for events and clubs", js: true do
   include_context "features"
 
-  let!(:image) { create(:image, caption: "Venue photo") }
-
   def set_editor_html(html)
     expect(page).to have_css("#wysiwyg_editor_mount .ql-editor", wait: 5)
     page.execute_script("document.querySelector('#wysiwyg_editor_mount').__quill.root.innerHTML = #{html.to_json};")
   end
 
-  it "an organiser edits an event's notes and inserts an image" do
+  it "an organiser edits an event's notes and links an event, but can't insert an image" do
     organiser = create(:user, roles: "organiser")
     event = create(:event, user: organiser, note: "Old **Markdown** note")
     login organiser
@@ -19,11 +17,15 @@ describe "WYSIWYG notes for events and clubs", js: true do
     expect(page).to have_css("#wysiwyg_editor_mount strong", text: "Markdown")
     set_editor_html("<p><strong>Bring a clock</strong></p>")
 
-    find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
-    within "#image_ids_modal" do
-      expect(page).to have_link("Upload new")
-      fill_in I18n.t("image.caption"), with: image.caption + force_submit
-      click_link image.caption
+    within "#wysiwyg_toolbar_extra" do
+      expect(page).to have_button("Link Event")
+      expect(page).to_not have_button("Insert Image")
+    end
+    expect(page).to_not have_css("#image_ids_modal", visible: :all)
+    find("#wysiwyg_toolbar_extra button", text: "Link Event").click
+    within "#event_ids_modal" do
+      fill_in I18n.t("event.name"), with: event.name + force_submit
+      click_link event.name
     end
     expect(page).to have_no_css(".modal-backdrop")
     click_button save
@@ -31,9 +33,9 @@ describe "WYSIWYG notes for events and clubs", js: true do
     expect(page).to have_css(success, text: "updated")
     event.reload
     expect(event.markdown).to be false
-    expect(event.note).to include("Bring a clock", "[IMG:#{image.id}]")
+    expect(event.note).to include("Bring a clock", "[EVT:#{event.id}:#{event.name}]")
     expect(page).to have_css("#description strong", text: "Bring a clock")
-    expect(page).to have_css("#description img[alt='Venue photo']")
+    expect(page).to have_css("#description a[href='/events/#{event.id}']", text: event.name)
   end
 
   it "a club secretary edits the club's notes with only the pickers they can use" do
@@ -44,13 +46,9 @@ describe "WYSIWYG notes for events and clubs", js: true do
 
     within "#wysiwyg_toolbar_extra" do
       expect(page).to have_button("Link Article")
-      expect(page).to have_button("Insert Image")
+      expect(page).to_not have_button("Insert Image")
       expect(page).to_not have_button("Link Event")
     end
-    find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
-    within("#image_ids_modal") { expect(page).to_not have_link("Upload new") }
-    find("#image_ids_modal button.close").click
-    expect(page).to have_no_css(".modal-backdrop")
 
     set_editor_html("<p>Meets <em>upstairs</em></p>")
     click_button save

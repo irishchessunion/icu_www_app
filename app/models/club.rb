@@ -86,7 +86,9 @@ class Club < ApplicationRecord
   private
 
   def notes_expansions
-    expand_all(notes, true) if notes.present?
+    return unless notes.present?
+    errors.add(:notes, "can't include images") if notes.include?("[IMG:")
+    expand_all(notes, true)
   rescue => e
     errors.add(:notes, e.message)
   end

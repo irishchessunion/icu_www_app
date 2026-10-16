@@ -1,5 +1,6 @@
 = render "admin/article_ids/modal", title: "Link to an Article"
 = render "admin/event_ids/modal", title: "Link to an Event"
-= render "admin/image_ids/modal", title: "Insert an Image"
+- unless local_assigns[:images] == false
+  = render "admin/image_ids/modal", title: "Insert an Image"
 %script
   = render(:partial => "admin/wysiwyg_editor_callbacks", :handlers => [:erb], :formats => [:js])

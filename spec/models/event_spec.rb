@@ -352,9 +352,16 @@ describe Event do
     end
 
     it "rejects invalid shortcuts" do
-      event = build(:event, markdown: false, note: "<p>[IMG:999999]</p>")
+      event = build(:event, markdown: false, note: "<p>[ART:999999]</p>")
       expect(event).to_not be_valid
-      expect(event.errors[:note].first).to match(/not a valid image/)
+      expect(event.errors[:note].first).to match(/not a valid article/)
+    end
+
+    it "rejects images" do
+      image = create(:image)
+      event = build(:event, markdown: false, note: "<p>[IMG:#{image.id}]</p>")
+      expect(event).to_not be_valid
+      expect(event.errors[:note]).to eq ["can't include images"]
     end
 
     it "can still update the note after the event has ended, converting it to HTML" do
