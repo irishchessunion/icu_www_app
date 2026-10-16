@@ -4,6 +4,7 @@
 
 = render "utils/title_panel", header_text: @event.name, back_button: true do
   %div.inline-flex
+    = link_to t("event.admin.view_event"), event_path(@event), class: "btn btn-default"
     - if can?(:edit, @event)
       = link_to t("edit"), edit_admin_event_path(@event), class: "btn btn-primary"
     - if can?(:destroy, @event)
