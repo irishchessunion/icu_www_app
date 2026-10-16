@@ -4,7 +4,7 @@
       - if @event.note.present?
         %li= link_to t('event.description'), "#description"
       - if @event.contact.present? || @event.email.present? || @event.phone.present?
-        %li= link_to t('event.contact'), "#contact"
+        %li= link_to t('event.contact_short'), "#contact"
       - if event_has_links?(@event)
         %li= link_to t('event.links'), "#links"
       - if @on_sale_fees.any?

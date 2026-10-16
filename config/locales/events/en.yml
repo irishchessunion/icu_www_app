@@ -25,6 +25,7 @@ en:
       user_must_be_organiser: User must have organiser role
       user_added: User added successfully
       user_removed: User removed successfully
+    contact_short: Contact
     contact: Contact name
     contact_name: Contact name
     create_entry_fee: New Entry Fee
