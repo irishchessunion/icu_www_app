@@ -8,9 +8,11 @@ class News < ApplicationRecord
 
   include CategoriesOwner
 
-  journalize %w[active date headline summary categories], "/news/%d"
+  journalize %w[active date headline summary categories image_id], "/news/%d"
 
   belongs_to :user
+  # Shown beside the news item in lists, rather than in the summary
+  belongs_to :image, optional: true
 
   before_validation :normalize_attributes
 
@@ -20,6 +22,7 @@ class News < ApplicationRecord
   validate :expansions
 
   scope :include_player, -> { includes(user: :player) }
+  scope :include_image, -> { includes(:image) }
   scope :ordered, -> { order(date: :desc, updated_at: :desc) }
   scope :linked_to_game, -> { where("headline like '%[GME:%' or summary like '%[GME:%'") }
   scope :junior, -> { juniors }
@@ -54,15 +57,6 @@ class News < ApplicationRecord
     "#{date.mon}-#{date.mday}"
   end
 
-  # Just returns the Like class for this type of item
-  def like_class
-    NewsLike
-  end
-
-  def like_button_options
-    { news_id: id }
-  end
-
   # @return [Array<Numeric, String>] A collection of ids of games that are linked in the title or the text of the article.
   def game_ids
     re = /\[GME:(\d+)/
@@ -76,6 +70,10 @@ class News < ApplicationRecord
   end
 
   def expansions
+    # The image goes in image_id now. Older items with images in their text can still be edited.
+    if summary.to_s.scan("[IMG:").size > summary_was.to_s.scan("[IMG:").size
+      errors.add(:summary, "can't include new images, use the Image field instead")
+    end
     if summary.present?
       begin
         expand_all(summary, true)

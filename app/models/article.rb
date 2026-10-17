@@ -73,15 +73,6 @@ class Article < ApplicationRecord
     @thumbnail_image ||= Image.find_by(id: id)
   end
 
-  # Just returns the Like class for this type of item
-  def like_class
-    ArticleLike
-  end
-
-  def like_button_options
-    { article_id: id }
-  end
-
   # @return [Array<Numeric, String>] A collection of ids of games that are linked in the title or the text of the article.
   def game_ids
     re = /\[GME:(\d+)/

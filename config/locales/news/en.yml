@@ -1,6 +1,11 @@
 en:
   news:
+    choose_image: Choose Image
     headline: Headline
+    image: Image
+    image_hint: Optional. Shown beside the news item in lists.
     news: News
+    no_image: None
+    remove_image: Remove
     search: Search News
     summary: Summary

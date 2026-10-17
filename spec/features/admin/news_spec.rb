@@ -9,7 +9,7 @@ describe News do
   let(:user) { create(:user, roles: "editor") }
 
   context "authorization" do
-    let(:panel)  { ".panel-heading" }
+    let(:panel)  { ".news-item-headline" }
     let(:level1) { ["admin", user] }
     let(:level2) { ["editor", "organiser"] }
     let(:level3) { User::ROLES.reject { |r| level1.include?(r) || level2.include?(r) }.append("guest") }
@@ -215,12 +215,14 @@ describe News do
       end
       expect(page).to have_no_css(".modal-backdrop")
 
-      find("#wysiwyg_toolbar_extra button", text: "Insert Image").click
+      expect(page).to_not have_css("#wysiwyg_toolbar_extra button", text: "Image")
+      within("#news_image") { click_button I18n.t("news.choose_image") }
       within "#image_ids_modal" do
         fill_in I18n.t("image.caption"), with: linked_image.caption + force_submit
         click_link linked_image.caption
       end
       expect(page).to have_no_css(".modal-backdrop")
+      expect(page).to have_css("#news_image_preview img[alt='#{linked_image.caption}']")
 
       click_button save
 
@@ -230,7 +232,22 @@ describe News do
       expect(news.summary).to include("Some intro text.")
       expect(news.summary).to include("[ART:#{linked_article.id}:#{linked_article.title}]")
       expect(news.summary).to include("[EVT:#{linked_event.id}:#{linked_event.name}]")
-      expect(news.summary).to include("[IMG:#{linked_image.id}]")
+      expect(news.summary).to_not include("[IMG:")
+      expect(news.image).to eq linked_image
+      expect(page).to have_css(".news-item .news-item-image img")
+    end
+
+    it "removes a news item's image" do
+      news = create(:news, user: user, image: linked_image)
+      visit edit_admin_news_path(news)
+
+      within("#news_image") { click_button I18n.t("news.remove_image") }
+      expect(page).to have_css("#news_image_preview", text: I18n.t("news.no_image"))
+      click_button save
+
+      expect(page).to have_css(success, text: "updated")
+      expect(news.reload.image).to be_nil
+      expect(page).to_not have_css(".news-item-image")
     end
   end
 end

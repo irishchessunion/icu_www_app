@@ -23,6 +23,7 @@ class Image < ApplicationRecord
   has_attached_file :data, styles: STYLES, keep_old_files: true
 
   belongs_to :user
+  has_many :news, dependent: :nullify
 
   before_validation :normalize_attributes, :check_dimensions
 

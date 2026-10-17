@@ -18,6 +18,25 @@ describe News do
   end
 
   context "validation" do
+    let(:image) { create(:image) }
+
+    it "rejects images in the summary of a new item" do
+      news = build(:news, summary: "Hello [IMG:#{image.id}]")
+      expect(news).to_not be_valid
+      expect(news.errors[:summary]).to eq ["can't include new images, use the Image field instead"]
+    end
+
+    it "lets an older item with an image in its summary be edited, but not get another" do
+      news = create(:news)
+      news.update_column(:summary, "Old [IMG:#{image.id}]")
+      news.reload
+
+      news.summary = "Edited [IMG:#{image.id}]"
+      expect(news).to be_valid
+      news.summary = "Edited [IMG:#{image.id}] [IMG:#{image.id}:right]"
+      expect(news).to_not be_valid
+    end
+
     it "rejects an empty Quill editor's placeholder markup as blank summary" do
       news = build(:news, markdown: false, summary: "<p><br></p>")
       expect(news).to_not be_valid
