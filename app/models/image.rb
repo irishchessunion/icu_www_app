@@ -20,6 +20,9 @@ class Image < ApplicationRecord
     large:     "1200x1200>",
   }
 
+  # Widths offered by the editor's image picker; full width (nil) fills the column instead
+  PICKER_SIZES = { small: 200, medium: 400, large: 600, full: nil }
+
   has_attached_file :data, styles: STYLES, keep_old_files: true
 
   belongs_to :user
