@@ -1,6 +1,6 @@
 class ClubsDirectoryController extends Controller {
-  static targets = ["form", "content", "map", "markers", "results", "list", "count", "empty"]
-  static values = { marker: String, count: String }
+  static targets = ["form", "content", "map", "markers", "results", "list", "count", "empty", "radius", "locate", "locationStatus"]
+  static values = { marker: String, count: String, locationError: String }
 
   connect() {
     this.mobile = window.matchMedia("(max-width: 768px)");
@@ -31,8 +31,12 @@ class ClubsDirectoryController extends Controller {
 
   change(event) {
     if (event.target.name === "search") return;
-    clearTimeout(this.timer);
-    this.formTarget.requestSubmit();
+    if (event.target.name === "radius") {
+      if (this.position) this.refresh();
+    } else {
+      clearTimeout(this.timer);
+      this.formTarget.requestSubmit();
+    }
   }
 
   submitting() {
@@ -41,6 +45,7 @@ class ClubsDirectoryController extends Controller {
     const county = params.get("county");
     const path = county ? `${this.formTarget.action}/county/${encodeURIComponent(county)}` : this.formTarget.action;
     params.delete("county");
+    params.delete("radius");
     if (params.get("audience") === "all") params.delete("audience");
     Array.from(params).forEach(([key, value]) => { if (!value) params.delete(key); });
     const url = new URL(path);
@@ -50,15 +55,23 @@ class ClubsDirectoryController extends Controller {
 
   clear(event) {
     event.preventDefault();
+    this.position = null;
+    this.locationStatusTarget.textContent = "";
     this.formTarget.querySelectorAll("input[type='search'], select[name='county'], select[name='day_of_week']").forEach(input => { input.value = ""; });
     this.formTarget.querySelectorAll("input[type='checkbox']").forEach(input => { input.checked = false; });
     this.formTarget.querySelector("input[name='audience'][value='all']").checked = true;
+    this.radiusTarget.selectedIndex = 0;
     this.formTarget.requestSubmit();
   }
 
   refresh() {
     this.matchingIds = new Set(JSON.parse(this.resultsTarget.textContent));
-    const count = this.listTarget.querySelectorAll("[data-club-id]").length;
+    let count = 0;
+    this.listTarget.querySelectorAll("[data-club-id]").forEach(row => {
+      const visible = this.inRadius(row.dataset);
+      row.classList.toggle("hidden", !visible);
+      if (visible) count++;
+    });
     this.countTarget.textContent = this.countValue.replace("%{count}", count);
     this.emptyTarget.classList.toggle("hidden", count > 0);
     this.listTarget.scrollTop = 0;
@@ -104,6 +117,40 @@ class ClubsDirectoryController extends Controller {
     });
   }
 
+  locate() {
+    if (!navigator.geolocation) return this.locationFailed();
+    this.locateTarget.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      position => { this.locateTarget.disabled = false; this.usePosition(position); },
+      () => { this.locateTarget.disabled = false; this.locationFailed(); },
+      { timeout: 15000, maximumAge: 60000 }
+    );
+  }
+
+  located(event) {
+    if (event.currentTarget.position) this.usePosition(event.currentTarget.position);
+    else if (event.currentTarget.error) this.locationFailed();
+  }
+
+  usePosition(position) {
+    this.position = new maplibregl.LngLat(position.coords.longitude, position.coords.latitude);
+    this.locationStatusTarget.textContent = "";
+    if (this.mobile.matches) this.showMap();
+    this.refresh();
+  }
+
+  locationFailed() {
+    this.locationStatusTarget.textContent = this.locationErrorValue;
+    this.locationStatusTarget.classList.remove("sr-only");
+    this.locationStatusTarget.classList.add("text-danger");
+  }
+
+  inRadius(point) {
+    if (!this.position) return true;
+    if (point.lat == null || point.lng == null || point.lat === "" || point.lng === "") return false;
+    return this.position.distanceTo(new maplibregl.LngLat(Number(point.lng), Number(point.lat))) <= Number(this.radiusTarget.value) * 1000;
+  }
+
   ensureMap() {
     if (this.map) return;
     this.map = ICU.Maps.init(this.mapTarget, { markers: [], fit: false });
@@ -132,7 +179,7 @@ class ClubsDirectoryController extends Controller {
     const includeInactive = this.formTarget.querySelector("[name='include_inactive']:checked");
     const selected = [];
     this.mapMarkers.forEach(({ data, marker, element }) => {
-      const visible = data.active || includeInactive;
+      const visible = (data.active || includeInactive) && this.inRadius(data);
       const matching = this.matchingIds.has(data.id);
       marker.getElement().classList.toggle("hidden", !visible);
       element.style.opacity = matching ? "1" : "0.6";
@@ -140,9 +187,36 @@ class ClubsDirectoryController extends Controller {
       if (visible && matching) selected.push([data.lng, data.lat]);
     });
 
+    const circle = this.position ? this.radiusCircle() : [];
+    if (this.map.isStyleLoaded()) {
+      const geojson = { type: "FeatureCollection", features: circle.length ? [{ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [circle] } }] : [] };
+      if (this.map.getSource("club-radius")) {
+        this.map.getSource("club-radius").setData(geojson);
+      } else {
+        this.map.addSource("club-radius", { type: "geojson", data: geojson });
+        const color = getComputedStyle(this.element).getPropertyValue("--brand-info").trim();
+        this.map.addLayer({ id: "club-radius-fill", type: "fill", source: "club-radius", paint: { "fill-color": color, "fill-opacity": 0.15 } });
+        this.map.addLayer({ id: "club-radius-line", type: "line", source: "club-radius", paint: { "line-color": color, "line-width": 2 } });
+      }
+    }
+
     const filtered = this.formTarget.querySelector("[name='search']").value.trim() || this.formTarget.querySelector("[name='county']").value || this.formTarget.querySelector("[name='day_of_week']").value || this.formTarget.querySelector("[name='audience']:checked").value !== "all";
-    const points = filtered && selected.length ? selected : [[-10.8, 51.3], [-5.3, 55.5]];
+    const points = circle.length ? circle : filtered && selected.length ? selected : [[-10.8, 51.3], [-5.3, 55.5]];
     const bounds = points.reduce((bounds, point) => bounds.extend(point), new maplibregl.LngLatBounds());
     this.map.fitBounds(bounds, { padding: 30, maxZoom: 12, duration: 0 });
+  }
+
+  radiusCircle() {
+    const lat = this.position.lat * Math.PI / 180;
+    const lng = this.position.lng * Math.PI / 180;
+    const distance = Number(this.radiusTarget.value) / 6371;
+    const points = [];
+    for (let i = 0; i <= 64; i++) {
+      const bearing = i * 2 * Math.PI / 64;
+      const y = Math.asin(Math.sin(lat) * Math.cos(distance) + Math.cos(lat) * Math.sin(distance) * Math.cos(bearing));
+      const x = lng + Math.atan2(Math.sin(bearing) * Math.sin(distance) * Math.cos(lat), Math.cos(distance) - Math.sin(lat) * Math.sin(y));
+      points.push([x * 180 / Math.PI, y * 180 / Math.PI]);
+    }
+    return points;
   }
 }

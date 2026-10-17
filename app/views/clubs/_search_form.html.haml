@@ -9,3 +9,10 @@
     - if @include_inactive
       = render "utils/toggle_checkbox_field", name: "include_inactive", label: t("club.directory.include_inactive")
     = button_tag t("search"), type: "submit", class: "btn btn-info"
+  .inline-flex.form-inline
+    %geolocation.btn.btn-pastel-info{data: { action: "location->clubs-directory#located" }, "aria-label": t("club.directory.near_me")}
+      = button_tag t("club.directory.near_me"), type: "button", class: "btn btn-pastel-info", data: { action: "clubs-directory#locate", clubs_directory_target: "locate" }
+    .form-group.no-margin
+      = label_tag :radius, t("club.directory.radius"), class: "sr-only"
+      = select_tag :radius, options_for_select([10, 25, 50, 100, 150].map { |km| ["#{km}km", km] }, 10), class: "form-control", data: { clubs_directory_target: "radius" }
+  %span.sr-only{role: "status", data: { clubs_directory_target: "locationStatus" }}

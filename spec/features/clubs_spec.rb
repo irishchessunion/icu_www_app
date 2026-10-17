@@ -146,6 +146,44 @@ describe Club do
       expect(page).to have_checked_field("All", visible: :all)
     end
 
+    it "filters across county borders around a location and switches to the map on mobile" do
+      create(:club, name: "Wexford club", county: "wexford", city: "Wexford", lat: 52.34, long: -6.46)
+      page.current_window.resize_to(390, 844)
+      visit clubs_path
+      expect(page).to have_select("Search radius", selected: "10km")
+      select "25km", from: "Search radius"
+      page.execute_script <<~JS
+        const position = { coords: { latitude: 53.35, longitude: -6.26 } };
+        navigator.geolocation.getCurrentPosition = success => success(position);
+        // Exercise the fallback even on browsers that implement the native element.
+        const geo = document.querySelector('geolocation');
+        const button = geo.querySelector('button');
+        geo.replaceWith(button);
+      JS
+      click_button "Find clubs near me"
+      expect(page).to have_css(".clubs-show-map #clubs-map", visible: true)
+      expect(page).to have_content("2 clubs found")
+      expect(page).to have_select("day_of_week", selected: "Any day")
+      controls = find(".clubs-controls").rect
+      expect(controls.y + controls.height).to be <= find(".list-map-tabs").rect.y + 1
+      choose "Women-only", allow_label_click: true
+      expect(page).to have_content("0 clubs found")
+      expect(page).to have_css(".clubs-show-map #clubs-map", visible: true)
+      choose "All", allow_label_click: true
+      expect(page).to have_content("2 clubs found")
+      click_link "List"
+      expect(page).to have_content("2 clubs found")
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 2)
+      expect(page).not_to have_css(".clubs-scroll .list-group-item", text: "Cork club")
+      select "150km", from: "Search radius"
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 3)
+      click_link "Clear search filters"
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 4)
+      expect(page).to have_select("Search radius", selected: "10km")
+    ensure
+      page.current_window.resize_to(1920, 1080)
+    end
+
     it "scrolls only the results when scrolling over the desktop map" do
       20.times { |i| create(:club, name: "Club #{i}") }
       visit clubs_path

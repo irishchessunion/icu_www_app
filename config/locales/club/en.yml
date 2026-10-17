@@ -10,6 +10,9 @@ en:
       title: Find a Chess Club
       new: New club
       search: Search name or location
+      near_me: Find clubs near me
+      radius: Search radius
+      location_error: Unable to find your location. Please allow location access and try again.
       found: "%{count} clubs found"
       clear: Clear search filters
       adults_only: Adults-only
