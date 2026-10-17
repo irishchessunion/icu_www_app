@@ -32,7 +32,6 @@ IcuWwwApp::Application.routes.draw do
   resources :articles,    only: [:index, :show] do
     get :source, on: :member
   end
-  resources :likes, only: [:create, :destroy]
   resources :champions,   only: [:index, :show]
   resources :clubs,       only: [:index, :show]
   resources :documents,   only: [:index, :show, :new, :create, :edit, :update]
