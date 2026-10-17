@@ -51,3 +51,4 @@ en:
     secretary: Secretary
     select_secretary: Select Secretary
     web: Website
+    web_hint: Optional. Active clubs must have at least one contact method (phone, email or website).

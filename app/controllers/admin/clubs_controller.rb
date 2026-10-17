@@ -16,6 +16,7 @@ class Admin::ClubsController < ApplicationController
       journal_meetings("")
       redirect_to @club, notice: "Club was successfully created"
     else
+      flash_first_error(@club, base_only: true)
       render action: "new"
     end
   end
