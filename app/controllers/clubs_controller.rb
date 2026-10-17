@@ -1,12 +1,11 @@
 class ClubsController < ApplicationController
   def index
-    @include_inactive = can?(:manage, Club) || Club.accessible_by(current_ability, :update).exists?
-    params.delete(:include_inactive) unless @include_inactive
+    params.delete(:include_inactive) unless can?(:manage, Club)
     @clubs = Club.search(params).to_a
     if turbo_frame_request?
       render partial: "results"
     else
-      @map_clubs = (@include_inactive ? Club.all : Club.active).with_geocodes
+      @map_clubs = (can?(:manage, Club) ? Club.all : Club.active).with_geocodes
     end
   end
 

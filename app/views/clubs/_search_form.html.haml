@@ -6,7 +6,7 @@
     .form-group.no-margin
       = label_tag :county, t("club.county"), class: "sr-only"
       = select_tag :county, club_county_menu(params[:county]), class: "form-control"
-    - if @include_inactive
+    - if can?(:manage, Club)
       = render "utils/toggle_checkbox_field", name: "include_inactive", label: t("club.directory.include_inactive")
     = button_tag t("search"), type: "submit", class: "btn btn-info"
   .inline-flex.form-inline

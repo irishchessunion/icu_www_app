@@ -81,7 +81,7 @@ describe Club do
       expect(page).not_to have_content("Cortex")
     end
 
-    it "only enables inactive search for members who can edit a club" do
+    it "enables only admins and editors to search for inactive clubs" do
       user = login
       visit clubs_path(include_inactive: "on")
       expect(page).not_to have_field("Include inactive")
@@ -89,8 +89,8 @@ describe Club do
 
       Club.find_by!(name: "Bangor").update!(secretary_id: user.player_id)
       visit clubs_path(include_inactive: "on")
-      expect(page).to have_checked_field("Include inactive")
-      expect(page).to have_xpath(@row, count: 4)
+      expect(page).not_to have_field("Include inactive")
+      expect(page).to have_xpath(@row, count: 3)
     end
 
     it "return no results when appropriate" do
