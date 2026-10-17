@@ -3,8 +3,8 @@ require 'rails_helper'
 describe Club do
   include_context "features"
 
-  let(:country)  { I18n.t("club.county") }
-  let(:province) { I18n.t("club.province") }
+  let(:county) { I18n.t("club.county") }
+  let(:directory_search) { I18n.t("club.directory.search") }
 
   context "search" do
     before(:each) do
@@ -13,7 +13,7 @@ describe Club do
       create(:club, name: "Aer Lingus", city: "Dublin", contact: "Gearóidín", county: "dublin")
       create(:club, name: "Cortex", city: "Arklow", contact: "Danny", county: "wicklow", active: false)
       visit clubs_path
-      @row = "//div[starts-with(@id,'club_')]"
+      @row = "//a[starts-with(@id,'club_')]"
       @search = "Search"
     end
 
@@ -22,23 +22,23 @@ describe Club do
     end
 
     it "find records by name" do
-      fill_in name, with: "Lingus"
+      fill_in directory_search, with: "Lingus"
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       expect(page).to have_xpath(@row, text: "Aer Lingus")
-      fill_in name, with: "b"
+      fill_in directory_search, with: "b"
       click_button @search
-      expect(page).to have_xpath(@row, count: 2)
+      expect(page).to have_xpath(@row, count: 3)
       expect(page).to have_xpath(@row, text: "Bangor")
       expect(page).to have_xpath(@row, text: "Bray/Greystones")
-      fill_in name, with: "/"
+      fill_in directory_search, with: "/"
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       expect(page).to have_xpath(@row, text: "Bray/Greystones")
     end
 
     it "find records by city" do
-      fill_in city, with: "Dub"
+      fill_in directory_search, with: "Dub"
       click_button @search
       expect(page).to have_xpath(@row, count: 2)
       expect(page).to have_xpath(@row, text: "Bray/Greystones")
@@ -46,52 +46,57 @@ describe Club do
     end
 
     it "find records by county" do
-      select "Dublin", from: country
+      select "Dublin", from: county
       click_button @search
       expect(page).to have_xpath(@row, count: 2)
       expect(page).to have_xpath(@row, text: "Bray/Greystones")
       expect(page).to have_xpath(@row, text: "Aer Lingus")
-      select "Down", from: country
+      select "Down", from: county
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       expect(page).to have_xpath(@row, text: "Bangor")
     end
 
-    it "find records by province" do
-      select "Lein", from: province
-      click_button @search
-      expect(page).to have_xpath(@row, count: 2)
-      expect(page).to have_xpath(@row, text: "Bray/Greystones")
-      expect(page).to have_xpath(@row, text: "Aer Lingus")
-      select "Ulster", from: province
-      click_button @search
-      expect(page).to have_xpath(@row, count: 1)
-      expect(page).to have_xpath(@row, text: "Bangor")
-    end
-
-    it "find records by whether active or not" do
-      select either, from: active
+    it "allows editors to include inactive clubs" do
+      login "editor"
+      visit clubs_path
+      check "Include inactive"
       click_button @search
       expect(page).to have_xpath(@row, count: 4)
-      select active, from: active
+      uncheck "Include inactive"
       click_button @search
       expect(page).to have_xpath(@row, count: 3)
-      select inactive, from: active
-      click_button @search
-      expect(page).to have_xpath(@row, count: 1)
-      expect(page).to have_xpath(@row, text: "Cortex")
+    end
+
+    it "ignores the include inactive parameter for guests" do
+      visit clubs_path(include_inactive: "on")
+      expect(page).not_to have_field("Include inactive")
+      expect(page).to have_xpath(@row, count: 3)
+      expect(page).not_to have_content("Cortex")
+    end
+
+    it "only enables inactive search for members who can edit a club" do
+      user = login
+      visit clubs_path(include_inactive: "on")
+      expect(page).not_to have_field("Include inactive")
+      expect(page).to have_xpath(@row, count: 3)
+
+      Club.find_by!(name: "Bangor").update!(secretary_id: user.player_id)
+      visit clubs_path(include_inactive: "on")
+      expect(page).to have_checked_field("Include inactive")
+      expect(page).to have_xpath(@row, count: 4)
     end
 
     it "return no results when appropriate" do
-      select "Ulster", from: province
-      fill_in name, with: "Aer"
+      select "Down", from: county
+      fill_in directory_search, with: "Aer"
       click_button @search
       expect(page).to_not have_xpath(@row)
-      expect(page).to have_css("div.alert-warning", text: "No matches")
+      expect(page).to have_css(".clubs-scroll", text: "No matches")
     end
 
     it "returns to all clubs from a club page" do
-      fill_in name, with: "Aer"
+      fill_in directory_search, with: "Aer"
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       click_link "Aer Lingus"

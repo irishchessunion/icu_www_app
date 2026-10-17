@@ -60,7 +60,7 @@ describe Club do
     before(:each) do
       login "editor"
       visit clubs_path
-      click_link new_one
+      click_link I18n.t("club.directory.new"), exact: true
     end
 
     it "successful creation with all attributes" do

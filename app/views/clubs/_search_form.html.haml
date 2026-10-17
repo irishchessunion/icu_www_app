@@ -1,8 +1,11 @@
-= form_tag clubs_path, method: :get, class: "form-inline", role: "form" do
-  = render "utils/inline_text_field", param: :name, text: t("name")
-  = render "utils/inline_text_field", param: :city, text: t("city")
-  = render "utils/inline_select", param: :county, text: t("club.county"), menu: club_county_menu(params[:county])
-  = render "utils/inline_select", param: :province, text: t("club.province"), menu: club_province_menu(params[:province])
-  = render "utils/inline_select", param: :junior, text: t("club.junior"), menu: club_junior_menu(params[:junior])
-  = render "utils/inline_select", param: :active, text: t("active"), menu: active_menu(params[:active])
-  = button_tag t("search"), type: "submit", class: "btn btn-default pull-right"
+.inline-flex.inline-between.flex-wrap.stack-xs
+  .inline-flex.flex-wrap.stack-xs.form-inline
+    .form-group.no-margin
+      = label_tag :search, t("club.directory.search"), class: "sr-only"
+      = search_field_tag :search, params[:search], class: "form-control", placeholder: t("club.directory.search")
+    .form-group.no-margin
+      = label_tag :county, t("club.county"), class: "sr-only"
+      = select_tag :county, club_county_menu(params[:county]), class: "form-control"
+    - if @include_inactive
+      = render "utils/toggle_checkbox_field", name: "include_inactive", label: t("club.directory.include_inactive")
+    = button_tag t("search"), type: "submit", class: "btn btn-info"

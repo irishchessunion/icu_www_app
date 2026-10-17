@@ -1,8 +1,8 @@
 class ClubsController < ApplicationController
   def index
-    @clubs = Club.search(params, clubs_path)
-    flash.now[:warning] = t("no_matches") if @clubs.count == 0
-    save_last_search(@clubs, :clubs)
+    @include_inactive = can?(:manage, Club) || Club.accessible_by(current_ability, :update).exists?
+    params.delete(:include_inactive) unless @include_inactive
+    @clubs = Club.search(params).to_a
   end
 
   def show

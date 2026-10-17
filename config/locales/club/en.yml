@@ -6,6 +6,18 @@ en:
     co: Co.
     county: County
     district: District
+    directory:
+      title: Find a Chess Club
+      new: New club
+      search: Search name or location
+      found: "%{count} clubs found"
+      clear: Clear search filters
+      adults_only: Adults-only
+      include_inactive: Include inactive
+      any_day: Any day
+      open_to: "Open to:"
+      juniors_only: Juniors-only
+      women_only: Women-only
     has_junior_section: Has junior section?
     junior: Junior
     juniors:

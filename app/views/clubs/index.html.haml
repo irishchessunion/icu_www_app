@@ -1,36 +1,15 @@
-- content_for :title, t("club.clubs")
+- content_for :title, t("club.directory.title")
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
 
-= render "utils/list_map_buttons", resource: "clubs", map: false
-= render "utils/search_panel", form: "search_form", title: t("club.clubs"), col: "md"
-.row
-  .col-md-10.col-md-offset-1
-    - if @clubs.count > 0
-      - @clubs.matches.each do |club|
-        - meetings = ordered_club_meetings(club.club_meetings)
-        %div{class: "panel panel-default", id: "club_#{club.id}"}
-          .panel-heading
-            %strong= link_to club.name, club
-            = "(#{t('inactive')})" unless club.active
-          %ul.list-group
-            %li.list-group-item
-              %em= "#{t('club.location')}:"
-              = link_to_if club.geocodes?, club.location, clubs_map_path(club)
-            - if meetings.any?
-              %li.list-group-item
-                %em= "#{t('club.meet')}:"
-                = meetings.map { |meeting| "#{meeting.day_of_week.capitalize}#{t('club.meetings.is_at_sm')} #{meeting.start_time.strftime('%H:%M')}" }.join(', ')
-            - elsif club.meet.present?
-              %li.list-group-item
-                %em= "#{t('club.meet')}:"
-                = club.meet
-            - if club.contact || club.contactable?
-              %li.list-group-item
-                %em= "#{t('contact')}:"
-                - contact = []
-                - contact << club.contact                                            if club.contact && !club.email
-                - contact << mail_to(club.email, club.contact || club.email)         if club.email
-                - contact << club.phone                                              if club.phone
-                - contact << link_to(simple_url(club.web), club.web, target: "club") if club.web
-                = contact.join(', ').html_safe
-    = render "utils/pagination_links", pager: @clubs
-    = render "utils/index_buttons", klass: Club
+.clubs-directory
+  = render layout: "utils/title_panel", locals: { header_text: t("club.directory.title"), css: "no-margin" } do
+    - if can?(:create, Club)
+      = link_to t("club.directory.new"), new_admin_club_path, class: "btn btn-primary hidden-xs"
+
+  = form_with url: clubs_path, method: :get, local: true do
+    = render layout: "utils/sub_panel_bar" do
+      = render "search_form"
+
+    .container.voffset3
+      = render "results"
