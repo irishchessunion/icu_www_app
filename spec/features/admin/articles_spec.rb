@@ -330,6 +330,12 @@ describe Article do
       within "#image_ids_modal" do
         fill_in I18n.t("image.caption"), with: linked_image.caption + force_submit
         click_link linked_image.caption
+        within "#image_ids_options" do
+          expect(page).to have_css("#image_ids_options_caption", text: linked_image.caption)
+          choose "image_ids_size_large"
+          choose "image_ids_position_right"
+          click_button I18n.t("image.picker.insert")
+        end
       end
       expect(page).to have_no_css(".modal-backdrop")
 
@@ -341,7 +347,7 @@ describe Article do
       expect(article.text).to include("Some intro text.")
       expect(article.text).to include("[ART:#{linked_article.id}:#{linked_article.title}]")
       expect(article.text).to include("[EVT:#{linked_event.id}:#{linked_event.name}]")
-      expect(article.text).to include("[IMG:#{linked_image.id}]")
+      expect(article.text).to include("[IMG:#{linked_image.id}:width=600:right]")
     end
 
     it "uploads a new image via the picker's upload tab (Turbo frame) and inserts it" do
@@ -366,6 +372,12 @@ describe Article do
           fill_in year, with: "2020"
           click_button "Upload"
         end
+        within "#image_ids_options" do
+          expect(page).to have_css("#image_ids_options_caption", text: "Freshly Uploaded")
+          choose "image_ids_size_full"
+          expect(page).to have_field("image_ids_position_left", disabled: true)
+          click_button I18n.t("image.picker.insert")
+        end
       end
 
       expect(page).to have_no_css("#image_ids_modal.in", wait: 5)
@@ -375,7 +387,7 @@ describe Article do
       expect(page).to have_css(success, text: created)
       image = Image.find_by!(caption: "Freshly Uploaded")
       article = Article.find_by!(title: "My Article")
-      expect(article.text).to include("[IMG:#{image.id}]")
+      expect(article.text).to include("[IMG:#{image.id}:center:responsive=true]")
     end
   end
 end

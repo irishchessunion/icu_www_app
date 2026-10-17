@@ -18,5 +18,30 @@
           #image_ids_upload_pane.tab-pane{role: "tabpanel"}
             .voffset1
               = render "admin/image_ids/upload_form"
+        -# Second step for the WYSIWYG editor, shown by its image_ids_callback once an image is chosen
+        #image_ids_options.hidden
+          .row
+            .col-sm-3
+              %img#image_ids_options_thumbnail{alt: ""}
+            .col-sm-9
+              %p
+                %strong#image_ids_options_caption
+              .form-group
+                %label= t("image.picker.size")
+                %div
+                  - Image::PICKER_SIZES.each do |size, width|
+                    %label.radio-inline
+                      = radio_button_tag "image_ids_size", size, size == :medium, data: { width: width }
+                      = t("image.picker.#{size}") + (width ? " (#{width}px)" : "")
+              .form-group
+                %label= t("image.picker.position")
+                %div
+                  - %w[left right center].each do |position|
+                    %label.radio-inline
+                      = radio_button_tag "image_ids_position", position, position == "left"
+                      = t("image.picker.#{position}")
+          .text-right
+            %button.btn.btn-default#image_ids_options_back{type: "button"}= t("image.picker.back")
+            %button.btn.btn-primary#image_ids_options_insert{type: "button"}= t("image.picker.insert")
 %script
   = render(:partial => "admin/image_ids/attach_callbacks", :handlers => [:erb], :formats => [:js])
