@@ -78,8 +78,12 @@ class Club < ApplicationRecord
   end
 
   def location_parts
+    address.to_s.split(",").map(&:strip).reject(&:blank?) + locality_parts
+  end
+
+  def locality_parts
     county_name = I18n.t("ireland.co.#{county}")
-    parts = address.to_s.split(",").map(&:strip).reject(&:blank?)
+    parts = []
     parts << city if city.present? && ![county.to_s, county_name].any? { |name| city.casecmp?(name) }
     parts << "#{I18n.t('club.co')} #{county_name}"
     parts << eircode if eircode.present?

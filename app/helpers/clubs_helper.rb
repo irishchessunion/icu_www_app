@@ -34,4 +34,11 @@ module ClubsHelper
       [days.index(meeting.day_of_week) || days.size, meeting.start_time&.strftime("%H:%M:%S").to_s]
     end
   end
+
+  def club_meeting_summary(club)
+    meetings = ordered_club_meetings(club.club_meetings)
+    return club.meet if meetings.empty?
+
+    meetings.map { |meeting| "#{meeting.day_of_week.capitalize}#{t('club.meetings.is_at_sm')} #{meeting.start_time.strftime('%H:%M')}" }.join(", ")
+  end
 end
