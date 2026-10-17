@@ -12,7 +12,7 @@
   #clubs-list.clubs-list.clubs-scroll{role: "tabpanel", "aria-labelledby": "clubs-list-tab", tabindex: "0", "aria-label": t("club.clubs"), data: { clubs_directory_target: "list" }}
     .list-group.no-margin
       - @clubs.each do |club|
-        = link_to club_path(club), class: "list-group-item", id: "club_#{club.id}", data: { turbo: false, club_id: club.id, lat: club.lat, lng: club.long } do
+        = link_to club_path(club), class: "list-group-item", id: "club_#{club.id}", data: { turbo: false, club_id: club.id, lat: club.lat, lng: club.long, action: "mouseenter->clubs-directory#highlightMarker mouseleave->clubs-directory#highlightMarker" } do
           %h4.list-group-item-heading
             %strong= club.name
             - unless club.active

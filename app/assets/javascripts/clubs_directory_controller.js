@@ -1,6 +1,6 @@
 class ClubsDirectoryController extends Controller {
   static targets = ["form", "content", "map", "markers", "results", "list", "count", "empty", "radius", "locate", "locationStatus"]
-  static values = { marker: String, count: String, locationError: String }
+  static values = { marker: String, trainingMarker: String, count: String, locationError: String }
 
   connect() {
     this.mobile = window.matchMedia("(max-width: 768px)");
@@ -65,6 +65,7 @@ class ClubsDirectoryController extends Controller {
   }
 
   refresh() {
+    this.mapMarkers.forEach(({ element }) => { element.src = this.markerValue; });
     this.matchingIds = new Set(JSON.parse(this.resultsTarget.textContent));
     let count = 0;
     this.listTarget.querySelectorAll("[data-club-id]").forEach(row => {
@@ -94,6 +95,13 @@ class ClubsDirectoryController extends Controller {
     event.preventDefault();
     const factor = event.deltaMode === 1 ? 20 : event.deltaMode === 2 ? this.listTarget.clientHeight : 1;
     this.listTarget.scrollTop += event.deltaY * factor;
+  }
+
+  highlightMarker(event) {
+    const entry = this.mapMarkers.find(({ data }) => data.id === Number(event.currentTarget.dataset.clubId));
+    if (entry) {
+      entry.element.src = event.type === "mouseenter" ? this.trainingMarkerValue : this.markerValue;
+    }
   }
 
   showList(event) {
