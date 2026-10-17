@@ -184,6 +184,34 @@ describe Club do
       page.current_window.resize_to(1920, 1080)
     end
 
+    it "expands the location radius until a matching club is found, up to 150km" do
+      visit clubs_path(search: "Dublin club")
+      page.execute_script <<~JS
+        navigator.geolocation.getCurrentPosition = success => success({ coords: window.directoryPosition });
+        const geo = document.querySelector('geolocation');
+        geo.replaceWith(geo.querySelector('button'));
+      JS
+
+      [
+        [53.35, -6.26, 10, 1],
+        [53.2, -6.1, 25, 1],
+        [53.7, -6.26, 50, 1],
+        [54.0, -6.26, 100, 1],
+        [54.4, -6.26, 150, 1],
+        [55.5, -6.26, 150, 0]
+      ].each do |lat, lng, radius, count|
+        select "10km", from: "Search radius"
+        page.execute_script("window.directoryPosition = { latitude: #{lat}, longitude: #{lng} }")
+        click_button "Find clubs near me"
+        expect(page).to have_select("Search radius", selected: "#{radius}km")
+        expect(page).to have_content("#{count} clubs found")
+      end
+
+      select "10km", from: "Search radius"
+      expect(page).to have_select("Search radius", selected: "10km")
+      expect(page).to have_css(".panel-pastel-warning", text: "No matches")
+    end
+
     it "scrolls only the results when scrolling over the desktop map" do
       20.times { |i| create(:club, name: "Club #{i}") }
       visit clubs_path

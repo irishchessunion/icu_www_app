@@ -135,6 +135,10 @@ class ClubsDirectoryController extends Controller {
   usePosition(position) {
     this.position = new maplibregl.LngLat(position.coords.longitude, position.coords.latitude);
     this.locationStatusTarget.textContent = "";
+    const clubs = Array.from(this.listTarget.querySelectorAll("[data-club-id]"));
+    while (!clubs.some(club => this.inRadius(club.dataset)) && this.radiusTarget.selectedIndex < this.radiusTarget.options.length - 1) {
+      this.radiusTarget.selectedIndex++;
+    }
     if (this.mobile.matches) this.showMap();
     this.refresh();
   }
