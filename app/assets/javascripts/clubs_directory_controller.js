@@ -177,6 +177,8 @@ class ClubsDirectoryController extends Controller {
       element.style.cursor = "pointer";
       // MapLibre manages opacity on the marker wrapper itself.
       const wrapper = document.createElement("div");
+      wrapper.dataset.clubId = data.id;
+      wrapper.dataset.action = "mouseenter->clubs-directory#highlightMarker mouseleave->clubs-directory#highlightMarker";
       wrapper.appendChild(element);
       const marker = new maplibregl.Marker({ element: wrapper })
         .setLngLat([data.lng, data.lat])
