@@ -292,6 +292,26 @@ section h2 {
   margin: 0;
 }
 
+/* Club directory */
+.clubs-content { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 10px; }
+.clubs-content > turbo-frame { display: contents; }
+.clubs-controls { grid-row: 1; }
+.clubs-content > .list-map-tabs { grid-row: 2; }
+.clubs-list,
+.clubs-map-column { grid-column: 1; grid-row: 3; }
+
+@media (min-width: 769px) {
+  .clubs-content { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr); column-gap: 30px; }
+  .clubs-list { grid-row: 2; }
+  .clubs-map-column { grid-column: 2; grid-row: 1 / span 2; }
+}
+
+@media (max-width: 768px) {
+  .clubs-map-column,
+  .clubs-show-map .clubs-list { display: none; }
+  .clubs-show-map .clubs-map-column { display: block; }
+}
+
 /* Events */
 
 

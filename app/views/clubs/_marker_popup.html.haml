@@ -1,3 +1,9 @@
 .event_info
   .text-center
     %strong= link_to club.name, club_path(club)
+  - if local_assigns[:include_location]
+    %hr
+    %small.text-muted
+      - club.location_parts.each do |part|
+        = part
+        %br

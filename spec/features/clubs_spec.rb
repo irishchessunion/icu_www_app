@@ -57,6 +57,12 @@ describe Club do
       expect(page).to have_xpath(@row, text: "Bangor")
     end
 
+    it "defaults the county from its shareable URL" do
+      visit county_clubs_path(county: "dublin")
+      expect(page).to have_select(county, selected: "Dublin")
+      expect(page).to have_xpath(@row, count: 2)
+    end
+
     it "allows editors to include inactive clubs" do
       login "editor"
       visit clubs_path
@@ -102,6 +108,42 @@ describe Club do
       click_link "Aer Lingus"
       click_link "All Clubs"
       expect(page).to have_xpath(@row, count: 3)
+    end
+  end
+
+  context "live directory", js: true do
+    before do
+      create(:club, name: "Dublin club", county: "dublin", city: "Dublin", lat: 53.35, long: -6.26)
+      create(:club, name: "Wicklow club", county: "wicklow", city: "Bray", lat: 53.2, long: -6.1)
+      create(:club, name: "Cork club", county: "cork", city: "Cork", lat: 51.9, long: -8.47)
+    end
+
+    it "refreshes without reloading, updates the county URL, and clears every filter" do
+      Club.find_by!(name: "Wicklow club").club_meetings.create!(day_of_week: "monday", start_time: "19:00")
+      visit clubs_path
+      page.execute_script("window.directoryPage = true")
+      select "Dublin", from: county
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 1)
+      expect(page).to have_current_path(county_clubs_path(county: "dublin"))
+      expect(page.evaluate_script("window.directoryPage")).to eq(true)
+      expect(page.evaluate_script("document.querySelectorAll('.maplibregl-marker').length")).to eq(3)
+      expect(page).to have_css(".maplibregl-marker img[style*='opacity: 0.6']", count: 2, visible: :all)
+
+      fill_in directory_search, with: "Missing club"
+      expect(page).to have_content("0 clubs found")
+      click_link "Clear search filters"
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 3)
+      expect(page).to have_current_path(clubs_path)
+      expect(page).to have_field(directory_search, with: "")
+      expect(page.evaluate_script("window.directoryPage")).to eq(true)
+
+      choose "Adults-only", allow_label_click: true
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 2)
+      expect(page).not_to have_css(".clubs-scroll .list-group-item", text: "Wicklow club")
+      expect(page).to have_current_path(clubs_path(audience: "adults_only"))
+      click_link "Clear search filters"
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 3)
+      expect(page).to have_checked_field("All", visible: :all)
     end
   end
 

@@ -1,18 +1,18 @@
 = turbo_frame_tag "clubs-results" do
   .clubs-controls
     .inline-flex
-      %small.text-muted{role: "status"}= t("club.directory.found", count: @clubs.size)
-      %small= link_to t("club.directory.clear"), clubs_path
+      %small.text-muted{role: "status", data: { clubs_directory_target: "count" }}= t("club.directory.found", count: @clubs.size)
+      %small= link_to t("club.directory.clear"), clubs_path, data: { action: "clubs-directory#clear", turbo: false }
     .form-inline.inline-between.flex-wrap.voffset1
       = label_tag :day_of_week, t("club.meetings.day"), class: "sr-only"
       = select_tag :day_of_week, options_for_select([[t("club.directory.any_day"), ""]] + ClubMeeting::DAYS_OF_WEEK.map { |day| [day.capitalize, day] }, params[:day_of_week]), class: "form-control input-sm btn-rounded"
       %fieldset.inline-flex
         %legend.sr-only= t("club.directory.open_to")
         = render "utils/inline_radio_field", name: "audience", include_all: false, checked: params[:audience], options: [["all", t("all")], ["adults_only", t("club.directory.adults_only")], ["juniors_only", t("club.directory.juniors_only")], ["women_only", t("club.directory.women_only")]]
-  #clubs-list.clubs-list.clubs-scroll{tabindex: "0", "aria-label": t("club.clubs")}
+  #clubs-list.clubs-list.clubs-scroll{role: "tabpanel", "aria-labelledby": "clubs-list-tab", tabindex: "0", "aria-label": t("club.clubs"), data: { clubs_directory_target: "list" }}
     .list-group.no-margin
       - @clubs.each do |club|
-        = link_to club_path(club), class: "list-group-item", id: "club_#{club.id}", data: { turbo: false } do
+        = link_to club_path(club), class: "list-group-item", id: "club_#{club.id}", data: { turbo: false, club_id: club.id, lat: club.lat, lng: club.long } do
           %h4.list-group-item-heading
             %strong= club.name
             - unless club.active
@@ -28,6 +28,7 @@
             .media.no-margin
               %span.glyphicon.glyphicon-time.glyphicon-sm.text-muted.pull-left{"aria-hidden": "true"}
               .media-body= summary
-    .panel.panel-pastel-warning{class: ("hidden" if @clubs.any?)}
+    .panel.panel-pastel-warning{class: ("hidden" if @clubs.any?), data: { clubs_directory_target: "empty" }}
       .panel-body
         .text-center= t("no_matches")
+  %script{type: "application/json", data: { clubs_directory_target: "results" }}= raw json_escape(@clubs.map(&:id).to_json)

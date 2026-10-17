@@ -34,6 +34,7 @@ IcuWwwApp::Application.routes.draw do
   end
   resources :likes, only: [:create, :destroy]
   resources :champions,   only: [:index, :show]
+  get "clubs/county/:county", to: "clubs#index", as: :county_clubs
   resources :clubs,       only: [:index, :show]
   resources :documents,   only: [:index, :show, :new, :create, :edit, :update]
   resources :downloads,   only: [:index, :show]
