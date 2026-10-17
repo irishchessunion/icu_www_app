@@ -299,6 +299,8 @@ section h2 {
 .clubs-content > .list-map-tabs { grid-row: 2; }
 .clubs-list,
 .clubs-map-column { grid-column: 1; grid-row: 3; }
+.clubs-detail { align-items: baseline; }
+.clubs-detail > .glyphicon { flex: 0 0 1em; text-align: center; }
 
 @media (min-width: 769px) {
   body.clubs-directory-page { overflow: hidden; }

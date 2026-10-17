@@ -18,16 +18,16 @@
             - unless club.active
               %small
                 %span.label.label-default= t("inactive")
-          .media.no-margin
-            %span.glyphicon.glyphicon-map-marker.glyphicon-sm.text-muted.pull-left{"aria-hidden": "true"}
-            .media-body
+          .inline-glyph.clubs-detail
+            %span.glyphicon.glyphicon-map-marker.glyphicon-sm.text-muted{"aria-hidden": "true"}
+            %div
               - if club.address.present?
                 %div= club.address
               %div= club.locality_parts.join(", ")
           - if (summary = club_meeting_summary(club)).present?
-            .media.no-margin
-              %span.glyphicon.glyphicon-time.glyphicon-sm.text-muted.pull-left{"aria-hidden": "true"}
-              .media-body= summary
+            .inline-glyph.clubs-detail
+              %span.glyphicon.glyphicon-time.glyphicon-sm.text-muted{"aria-hidden": "true"}
+              %div= summary
     .panel.panel-pastel-warning{class: ("hidden" if @clubs.any?), data: { clubs_directory_target: "empty" }}
       .panel-body
         .text-center= t("no_matches")
