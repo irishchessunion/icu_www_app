@@ -3,8 +3,9 @@
 - defined?(back_text) || back_text = nil
 - defined?(back_path) || back_path = :back
 - defined?(subtitle) || subtitle = nil
+- defined?(css) || css = nil
 
-%section{class: "full-width title-only"}
+%section{class: ["full-width title-only", css]}
   .container
     .row
       .col-md-12.flex-row

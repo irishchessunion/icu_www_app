@@ -81,6 +81,11 @@
   gap: 0 15px;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+
 .inline-between {
   display: flex;
   flex-direction: row;
@@ -274,7 +279,7 @@ section.full-width {
   width: 100%;
 }
 
-section.title-only {
+:where(section.title-only) {
   background: var(--gray-lighter);
   padding: 32px 0;
   margin: 0 0 21px 0;
@@ -961,6 +966,7 @@ section.latest-reports .content-grid .thumbnail-image {
 
 .switch-group label {
   margin: 0;
+  font-weight: 400;
 }
 
 .switch-group .admin-only-label {
@@ -1041,6 +1047,7 @@ input:checked+.slider:before {
 .inline-radio label {
   color: var(--gray-base);
   cursor: pointer;
+  font-weight: 400;
   padding: 0 0 4px 0;
   border-bottom: 2px solid var(--gray-lighter);
 }
@@ -1473,6 +1480,11 @@ td.enter {
 
 /* Bootstrap SM Breakpoint */
 @media (max-width: 768px) {
+  .stack-xs {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .list-map-tabs {
     display: block;
   }
