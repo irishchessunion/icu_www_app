@@ -301,9 +301,13 @@ section h2 {
 .clubs-map-column { grid-column: 1; grid-row: 3; }
 
 @media (min-width: 769px) {
-  .clubs-content { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr); column-gap: 30px; }
+  body.clubs-directory-page { overflow: hidden; }
+  .clubs-content { height: var(--clubs-content-height); grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr); column-gap: 30px; }
   .clubs-list { grid-row: 2; }
   .clubs-map-column { grid-column: 2; grid-row: 1 / span 2; }
+  .clubs-scroll { overflow-y: auto; min-height: 0; overscroll-behavior: contain; scrollbar-width: none; }
+  .clubs-scroll::-webkit-scrollbar { display: none; }
+  .clubs-map { max-width: var(--clubs-content-height); margin-left: auto; }
 }
 
 @media (max-width: 768px) {

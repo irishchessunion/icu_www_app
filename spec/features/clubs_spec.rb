@@ -145,6 +145,17 @@ describe Club do
       expect(page).to have_css(".clubs-scroll .list-group-item", count: 3)
       expect(page).to have_checked_field("All", visible: :all)
     end
+
+    it "scrolls only the results when scrolling over the desktop map" do
+      20.times { |i| create(:club, name: "Club #{i}") }
+      visit clubs_path
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 23)
+      map_top = find(".clubs-map").rect.y
+      page.execute_script("document.querySelector('.clubs-map').dispatchEvent(new WheelEvent('wheel', { deltaY: 500, bubbles: true, cancelable: true }))")
+      expect(page.evaluate_script("document.querySelector('.clubs-scroll').scrollTop")).to be > 0
+      expect(page.evaluate_script("window.scrollY")).to eq(0)
+      expect(find(".clubs-map").rect.y).to eq(map_top)
+    end
   end
 
   context "show" do
