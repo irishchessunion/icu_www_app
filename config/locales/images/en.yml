@@ -5,7 +5,10 @@ en:
     dimensions: Dimensions
     image: Image
     images: Images
+    large: Large
+    medium: Medium
     original: Original
+    small: Small
     thumbnail: Thumbnail
     order:
       order: Order
