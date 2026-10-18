@@ -105,3 +105,19 @@ describe "News on the home page", js: true do
     expect(page).to_not have_css(".show-more-content")
   end
 end
+
+describe "Tournament reports on the home page" do
+  # 500x200, so the small style (300x120) is too short to cover a 3:2 box and medium (500x200) is used
+  let(:image) { create(:image, :with_thumbnail) }
+  let!(:report) { create(:article, selected_categories: ["tournament"], text: "Report [IMG:#{image.id}:right]") }
+
+  it "use the smallest image style that covers the thumbnail box, not the original" do
+    visit home_path
+
+    within("section.latest-reports") do
+      style = find(".thumbnail-image")[:style]
+      expect(style).to include(image.data.url(:medium))
+      expect(style).to_not include(image.data.url)
+    end
+  end
+end
