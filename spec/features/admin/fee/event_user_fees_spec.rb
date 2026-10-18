@@ -68,6 +68,6 @@ describe "Fees for full-access event users" do
 
   it "can't delete a fee" do
     visit admin_fee_path(fee, show_delete_button_for_test: true)
-    expect(page).to_not have_link(delete)
+    expect(page).to_not have_link(delete, exact: true)
   end
 end

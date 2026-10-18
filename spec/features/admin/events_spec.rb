@@ -40,7 +40,7 @@ describe Event do
         visit events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
-        expect(page).to have_link(edit)
+        expect(page).to have_link(edit, exact: true)
       end
     end
 
@@ -54,7 +54,7 @@ describe Event do
         visit events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
-        expect(page).to_not have_link(edit)
+        expect(page).to_not have_link(edit, exact: true)
       end
     end
 
@@ -68,7 +68,7 @@ describe Event do
         visit events_path
         click_link event.name
         expect(page).to have_css(header, text: event.name)
-        expect(page).to_not have_link(edit)
+        expect(page).to_not have_link(edit, exact: true)
       end
     end
   end

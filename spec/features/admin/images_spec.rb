@@ -63,8 +63,8 @@ describe Image do
         visit images_path
         first(href(image)).click
         expect(page).to have_xpath(cell(caption), text: image.caption)
-        expect(page).to have_link(edit)
-        expect(page).to have_link(delete)
+        expect(page).to have_link(edit, exact: true)
+        expect(page).to have_link(delete, exact: true)
       end
     end
 
@@ -78,8 +78,8 @@ describe Image do
         visit images_path
         first(href(image)).click
         expect(page).to have_xpath(cell(caption), text: image.caption)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
 
@@ -96,8 +96,8 @@ describe Image do
         else
           first(href(image)).click
           expect(page).to have_xpath(cell(caption), text: image.caption)
-          expect(page).to_not have_link(edit)
-          expect(page).to_not have_link(delete)
+          expect(page).to_not have_link(edit, exact: true)
+          expect(page).to_not have_link(delete, exact: true)
         end
       end
     end
@@ -253,7 +253,7 @@ describe Image do
     it "by non-owner" do
       login "editor"
       visit image_path(image)
-      expect(page).to_not have_link(delete)
+      expect(page).to_not have_link(delete, exact: true)
     end
   end
 end

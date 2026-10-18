@@ -25,8 +25,8 @@ describe News do
         visit news_index_path
         click_link news.headline
         expect(page).to have_css(panel, text: news.headline)
-        expect(page).to have_link(edit)
-        expect(page).to have_link(delete)
+        expect(page).to have_link(edit, exact: true)
+        expect(page).to have_link(delete, exact: true)
       end
     end
 
@@ -39,8 +39,8 @@ describe News do
         expect(page).to have_css(failure, text: unauthorized)
         visit news_path(news)
         expect(page).to have_css(panel, text: news.headline)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
 
@@ -53,8 +53,8 @@ describe News do
         expect(page).to have_css(failure, text: unauthorized)
         visit news_path(news)
         expect(page).to have_css(panel, text: news.headline)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
   end

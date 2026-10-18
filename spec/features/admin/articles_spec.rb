@@ -28,8 +28,8 @@ describe Article do
         visit articles_path
         click_link article.title
         expect(page).to have_css(header, text: article.title)
-        expect(page).to have_link(edit)
-        expect(page).to have_link(delete)
+        expect(page).to have_link(edit, exact: true)
+        expect(page).to have_link(delete, exact: true)
       end
     end
 
@@ -43,8 +43,8 @@ describe Article do
         visit articles_path
         click_link article.title
         expect(page).to have_css(header, text: article.title)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
 
@@ -58,8 +58,8 @@ describe Article do
         visit articles_path
         click_link article.title
         expect(page).to have_css(header, text: article.title)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
     

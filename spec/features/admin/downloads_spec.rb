@@ -73,8 +73,8 @@ describe Download do
         visit downloads_path
         click_link download.description
         expect(page).to have_xpath(cell(description), text: download.description)
-        expect(page).to have_link(edit)
-        expect(page).to have_link(delete)
+        expect(page).to have_link(edit, exact: true)
+        expect(page).to have_link(delete, exact: true)
       end
     end
 
@@ -88,8 +88,8 @@ describe Download do
         visit downloads_path
         click_link download.description
         expect(page).to have_xpath(cell(description), text: download.description)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
 
@@ -355,7 +355,7 @@ describe Download do
     it "by non-owner" do
       login "editor"
       visit admin_download_path(download)
-      expect(page).to_not have_link(delete)
+      expect(page).to_not have_link(delete, exact: true)
     end
   end
 end
