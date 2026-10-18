@@ -82,7 +82,9 @@ IcuWwwApp::Application.routes.draw do
     end
 
     get "deployment_info" => "deployment_info#show"
-    resources :articles,        only: [:new, :create, :edit, :update, :destroy]
+    resources :articles,        only: [:new, :create, :edit, :update, :destroy] do
+      post :preview, on: :collection
+    end
     resources :article_ids,     only: [:index]
     resources :bad_logins,      only: [:index]
     resources :carts,           only: [:index, :show, :edit, :update] do

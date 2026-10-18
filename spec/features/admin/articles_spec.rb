@@ -389,5 +389,26 @@ describe Article do
       article = Article.find_by!(title: "My Article")
       expect(article.text).to include("[IMG:#{image.id}:center:responsive=true]")
     end
+
+    it "previews the unsaved text, with shortcuts expanded, in another tab" do
+      fill_in title, with: "Draft Article"
+      set_editor_html("<p>Draft text.</p><p>[IMG:#{linked_image.id}:width=200:right]</p>")
+
+      preview = window_opened_by { find("#wysiwyg_toolbar_extra button", text: I18n.t("article.preview")).click }
+      within_window(preview) do
+        expect(page).to have_css("h1", text: "Draft Article")
+        expect(page).to have_css("#article", text: "Draft text.")
+        expect(page).to have_css("#article div.float-right img[alt='#{linked_image.caption}']")
+      end
+      expect(Article.count).to eq 1
+    end
+  end
+
+  context "preview" do
+    it "is only for users who can create articles" do
+      page.driver.post preview_admin_articles_path, text: "<p>Hello</p>"
+      expect(page.driver.response.status).to eq 302
+      expect(page.driver.response.location).to_not include("preview")
+    end
   end
 end

@@ -1322,6 +1322,15 @@ table.float-center { margin-left: auto; margin-right: auto; }
   margin-right: 1em !important;
 }
 
+/* A floated [IMG:] starts below any earlier image on the same side, rather than beside it, so it appears
+   where the writer put it in the text. */
+#article div.float-left, .news div.float-left {
+  clear: left;
+}
+#article div.float-right, .news div.float-right {
+  clear: right;
+}
+
 /* On phones the text beside a floated [IMG:] gets too narrow, so images go on their own line, centred
    (img-responsive still stops a big one overflowing). */
 @media (max-width: 767px) {

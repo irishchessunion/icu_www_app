@@ -90,12 +90,10 @@ class Image < ApplicationRecord
     STYLES.keys.select { |style| dimensions.is_a?(Hash) && dimensions[style].is_a?(Array) }
   end
 
-  # The smallest style at least width x height, else the biggest there is. Images uploaded before a
-  # style was added don't have it until "bin/rake images:styles" runs, so fall back to the original.
+  # The smallest style at least width x height, else the original. Images uploaded before a style was
+  # added don't have it until "bin/rake images:styles" runs, and may only have a thumbnail.
   def style_for(width, height = 0)
-    styles = styles_generated
-    return :original if styles.empty?
-    styles.find { |style| self.width(style) >= width && self.height(style) >= height } || styles.last
+    styles_generated.find { |style| self.width(style) >= width && self.height(style) >= height } || :original
   end
 
   # Make every style from the original and record their dimensions, without changing updated_at.
