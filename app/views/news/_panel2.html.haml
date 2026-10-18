@@ -6,5 +6,5 @@
     .pull-right.visible-sm-block.text-sm.right-margin-thin= news.short_date
     .pull-right.text-sm.right-margin-thin
       .visible-lg-inline-block.right-margin-thin= news.date.strftime('%d-%m-%Y')
-  .panel-body.news
+  .panel-body.news{class: news.wysiwyg_class}
     = news.html

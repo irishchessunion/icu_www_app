@@ -65,11 +65,23 @@ describe News do
     end
   end
 
+  context "#wysiwyg_class" do
+    it "drops paragraph margins only for text saved from the editor" do
+      expect(build(:news, markdown: false).wysiwyg_class).to eq "wysiwyg-content"
+      expect(build(:news, markdown: true).wysiwyg_class).to be_nil
+    end
+  end
+
   context "#editor_html" do
     it "renders markdown summary to HTML without expanding shortcodes" do
       news = build(:news, markdown: true, summary: "**Bold** [ART:1:Some Title]")
       expect(news.editor_html).to include("<strong>Bold</strong>")
       expect(news.editor_html).to include("[ART:1:Some Title]")
+    end
+
+    it "keeps the gaps between markdown paragraphs as blank lines" do
+      news = build(:news, markdown: true, summary: "One\n\nTwo\n\nThree")
+      expect(news.editor_html).to eq("<p>One</p><p><br></p><p>Two</p><p><br></p><p>Three</p>\n")
     end
 
     it "returns HTML summary as-is without expanding shortcodes" do

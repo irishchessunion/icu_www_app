@@ -15,6 +15,7 @@
 #
 # Provides, for the declared field:
 # - #editor_html: seeds the admin editor, without expanding shortcodes
+# - #wysiwyg_class: the class for the element the #html goes in (see below)
 # - #html: the public rendering (expands shortcodes, then respects markdown)
 # - a before_validation sanitizing the field when markdown: false (and, for an optional
 #   field, clearing an empty Quill placeholder such as "<p><br></p>")
@@ -34,9 +35,12 @@ module WysiwygEditable
       before_validation :"sanitize_#{field}_for_wysiwyg"
       validate(:"#{field}_must_be_present_for_wysiwyg") if required
 
+      # The editor shows each paragraph as a single line, so to keep the gaps between Markdown
+      # paragraphs once the text is saved as HTML, put an empty one (a blank line) between them
       define_method(:editor_html) do
         raw = public_send(field)
-        markdown? ? to_html(raw, filter_html: wysiwyg_filter_html) : raw.to_s.html_safe
+        return raw.to_s.html_safe unless markdown?
+        to_html(raw, filter_html: wysiwyg_filter_html).to_str.gsub(%r{</p>\s*<p>}, "</p><p><br></p><p>").html_safe
       end
 
       define_method(:html) do
@@ -56,6 +60,12 @@ module WysiwygEditable
 
       private :"sanitize_#{field}_for_wysiwyg", :"#{field}_must_be_present_for_wysiwyg"
     end
+  end
+
+  # Text saved from the editor has a paragraph per line, with empty ones for blank lines, so it's shown
+  # without paragraph margins to look as it did in the editor. Markdown paragraphs keep their margins.
+  def wysiwyg_class
+    "wysiwyg-content" unless markdown?
   end
 
   # Renders already-expanded editor content, respecting the markdown flag.
