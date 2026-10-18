@@ -21,6 +21,12 @@ describe Image do
       expect(html).to include(%Q{src="#{image.data.url}"})
       expect(html).to_not include("srcset")
     end
+
+    it "uses the original, not a thumbnail stretched to fit, if that's the only style an older image has" do
+      image.update_column(:dimensions, { original: [500, 200], thumbnail: [100, 40] })
+      html = image.reload.expand(type: "IMG", width: "400")
+      expect(html).to include(%Q{src="#{image.data.url}"})
+    end
   end
 
   context "styles" do

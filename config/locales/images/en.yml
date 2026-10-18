@@ -8,6 +8,18 @@ en:
     large: Large
     medium: Medium
     original: Original
+    picker:
+      back: Back
+      center: Centre
+      full: Full width
+      insert: Insert
+      large: Large
+      left: Left
+      medium: Medium
+      position: Position
+      right: Right
+      size: Size
+      small: Small
     small: Small
     thumbnail: Thumbnail
     order:

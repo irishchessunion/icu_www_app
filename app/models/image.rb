@@ -20,6 +20,9 @@ class Image < ApplicationRecord
     large:     "1200x1200>",
   }
 
+  # Widths offered by the editor's image picker; full width (nil) fills the column instead
+  PICKER_SIZES = { small: 200, medium: 400, large: 600, full: nil }
+
   has_attached_file :data, styles: STYLES, keep_old_files: true
 
   belongs_to :user
@@ -87,12 +90,10 @@ class Image < ApplicationRecord
     STYLES.keys.select { |style| dimensions.is_a?(Hash) && dimensions[style].is_a?(Array) }
   end
 
-  # The smallest style at least width x height, else the biggest there is. Images uploaded before a
-  # style was added don't have it until "bin/rake images:styles" runs, so fall back to the original.
+  # The smallest style at least width x height, else the original. Images uploaded before a style was
+  # added don't have it until "bin/rake images:styles" runs, and may only have a thumbnail.
   def style_for(width, height = 0)
-    styles = styles_generated
-    return :original if styles.empty?
-    styles.find { |style| self.width(style) >= width && self.height(style) >= height } || styles.last
+    styles_generated.find { |style| self.width(style) >= width && self.height(style) >= height } || :original
   end
 
   # Make every style from the original and record their dimensions, without changing updated_at.

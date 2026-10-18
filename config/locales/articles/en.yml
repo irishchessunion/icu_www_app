@@ -4,6 +4,8 @@ en:
     articles: Articles
     author: Author(s)
     inaccessible: "Sorry, this article is inaccessible to the current user"
+    preview: Preview
+    preview_note: "Preview only, not saved. Close this tab to go back to the editor."
     text: Text
     title: Article Title
     category:

@@ -1,0 +1,7 @@
+- content_for :title, @article.title.presence || t("article.preview")
+
+.alert.alert-info.text-center= t("article.preview_note")
+
+%h1.text-center= @article.title
+%hr
+#article= @article.html

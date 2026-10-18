@@ -1,6 +1,6 @@
 class Admin::ArticlesController < ApplicationController
   before_action :set_article, only: [:edit, :update, :destroy]
-  authorize_resource
+  authorize_resource except: :preview
 
   def new
     @article = Article.new(title: params[:title], text: params[:text])
@@ -32,6 +32,13 @@ class Admin::ArticlesController < ApplicationController
       flash_first_error(@article, base_only: true)
       render action: "edit"
     end
+  end
+
+  # Renders the editor's unsaved text as it will look on the article page, in a tab of its own
+  def preview
+    authorize! :create, Article
+    @article = Article.new(title: params[:title], markdown: false)
+    @article.text = @article.sanitize_editor_html(params[:text].to_s)
   end
 
   def destroy
