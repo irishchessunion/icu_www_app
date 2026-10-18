@@ -46,6 +46,15 @@ describe "News list on the home page" do
       expect(page).to have_css("time.news-item-date", text: "2 Oct 2026")
     end
   end
+
+  it "shows editor text without paragraph margins, but keeps them for markdown" do
+    create(:news, headline: "Editor news", markdown: false, summary: "<p>One</p><p>Two</p>")
+    create(:news, headline: "Markdown news", markdown: true, summary: "One\n\nTwo")
+    visit home_path
+
+    expect(page).to have_css(".news-item", text: "Editor news") { |item| item.has_css?(".news.wysiwyg-content p") }
+    expect(page).to have_css(".news-item", text: "Markdown news") { |item| item.has_css?(".news p") && item.has_no_css?(".wysiwyg-content") }
+  end
 end
 
 describe "News on the home page", js: true do

@@ -15,7 +15,7 @@
   = render "series", series: series, article: @article
 
 %hr
-#article= @article.html
+#article{class: @article.wysiwyg_class}= @article.html
 %hr
 = render "utils/editing_details", object: @article
 %hr

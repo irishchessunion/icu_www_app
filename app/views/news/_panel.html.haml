@@ -13,9 +13,9 @@
       - unless news.active
         %small= "(inactive)"
     - if show_more
-      .show-more-content.news{data: { show_more_target: "content", action: "focusin->show-more#reveal" }}
+      .show-more-content.news{class: news.wysiwyg_class, data: { show_more_target: "content", action: "focusin->show-more#reveal" }}
         = news.html
       %a.hidden{href: "#", role: "button", "aria-expanded": "false", data: { show_more_target: "button", action: "show-more#toggle" }}= t("pages.news.show_more")
     - else
-      .news= news.html
+      .news{class: news.wysiwyg_class}= news.html
     %time.news-item-date{datetime: news.date.iso8601}= news.date.strftime("%-d %b %Y")
