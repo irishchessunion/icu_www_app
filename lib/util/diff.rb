@@ -38,10 +38,11 @@ module Util
       # Wind back the index to give a bit of context for where the difference occurs.
       index = index > context ? index - context : 0
 
-      # Replace the equal parts with a short mask.
+      # Replace the equal parts with a short mask, in new strings, as the originals may be frozen (nil.to_s)
+      # or be the record's own attribute values.
       mask = '.' * (index > 3 ? 3 : index)
-      a[0,index] = mask
-      b[0,index] = mask
+      a = mask + a[index..].to_s
+      b = mask + b[index..].to_s
 
       # Truncate and return them.
       [a.truncate(limit), b.truncate(limit)]
