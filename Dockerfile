@@ -16,6 +16,7 @@ RUN apt-get update -qq && \
   wget \
   gnupg \
   unzip \
+  zip \
   chromium \
   chromium-driver \
   && rm -rf /var/lib/apt/lists /var/cache/apt/archives
