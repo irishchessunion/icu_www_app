@@ -19,11 +19,11 @@ module ICU
       # This zip command fails if you don't first delete the old zip file.
       # The old version used to use gzip, but this is not compatible with zip on Windows.
       # The -j flag is used to junk the file path, as we don't need it.
-      cmd = "rm #{zip_file} && zip -j -q #{zip_file} #{pgn_file}"
+      cmd = "rm -f #{zip_file} && zip -j -q #{zip_file} #{pgn_file}"
       if system(cmd)
         pgn_size = File.size(pgn_file) rescue 0
         zip_size = File.size(zip_file) rescue 0
-        puts "#{signature}: compressed PGN (#{pgn_size.to_s(:human_size)}) to ZIP (#{zip_size.to_s(:human_size)})"
+        puts "#{signature}: compressed PGN (#{pgn_size.to_fs(:human_size)}) to ZIP (#{zip_size.to_fs(:human_size)})"
       else
         raise "system call (#{cmd}) falied"
       end
@@ -41,7 +41,7 @@ module ICU
     end
 
     def get_last_mod(new_count, force)
-      new_last_mod = Game.maximum(:updated_at).to_s(:db)
+      new_last_mod = Game.maximum(:updated_at).to_fs(:db)
 
       # Do we need to regenerate the file?
       unless force || !File.exist?(zip_file)
@@ -82,7 +82,7 @@ module ICU
     end
 
     def time
-      Time.now.utc.to_s(:db)
+      Time.now.utc.to_fs(:db)
     end
   end
 end
