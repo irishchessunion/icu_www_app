@@ -777,14 +777,14 @@ section.stats-panel .list-col {
 .news-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
   padding: 12px 0;
+  gap: 15px;
   border-bottom: 1px solid var(--gray-lighter);
 }
 
 .news-item-image {
   flex: none;
-  width: 64px;
+  width: 96px;
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 4px;
@@ -820,16 +820,13 @@ section.stats-panel .list-col {
   color: var(--gray-light);
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .news-item {
-    gap: 20px;
+    gap: 10px;
   }
 
   .news-item-image {
-    width: 96px;
-  }
-
-  .news-item-headline {
+    width: 64px;
   }
 }
 
