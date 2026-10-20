@@ -293,30 +293,30 @@ section h2 {
 }
 
 /* Club directory */
-.clubs-content { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 10px; }
+body.clubs-directory-page { overflow: hidden; }
+.clubs-content { display: grid; height: var(--clubs-content-height); grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr); gap: 10px 30px; }
 .clubs-content > turbo-frame { display: contents; }
 .clubs-controls { grid-row: 1; }
-.clubs-content > .list-map-tabs { grid-row: 2; }
-.clubs-list,
-.clubs-map-column { grid-column: 1; grid-row: 3; }
+.clubs-list { grid-column: 1; grid-row: 2; }
+.clubs-map-column { grid-column: 2; grid-row: 1 / span 2; }
+.clubs-scroll { overflow-y: auto; min-height: 0; overscroll-behavior: contain; scrollbar-width: none; }
+.clubs-scroll::-webkit-scrollbar { display: none; }
+.clubs-map { max-width: var(--clubs-content-height); margin-left: auto; }
 .clubs-detail { align-items: baseline; }
 .clubs-detail > .glyphicon { flex: 0 0 1em; text-align: center; }
 
-@media (min-width: 769px) {
-  body.clubs-directory-page { overflow: hidden; }
-  .clubs-content { height: var(--clubs-content-height); grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr); column-gap: 30px; }
-  .clubs-list { grid-row: 2; }
-  .clubs-map-column { grid-column: 2; grid-row: 1 / span 2; }
-  .clubs-scroll { overflow-y: auto; min-height: 0; overscroll-behavior: contain; scrollbar-width: none; }
-  .clubs-scroll::-webkit-scrollbar { display: none; }
-  .clubs-map { max-width: var(--clubs-content-height); margin-left: auto; }
-}
-
 @media (max-width: 768px) {
+  body.clubs-directory-page { overflow: visible; }
+  .clubs-content { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: none; column-gap: 0; }
   .clubs-content.voffset3 { margin-top: 0; }
   .clubs-content > .list-map-tabs { grid-row: 1; }
   .clubs-controls,
   .clubs-map-column { grid-row: 2; }
+  .clubs-list { grid-row: 3; }
+  .clubs-map-column { grid-column: 1; }
+  .clubs-scroll { overflow-y: visible; min-height: auto; overscroll-behavior: auto; scrollbar-width: auto; }
+  .clubs-scroll::-webkit-scrollbar { display: initial; }
+  .clubs-map { max-width: none; margin-left: 0; }
   .clubs-map-column,
   .clubs-show-map .clubs-controls,
   .clubs-show-map .clubs-list { display: none; }
