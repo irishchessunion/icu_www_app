@@ -38,12 +38,12 @@ describe "News list on the home page" do
     within(".news-item", text: "With image") do
       expect(page).to have_link("With image", href: news_path(with_image))
       expect(page).to have_css(".news-item-image img[src='#{image.data.url}']")
-      expect(page).to have_css("time.news-item-date", text: "1 Oct 2026")
+      expect(page).to have_css("footer > time", text: "1 Oct 2026")
       expect(page).to_not have_content(with_image.user.player.name)
     end
     within(".news-item", text: "Without image") do
       expect(page).to_not have_css(".news-item-image")
-      expect(page).to have_css("time.news-item-date", text: "2 Oct 2026")
+      expect(page).to have_css("footer > time", text: "2 Oct 2026")
     end
   end
 
