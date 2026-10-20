@@ -1,6 +1,7 @@
 class ClubsController < ApplicationController
   def index
     params.delete(:include_inactive) unless can?(:manage, Club)
+    params.delete(:audience) unless %w[all adults_only juniors_only women_only].include?(params[:audience])
     @clubs = Club.search(params).to_a
     if turbo_frame_request?
       render partial: "results"

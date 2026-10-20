@@ -1,6 +1,6 @@
 .event_info
   .text-center
-    %strong= link_to club.name, club_path(club)
+    %strong= link_to club.name, club_path(club), data: { turbo: false }
   - if local_assigns[:include_location]
     %hr
     %small.text-muted
