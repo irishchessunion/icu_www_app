@@ -1,11 +1,14 @@
 class ClubsDirectoryController extends Controller {
-  static targets = ["form", "content", "map", "markers", "results", "list", "count", "empty", "radius", "locate", "locationStatus"]
+  static targets = ["form", "content", "map", "markers", "results", "list", "count", "empty", "radius", "geolocation", "locate", "locationStatus"]
   static values = { marker: String, trainingMarker: String, count: String, locationError: String }
 
   connect() {
     this.mobile = window.matchMedia("(max-width: 768px)");
     this.markerData = JSON.parse(this.markersTarget.textContent);
     this.mapMarkers = [];
+    if (typeof window.HTMLGeolocationElement === "function") {
+      this.geolocationTarget.classList.add("btn", "btn-pastel-info");
+    }
     document.body.classList.add("clubs-directory-page");
     this.wheel = this.scrollList.bind(this);
     document.addEventListener("wheel", this.wheel, { passive: false });
