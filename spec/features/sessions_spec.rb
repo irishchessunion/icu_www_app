@@ -135,10 +135,10 @@ describe "Sessions" do
   context "redirecting to the last page before sign in" do
     it "clubs#index" do
       visit clubs_path
-      expect(page).to have_title(I18n.t("club.clubs"))
+      expect(page).to have_title(I18n.t("club.directory.title"))
       login
       expect(page).to have_css(success, text: signed_in_as)
-      expect(page).to have_title(I18n.t("club.clubs"))
+      expect(page).to have_title(I18n.t("club.directory.title"))
     end
 
     it "help#index" do
