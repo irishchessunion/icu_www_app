@@ -1,6 +1,6 @@
 class ClubsDirectoryController extends Controller {
   static targets = ["form", "content", "controls", "map", "markers", "results", "list", "count", "empty", "radius", "geolocation", "locate", "locationStatus"]
-  static values = { marker: String, trainingMarker: String, count: String, locationError: String }
+  static values = { marker: String, highlightedMarker: String, count: String, locationError: String }
 
   connect() {
     this.mobile = window.matchMedia("(max-width: 768px)");
@@ -115,7 +115,7 @@ class ClubsDirectoryController extends Controller {
   highlightMarker(event) {
     const entry = this.mapMarkers.find(({ data }) => data.id === Number(event.currentTarget.dataset.clubId));
     if (entry) {
-      entry.element.src = event.type === "mouseenter" ? this.trainingMarkerValue : this.markerValue;
+      entry.element.src = event.type === "mouseenter" ? this.highlightedMarkerValue : this.markerValue;
     }
   }
 
