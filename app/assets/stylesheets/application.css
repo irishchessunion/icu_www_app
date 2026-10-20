@@ -856,7 +856,7 @@ section.stats-panel .list-col {
   color: var(--brand-primary-dark);
 }
 
-.news-item footer {
+article.news-item footer {
   margin: 0;
 }
 
