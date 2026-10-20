@@ -83,7 +83,7 @@
 
 .flex-wrap {
   flex-wrap: wrap;
-  row-gap: 10px;
+  row-gap: 15px;
 }
 
 .inline-between {
@@ -313,7 +313,12 @@ section h2 {
 }
 
 @media (max-width: 768px) {
+  .clubs-content.voffset3 { margin-top: 0; }
+  .clubs-content > .list-map-tabs { grid-row: 1; }
+  .clubs-controls,
+  .clubs-map-column { grid-row: 2; }
   .clubs-map-column,
+  .clubs-show-map .clubs-controls,
   .clubs-show-map .clubs-list { display: none; }
   .clubs-show-map .clubs-map-column { display: block; }
 }
@@ -1138,6 +1143,7 @@ input:checked+.slider:before {
   color: var(--gray-base);
   cursor: pointer;
   font-weight: 400;
+  margin-bottom: 0;
   padding: 0 0 4px 0;
   border-bottom: 2px solid var(--gray-lighter);
 }
@@ -1581,9 +1587,18 @@ td.enter {
 
 /* Bootstrap SM Breakpoint */
 @media (max-width: 768px) {
+  .title-only:has(+ .sub-panel-bar),
+  .title-only:has(+ form > .sub-panel-bar:first-child) {
+    padding-bottom: 15px;
+  }
+
   .stack-xs {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .stack-xs-reverse {
+    flex-direction: column-reverse;
   }
 
   .list-map-tabs {

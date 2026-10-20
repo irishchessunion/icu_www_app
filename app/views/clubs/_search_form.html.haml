@@ -1,4 +1,4 @@
-.inline-flex.inline-between.flex-wrap.stack-xs
+.inline-flex.inline-between.flex-wrap.stack-xs.stack-xs-reverse
   .inline-flex.flex-wrap.stack-xs.form-inline
     .form-group.no-margin
       = label_tag :search, t("club.directory.search"), class: "sr-only"
@@ -9,6 +9,11 @@
     - if can?(:manage, Club)
       = render "utils/toggle_checkbox_field", name: "include_inactive", label: t("club.directory.include_inactive")
     = button_tag t("search"), type: "submit", class: "btn btn-info"
+  .visible-xs-block.col-xs-12.no-gutters
+    .inline-flex
+      %hr.no-margin{style: "width: 15px;"}
+      %small.text-muted= t("club.directory.or")
+      %hr.flex-grow.no-margin{style: "max-width: 80px;"}
   .inline-flex.flex-wrap.form-inline
     %geolocation{data: { clubs_directory_target: "geolocation", action: "location->clubs-directory#located" }, "aria-label": t("club.directory.near_me")}
       = button_tag t("club.directory.near_me"), type: "button", class: "btn btn-pastel-info", data: { action: "clubs-directory#locate", clubs_directory_target: "locate" }

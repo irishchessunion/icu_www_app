@@ -162,16 +162,20 @@ describe Club do
       JS
       click_button "Find clubs near me"
       expect(page).to have_css(".clubs-show-map #clubs-map", visible: true)
+      expect(page).not_to have_css(".clubs-controls")
+      click_link "List"
       expect(page).to have_content("2 clubs found")
       expect(page).to have_select("day_of_week", selected: "Any day")
       controls = find(".clubs-controls").rect
-      expect(controls.y + controls.height).to be <= find(".list-map-tabs").rect.y + 1
+      tabs = find(".list-map-tabs").rect
+      expect(controls.y).to be >= tabs.y + tabs.height - 1
       choose "Women-only", allow_label_click: true
       expect(page).to have_content("0 clubs found")
+      click_link "Map", exact: true
       expect(page).to have_css(".clubs-show-map #clubs-map", visible: true)
-      choose "All", allow_label_click: true
-      expect(page).to have_content("2 clubs found")
+      expect(page).not_to have_css(".clubs-controls")
       click_link "List"
+      choose "All", allow_label_click: true
       expect(page).to have_content("2 clubs found")
       expect(page).to have_css(".clubs-scroll .list-group-item", count: 2)
       expect(page).not_to have_css(".clubs-scroll .list-group-item", text: "Cork club")

@@ -11,7 +11,7 @@
       = link_to t("club.directory.new"), new_admin_club_path, class: "btn btn-primary hidden-xs"
 
   = form_with url: clubs_path, method: :get, local: true, data: { turbo: true, turbo_frame: "clubs-results", clubs_directory_target: "form", action: "input->clubs-directory#typing change->clubs-directory#change submit->clubs-directory#submitting turbo:frame-load->clubs-directory#refresh" } do
-    = render layout: "utils/sub_panel_bar" do
+    = render layout: "utils/sub_panel_bar", locals: { padding: "15px 0" } do
       = render "search_form"
 
     .container.clubs-content.voffset3{data: { clubs_directory_target: "content" }}

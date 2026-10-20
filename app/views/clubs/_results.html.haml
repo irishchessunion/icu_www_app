@@ -9,6 +9,8 @@
       %fieldset.inline-flex
         %legend.sr-only= t("club.directory.open_to")
         = render "utils/inline_radio_field", name: "audience", include_all: false, checked: params[:audience], options: [["all", t("all")], ["adults_only", t("club.directory.adults_only")], ["juniors_only", t("club.directory.juniors_only")], ["women_only", t("club.directory.women_only")]]
+    .row.visible-xs-block
+      %hr.no-margin
   #clubs-list.clubs-list.clubs-scroll{role: "tabpanel", "aria-labelledby": "clubs-list-tab", tabindex: "0", "aria-label": t("club.clubs"), data: { clubs_directory_target: "list" }}
     .list-group.no-margin
       - @clubs.each do |club|
