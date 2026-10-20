@@ -1,5 +1,5 @@
 class ClubsDirectoryController extends Controller {
-  static targets = ["form", "content", "map", "markers", "results", "list", "count", "empty", "radius", "geolocation", "locate", "locationStatus"]
+  static targets = ["form", "content", "controls", "map", "markers", "results", "list", "count", "empty", "radius", "geolocation", "locate", "locationStatus"]
   static values = { marker: String, trainingMarker: String, count: String, locationError: String }
 
   connect() {
@@ -11,7 +11,7 @@ class ClubsDirectoryController extends Controller {
     }
     document.body.classList.add("clubs-directory-page");
     this.wheel = this.scrollList.bind(this);
-    document.addEventListener("wheel", this.wheel, { passive: false });
+    this.contentTarget.addEventListener("wheel", this.wheel, { passive: false });
     this.observer = new ResizeObserver(() => this.resize());
     this.observer.observe(this.element);
     this.observer.observe(document.querySelector("body > header"));
@@ -21,8 +21,8 @@ class ClubsDirectoryController extends Controller {
   disconnect() {
     clearTimeout(this.timer);
     this.observer.disconnect();
-    document.removeEventListener("wheel", this.wheel);
-    document.body.classList.remove("clubs-directory-page");
+    this.contentTarget.removeEventListener("wheel", this.wheel);
+    document.body.classList.remove("clubs-directory-page", "clubs-page-scroll");
     if (this.map) this.map.remove();
   }
 
@@ -84,7 +84,13 @@ class ClubsDirectoryController extends Controller {
   }
 
   resize() {
-    this.element.style.setProperty("--clubs-content-height", `${Math.max(0, window.innerHeight - this.contentTarget.getBoundingClientRect().top - 15)}px`);
+    // Use the document position so scrolling the fallback page does not change its layout mode.
+    const height = Math.max(0, window.innerHeight - (this.contentTarget.getBoundingClientRect().top + window.scrollY) - 15);
+    const result = this.listTarget.querySelector("[data-club-id]:not(.hidden)") || this.emptyTarget;
+    const minimumHeight = this.controlsTarget.getBoundingClientRect().height + parseFloat(getComputedStyle(this.contentTarget).rowGap) + result.getBoundingClientRect().height;
+    this.pageScroll = !this.mobile.matches && height < minimumHeight;
+    document.body.classList.toggle("clubs-page-scroll", this.pageScroll);
+    this.element.style.setProperty("--clubs-content-height", `${height}px`);
     const mapVisible = !this.mobile.matches || this.element.classList.contains("clubs-show-map");
     if (mapVisible) this.ensureMap();
     if (this.map && mapVisible) {
@@ -98,7 +104,7 @@ class ClubsDirectoryController extends Controller {
   }
 
   scrollList(event) {
-    if (this.mobile.matches || event.ctrlKey || event.target.closest("select, textarea, .maplibregl-popup")) return;
+    if (this.mobile.matches || this.pageScroll || event.ctrlKey || event.target.closest("select, textarea, .maplibregl-popup")) return;
     // Let the scroll area handle its own wheel events, including trackpad momentum.
     if (this.listTarget.contains(event.target)) return;
     event.preventDefault();

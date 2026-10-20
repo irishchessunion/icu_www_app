@@ -1,5 +1,5 @@
 = turbo_frame_tag "clubs-results" do
-  .clubs-controls
+  .clubs-controls{data: { clubs_directory_target: "controls" }}
     .inline-flex
       %small.text-muted{role: "status", data: { clubs_directory_target: "count" }}= t("club.directory.found", count: @clubs.size)
       %small= link_to t("club.directory.clear"), clubs_path, data: { action: "clubs-directory#clear", turbo: false }

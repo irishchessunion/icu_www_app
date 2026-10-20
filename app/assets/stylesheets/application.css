@@ -305,6 +305,11 @@ body.clubs-directory-page { overflow: hidden; }
 .clubs-detail { align-items: baseline; }
 .clubs-detail > .glyphicon { flex: 0 0 1em; text-align: center; }
 
+body.clubs-directory-page.clubs-page-scroll { overflow: visible; }
+.clubs-page-scroll .clubs-content { height: auto; grid-template-rows: auto auto; }
+.clubs-page-scroll .clubs-scroll { overflow-y: visible; overscroll-behavior: auto; }
+.clubs-page-scroll .clubs-map { max-width: none; }
+
 @media (max-width: 768px) {
   body.clubs-directory-page { overflow: visible; }
   .clubs-content { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: none; column-gap: 0; }
