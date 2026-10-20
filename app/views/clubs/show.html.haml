@@ -26,6 +26,7 @@
         = render "clubs/show_admin"
         = render "clubs/show_meetings"
         = render "clubs/show_contact"
+        = render "clubs/show_players"
 
 - if @club.geocodes?
   - popup_html = render(partial: "clubs/marker_popup", locals: { club: @club }, formats: [:html], handlers: [:haml])

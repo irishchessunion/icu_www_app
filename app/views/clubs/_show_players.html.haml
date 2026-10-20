@@ -1,0 +1,11 @@
+-# Only logged in users can search players (see Ability), so guests don't see the link
+- if can?(:index, Player)
+  - count = @club.players.where(status: "active").count
+  %section{"id": "players", "aria-label": "#{t('club.club')} #{t('player.players')}"}
+    %h4= t("player.players")
+    .panel.panel-default
+      .panel-body
+        - if count > 0
+          = link_to t("club.active_players", count: count), players_path(club_id: @club.id, status: "active")
+        - else
+          = t("club.no_active_players")

@@ -1,5 +1,8 @@
 en:
   club:
+    active_players:
+      one: "%{count} active player"
+      other: "%{count} active players"
     button: Find a chess club
     club: Club
     clubs: Clubs
@@ -29,6 +32,7 @@ en:
       select_day: Select day
       time: Start time
       welcomes_juniors: Welcomes juniors
+    no_active_players: No active players
     no_meetings: This club currently has no meetings.
     notes: Notes
     phone: Phone

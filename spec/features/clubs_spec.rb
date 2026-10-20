@@ -158,6 +158,20 @@ describe Club do
       expect(page).to have_css("aside.side-content #meetings", text: I18n.t("club.no_meetings"))
     end
 
+    it "links to the club's active players for logged in users, but not guests" do
+      create_list(:player, 2, club: bangor)
+      create(:player, club: bangor, status: "inactive")
+
+      visit club_path(bangor)
+      expect(page).to_not have_css("#players")
+
+      login "member"
+      visit club_path(bangor)
+      expect(page).to have_link("2 active players", href: players_path(club_id: bangor.id, status: "active"))
+      click_link "2 active players"
+      expect(page).to have_css("table tbody tr", count: 2)
+    end
+
     it "shows the map only when geocoded" do
       ungeocoded = create(:club, lat: nil, long: nil)
       visit club_path(ungeocoded)
