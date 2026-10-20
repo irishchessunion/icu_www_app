@@ -9,7 +9,7 @@ describe News do
   let(:user) { create(:user, roles: "editor") }
 
   context "authorization" do
-    let(:panel)  { ".news-item-headline" }
+    let(:panel)  { ".news-item header > h4" }
     let(:level1) { ["admin", user] }
     let(:level2) { ["editor", "organiser"] }
     let(:level3) { User::ROLES.reject { |r| level1.include?(r) || level2.include?(r) }.append("guest") }

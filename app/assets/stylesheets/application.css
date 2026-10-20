@@ -777,14 +777,18 @@ section.stats-panel .list-col {
 .news-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 0;
+  gap: 15px;
+  padding: 21px 0;
   border-bottom: 1px solid var(--gray-lighter);
+}
+
+.news-item:first-of-type {
+  padding-top: 10px;
 }
 
 .news-item-image {
   flex: none;
-  width: 64px;
+  width: 96px;
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 4px;
@@ -801,37 +805,35 @@ section.stats-panel .list-col {
   min-width: 0;
 }
 
-.news-item-headline {
-  margin: 0 0 4px 0;
-  font-size: 20px;
+.news-item header > h4 {
+  margin: 0 0 6px 0;
   font-weight: bold;
   line-height: 1.1;
 }
 
-.news-item-headline a {
-  color: var(--text-color);
+.news-item header> h4 > a {
+  color: var(--brand-primary-dark);
 }
 
-.news-item-date {
+.news-item footer {
+  margin: 0;
+}
+
+.news-item footer > time {
+  color: var(--gray);
   display: block;
-  margin-top: 4px;
-  font-size: 12px;
-  font-weight: 600;
+  margin: 6px 0 0 0;
+  font-size: 0.8em;
   text-transform: uppercase;
-  color: var(--gray-light);
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .news-item {
-    gap: 20px;
+    gap: 10px;
   }
 
   .news-item-image {
-    width: 96px;
-  }
-
-  .news-item-headline {
-    font-size: 24px;
+    width: 64px;
   }
 }
 
@@ -909,6 +911,7 @@ section.stats-panel .list-col {
 
 .panel.compact-list .panel-body {
   padding: 10px 15px 0;
+  overflow-x: hidden;
 }
 
 .irish-events .panel-body.last-panel-body {
@@ -942,10 +945,12 @@ section.stats-panel .list-col {
 
 /* Latest Tournament Reports Card */
 section.latest-reports {
-  margin: 0 0 8px 0;
+  padding: 21px 0;
+  border-bottom: 1px solid var(--gray-lighter);
 }
 
 section.latest-reports h4 {
+  color: var(--brand-primary-dark);
   font-weight: 700;
   margin: 0;
 }
