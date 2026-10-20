@@ -904,6 +904,7 @@ section.stats-panel .list-col {
 
 .panel.compact-list .panel-body {
   padding: 10px 15px 0;
+  overflow-x: hidden;
 }
 
 .irish-events .panel-body.last-panel-body {
