@@ -112,6 +112,8 @@ describe Club do
   end
 
   context "live directory", js: true do
+    let(:directory_map) { "window.Stimulus.getControllerForElementAndIdentifier(document.querySelector('.clubs-directory'), 'clubs-directory').map" }
+
     before do
       create(:club, name: "Dublin club", county: "dublin", city: "Dublin", lat: 53.35, long: -6.26)
       create(:club, name: "Wicklow club", county: "wicklow", city: "Bray", lat: 53.2, long: -6.1)
@@ -214,6 +216,30 @@ describe Club do
       select "10km", from: "Search radius"
       expect(page).to have_select("Search radius", selected: "10km")
       expect(page).to have_css(".panel-pastel-warning", text: "No matches")
+    end
+
+    it "preserves map navigation across layout changes and refits changed filters" do
+      visit clubs_path
+      expect(page).to have_css(".maplibregl-canvas")
+      page.execute_script("#{directory_map}.jumpTo({ center: [-6.2, 53.3], zoom: 11 })")
+
+      page.current_window.resize_to(390, 844)
+      click_link "Map", exact: true
+      expect(page.evaluate_script("#{directory_map}.getZoom()")).to be_within(0.001).of(11)
+      expect(page.evaluate_script("#{directory_map}.getCenter().lng")).to be_within(0.001).of(-6.2)
+
+      click_link "List", exact: true
+      click_link "Map", exact: true
+      expect(page.evaluate_script("#{directory_map}.getZoom()")).to be_within(0.001).of(11)
+
+      click_link "List", exact: true
+      select "Cork", from: county
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 1)
+      click_link "Map", exact: true
+      expect(page.evaluate_script("#{directory_map}.getZoom()")).to be_within(0.001).of(12)
+      expect(page.evaluate_script("#{directory_map}.getCenter().lng")).to be_within(0.001).of(-8.47)
+    ensure
+      page.current_window.resize_to(1920, 1080)
     end
 
     it "scrolls only the results when scrolling over the desktop map" do

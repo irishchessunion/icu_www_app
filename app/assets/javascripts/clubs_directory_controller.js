@@ -79,15 +79,21 @@ class ClubsDirectoryController extends Controller {
     this.countTarget.textContent = this.countValue.replace("%{count}", count);
     this.emptyTarget.classList.toggle("hidden", count > 0);
     this.listTarget.scrollTop = 0;
+    this.mapNeedsUpdate = true;
     this.resize();
   }
 
   resize() {
     this.element.style.setProperty("--clubs-content-height", `${Math.max(0, window.innerHeight - this.contentTarget.getBoundingClientRect().top - 15)}px`);
-    if (!this.mobile.matches || this.element.classList.contains("clubs-show-map")) this.ensureMap();
-    if (this.map) {
+    const mapVisible = !this.mobile.matches || this.element.classList.contains("clubs-show-map");
+    if (mapVisible) this.ensureMap();
+    if (this.map && mapVisible) {
       this.map.resize();
-      this.updateMap();
+      // Defer changed results until the map is visible; layout changes alone keep its camera.
+      if (this.mapNeedsUpdate) {
+        this.updateMap();
+        this.mapNeedsUpdate = false;
+      }
     }
   }
 
@@ -170,6 +176,7 @@ class ClubsDirectoryController extends Controller {
     if (this.map) return;
     this.map = ICU.Maps.init(this.mapTarget, { markers: [], fit: false });
     if (!this.map) return;
+    this.mapNeedsUpdate = true;
     this.map.scrollZoom.disable();
     this.mapMarkers = this.markerData.map(data => {
       const element = document.createElement("img");
@@ -189,10 +196,10 @@ class ClubsDirectoryController extends Controller {
         .addTo(this.map);
       return { data, marker, element };
     });
-    this.map.on("load", () => this.updateMap());
+    this.map.on("load", () => this.updateMap(false));
   }
 
-  updateMap() {
+  updateMap(fit = true) {
     const includeInactive = this.formTarget.querySelector("[name='include_inactive']:checked");
     const selected = [];
     this.mapMarkers.forEach(({ data, marker, element }) => {
@@ -217,6 +224,7 @@ class ClubsDirectoryController extends Controller {
       }
     }
 
+    if (!fit) return;
     const filtered = this.formTarget.querySelector("[name='search']").value.trim() || this.formTarget.querySelector("[name='county']").value || this.formTarget.querySelector("[name='day_of_week']").value || this.formTarget.querySelector("[name='audience']:checked").value !== "all";
     const points = circle.length ? circle : filtered && selected.length ? selected : [[-10.8, 51.3], [-5.3, 55.5]];
     const bounds = points.reduce((bounds, point) => bounds.extend(point), new maplibregl.LngLatBounds());
