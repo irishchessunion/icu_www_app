@@ -68,7 +68,10 @@ class ClubsDirectoryController extends Controller {
   }
 
   refresh() {
-    this.mapMarkers.forEach(({ element }) => { element.src = this.markerValue; });
+    this.mapMarkers.forEach(({ marker, element }) => {
+      element.src = this.markerValue;
+      marker.getElement().style.zIndex = "";
+    });
     this.matchingIds = new Set(JSON.parse(this.resultsTarget.textContent));
     let count = 0;
     this.listTarget.querySelectorAll("[data-club-id]").forEach(row => {
@@ -115,7 +118,9 @@ class ClubsDirectoryController extends Controller {
   highlightMarker(event) {
     const entry = this.mapMarkers.find(({ data }) => data.id === Number(event.currentTarget.dataset.clubId));
     if (entry) {
-      entry.element.src = event.type === "mouseenter" ? this.highlightedMarkerValue : this.markerValue;
+      const highlighted = event.type === "mouseenter";
+      entry.element.src = highlighted ? this.highlightedMarkerValue : this.markerValue;
+      entry.marker.getElement().style.zIndex = highlighted ? "1" : "";
     }
   }
 
