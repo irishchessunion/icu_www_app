@@ -803,7 +803,6 @@ section.stats-panel .list-col {
 
 .news-item-headline {
   margin: 0 0 4px 0;
-  font-size: 20px;
   font-weight: bold;
   line-height: 1.1;
 }
@@ -815,8 +814,8 @@ section.stats-panel .list-col {
 .news-item-date {
   display: block;
   margin-top: 4px;
-  font-size: 12px;
   font-weight: 600;
+  font-size: 0.8em;
   text-transform: uppercase;
   color: var(--gray-light);
 }
@@ -831,7 +830,6 @@ section.stats-panel .list-col {
   }
 
   .news-item-headline {
-    font-size: 24px;
   }
 }
 
