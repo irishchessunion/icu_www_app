@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   before_action :load_donate_fee, except: :not_found
 
   def home
-    @news = News.active.nonjunior.ordered.limit(8)
+    @news = News.active.nonjunior.ordered.include_image.limit(8)
     @ongoing_events = Event.active.short.where(category: %w(irish women)).where('start_date <= ? AND end_date >= ?', Date.today, Date.today).ordered.limit(4)
     @upcoming_events = Event.active.short.where(category: %w(irish women)).where('start_date > ?', Date.today).ordered.limit(4)
     @reports = Article.active.tournament.ordered.limit(3)
@@ -10,14 +10,14 @@ class PagesController < ApplicationController
   end
 
   def home2
-    @news = News.active.nonjunior.ordered.limit(8)
+    @news = News.active.nonjunior.ordered.include_image.limit(8)
     @ongoing_events = Event.active.short.where(category: %w(irish women)).where('start_date <= ? AND end_date >= ?', Date.today, Date.today).ordered.limit(4)
     @upcoming_events = Event.active.short.where(category: %w(irish women)).where('start_date > ?', Date.today).ordered.limit(4)
     @results = Result.recent
   end
 
   def juniors
-    @news = News.active.junior.ordered.limit(8)
+    @news = News.active.junior.ordered.include_image.limit(8)
     @junior_events = Event.active.short.junior.where('end_date >= ?', Date.today).ordered.limit(4)
     @international_events = Event.active.short.junint.where('end_date >= ?', Date.today).ordered.limit(4)
     @junior_clubs = Club.active.junior
@@ -25,13 +25,13 @@ class PagesController < ApplicationController
   end
 
   def beginners
-    @news = News.active.beginners.ordered
+    @news = News.active.beginners.ordered.include_image.limit(20)
     @junior_clubs = Club.active.junior
     @clubs = Club.active
   end
 
   def women
-    @news = News.active.women.ordered
+    @news = News.active.women.ordered.include_image.limit(20)
     @woman_events = Event.active.short.women.where('end_date >= ?', Date.today).ordered.limit(4)
     @international_events = Event.active.short.wint.where('end_date >= ?', Date.today).ordered.limit(4)
     @officers = Officer.active.ordered.include_players
@@ -40,22 +40,22 @@ class PagesController < ApplicationController
 
   # this method can't be called parents as this is already a ruby method
   def for_parents
-    @news = News.active.for_parents.ordered
+    @news = News.active.for_parents.ordered.include_image.limit(20)
     @junior_clubs = Club.active.junior
   end
 
   def primary_schools
-    @news = News.active.primary.ordered
+    @news = News.active.primary.ordered.include_image.limit(20)
     @junior_clubs = Club.active.junior
   end
 
   def secondary_schools
-    @news = News.active.secondary.ordered
+    @news = News.active.secondary.ordered.include_image.limit(20)
     @junior_clubs = Club.active.junior
   end
 
   def organisers
-    @news = News.active.organisers.ordered.limit(8)
+    @news = News.active.organisers.ordered.include_image.limit(8)
     @articles = Article.active.organisers.ordered.limit(8)
     @ongoing_events = Event.active.short.where(category: %w(irish women)).where('start_date <= ? AND end_date >= ?', Date.today, Date.today).ordered.limit(4)
     @upcoming_events = Event.active.short.where(category: %w(irish women)).where('start_date > ?', Date.today).ordered.limit(4)

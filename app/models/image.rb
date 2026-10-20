@@ -12,11 +12,21 @@ class Image < ApplicationRecord
   MAX_PIXELS = 10000
   MIN_PIXELS = 30
   THUMB_SIZE = 100
-  STYLES = { :thumbnail => "#{THUMB_SIZE}x#{THUMB_SIZE}>" }
+  # Smallest first, so #style_for can pick the smallest that's big enough. ">" only ever shrinks.
+  STYLES = {
+    thumbnail: "#{THUMB_SIZE}x#{THUMB_SIZE}>",
+    small:     "300x300>",
+    medium:    "600x600>",
+    large:     "1200x1200>",
+  }
+
+  # Widths offered by the editor's image picker; full width (nil) fills the column instead
+  PICKER_SIZES = { small: 200, medium: 400, large: 600, full: nil }
 
   has_attached_file :data, styles: STYLES, keep_old_files: true
 
   belongs_to :user
+  has_many :news, dependent: :nullify
 
   before_validation :normalize_attributes, :check_dimensions
 
@@ -62,7 +72,7 @@ class Image < ApplicationRecord
   def dimensions_description
     s = []
     if dimensions.is_a?(Hash)
-      STYLES.keys.unshift(:original).each do |style|
+      styles_generated.unshift(:original).each do |style|
         if dimensions[style].is_a?(Array)
           info = "#{dimensions[style][0]}×#{dimensions[style][1]}"
         else
@@ -74,6 +84,27 @@ class Image < ApplicationRecord
       s.push "Error (not a Hash)"
     end
     s.join(", ")
+  end
+
+  def styles_generated
+    STYLES.keys.select { |style| dimensions.is_a?(Hash) && dimensions[style].is_a?(Array) }
+  end
+
+  # The smallest style at least width x height, else the original. Images uploaded before a style was
+  # added don't have it until "bin/rake images:styles" runs, and may only have a thumbnail.
+  def style_for(width, height = 0)
+    styles_generated.find { |style| self.width(style) >= width && self.height(style) >= height } || :original
+  end
+
+  # Make every style from the original and record their dimensions, without changing updated_at.
+  def generate_styles
+    updated = updated_at
+    data.reprocess!
+    sizes = STYLES.keys.push(:original).each_with_object({}) do |style, hash|
+      geometry = Paperclip::Geometry.from_file(data.path(style))
+      hash[style] = [geometry.width.to_i, geometry.height.to_i]
+    end
+    update_columns(dimensions: sizes, updated_at: updated)
   end
 
   def short_type
@@ -91,7 +122,10 @@ class Image < ApplicationRecord
       margin = opt[:margin] || "yes"
       img_atrs = []
       wrp_atrs = []
-      img_atrs.push %Q/src="#{data.url}"/
+      style = style_for(width, height)
+      retina = style_for(2 * width, 2 * height)
+      img_atrs.push %Q/src="#{data.url(style)}"/
+      img_atrs.push %Q/srcset="#{data.url(style)} 1x, #{data.url(retina)} 2x"/ if self.width(retina) > self.width(style)
       img_atrs.push 'class="img-responsive"'
       unless opt[:align] == "center" && opt[:responsive] == "true"
         img_atrs.push %Q/width="#{width}"/

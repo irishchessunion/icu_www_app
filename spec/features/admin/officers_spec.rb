@@ -23,7 +23,7 @@ describe Officer do
         visit admin_officer_path(ratings)
         expect(page).to_not have_css(failure)
         expect(page).to have_css(header, text: "Rating Officer")
-        expect(page).to have_link(edit)
+        expect(page).to have_link(edit, exact: true)
         visit edit_admin_officer_path(chair)
         expect(page).to_not have_css(failure)
         visit new_admin_officer_path

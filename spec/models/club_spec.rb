@@ -20,6 +20,21 @@ describe Club do
     end
   end
 
+  context "email" do
+    # The clubs.email column used to be limited to 50 characters (issue #251)
+    it "can be longer than 50 characters" do
+      email = "#{'a' * 60}@#{'b' * 60}.ie"
+      bangor.update!(email: email)
+      expect(bangor.reload.email).to eq email
+    end
+
+    it "can't be longer than 254 characters" do
+      bangor.email = "#{'a' * 64}@#{'b' * 190}.ie"
+      expect(bangor).to_not be_valid
+      expect(bangor.errors[:email]).to eq ["is too long (maximum is 254 characters)"]
+    end
+  end
+
   context "latitude and longitude" do
     it "can be blank" do
       bangor.lat = nil

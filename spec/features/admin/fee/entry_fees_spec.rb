@@ -291,7 +291,7 @@ describe Fee::Entry do
     it "with items" do
       expect(item.fee.user_inputs).to_not be_nil
       visit admin_fee_path(item.fee)
-      expect(page).to_not have_link(delete)
+      expect(page).to_not have_link(delete, exact: true)
 
       visit admin_fee_path(item.fee, show_delete_button_for_test: "")
       click_link delete

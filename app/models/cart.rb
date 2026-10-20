@@ -245,7 +245,7 @@ class Cart < ApplicationRecord
       details.delete(:message) if details.is_a?(Hash) && details[:message] == message
       details = details.to_s
     end
-    error = payment_errors.build(message: message.truncate(255), details: details.truncate(255), payment_name: name.to_s.truncate(100), confirmation_email: email.to_s.truncate(50))
+    error = payment_errors.build(message: message.truncate(255), details: details.truncate(255), payment_name: name.to_s.truncate(100), confirmation_email: email.to_s.truncate(255))
     error.save
   end
 

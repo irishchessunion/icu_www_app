@@ -1,21 +1,23 @@
 -# Pages that list several news items pass show_more: true to cap long ones (show_more_controller.js)
 - show_more = local_assigns.fetch(:show_more, false)
-- panel_data = show_more ? { controller: "show-more", show_more_more_value: t("pages.news.show_more"), show_more_less_value: t("pages.news.show_less"), action: "resize@window->show-more#update" } : {}
+- show_more_data = show_more ? { controller: "show-more", show_more_more_value: t("pages.news.show_more"), show_more_less_value: t("pages.news.show_less"), action: "resize@window->show-more#update" } : {}
 
-.panel.panel-default.panel-news{data: panel_data}
-  .panel-heading
-    %strong
-      = news.headline
-    - unless news.active
-      = "(inactive)"
-    .pull-right.visible-sm-block.text-sm.right-margin-thin= news.short_date
-    .pull-right.text-sm.right-margin-thin
-      .visible-lg-inline-block.right-margin-thin{data: {news_id: news.id}}= like_button(current_user, news)
-      .visible-lg-inline-block.right-margin-thin= news.date.strftime('%d-%m-%Y')
-  .panel-body.news
+%article.news-item
+  - if (image = news.image)
+    -# Cropped to a square of up to 96px, so 192px covers 2x screens
+    = link_to news_path(news), class: "news-item-image", tabindex: "-1", "aria-hidden": "true" do
+      = image_tag image.data.url(image.style_for(192, 192)), alt: "", loading: "lazy"
+  .news-item-body{data: show_more_data}
+    %header
+      %h4
+        = link_to news.headline, news_path(news)
+        - unless news.active
+          %small= "(inactive)"
     - if show_more
-      .show-more-content{data: { show_more_target: "content", action: "focusin->show-more#reveal" }}
+      .show-more-content.news{class: news.wysiwyg_class, data: { show_more_target: "content", action: "focusin->show-more#reveal" }}
         = news.html
       %a.hidden{href: "#", role: "button", "aria-expanded": "false", data: { show_more_target: "button", action: "show-more#toggle" }}= t("pages.news.show_more")
     - else
-      = news.html
+      .news{class: news.wysiwyg_class}= news.html
+    %footer
+      %time{datetime: news.date.iso8601}= news.date.strftime("%-d %b %Y")

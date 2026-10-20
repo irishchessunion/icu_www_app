@@ -11,11 +11,11 @@
 // callback the search tab's results use, to insert the [IMG:id] token and
 // close the modal.
 class ImageUploadController extends Controller {
-  static values = { id: Number, caption: String }
+  static values = { id: Number, caption: String, thumbnail: String }
 
   connect() {
     if (this.hasIdValue) {
-      image_ids_callback(this.idValue, this.captionValue);
+      image_ids_callback(this.idValue, this.captionValue, this.thumbnailValue);
     }
   }
 }

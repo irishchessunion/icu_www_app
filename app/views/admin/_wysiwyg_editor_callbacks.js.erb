@@ -8,7 +8,36 @@ function event_ids_callback(id, name) {
   $('#event_ids_modal').modal('hide');
 }
 
-function image_ids_callback(id, caption) {
-  insertWysiwygToken('[IMG:' + id + ']');
-  $('#image_ids_modal').modal('hide');
+// Once an image is chosen (searched for or uploaded), ask for its size and position before inserting it
+function image_ids_callback(id, caption, thumbnail) {
+  var $modal = $('#image_ids_modal');
+  $modal.find('.nav-tabs, .tab-content').addClass('hidden');
+  $('#image_ids_options').removeClass('hidden').data('id', id);
+  $('#image_ids_options_thumbnail').attr('src', thumbnail);
+  $('#image_ids_options_caption').text(caption);
 }
+
+function image_ids_show_search() {
+  $('#image_ids_options').addClass('hidden');
+  $('#image_ids_modal').find('.nav-tabs, .tab-content').removeClass('hidden');
+}
+
+// Full width images are always centred
+function image_ids_full_width_check() {
+  var full = $('input[name=image_ids_size]:checked').val() == 'full';
+  $('input[name=image_ids_position]').prop('disabled', full);
+}
+
+$(function() {
+  $('input[name=image_ids_size]').on('change', image_ids_full_width_check);
+  $('#image_ids_options_back').on('click', image_ids_show_search);
+  $('#image_ids_modal').on('hidden.bs.modal', image_ids_show_search);
+
+  $('#image_ids_options_insert').on('click', function() {
+    var id = $('#image_ids_options').data('id');
+    var width = $('input[name=image_ids_size]:checked').data('width');
+    var position = $('input[name=image_ids_position]:checked').val();
+    insertWysiwygToken('[IMG:' + id + (width ? ':width=' + width + ':' + position : ':center:responsive=true') + ']');
+    $('#image_ids_modal').modal('hide');
+  });
+});

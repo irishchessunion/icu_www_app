@@ -39,7 +39,7 @@ describe Player do
         expect(page).to_not have_css(failure)
         visit admin_player_path(player)
         expect(page).to have_css(header, text: player.name)
-        expect(page).to have_link(edit)
+        expect(page).to have_link(edit, exact: true)
       end
     end
 
@@ -55,7 +55,7 @@ describe Player do
         visit admin_player_path(player)
         expect(page).to_not have_css(failure, text: unauthorized)
         expect(page).to have_css(header, text: player.name)
-        expect(page).to_not have_link(edit)
+        expect(page).to_not have_link(edit, exact: true)
       end
     end
 

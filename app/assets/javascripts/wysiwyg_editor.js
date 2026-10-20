@@ -60,4 +60,18 @@ $(function() {
   $(textarea).closest("form").on("submit", function() {
     textarea.value = quill.root.innerHTML;
   });
+
+  // Posts the unsaved text to a preview page, always in the same tab, so pressing Preview again refreshes it
+  $("[data-wysiwyg-preview]").on("click", function() {
+    var fields = {
+      text: quill.root.innerHTML,
+      title: $($(this).data("wysiwyg-preview-title")).val(),
+      authenticity_token: $("meta[name=csrf-token]").attr("content")
+    };
+    var form = $("<form>", { method: "post", action: $(this).data("wysiwyg-preview"), target: "wysiwyg_preview" });
+    $.each(fields, function(name, value) {
+      form.append($("<input>", { type: "hidden", name: name, value: value }));
+    });
+    form.appendTo("body").submit().remove();
+  });
 });

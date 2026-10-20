@@ -25,8 +25,8 @@ describe Pgn do
         expect(page).to_not have_css(failure)
         visit admin_pgn_path(pgn)
         expect(page).to have_xpath(cell)
-        expect(page).to have_link(edit)
-        expect(page).to have_link(delete)
+        expect(page).to have_link(edit, exact: true)
+        expect(page).to have_link(delete, exact: true)
       end
     end
 
@@ -42,8 +42,8 @@ describe Pgn do
         visit admin_pgn_path(pgn)
         expect(page).to_not have_css(failure, text: unauthorized)
         expect(page).to have_xpath(cell)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
 

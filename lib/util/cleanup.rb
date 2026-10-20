@@ -34,7 +34,7 @@ module Util
 
     def destroy(gonners, force=false, type)
       if force
-        puts "cleanup #{type} carts #{Time.now.to_s(:db)}"
+        puts "cleanup #{type} carts #{Time.now.to_fs(:db)}"
         if gonners.any?
           format("total carts before", get_total_carts)
           format("total items before", get_total_items)

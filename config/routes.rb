@@ -32,7 +32,6 @@ IcuWwwApp::Application.routes.draw do
   resources :articles,    only: [:index, :show] do
     get :source, on: :member
   end
-  resources :likes, only: [:create, :destroy]
   resources :champions,   only: [:index, :show]
   get "clubs/county/:county", to: "clubs#index", as: :county_clubs
   resources :clubs,       only: [:index, :show]
@@ -84,7 +83,9 @@ IcuWwwApp::Application.routes.draw do
     end
 
     get "deployment_info" => "deployment_info#show"
-    resources :articles,        only: [:new, :create, :edit, :update, :destroy]
+    resources :articles,        only: [:new, :create, :edit, :update, :destroy] do
+      post :preview, on: :collection
+    end
     resources :article_ids,     only: [:index]
     resources :bad_logins,      only: [:index]
     resources :carts,           only: [:index, :show, :edit, :update] do

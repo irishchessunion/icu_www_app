@@ -18,7 +18,7 @@ describe Relay do
         visit admin_relay_path(relay)
         expect(page).to_not have_css(failure)
         expect(page).to have_css(header, text: relay.from)
-        expect(page).to have_link(edit)
+        expect(page).to have_link(edit, exact: true)
         visit edit_admin_relay_path(relay)
         expect(page).to_not have_css(failure)
       end

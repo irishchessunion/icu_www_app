@@ -53,11 +53,14 @@ Auth is hand-rolled, not Devise — `User` stores `encrypted_password`/`salt` di
 ### Public vs admin surface
 `config/routes.rb` defines a public-facing resource set (mostly `index`/`show`, read-heavy) and a parallel `namespace :admin` with the fuller CRUD for the same models (e.g. `resources :clubs, only: [:index, :show]` publicly vs `resources :clubs, only: [:new, :create, :edit, :update]` under admin). Controllers/views mirror this split (`app/controllers/admin/...`, `app/views/admin/...`). When adding a resource, expect to touch both sides.
 
-### Frontend styling
-Use the existing Bootstrap 3.0.2 and Bootswatch 3.2.0 theme classes and components before adding custom CSS. Refer to the relevant  documentation (https://bootstrapdocs.com/v3.0.2/docs/ & https://bootswatch.com/3/) if needed.
-Users can toggle between all Bootswatch themes. Flatly is the default and is used by most users and all guests.
-Each theme’s `app/assets/stylesheets/variables_{theme}.css` defines the same CSS variable names with theme-specific values, so use css variables such as var(--brand-primary) rather than hard-coded colours to preserve theme compatibility.
-Add rules to `app/assets/stylesheets/application.css` only when the framework does not provide the required behavior or a genuine site-specific override is needed. Never use !important flags.
+### Style Guide / CSS / Theme
+- Check existing project CSS and Bootstrap 3.0.2 classes and components before creating new classes or rules. Refer to the documentation (https://bootstrapdocs.com/v3.0.2/docs/) if needed.
+- Add custom CSS and rules to `app/assets/stylesheets/application.css` only when existing project or framework styles cannot meet the requirement. Never use `!important` flags.
+- Inherit typography. Let the active theme determine font sizes. Override `font-size` only when necessary, and always use `em`, never `px`, so it scales with theme values.
+- Use semantic HTML. Prefer widely supported elements that match the content’s meaning (`article`, `header`, `footer`, `nav`, lists, etc.) over nested div wrappers.
+- Write any custom CSS desktop-first. Put desktop styles in the base rules and use `max-width` media queries for smaller-screen overrides. Follow Bootstrap 3.0.2 breakpoints.
+- Keep CSS selectors structural. Prefer a component class with child selectors, e.g. `.results-item > header` and `.results-item > footer`, rather than `.results-item-header` and `.results-item-footer`. Add child classes only when needed to distinguish their purpose or behaviour.
+- Support every theme. Users can toggle between all Bootswatch 3.2 (https://bootswatch.com/3/) themes. Flatly is the default and is used by most users and all guests. Use the shared variables defined in each theme’s `app/assets/stylesheets/variables_{theme}.css`, instead of hard-coded colours to preserve theme compatibility.
 
 ### Hotwire (Turbo & Stimulus)
 `turbo-rails` (~> 2.0) and `stimulus-rails` (~> 1.3) are loaded from `app/views/layouts/application.html.haml` as two ES module scripts: `turbo` standalone, plus `hotwire.js` (a sprockets bundle containing stimulus and boot). They cannot be combined into one file as turbo.js and stimulus.js declare conflicting top-level helpers, which breaks terser minification. Turbo Drive is **globally disabled** in the bundle (`Turbo.session.drive = false`), so all links/forms keep their current full-page/jQuery-UJS behaviour until a feature explicitly opts in. Stimulus is started in the bundle and exposed as `window.Stimulus`. Register controllers from additional files required into `app/assets/javascripts/hotwire.js`. Migrate features to Hotwire page-by-page only when requested rather than removing the legacy `jquery_ujs` behaviour.

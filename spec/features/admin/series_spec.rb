@@ -27,8 +27,8 @@ describe Series do
         visit series_index_path
         click_link series.title
         expect(page).to have_css(header, text: series.title)
-        expect(page).to have_link(edit)
-        expect(page).to have_link(delete)
+        expect(page).to have_link(edit, exact: true)
+        expect(page).to have_link(delete, exact: true)
       end
     end
 
@@ -42,8 +42,8 @@ describe Series do
         visit series_index_path
         click_link series.title
         expect(page).to have_css(header, text: series.title)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
 

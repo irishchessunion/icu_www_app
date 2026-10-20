@@ -183,7 +183,7 @@ class Game < ApplicationRecord
 
   def self.get_last_pgn_db
     last_mod_count = File.open(LOG_FILE, "r") { |f| f.each_line.first }
-    if last_mod_count.to_s.match(/\A([^|]+)\|([1-9]\d+)\z/)
+    if last_mod_count.to_s.match(/\A([^|]+)\|([1-9]\d*)\z/)
       last_mod = $1
       count = $2
     else

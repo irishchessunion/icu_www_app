@@ -35,6 +35,19 @@ describe Util::Diff do
     expect(b).to eq "abcdefg..."
   end
 
+  it "a long string replacing nil (e.g. a club's first notes)" do
+    a, b = diff(nil, "x" * 300)
+    expect(a).to eq ""
+    expect(b).to eq "x" * 252 + "..."
+  end
+
+  it "leaves the strings it's given unchanged" do
+    from, to = "a" * 300, "a" * 299 + "b"
+    diff(from, to)
+    expect(from).to eq "a" * 300
+    expect(to).to eq "a" * 299 + "b"
+  end
+
   it "integers" do
     a, b = diff(1, 2)
     expect(a).to eq "1"

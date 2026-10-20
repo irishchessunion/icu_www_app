@@ -22,7 +22,7 @@ describe Club do
         expect(page).to_not have_css(failure)
         visit club_path(club)
         expect(page).to have_xpath(header)
-        expect(page).to have_link(edit)
+        expect(page).to have_link("Edit Club", exact: true)
       end
     end
 
@@ -35,7 +35,7 @@ describe Club do
         expect(page).to have_css(failure, text: unauthorized)
         visit club_path(club)
         expect(page).to have_xpath(header)
-        expect(page).to_not have_link(edit)
+        expect(page).to_not have_link("Edit Club", exact: true)
       end
     end
 

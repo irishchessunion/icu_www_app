@@ -30,7 +30,7 @@
     = render "layouts/header_control"
     #header.jumbotron{style: "display: #{show_header?? 'block' : 'none'}"}
       .container= render "layouts/header"
-    %header{ :style => (content_for(:header_bg_color) ? "background: #{yield(:header_bg_color)};" : 'background: var(--body-bg); margin-bottom: 21px') }
+    %header{ :style => (content_for(:header_bg_color) ? "background: #{yield(:header_bg_color)};" : 'background: linear-gradient(to bottom, var(--gray-lighter) 50%, var(--body-bg) 50%); margin-bottom: 21px') }
       .container
         = render "layouts/spacer"
         = render "layouts/nav"

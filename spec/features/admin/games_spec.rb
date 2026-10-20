@@ -20,8 +20,8 @@ describe Game do
         expect(page).to_not have_css(failure)
         visit game_path(game)
         expect(page).to have_css(para, text: game.details)
-        expect(page).to have_link(edit)
-        expect(page).to have_link(delete)
+        expect(page).to have_link(edit, exact: true)
+        expect(page).to have_link(delete, exact: true)
       end
     end
 
@@ -32,8 +32,8 @@ describe Game do
         expect(page).to have_css(failure, text: unauthorized)
         visit game_path(game)
         expect(page).to have_css(para, text: game.details)
-        expect(page).to_not have_link(edit)
-        expect(page).to_not have_link(delete)
+        expect(page).to_not have_link(edit, exact: true)
+        expect(page).to_not have_link(delete, exact: true)
       end
     end
   end

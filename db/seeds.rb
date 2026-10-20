@@ -307,14 +307,6 @@ if seed_sample_data
       )
     end
 
-    # Sample data for article_likes
-    Article.all.each do |article|
-      ArticleLike.create!(
-        article_id: article.id,
-        user_id: User.all.sample.id
-      )
-    end
-    
     # Sample data for series
     5.times do |i|
       Series.create!(
@@ -416,14 +408,6 @@ if seed_sample_data
         file_name: "game#{i}.pgn",
         file_size: rand(1000..10000),
         game_count: rand(1..10),
-        user_id: User.all.sample.id
-      )
-    end
-
-    # Sample data for news_likes
-    5.times do |i|
-      NewsLike.create!(
-        news_id: News.all[i].id,
         user_id: User.all.sample.id
       )
     end

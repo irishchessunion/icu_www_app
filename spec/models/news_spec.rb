@@ -18,6 +18,25 @@ describe News do
   end
 
   context "validation" do
+    let(:image) { create(:image) }
+
+    it "rejects images in the summary of a new item" do
+      news = build(:news, summary: "Hello [IMG:#{image.id}]")
+      expect(news).to_not be_valid
+      expect(news.errors[:summary]).to eq ["can't include new images, use the Image field instead"]
+    end
+
+    it "lets an older item with an image in its summary be edited, but not get another" do
+      news = create(:news)
+      news.update_column(:summary, "Old [IMG:#{image.id}]")
+      news.reload
+
+      news.summary = "Edited [IMG:#{image.id}]"
+      expect(news).to be_valid
+      news.summary = "Edited [IMG:#{image.id}] [IMG:#{image.id}:right]"
+      expect(news).to_not be_valid
+    end
+
     it "rejects an empty Quill editor's placeholder markup as blank summary" do
       news = build(:news, markdown: false, summary: "<p><br></p>")
       expect(news).to_not be_valid
@@ -46,11 +65,23 @@ describe News do
     end
   end
 
+  context "#wysiwyg_class" do
+    it "drops paragraph margins only for text saved from the editor" do
+      expect(build(:news, markdown: false).wysiwyg_class).to eq "wysiwyg-content"
+      expect(build(:news, markdown: true).wysiwyg_class).to be_nil
+    end
+  end
+
   context "#editor_html" do
     it "renders markdown summary to HTML without expanding shortcodes" do
       news = build(:news, markdown: true, summary: "**Bold** [ART:1:Some Title]")
       expect(news.editor_html).to include("<strong>Bold</strong>")
       expect(news.editor_html).to include("[ART:1:Some Title]")
+    end
+
+    it "keeps the gaps between markdown paragraphs as blank lines" do
+      news = build(:news, markdown: true, summary: "One\n\nTwo\n\nThree")
+      expect(news.editor_html).to eq("<p>One</p><p><br></p><p>Two</p><p><br></p><p>Three</p>\n")
     end
 
     it "returns HTML summary as-is without expanding shortcodes" do

@@ -27,6 +27,36 @@ describe "News item button on the home page" do
   end
 end
 
+describe "News list on the home page" do
+  let(:image) { create(:image) }
+  let!(:with_image)    { create(:news, headline: "With image", image: image, date: Date.new(2026, 10, 1)) }
+  let!(:without_image) { create(:news, headline: "Without image", date: Date.new(2026, 10, 2)) }
+
+  it "shows the image beside the text if there is one, and the date but not the author" do
+    visit home_path
+
+    within(".news-item", text: "With image") do
+      expect(page).to have_link("With image", href: news_path(with_image))
+      expect(page).to have_css(".news-item-image img[src='#{image.data.url}']")
+      expect(page).to have_css("footer > time", text: "1 Oct 2026")
+      expect(page).to_not have_content(with_image.user.player.name)
+    end
+    within(".news-item", text: "Without image") do
+      expect(page).to_not have_css(".news-item-image")
+      expect(page).to have_css("footer > time", text: "2 Oct 2026")
+    end
+  end
+
+  it "shows editor text without paragraph margins, but keeps them for markdown" do
+    create(:news, headline: "Editor news", markdown: false, summary: "<p>One</p><p>Two</p>")
+    create(:news, headline: "Markdown news", markdown: true, summary: "One\n\nTwo")
+    visit home_path
+
+    expect(page).to have_css(".news-item", text: "Editor news") { |item| item.has_css?(".news.wysiwyg-content p") }
+    expect(page).to have_css(".news-item", text: "Markdown news") { |item| item.has_css?(".news p") && item.has_no_css?(".wysiwyg-content") }
+  end
+end
+
 describe "News on the home page", js: true do
   let(:show_more) { I18n.t("pages.news.show_more") }
   let(:show_less) { I18n.t("pages.news.show_less") }
@@ -36,10 +66,10 @@ describe "News on the home page", js: true do
   let!(:long_news)  { create(:news, headline: "Long news", summary: (1..40).map { |i| "Paragraph #{i}." }.join("\n\n"), date: Date.yesterday) }
   let!(:link_news)  { create(:news, headline: "Link news", summary: "[Top link](/clubs)\n\n" + (1..20).map { |i| "Section #{i}." }.join("\n\n") + "\n\n[Bottom link](/events)", date: Date.yesterday - 1) }
 
-  let(:short_panel) { find(".panel-news", text: "Short news") }
-  let(:four_panel)  { find(".panel-news", text: "Four lines") }
-  let(:long_panel)  { find(".panel-news", text: "Long news") }
-  let(:link_panel)  { find(".panel-news", text: "Link news") }
+  let(:short_panel) { find(".news-item", text: "Short news") }
+  let(:four_panel)  { find(".news-item", text: "Four lines") }
+  let(:long_panel)  { find(".news-item", text: "Long news") }
+  let(:link_panel)  { find(".news-item", text: "Link news") }
 
   before(:each) do
     visit home_path
@@ -67,11 +97,11 @@ describe "News on the home page", js: true do
   it "expands when the keyboard focus moves to a cut-off link" do
     expect(link_panel).to have_link(show_more)
 
-    page.execute_script("document.querySelector('.panel-news a[href=\"/clubs\"]').focus()")
+    page.execute_script("document.querySelector('.news-item a[href=\"/clubs\"]').focus()")
     expect(link_panel).to have_link(show_more)
     expect(link_panel).to_not have_text("Section 20.")
 
-    page.execute_script("document.querySelector('.panel-news a[href=\"/events\"]').focus()")
+    page.execute_script("document.querySelector('.news-item a[href=\"/events\"]').focus()")
     expect(link_panel).to have_link(show_less)
     expect(link_panel).to have_text("Section 20.")
     expect(link_panel).to have_link("Bottom link")
@@ -79,8 +109,24 @@ describe "News on the home page", js: true do
 
   it "shows news in full on its own page" do
     visit news_path(long_news)
-    expect(page).to have_css(".panel-news", text: "Paragraph 40.")
+    expect(page).to have_css(".news-item", text: "Paragraph 40.")
     expect(page).to_not have_link(show_more)
     expect(page).to_not have_css(".show-more-content")
+  end
+end
+
+describe "Tournament reports on the home page" do
+  # 500x200, so the small style (300x120) is too short to cover a 3:2 box and medium (500x200) is used
+  let(:image) { create(:image, :with_thumbnail) }
+  let!(:report) { create(:article, selected_categories: ["tournament"], text: "Report [IMG:#{image.id}:right]") }
+
+  it "use the smallest image style that covers the thumbnail box, not the original" do
+    visit home_path
+
+    within("section.latest-reports") do
+      style = find(".thumbnail-image")[:style]
+      expect(style).to include(image.data.url(:medium))
+      expect(style).to_not include(image.data.url)
+    end
   end
 end
