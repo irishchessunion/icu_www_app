@@ -158,6 +158,26 @@ describe Club do
       expect(page).to have_css("aside.side-content #meetings", text: I18n.t("club.no_meetings"))
     end
 
+    it "links to the club's current members, including life members, for logged in users but not guests" do
+      season = Season.new.to_s
+      paid = create(:player, club: bangor, last_name: "Paid")
+      life = create(:player, club: bangor, last_name: "Life")
+      lapsed = create(:player, club: bangor, last_name: "Lapsed")
+      create(:legacy_subscription_item, player: paid, description: "Standard ICU Subscription #{season}")
+      create(:lifetime_subscription, player: life)
+      create(:legacy_subscription_item, player: lapsed, description: "Standard ICU Subscription 2012-13")
+
+      visit club_path(bangor)
+      expect(page).to_not have_css("#members")
+
+      login "member"
+      visit club_path(bangor)
+      click_link "2 current members"
+      expect(page).to have_css("table tbody tr", count: 2)
+      expect(page).to have_css("tbody tr", text: paid.name(reversed: true))
+      expect(page).to have_css("tbody tr", text: life.name(reversed: true))
+    end
+
     it "shows the map only when geocoded" do
       ungeocoded = create(:club, lat: nil, long: nil)
       visit club_path(ungeocoded)

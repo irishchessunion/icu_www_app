@@ -1,0 +1,11 @@
+-# Only logged in users can see who the members are (see Ability and IcuController#subscribers)
+- if can?(:view, :special_membership)
+  - count = @club.players.members_in(Season.new).count
+  %section{"id": "members", "aria-label": "#{t('club.club')} #{t('club.members')}"}
+    %h4= t("club.members")
+    .panel.panel-default
+      .panel-body
+        - if count > 0
+          = link_to t("club.current_members", count: count), icu_subscribers_path(club_id: @club.id)
+        - else
+          = t("club.no_current_members")

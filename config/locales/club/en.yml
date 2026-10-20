@@ -1,5 +1,8 @@
 en:
   club:
+    current_members:
+      one: "%{count} current member"
+      other: "%{count} current members"
     button: Find a chess club
     club: Club
     clubs: Clubs
@@ -29,6 +32,8 @@ en:
       select_day: Select day
       time: Start time
       welcomes_juniors: Welcomes juniors
+    members: Members
+    no_current_members: No current members
     no_meetings: This club currently has no meetings.
     notes: Notes
     phone: Phone
