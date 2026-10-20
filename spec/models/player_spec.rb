@@ -1,6 +1,23 @@
 require 'rails_helper'
 
 describe Player do
+  context "members" do
+    let(:season) { Season.new.to_s }
+    let!(:paid)     { create(:player).tap { |p| create(:legacy_subscription_item, player: p, description: "Standard ICU Subscription #{season}") } }
+    let!(:life)     { create(:player).tap { |p| create(:lifetime_subscription, player: p) } }
+    let!(:deceased) { create(:player, status: "deceased", dob: nil, joined: nil).tap { |p| create(:lifetime_subscription, player: p) } }
+    let!(:old)      { create(:player).tap { |p| create(:legacy_subscription_item, player: p, description: "Standard ICU Subscription 2012-13") } }
+
+    it "#members_in includes life members, but not deceased ones or other seasons' members" do
+      expect(Player.members_in(season)).to contain_exactly(paid, life)
+    end
+
+    it "the current members search includes life members, but a past season's doesn't" do
+      expect(Player.search_subscribers({ season: season }, "/").matches).to contain_exactly(paid, life)
+      expect(Player.search_subscribers({ season: "2012-13" }, "/").matches).to contain_exactly(old)
+    end
+  end
+
   context "normalisation" do
     it "name" do
       player = create(:player, first_name: " MARK j L ", last_name: " O ToolE ")
