@@ -1,20 +1,33 @@
 require 'rails_helper'
 
 describe Player do
-  context "members" do
-    let(:season) { Season.new.to_s }
-    let!(:paid)     { create(:player).tap { |p| create(:legacy_subscription_item, player: p, description: "Standard ICU Subscription #{season}") } }
-    let!(:life)     { create(:player).tap { |p| create(:lifetime_subscription, player: p) } }
-    let!(:deceased) { create(:player, status: "deceased", dob: nil, joined: nil).tap { |p| create(:lifetime_subscription, player: p) } }
-    let!(:old)      { create(:player).tap { |p| create(:legacy_subscription_item, player: p, description: "Standard ICU Subscription 2012-13") } }
+  context "current members" do
+    include ActiveSupport::Testing::TimeHelpers
 
-    it "#members_in includes life members, but not deceased ones or other seasons' members" do
-      expect(Player.members_in(season)).to contain_exactly(paid, life)
+    def subscribe(season)
+      create(:player).tap { |p| create(:legacy_subscription_item, player: p, description: "Standard ICU Subscription #{season}") }
     end
 
-    it "the current members search includes life members, but a past season's doesn't" do
-      expect(Player.search_subscribers({ season: season }, "/").matches).to contain_exactly(paid, life)
-      expect(Player.search_subscribers({ season: "2012-13" }, "/").matches).to contain_exactly(old)
+    let!(:this_season) { subscribe("2026-27") }
+    let!(:last_season) { subscribe("2025-26") }
+    let!(:old)         { subscribe("2012-13") }
+    let!(:life)        { create(:player).tap { |p| create(:lifetime_subscription, player: p) } }
+    let!(:deceased)    { create(:player, status: "deceased", dob: nil, joined: nil).tap { |p| create(:lifetime_subscription, player: p) } }
+
+    it "include life members and, until the end of December, last season's members" do
+      travel_to(Date.new(2026, 12, 31)) do
+        expect(Player.current_members).to contain_exactly(this_season, last_season, life)
+      end
+      travel_to(Date.new(2027, 1, 1)) do
+        expect(Player.current_members).to contain_exactly(this_season, life)
+      end
+    end
+
+    it "are what the current season's members search finds, while a past season's finds only its own" do
+      travel_to(Date.new(2026, 10, 21)) do
+        expect(Player.search_subscribers({ season: "2026-27" }, "/").matches).to contain_exactly(this_season, last_season, life)
+        expect(Player.search_subscribers({ season: "2025-26" }, "/").matches).to contain_exactly(last_season)
+      end
     end
   end
 

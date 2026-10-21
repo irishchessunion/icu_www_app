@@ -1,6 +1,6 @@
 -# Only logged in users can see who the members are (see Ability and IcuController#subscribers)
 - if can?(:view, :special_membership)
-  - count = @club.players.members_in(Season.new).count
+  - count = @club.players.current_members.count
   %section{"id": "members", "aria-label": "#{t('club.club')} #{t('club.members')}"}
     %h4= t("club.members")
     .panel.panel-default

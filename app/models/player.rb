@@ -29,8 +29,6 @@ class Player < ApplicationRecord
   scope :include_clubs, -> { includes(:club) }
   scope :non_duplicates, -> { where("player_id IS NULL") }
   scope :subscribed_in, ->(season) { where(search_subscribers_sql, "%#{season}")}
-  # Paid for the season or for life (life members' subscriptions don't name a season)
-  scope :members_in, ->(season) { where.not(status: "deceased").where(members_sql, "%#{season}") }
 
   before_validation :normalize_attributes, :conditional_adjustment, :canonicalize_privacy
 
@@ -240,8 +238,9 @@ class Player < ApplicationRecord
   def self.search_subscribers(params, path)
     matches = include_clubs.order(:last_name, :first_name)
     if params[:season].present? && params[:season].to_s.match(/\A20\d\d-\d\d\z/)
-      # Life members are current members, but not necessarily members in past seasons
-      matches = params[:season] == Season.new.to_s ? matches.members_in(params[:season]) : matches.subscribed_in(params[:season])
+      # Life members and last season's members in the grace period are current members, but weren't
+      # necessarily members in past seasons
+      matches = params[:season] == Season.new.to_s ? matches.current_members : matches.subscribed_in(params[:season])
       matches = matches.where(first_name_like(params[:first_name], params[:last_name])) if params[:first_name].present?
       matches = matches.where(last_name_like(params[:last_name], params[:first_name])) if params[:last_name].present?
       if params[:club_id].present?
@@ -271,15 +270,22 @@ EXISTS(SELECT * FROM items WHERE
 SQL
   end
 
-  def self.members_sql
-    <<SQL
+  # Paid up now: for this season, for life (those subscriptions don't name a season), or for last
+  # season until the end of its grace period in December (see #is_subscribed?)
+  def self.current_members
+    season = Season.new
+    seasons = [season]
+    seasons.push(season.last) if Date.today <= season.last.end_of_grace_period
+    likes = seasons.map { "description LIKE ?" }.push("description LIKE 'Lifetime%'").join(" OR ")
+    sql = <<SQL
 EXISTS(SELECT * FROM items WHERE
   type        = 'Item::Subscription' AND
   status      = 'paid' AND
   player_id   = players.id AND
-  (description LIKE ? OR description LIKE 'Lifetime%')
+  (#{likes})
 )
 SQL
+    where.not(status: "deceased").where(sql, *seasons.map { |s| "%#{s}" })
   end
 
   def self.life_members_sql
