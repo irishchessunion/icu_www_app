@@ -1,5 +1,9 @@
 class ClubsController < ApplicationController
   def index
+    if params[:county].present? && !Ireland.county?(params[:county])
+      return redirect_to clubs_path, status: :moved_permanently
+    end
+
     params.delete(:include_inactive) unless can?(:manage, Club)
     params.delete(:audience) unless %w[all adults_only juniors_only women_only].include?(params[:audience])
     @clubs = Club.search(params).to_a
