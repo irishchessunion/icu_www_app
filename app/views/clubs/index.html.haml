@@ -5,7 +5,7 @@
   = javascript_include_tag "maplibre-gl"
   = stylesheet_link_tag "maplibre-gl", skip_pipeline: true
 
-.clubs-directory{data: { controller: "clubs-directory", action: "resize@window->clubs-directory#resize", clubs_directory_marker_value: asset_path("svg/marker_other.svg"), clubs_directory_highlighted_marker_value: asset_path("svg/marker_training.svg"), clubs_directory_count_value: t("club.directory.found", count: "%{count}"), clubs_directory_location_error_value: t("club.directory.location_error") }}
+.clubs-directory{data: { controller: "clubs-directory", action: "resize@window->clubs-directory#resize", clubs_directory_marker_value: asset_path("svg/marker_other.svg"), clubs_directory_highlighted_marker_value: asset_path("svg/marker_training.svg"), clubs_directory_count_one_value: t("club.directory.found.one", count: "%{count}"), clubs_directory_count_other_value: t("club.directory.found.other", count: "%{count}"), clubs_directory_location_error_value: t("club.directory.location_error") }}
   = render layout: "utils/title_panel", locals: { header_text: t("club.directory.title"), css: "no-margin" } do
     - if can?(:create, Club)
       = link_to t("club.directory.new"), new_admin_club_path, class: "btn btn-primary hidden-xs"

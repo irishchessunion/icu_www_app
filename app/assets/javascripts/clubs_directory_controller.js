@@ -1,6 +1,6 @@
 class ClubsDirectoryController extends Controller {
   static targets = ["form", "content", "controls", "map", "markers", "results", "list", "count", "empty", "radius", "geolocation", "locate", "locationStatus"]
-  static values = { marker: String, highlightedMarker: String, count: String, locationError: String }
+  static values = { marker: String, highlightedMarker: String, countOne: String, countOther: String, locationError: String }
 
   connect() {
     this.mobile = window.matchMedia("(max-width: 768px)");
@@ -79,7 +79,8 @@ class ClubsDirectoryController extends Controller {
       row.classList.toggle("hidden", !visible);
       if (visible) count++;
     });
-    this.countTarget.textContent = this.countValue.replace("%{count}", count);
+    const countMessage = count === 1 ? this.countOneValue : this.countOtherValue;
+    this.countTarget.textContent = countMessage.replace("%{count}", count);
     this.emptyTarget.classList.toggle("hidden", count > 0);
     this.listTarget.scrollTop = 0;
     this.mapNeedsUpdate = true;

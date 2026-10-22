@@ -210,7 +210,7 @@ describe Club do
         page.execute_script("window.directoryPosition = { latitude: #{lat}, longitude: #{lng} }")
         click_button "Find clubs near me"
         expect(page).to have_select("Search radius", selected: "#{radius}km")
-        expect(page).to have_content("#{count} clubs found")
+        expect(page).to have_content(I18n.t("club.directory.found", count: count))
       end
 
       select "10km", from: "Search radius"
