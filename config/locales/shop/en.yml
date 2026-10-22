@@ -1,6 +1,16 @@
 en:
   shop:
     join_icu: Join ICU
+    guest_help:
+      title: Buying a membership
+      no_account: You don't need an account to buy anything here. Choose a subscription below, then say who it's for.
+      renewing_html: "<strong>Renewing, or paying for someone who has been a member before</strong> (including a child who has played in ICU events): use <em>%{select}</em> to find them by name. Please don't use <em>%{new}</em> for them, as that creates a second ICU record."
+      new_html: "<strong>Never been an ICU member?</strong> Choose the subscription that fits your age and circumstances, then use <em>%{new}</em>."
+      tournament_html: "<strong>Entering a tournament?</strong> Use the Enter button on the tournament's page in %{events}."
+      events: Events
+      sign_in_html: "<strong>Already have an account?</strong> %{sign_in} to use <em>%{me}</em>."
+      sign_in: Sign in
+      more: More about subscriptions and membership
     shop: Shop
     cart:
       cart: Cart

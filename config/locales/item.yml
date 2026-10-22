@@ -60,6 +60,7 @@ en:
           missing: "Please enter something for '%{label}'"
     member:
       new: New Member
+      new_hint_html: "Has this person been an ICU member before? Use <em>%{select}</em> to find them. <em>%{new}</em> is only for people who have never had an ICU ID."
       select: Select Member
       me: Select Me
     n_items:
