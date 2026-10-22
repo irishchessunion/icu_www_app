@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_17_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -137,7 +137,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_140000) do
     t.index ["year"], name: "index_champions_on_year"
   end
 
-  create_table "club_meetings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "club_meetings", charset: "utf8mb3", force: :cascade do |t|
     t.string "audience", default: "open", null: false
     t.integer "club_id", null: false
     t.datetime "created_at", null: false
@@ -311,6 +311,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_140000) do
     t.integer "min_rating", limit: 2
     t.string "name", limit: 100
     t.boolean "organizer_only"
+    t.boolean "overseas", default: false, null: false
     t.boolean "player_required", default: true
     t.date "sale_end"
     t.date "sale_start"
@@ -865,6 +866,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_140000) do
     t.index ["verified_at"], name: "index_users_on_verified_at"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "champions", "images"
   add_foreign_key "documents", "documents", column: "previous_version_id"

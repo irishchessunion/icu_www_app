@@ -39,6 +39,17 @@ class Fee::Entry < Fee
     true
   end
 
+  # A player from outside Ireland can be entered as a new player, with this subscription added to the cart
+  def new_player_allowed?
+    overseas_subscription.present?
+  end
+
+  # The on-sale subscription the treasurer marked for overseas entrants, for the event's season
+  def overseas_subscription
+    return unless event&.subscription_required
+    @overseas_subscription ||= Fee::Subscription.on_sale.find_by(overseas: true, years: Season.new(start_date).to_s)
+  end
+
   def self.init_default_attributes(fee)
     if fee.event_id
       event = Event.find(fee.event_id)

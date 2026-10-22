@@ -81,6 +81,8 @@ class Item < ApplicationRecord
           player = new_player.to_player
           player.save!
           update_column(:player_id, player.id)
+          # e.g. an overseas player's entry, added with this subscription
+          cart.items.where(player_id: nil, player_data: player_data).update_all(player_id: player.id) if cart
         rescue => e
           Failure.log("NewPlayerCreateFailure", exception: e, data: player_data)
         end

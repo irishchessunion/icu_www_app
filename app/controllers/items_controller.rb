@@ -19,10 +19,10 @@ class ItemsController < ApplicationController
       return
     end
     cart = current_cart(:create)
+    @item.cart = cart
     original_notes = @item.notes.dup
 
-    if !cart.duplicates?(@item, add_error: true) && @item.save
-      @item.update_column(:cart_id, cart.id)
+    if save_with_overseas_subscription(cart)
       redirect_to cart_path
     else
       flash_first_error(@item)
@@ -38,12 +38,31 @@ class ItemsController < ApplicationController
       item.id == params[:id].to_i && item.unpaid?
     end
     item.destroy
+    # An entry that relied on this subscription can't be paid for without it
+    if item.is_a?(Item::Subscription)
+      current_cart.items.each { |other| other.destroy if other.is_a?(Item::Entry) && other.missing_subscription? }
+    end
     redirect_to cart_path
   rescue
     redirect_to shop_path
   end
 
   private
+
+  # Saves the item, along with the overseas subscription an entry for a player from outside Ireland needs.
+  def save_with_overseas_subscription(cart)
+    saved = false
+    Item.transaction do
+      subscription = @item.overseas_subscription if @item.is_a?(Item::Entry)
+      if subscription && !subscription.save
+        subscription.errors.full_messages.each { |message| @item.errors.add(:base, message) }
+        raise ActiveRecord::Rollback
+      end
+      saved = !cart.duplicates?(@item, add_error: true) && @item.save
+      raise ActiveRecord::Rollback unless saved
+    end
+    saved
+  end
 
   def item_params
     params.required(:item).permit(:type, :fee_id, :player_id, :player_data, :section, notes: [])
