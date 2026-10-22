@@ -121,6 +121,7 @@ describe Club do
     end
 
     it "refreshes without reloading, updates the county URL, and clears every filter" do
+      Club.find_by!(name: "Dublin club").club_meetings.create!(day_of_week: "monday", start_time: "19:00", welcomes_juniors: false)
       Club.find_by!(name: "Wicklow club").club_meetings.create!(day_of_week: "monday", start_time: "19:00")
       visit clubs_path
       page.execute_script("window.directoryPage = true")
@@ -140,7 +141,8 @@ describe Club do
       expect(page.evaluate_script("window.directoryPage")).to eq(true)
 
       choose "Adults-only", allow_label_click: true
-      expect(page).to have_css(".clubs-scroll .list-group-item", count: 2)
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 1)
+      expect(page).to have_css(".clubs-scroll .list-group-item", text: "Dublin club")
       expect(page).not_to have_css(".clubs-scroll .list-group-item", text: "Wicklow club")
       expect(page).to have_current_path(clubs_path(audience: "adults_only"))
       click_link "Clear search filters"

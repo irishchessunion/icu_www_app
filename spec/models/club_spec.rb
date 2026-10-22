@@ -171,18 +171,22 @@ describe Club do
       expect(Club.search(search: "%")).to be_empty
     end
 
-    it "uses the legacy adults-only fallback only without structured meetings and with meeting text" do
+    it "finds adults-only structured meetings across audiences without inferring from legacy fields" do
       adult = create(:club, name: "Adult meetings")
       adult.club_meetings.create!(day_of_week: "monday", start_time: "19:00", welcomes_juniors: false)
-      legacy = create(:club, name: "Legacy adults")
+      women = create(:club, name: "Adult women meetings")
+      women.club_meetings.create!(day_of_week: "tuesday", start_time: "19:00", audience: "women_only", welcomes_juniors: false)
+      women.club_meetings.create!(day_of_week: "monday", start_time: "19:00", audience: "women_only", welcomes_juniors: true)
+      create(:club, name: "Legacy meeting text")
       create(:club, name: "No meetings", meet: nil)
       create(:club, name: "Junior section", has_junior_section: true)
       create(:club, name: "Junior club", junior_only: true)
       open = create(:club, name: "Open meetings")
       open.club_meetings.create!(day_of_week: "monday", start_time: "19:00")
 
-      expect(Club.search(audience: "adults_only")).to contain_exactly(adult, legacy)
+      expect(Club.search(audience: "adults_only")).to contain_exactly(adult, women)
       expect(Club.search(audience: "adults_only", day_of_week: "monday")).to eq([adult])
+      expect(Club.search(audience: "adults_only", day_of_week: "tuesday")).to eq([women])
     end
 
     it "combines day and audience on the same meeting and includes every audience by default" do

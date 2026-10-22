@@ -73,13 +73,7 @@ class Club < ApplicationRecord
     end
 
     if params[:audience] == "adults_only"
-      adult_matches = matches.where(id: meetings.where(welcomes_juniors: false).select(:club_id))
-      unless filter_meetings
-        legacy_matches = matches.where.not(id: ClubMeeting.select(:club_id))
-          .where.not(meet: [nil, ""]).where(junior_only: false, has_junior_section: false)
-        adult_matches = adult_matches.or(legacy_matches)
-      end
-      matches = adult_matches
+      matches = matches.where(id: meetings.where(welcomes_juniors: false).select(:club_id))
 
     elsif params[:audience] == "juniors_only"
       junior_matches = matches.where(id: meetings.select(:club_id))
