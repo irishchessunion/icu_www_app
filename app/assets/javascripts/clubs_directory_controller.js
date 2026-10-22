@@ -14,7 +14,8 @@ class ClubsDirectoryController extends Controller {
     this.contentTarget.addEventListener("wheel", this.wheel, { passive: false });
     this.observer = new ResizeObserver(() => this.resize());
     this.observer.observe(this.element);
-    this.observer.observe(document.querySelector("body > header"));
+    const header = document.querySelector("body > header");
+    if (header) this.observer.observe(header);
     this.refresh();
   }
 
