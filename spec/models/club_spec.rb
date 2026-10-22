@@ -156,9 +156,48 @@ describe Club do
       tuesday.club_meetings.create!(day_of_week: "tuesday", start_time: "20:00")
       other.club_meetings.create!(day_of_week: "wednesday", start_time: "19:00")
 
-      results = Club.search({ day_of_week: "tuesday" }, "/clubs")
+      results = Club.search(day_of_week: "tuesday")
       expect(results.count).to eq(1)
-      expect(results.matches.to_a).to eq([tuesday])
+      expect(results.to_a).to eq([tuesday])
+    end
+  end
+
+  context "directory filters" do
+    it "finds names and locations, treating search wildcards literally" do
+      club = create(:club, address: "Community Hall", city: "Bangor", county: "down")
+      %w[Chess Community Bangor down].each do |term|
+        expect(Club.search(search: term)).to eq([club])
+      end
+      expect(Club.search(search: "%")).to be_empty
+    end
+
+    it "finds adults-only structured meetings across audiences without inferring from legacy fields" do
+      adult = create(:club, name: "Adult meetings")
+      adult.club_meetings.create!(day_of_week: "monday", start_time: "19:00", welcomes_juniors: false)
+      women = create(:club, name: "Adult women meetings")
+      women.club_meetings.create!(day_of_week: "tuesday", start_time: "19:00", audience: "women_only", welcomes_juniors: false)
+      women.club_meetings.create!(day_of_week: "monday", start_time: "19:00", audience: "women_only", welcomes_juniors: true)
+      create(:club, name: "Legacy meeting text")
+      create(:club, name: "No meetings", meet: nil)
+      create(:club, name: "Junior section", has_junior_section: true)
+      create(:club, name: "Junior club", junior_only: true)
+      open = create(:club, name: "Open meetings")
+      open.club_meetings.create!(day_of_week: "monday", start_time: "19:00")
+
+      expect(Club.search(audience: "adults_only")).to contain_exactly(adult, women)
+      expect(Club.search(audience: "adults_only", day_of_week: "monday")).to eq([adult])
+      expect(Club.search(audience: "adults_only", day_of_week: "tuesday")).to eq([women])
+    end
+
+    it "combines day and audience on the same meeting and includes every audience by default" do
+      club = create(:club)
+      club.club_meetings.create!(day_of_week: "monday", start_time: "19:00", audience: "women_only")
+      club.club_meetings.create!(day_of_week: "tuesday", start_time: "19:00", audience: "juniors_only")
+
+      expect(Club.search(audience: "all")).to eq([club])
+      expect(Club.search(audience: "women_only", day_of_week: "monday")).to eq([club])
+      expect(Club.search(audience: "women_only", day_of_week: "tuesday")).to be_empty
+      expect(Club.search(audience: "juniors_only")).to eq([club])
     end
   end
 

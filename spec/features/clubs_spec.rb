@@ -3,8 +3,8 @@ require 'rails_helper'
 describe Club do
   include_context "features"
 
-  let(:country)  { I18n.t("club.county") }
-  let(:province) { I18n.t("club.province") }
+  let(:county) { I18n.t("club.county") }
+  let(:directory_search) { I18n.t("club.directory.search") }
 
   context "search" do
     before(:each) do
@@ -13,7 +13,7 @@ describe Club do
       create(:club, name: "Aer Lingus", city: "Dublin", contact: "Gearóidín", county: "dublin")
       create(:club, name: "Cortex", city: "Arklow", contact: "Danny", county: "wicklow", active: false)
       visit clubs_path
-      @row = "//div[starts-with(@id,'club_')]"
+      @row = "//a[starts-with(@id,'club_')]"
       @search = "Search"
     end
 
@@ -22,23 +22,23 @@ describe Club do
     end
 
     it "find records by name" do
-      fill_in name, with: "Lingus"
+      fill_in directory_search, with: "Lingus"
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       expect(page).to have_xpath(@row, text: "Aer Lingus")
-      fill_in name, with: "b"
+      fill_in directory_search, with: "b"
       click_button @search
-      expect(page).to have_xpath(@row, count: 2)
+      expect(page).to have_xpath(@row, count: 3)
       expect(page).to have_xpath(@row, text: "Bangor")
       expect(page).to have_xpath(@row, text: "Bray/Greystones")
-      fill_in name, with: "/"
+      fill_in directory_search, with: "/"
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       expect(page).to have_xpath(@row, text: "Bray/Greystones")
     end
 
     it "find records by city" do
-      fill_in city, with: "Dub"
+      fill_in directory_search, with: "Dub"
       click_button @search
       expect(page).to have_xpath(@row, count: 2)
       expect(page).to have_xpath(@row, text: "Bray/Greystones")
@@ -46,57 +46,213 @@ describe Club do
     end
 
     it "find records by county" do
-      select "Dublin", from: country
+      select "Dublin", from: county
       click_button @search
       expect(page).to have_xpath(@row, count: 2)
       expect(page).to have_xpath(@row, text: "Bray/Greystones")
       expect(page).to have_xpath(@row, text: "Aer Lingus")
-      select "Down", from: country
+      select "Down", from: county
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       expect(page).to have_xpath(@row, text: "Bangor")
     end
 
-    it "find records by province" do
-      select "Lein", from: province
-      click_button @search
+    it "defaults the county from its shareable URL" do
+      visit county_clubs_path(county: "dublin")
+      expect(page).to have_select(county, selected: "Dublin")
       expect(page).to have_xpath(@row, count: 2)
-      expect(page).to have_xpath(@row, text: "Bray/Greystones")
-      expect(page).to have_xpath(@row, text: "Aer Lingus")
-      select "Ulster", from: province
-      click_button @search
-      expect(page).to have_xpath(@row, count: 1)
-      expect(page).to have_xpath(@row, text: "Bangor")
     end
 
-    it "find records by whether active or not" do
-      select either, from: active
+    it "allows editors to include inactive clubs" do
+      login "editor"
+      visit clubs_path
+      check "Include inactive"
       click_button @search
       expect(page).to have_xpath(@row, count: 4)
-      select active, from: active
+      uncheck "Include inactive"
       click_button @search
       expect(page).to have_xpath(@row, count: 3)
-      select inactive, from: active
-      click_button @search
-      expect(page).to have_xpath(@row, count: 1)
-      expect(page).to have_xpath(@row, text: "Cortex")
+    end
+
+    it "ignores the include inactive parameter for guests" do
+      visit clubs_path(include_inactive: "on")
+      expect(page).not_to have_field("Include inactive")
+      expect(page).to have_xpath(@row, count: 3)
+      expect(page).not_to have_content("Cortex")
+    end
+
+    it "enables only admins and editors to search for inactive clubs" do
+      user = login
+      visit clubs_path(include_inactive: "on")
+      expect(page).not_to have_field("Include inactive")
+      expect(page).to have_xpath(@row, count: 3)
+
+      Club.find_by!(name: "Bangor").update!(secretary_id: user.player_id)
+      visit clubs_path(include_inactive: "on")
+      expect(page).not_to have_field("Include inactive")
+      expect(page).to have_xpath(@row, count: 3)
     end
 
     it "return no results when appropriate" do
-      select "Ulster", from: province
-      fill_in name, with: "Aer"
+      select "Down", from: county
+      fill_in directory_search, with: "Aer"
       click_button @search
       expect(page).to_not have_xpath(@row)
-      expect(page).to have_css("div.alert-warning", text: "No matches")
+      expect(page).to have_css(".clubs-scroll", text: "No matches")
     end
 
     it "returns to all clubs from a club page" do
-      fill_in name, with: "Aer"
+      fill_in directory_search, with: "Aer"
       click_button @search
       expect(page).to have_xpath(@row, count: 1)
       click_link "Aer Lingus"
       click_link "All Clubs"
       expect(page).to have_xpath(@row, count: 3)
+    end
+  end
+
+  context "live directory", js: true do
+    let(:directory_map) { "window.Stimulus.getControllerForElementAndIdentifier(document.querySelector('.clubs-directory'), 'clubs-directory').map" }
+
+    before do
+      create(:club, name: "Dublin club", county: "dublin", city: "Dublin", lat: 53.35, long: -6.26)
+      create(:club, name: "Wicklow club", county: "wicklow", city: "Bray", lat: 53.2, long: -6.1)
+      create(:club, name: "Cork club", county: "cork", city: "Cork", lat: 51.9, long: -8.47)
+    end
+
+    it "refreshes without reloading, updates the county URL, and clears every filter" do
+      Club.find_by!(name: "Dublin club").club_meetings.create!(day_of_week: "monday", start_time: "19:00", welcomes_juniors: false)
+      Club.find_by!(name: "Wicklow club").club_meetings.create!(day_of_week: "monday", start_time: "19:00")
+      visit clubs_path
+      page.execute_script("window.directoryPage = true")
+      select "Dublin", from: county
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 1)
+      expect(page).to have_current_path(county_clubs_path(county: "dublin"))
+      expect(page.evaluate_script("window.directoryPage")).to eq(true)
+      expect(page.evaluate_script("document.querySelectorAll('.maplibregl-marker').length")).to eq(3)
+      expect(page).to have_css(".maplibregl-marker img[style*='opacity: 0.6']", count: 2, visible: :all)
+
+      fill_in directory_search, with: "Missing club"
+      expect(page).to have_content("0 clubs found")
+      click_link "Clear search filters"
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 3)
+      expect(page).to have_current_path(clubs_path)
+      expect(page).to have_field(directory_search, with: "")
+      expect(page.evaluate_script("window.directoryPage")).to eq(true)
+
+      choose "Adults-only", allow_label_click: true
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 1)
+      expect(page).to have_css(".clubs-scroll .list-group-item", text: "Dublin club")
+      expect(page).not_to have_css(".clubs-scroll .list-group-item", text: "Wicklow club")
+      expect(page).to have_current_path(clubs_path(audience: "adults_only"))
+      click_link "Clear search filters"
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 3)
+      expect(page).to have_checked_field("All", visible: :all)
+    end
+
+    it "filters across county borders around a location and switches to the map on mobile" do
+      create(:club, name: "Wexford club", county: "wexford", city: "Wexford", lat: 52.34, long: -6.46)
+      page.current_window.resize_to(390, 844)
+      visit clubs_path
+      expect(page).to have_select("Search radius", selected: "10km")
+      select "25km", from: "Search radius"
+      page.execute_script <<~JS
+        const position = { coords: { latitude: 53.35, longitude: -6.26 } };
+        navigator.geolocation.getCurrentPosition = success => success(position);
+        // Exercise the fallback even on browsers that implement the native element.
+        const geo = document.querySelector('geolocation');
+        const button = geo.querySelector('button');
+        geo.replaceWith(button);
+      JS
+      click_button "Find clubs near me"
+      expect(page).to have_css(".clubs-show-map #clubs-map", visible: true)
+      expect(page).not_to have_css(".clubs-controls")
+      click_link "List"
+      expect(page).to have_content("2 clubs found")
+      expect(page).to have_select("day_of_week", selected: "Any day")
+      controls = find(".clubs-controls").rect
+      tabs = find(".list-map-tabs").rect
+      expect(controls.y).to be >= tabs.y + tabs.height - 1
+      choose "Women-only", allow_label_click: true
+      expect(page).to have_content("0 clubs found")
+      click_link "Map", exact: true
+      expect(page).to have_css(".clubs-show-map #clubs-map", visible: true)
+      expect(page).not_to have_css(".clubs-controls")
+      click_link "List"
+      choose "All", allow_label_click: true
+      expect(page).to have_content("2 clubs found")
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 2)
+      expect(page).not_to have_css(".clubs-scroll .list-group-item", text: "Cork club")
+      select "150km", from: "Search radius"
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 3)
+      click_link "Clear search filters"
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 4)
+      expect(page).to have_select("Search radius", selected: "10km")
+    ensure
+      page.current_window.resize_to(1920, 1080)
+    end
+
+    it "expands the location radius until a matching club is found, up to 150km" do
+      visit clubs_path(search: "Dublin club")
+      page.execute_script <<~JS
+        navigator.geolocation.getCurrentPosition = success => success({ coords: window.directoryPosition });
+        const geo = document.querySelector('geolocation');
+        geo.replaceWith(geo.querySelector('button'));
+      JS
+
+      [
+        [53.35, -6.26, 10, 1],
+        [53.2, -6.1, 25, 1],
+        [53.7, -6.26, 50, 1],
+        [54.0, -6.26, 100, 1],
+        [54.4, -6.26, 150, 1],
+        [55.5, -6.26, 150, 0]
+      ].each do |lat, lng, radius, count|
+        select "10km", from: "Search radius"
+        page.execute_script("window.directoryPosition = { latitude: #{lat}, longitude: #{lng} }")
+        click_button "Find clubs near me"
+        expect(page).to have_select("Search radius", selected: "#{radius}km")
+        expect(page).to have_content(I18n.t("club.directory.found", count: count))
+      end
+
+      select "10km", from: "Search radius"
+      expect(page).to have_select("Search radius", selected: "10km")
+      expect(page).to have_css(".panel-pastel-warning", text: "No matches")
+    end
+
+    it "preserves map navigation across layout changes and refits changed filters" do
+      visit clubs_path
+      expect(page).to have_css(".maplibregl-canvas")
+      page.execute_script("#{directory_map}.jumpTo({ center: [-6.2, 53.3], zoom: 11 })")
+
+      page.current_window.resize_to(390, 844)
+      click_link "Map", exact: true
+      expect(page.evaluate_script("#{directory_map}.getZoom()")).to be_within(0.001).of(11)
+      expect(page.evaluate_script("#{directory_map}.getCenter().lng")).to be_within(0.001).of(-6.2)
+
+      click_link "List", exact: true
+      click_link "Map", exact: true
+      expect(page.evaluate_script("#{directory_map}.getZoom()")).to be_within(0.001).of(11)
+
+      click_link "List", exact: true
+      select "Cork", from: county
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 1)
+      click_link "Map", exact: true
+      expect(page.evaluate_script("#{directory_map}.getZoom()")).to be_within(0.001).of(12)
+      expect(page.evaluate_script("#{directory_map}.getCenter().lng")).to be_within(0.001).of(-8.47)
+    ensure
+      page.current_window.resize_to(1920, 1080)
+    end
+
+    it "scrolls only the results when scrolling over the desktop map" do
+      20.times { |i| create(:club, name: "Club #{i}") }
+      visit clubs_path
+      expect(page).to have_css(".clubs-scroll .list-group-item", count: 23)
+      map_top = find(".clubs-map").rect.y
+      page.execute_script("document.querySelector('.clubs-map').dispatchEvent(new WheelEvent('wheel', { deltaY: 500, bubbles: true, cancelable: true }))")
+      expect(page.evaluate_script("document.querySelector('.clubs-scroll').scrollTop")).to be > 0
+      expect(page.evaluate_script("window.scrollY")).to eq(0)
+      expect(find(".clubs-map").rect.y).to eq(map_top)
     end
   end
 

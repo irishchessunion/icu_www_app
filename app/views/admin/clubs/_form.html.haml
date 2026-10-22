@@ -16,7 +16,7 @@
         %fieldset
           - locals = { form: f, object: @club, col: "sm", pad: 1, width: 4 }
           = render "utils/text_field_for", locals.merge(param: :name, text: t("name"))
-          = render "utils/text_field_for", locals.merge(param: :web, text: t("club.web"))
+          = render "utils/text_field_for", locals.merge(param: :web, text: t("club.web"), hint: t("club.web_hint"))
 
           %hr
           = render "admin/clubs/meeting_form", form: f

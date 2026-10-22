@@ -1,8 +1,17 @@
 class ClubsController < ApplicationController
   def index
-    @clubs = Club.search(params, clubs_path)
-    flash.now[:warning] = t("no_matches") if @clubs.count == 0
-    save_last_search(@clubs, :clubs)
+    if params[:county].present? && !Ireland.county?(params[:county])
+      return redirect_to clubs_path, status: :moved_permanently
+    end
+
+    params.delete(:include_inactive) unless can?(:manage, Club)
+    params.delete(:audience) unless %w[all adults_only juniors_only women_only].include?(params[:audience])
+    @clubs = Club.search(params).to_a
+    if turbo_frame_request?
+      render partial: "results"
+    else
+      @map_clubs = (can?(:manage, Club) ? Club.all : Club.active).with_geocodes
+    end
   end
 
   def show

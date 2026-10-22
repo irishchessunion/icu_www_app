@@ -9,6 +9,24 @@ en:
     co: Co.
     county: County
     district: District
+    directory:
+      title: Find a Chess Club
+      new: New club
+      search: Search name or location
+      or: or
+      near_me: Find clubs near me
+      radius: Search radius
+      location_error: Unable to find your location. Please allow location access and try again.
+      found:
+        one: "%{count} club found"
+        other: "%{count} clubs found"
+      clear: Clear search filters
+      adults_only: Adults-only
+      include_inactive: Include inactive
+      any_day: Any day
+      open_to: "Open to:"
+      juniors_only: Juniors-only
+      women_only: Women-only
     has_junior_section: Has junior section?
     junior: Junior
     juniors:
@@ -41,3 +59,4 @@ en:
     secretary: Secretary
     select_secretary: Select Secretary
     web: Website
+    web_hint: Optional. Active clubs must have at least one contact method (phone, email or website).

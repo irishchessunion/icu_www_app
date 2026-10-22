@@ -1,8 +1,25 @@
-= form_tag clubs_path, method: :get, class: "form-inline", role: "form" do
-  = render "utils/inline_text_field", param: :name, text: t("name")
-  = render "utils/inline_text_field", param: :city, text: t("city")
-  = render "utils/inline_select", param: :county, text: t("club.county"), menu: club_county_menu(params[:county])
-  = render "utils/inline_select", param: :province, text: t("club.province"), menu: club_province_menu(params[:province])
-  = render "utils/inline_select", param: :junior, text: t("club.junior"), menu: club_junior_menu(params[:junior])
-  = render "utils/inline_select", param: :active, text: t("active"), menu: active_menu(params[:active])
-  = button_tag t("search"), type: "submit", class: "btn btn-default pull-right"
+.inline-flex.inline-between.flex-wrap.stack-xs.stack-xs-reverse
+  .inline-flex.flex-wrap.stack-xs.form-inline
+    .form-group.no-margin
+      = label_tag :search, t("club.directory.search"), class: "sr-only"
+      = search_field_tag :search, params[:search], class: "form-control", placeholder: t("club.directory.search")
+    .form-group.no-margin
+      = label_tag :county, t("club.county"), class: "sr-only"
+      = select_tag :county, club_county_menu(params[:county]), class: "form-control"
+    - if can?(:manage, Club)
+      = render "utils/toggle_checkbox_field", name: "include_inactive", label: t("club.directory.include_inactive")
+    = button_tag t("search"), type: "submit", class: "btn btn-info"
+  .visible-xs-block.col-xs-12.no-gutters
+    .inline-flex
+      %hr.no-margin{style: "width: 15px;"}
+      %small.text-muted= t("club.directory.or")
+      %hr.flex-grow.no-margin{style: "max-width: 80px;"}
+  .inline-flex.flex-wrap.form-inline
+    %geolocation{data: { clubs_directory_target: "geolocation", action: "location->clubs-directory#located" }, "aria-label": t("club.directory.near_me")}
+      = button_tag type: "button", class: "btn btn-pastel-info", data: { action: "clubs-directory#locate", clubs_directory_target: "locate" } do
+        %span.glyphicon.glyphicon-map-marker.glyphicon-sm{"aria-hidden": "true"}
+        = t("club.directory.near_me")
+    .form-group.no-margin
+      = label_tag :radius, t("club.directory.radius"), class: "sr-only"
+      = select_tag :radius, options_for_select([10, 25, 50, 100, 150].map { |km| ["#{km}km", km] }, 10), class: "form-control", data: { clubs_directory_target: "radius" }
+  %span.sr-only{role: "status", data: { clubs_directory_target: "locationStatus" }}

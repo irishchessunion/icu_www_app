@@ -1,36 +1,32 @@
-- content_for :title, t("club.clubs")
+- content_for :title, t("club.directory.title")
+- content_for :header_bg_color, "var(--gray-lighter)"
+- @show_main_container = "false"
+- content_for :includes do
+  = javascript_include_tag "maplibre-gl"
+  = stylesheet_link_tag "maplibre-gl", skip_pipeline: true
 
-= render "utils/list_map_buttons", resource: "clubs", map: false
-= render "utils/search_panel", form: "search_form", title: t("club.clubs"), col: "md"
-.row
-  .col-md-10.col-md-offset-1
-    - if @clubs.count > 0
-      - @clubs.matches.each do |club|
-        - meetings = ordered_club_meetings(club.club_meetings)
-        %div{class: "panel panel-default", id: "club_#{club.id}"}
-          .panel-heading
-            %strong= link_to club.name, club
-            = "(#{t('inactive')})" unless club.active
-          %ul.list-group
-            %li.list-group-item
-              %em= "#{t('club.location')}:"
-              = link_to_if club.geocodes?, club.location, clubs_map_path(club)
-            - if meetings.any?
-              %li.list-group-item
-                %em= "#{t('club.meet')}:"
-                = meetings.map { |meeting| "#{meeting.day_of_week.capitalize}#{t('club.meetings.is_at_sm')} #{meeting.start_time.strftime('%H:%M')}" }.join(', ')
-            - elsif club.meet.present?
-              %li.list-group-item
-                %em= "#{t('club.meet')}:"
-                = club.meet
-            - if club.contact || club.contactable?
-              %li.list-group-item
-                %em= "#{t('contact')}:"
-                - contact = []
-                - contact << club.contact                                            if club.contact && !club.email
-                - contact << mail_to(club.email, club.contact || club.email)         if club.email
-                - contact << club.phone                                              if club.phone
-                - contact << link_to(simple_url(club.web), club.web, target: "club") if club.web
-                = contact.join(', ').html_safe
-    = render "utils/pagination_links", pager: @clubs
-    = render "utils/index_buttons", klass: Club
+.clubs-directory{data: { controller: "clubs-directory", action: "resize@window->clubs-directory#resize", clubs_directory_marker_value: asset_path("svg/marker_other.svg"), clubs_directory_highlighted_marker_value: asset_path("svg/marker_training.svg"), clubs_directory_count_one_value: t("club.directory.found.one", count: "%{count}"), clubs_directory_count_other_value: t("club.directory.found.other", count: "%{count}"), clubs_directory_location_error_value: t("club.directory.location_error") }}
+  = render layout: "utils/title_panel", locals: { header_text: t("club.directory.title"), css: "no-margin" } do
+    - if can?(:create, Club)
+      = link_to t("club.directory.new"), new_admin_club_path, class: "btn btn-primary hidden-xs"
+
+  = form_with url: clubs_path, method: :get, local: true, data: { turbo: true, turbo_frame: "clubs-results", clubs_directory_target: "form", action: "input->clubs-directory#typing change->clubs-directory#change submit->clubs-directory#submitting turbo:frame-load->clubs-directory#refresh" } do
+    = render layout: "utils/sub_panel_bar", locals: { padding: "15px 0" } do
+      = render "search_form"
+
+    .container.clubs-content.voffset3{data: { clubs_directory_target: "content" }}
+      = render "results"
+      %ul.row.nav.nav-tabs.underline-tabs.list-map-tabs{role: "tablist", "aria-label": t("club.clubs")}
+        %li.active{role: "presentation"}
+          %a#clubs-list-tab{href: "#clubs-list", role: "tab", "aria-controls": "clubs-list", "aria-selected": "true", data: { action: "clubs-directory#showList" }}
+            %span.glyphicon.glyphicon-list{"aria-hidden": "true"}
+            = t("list")
+        %li{role: "presentation"}
+          %a#clubs-map-tab{href: "#clubs-map", role: "tab", "aria-controls": "clubs-map", "aria-selected": "false", data: { action: "clubs-directory#showMap" }}
+            %span.glyphicon.glyphicon-map-marker{"aria-hidden": "true"}
+            = t("map")
+      #clubs-map.clubs-map-column{role: "tabpanel", "aria-labelledby": "clubs-map-tab"}
+        .clubs-map.list-map-view.img-rounded{"aria-label": t("club.map")}
+          .img-rounded{data: { clubs_directory_target: "map" }}
+
+  %script{type: "application/json", data: { clubs_directory_target: "markers" }}= raw json_escape(club_directory_markers(@map_clubs).to_json)

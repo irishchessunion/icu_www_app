@@ -1,6 +1,7 @@
-- defined?(border) || border = "1px solid var(--gray-lighter)"
-- defined?(margin) || margin = "0"
+- defined?(border)  || border  = "1px solid var(--gray-lighter)"
+- defined?(margin)  || margin  = "0"
+- defined?(padding) || padding = "10px 0"
 
-%section.full-width{style: "border: #{border}; padding: 10px 0; margin: #{margin}"}
+%section.full-width.sub-panel-bar{style: "border: #{border}; padding: #{padding}; margin: #{margin}"}
   .container
     =yield

@@ -5,7 +5,7 @@ describe JournalEntry do
 
   def create_club
     visit clubs_path
-    click_link new_one
+    click_link I18n.t("club.directory.new"), exact: true
     fill_in "Name", with: "Wandering Dragons"
     fill_in "City", with: "Bangor"
     select "Down", from: "County"
