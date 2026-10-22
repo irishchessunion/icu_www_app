@@ -50,23 +50,28 @@ class Club < ApplicationRecord
 
   def self.search(params)
     matches = all.preload(:club_meetings)
+
     if params[:search].present?
       term = "%#{sanitize_sql_like(params[:search].squish)}%"
       matches = matches.where("name LIKE :term OR address LIKE :term OR city LIKE :term OR county LIKE :term", term: term)
     end
+
     matches = matches.where(county: params[:county]) if Ireland.county?(params[:county])
     matches = matches.active unless params[:include_inactive].present?
 
     meetings = ClubMeeting.all
     filter_meetings = false
+
     if ClubMeeting::DAYS_OF_WEEK.include?(params[:day_of_week])
       meetings = meetings.where(day_of_week: params[:day_of_week])
       filter_meetings = true
     end
+
     if %w[juniors_only women_only].include?(params[:audience])
       meetings = meetings.where(audience: params[:audience])
       filter_meetings = true
     end
+
     if params[:audience] == "adults_only"
       adult_matches = matches.where(id: meetings.where(welcomes_juniors: false).select(:club_id))
       unless filter_meetings
@@ -75,10 +80,21 @@ class Club < ApplicationRecord
         adult_matches = adult_matches.or(legacy_matches)
       end
       matches = adult_matches
+
+    elsif params[:audience] == "juniors_only"
+      junior_matches = matches.where(id: meetings.select(:club_id))
+      unless ClubMeeting::DAYS_OF_WEEK.include?(params[:day_of_week])
+        legacy_matches = matches.where.not(id: ClubMeeting.select(:club_id)).where(junior_only: true)
+        junior_matches = junior_matches.or(legacy_matches)
+      end
+      matches = junior_matches
+
     elsif filter_meetings
       matches = matches.where(id: meetings.select(:club_id))
     end
+
     matches
+
   end
 
   def geocodes?
