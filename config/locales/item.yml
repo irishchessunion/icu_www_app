@@ -60,6 +60,7 @@ en:
           missing: "Please enter something for '%{label}'"
     member:
       new: New Member
+      new_hint_html: "Has this person been an ICU member before? Use <em>%{select}</em> to find them. <em>%{new}</em> is only for people who have never had an ICU ID."
       new_overseas: New player from outside Ireland
       overseas_help: "Not an ICU member and from outside Ireland? Use the %{button} button. The %{subscription} (%{amount}), which you need to play in this event, will be added to your cart with the entry."
       select: Select Member

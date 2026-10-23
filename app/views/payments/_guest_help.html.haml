@@ -1,0 +1,14 @@
+-# People who aren't signed in are often new to the ICU, or parents paying for a child
+.row
+  .col-sm-8.col-sm-offset-2
+    %section.panel.panel-info{"aria-label": t("shop.guest_help.title")}
+      .panel-heading
+        %h4.panel-title= t("shop.guest_help.title")
+      .panel-body
+        %p= t("shop.guest_help.no_account")
+        %ul
+          %li= t("shop.guest_help.renewing_html", select: t("item.member.select"), new: t("item.member.new"))
+          %li= t("shop.guest_help.new_html", new: t("item.member.new"))
+          %li= t("shop.guest_help.tournament_html", events: link_to(t("shop.guest_help.events"), events_path))
+          %li= t("shop.guest_help.sign_in_html", sign_in: link_to(t("shop.guest_help.sign_in"), sign_in_path), me: t("item.member.me"))
+        %p.no-margin= link_to t("shop.guest_help.more"), help_membership_path, target: "help"

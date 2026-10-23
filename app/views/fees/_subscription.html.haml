@@ -1,3 +1,6 @@
 = render "fees/detail", term: "Valid from", desc: fee.start_date.to_s
 = render "fees/detail", term: "Valid to", desc: fee.end_date.to_s
 = render "fees/detail", term: "Name & ID", desc: player_name, id: "player_name"
+-# A second ICU record for someone who's been a member before is the commonest mistake here
+- unless fee.new_player_required?
+  %p.text-muted.small= t("item.member.new_hint_html", select: t("item.member.select"), new: t("item.member.new"))

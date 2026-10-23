@@ -4,6 +4,9 @@
   - add_help("treasurer")
   - add_help("offline_payments")
 
+- if current_user.guest?
+  = render "guest_help"
+
 - if current_cart || @completed_carts.present?
   .row
     .col-sm-12.text-center
