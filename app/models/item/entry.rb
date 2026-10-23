@@ -1,5 +1,6 @@
 class Item::Entry < Item
-  validates :start_date, :end_date, :player, presence: true
+  validates :start_date, :end_date, presence: true
+  validates :player, presence: true, unless: Proc.new { |e| e.player_data.present? }
   validate :membership_check
   validate :no_duplicates
   belongs_to :fee_entry, class_name: 'Fee::Entry', foreign_key: :fee_id
@@ -8,8 +9,8 @@ class Item::Entry < Item
   scope :any_duplicates, ->(fee, player) { active.where(fee_id: fee.id).where(player_id: player.id) }
 
   def duplicate_of?(item)
-    if type == item.type && fee_id == item.fee_id && player_id == item.player_id
-      I18n.t("item.error.entry.already_in_cart", member: player.name(id: true))
+    if type == item.type && fee_id == item.fee_id && same_player?(item)
+      I18n.t("item.error.entry.already_in_cart", member: player_name)
     else
       false
     end
@@ -38,6 +39,24 @@ class Item::Entry < Item
     end
   end
 
+  # A player from outside Ireland who isn't a member gets the overseas subscription added with their entry.
+  # @return [Item::Subscription, nil] An unsaved subscription for the entry's cart, if one is needed.
+  def overseas_subscription
+    subscription_fee = fee&.overseas_subscription
+    return unless subscription_fee && missing_subscription?
+    fed = player ? player.fed : new_player&.fed
+    return if fed.blank? || fed == "IRL"
+    Item::Subscription.new(fee: subscription_fee, player: player, player_data: (player_data unless player), cart: cart)
+  end
+
+  # Whether the event needs a subscription that the player doesn't have, paid or waiting in the same cart
+  def missing_subscription?
+    return false unless fee&.event&.subscription_required
+    return false if player&.is_subscribed?(true)
+    return true unless cart_id
+    Item::Subscription.where(cart_id: cart_id).none? { |s| same_player?(s) }
+  end
+
   # @return [String, nil] An error message if this player has already paid for this entry.
   def paid_duplicate_error
     return unless [player, fee].all?(&:present?)
@@ -53,9 +72,11 @@ class Item::Entry < Item
   end
 
   def membership_check
-    if fee.event&.subscription_required && !player.is_subscribed?(true)
-      errors.add(:base, I18n.t("item.error.entry.no_subscription", member: player.name(id: true)))
-    end
+    errors.add(:base, I18n.t("item.error.entry.no_subscription", member: player_name)) if missing_subscription?
+  end
+
+  def same_player?(item)
+    player_id ? player_id == item.player_id : player_data.present? && new_player == item.new_player
   end
 
   def no_duplicates

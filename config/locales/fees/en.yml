@@ -38,6 +38,10 @@ en:
     sale_end: Sale end
     sections: Sections
     start: Start date
+    subscription:
+      overseas:
+        hint: Added automatically when a player from outside Ireland enters an event that needs a subscription. Tick it for one fee per season.
+        label: For overseas entrants
     url: Web page
     age:
       min: Minimum age

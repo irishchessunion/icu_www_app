@@ -1,3 +1,19 @@
-$('#<%= form_id %> input, #<%= form_id %> select').on('change', function() {
-  $.rails.handleRemote($('#<%= form_id %>'))
-});
+(function() {
+  var form = $('#<%= form_id %>');
+  var search = function() { $.rails.handleRemote(form); };
+  var timer;
+  form.find('input, select').on('change', search);
+  // Search as people type, as phones (e.g. iOS's Go key) don't fire change until the field loses focus
+  form.find('input').on('input', function() {
+    clearTimeout(timer);
+    timer = setTimeout(search, 400);
+  });
+  // The form has no submit button, so Enter wouldn't submit it
+  form.on('keydown', 'input', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      clearTimeout(timer);
+      search();
+    }
+  });
+})();

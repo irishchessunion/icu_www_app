@@ -2,6 +2,10 @@
 - content_for :javascript do
   = render(:partial => "utils", :handlers => [:erb], :formats => [:js])
 
+-# Entry fees only allow new players from outside Ireland, who get the overseas subscription too (see Fee::Entry)
+- overseas = @fee.subtype == "entry" && @fee.new_player_allowed?
+- new_player_text = overseas ? t("item.member.new_overseas") : t("item.member.new")
+
 = form_for @item do |form|
   = form.hidden_field :type
   = form.hidden_field :fee_id
@@ -21,6 +25,9 @@
           = render "fees/#{@fee.subtype}", fee: @fee, player_name: @player_name
           = render "notes", fee: @fee, notes: @item.notes
           = render "fees/more_info", fee: @fee
+          - if overseas
+            - subscription = @fee.overseas_subscription
+            %p.text-muted= t("item.member.overseas_help", button: new_player_text, subscription: subscription.description(:full), amount: euros(subscription.current_amount))
         .panel-footer
           - if @fee.player_required
             - unless @fee.new_player_required?
@@ -28,7 +35,7 @@
             - if @fee.applies_to?(current_user)
               = render "select_user_button"
             - if @fee.new_player_allowed?
-              = render "new_player_button"
+              = render "new_player_button", text: new_player_text
           = link_to t("cancel"), :back, class: "btn btn-default btn-sm"
           = form.submit t("item.add"), class: "btn btn-info btn-sm pull-right"
 
@@ -37,6 +44,6 @@
   %script
     = render(:partial => "player_ids_callback", :handlers => [:erb], :formats => [:js])
   - if @fee.new_player_allowed?
-    = render "new_players/modal", title: t("item.member.new")
+    = render "new_players/modal", title: new_player_text
     %script
       = render(:partial => "new_player_callback", :handlers => [:erb], :formats => [:js])

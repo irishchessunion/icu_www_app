@@ -29,7 +29,7 @@ en:
       entry:
         already_entered: "%{member} has already entered this event"
         already_in_cart: "A entry for %{member} in the same event is already in your cart"
-        no_subscription: "%{member} must be have an ICU subscription to enter this event."
+        no_subscription: "%{member} must have an ICU subscription to enter this event."
       other:
         already_exists: A duplicate item has already been paid for
         already_in_cart: A duplicate item is already in your cart
@@ -61,6 +61,8 @@ en:
     member:
       new: New Member
       new_hint_html: "Has this person been an ICU member before? Use <em>%{select}</em> to find them. <em>%{new}</em> is only for people who have never had an ICU ID."
+      new_overseas: New player from outside Ireland
+      overseas_help: "Not an ICU member and from outside Ireland? Use the %{button} button. The %{subscription} (%{amount}), which you need to play in this event, will be added to your cart with the entry."
       select: Select Member
       me: Select Me
     n_items:

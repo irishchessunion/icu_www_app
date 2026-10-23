@@ -140,4 +140,67 @@ describe Item::Entry do
       expect(item.sections_with_different_fees).to be_empty
     end
   end
+  context "players from outside Ireland" do
+    let(:event)        { create(:event, subscription_required: true) }
+    let(:fee)          { create(:entry_fee, event: event) }
+    let!(:overseas)    { create(:subscription_fee, name: "Overseas", amount: 5.0, overseas: true) }
+    let(:cart)         { create(:cart) }
+    let(:newbie)       { build(:new_player, fed: "POL").to_json }
+
+    def entry(attrs)
+      Item::Entry.new({ fee: fee, cart: cart }.merge(attrs))
+    end
+
+    it "allows new players only if the event needs a subscription and there's an overseas one on sale" do
+      expect(fee.new_player_allowed?).to be true
+      expect(create(:entry_fee, name: "No event").new_player_allowed?).to be false
+      overseas.update!(overseas: false)
+      expect(Fee::Entry.find(fee.id).new_player_allowed?).to be false
+    end
+
+    it "gets the overseas subscription with a new player's entry, and the entry is then valid" do
+      item = entry(player_data: newbie)
+      expect(item).to_not be_valid
+
+      subscription = item.overseas_subscription
+      expect(subscription.fee).to eq overseas
+      expect(subscription.player_data).to eq newbie
+      subscription.save!
+      expect(item).to be_valid
+    end
+
+    it "gets it for an existing player from outside Ireland who isn't subscribed, but not one who is" do
+      player = create(:player, fed: "POL")
+      expect(entry(player: player).overseas_subscription.player).to eq player
+
+      create(:legacy_subscription_item, player: player, description: "Standard ICU Subscription #{Season.new}", end_date: Season.new.end)
+      expect(entry(player: player).overseas_subscription).to be_nil
+    end
+
+    it "doesn't get it for an Irish player" do
+      expect(entry(player_data: build(:new_player, fed: "IRL").to_json).overseas_subscription).to be_nil
+      expect(entry(player: create(:player, fed: "IRL")).overseas_subscription).to be_nil
+    end
+
+    it "is linked to the player the subscription creates on payment" do
+      item = entry(player_data: newbie)
+      item.overseas_subscription.save!
+      item.save!
+
+      cart.items.each { |i| i.complete("cash") }
+      player = Player.find_by!(last_name: JSON.parse(newbie)["last_name"])
+      expect(item.reload.player).to eq player
+      expect(Item::Subscription.last.player).to eq player
+      expect(Player.where(last_name: player.last_name).count).to eq 1
+    end
+
+    it "treats entries for two different new players as different" do
+      first = entry(player_data: newbie)
+      first.overseas_subscription.save!
+      first.save!
+      other = entry(player_data: build(:new_player, fed: "POL").to_json)
+      expect(cart.duplicates?(other)).to be false
+      expect(cart.duplicates?(entry(player_data: newbie))).to be true
+    end
+  end
 end
