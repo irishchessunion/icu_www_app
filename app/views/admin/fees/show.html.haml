@@ -42,6 +42,10 @@
       %tr
         %td= t("fee.player_required")
         %th= @fee.player_required ? t("yes") : t("no")
+      - if @fee.subtype == "subscription"
+        %tr
+          %td= t("fee.subscription.overseas.label")
+          %th{colspan: 3}= @fee.overseas ? t("yes") : t("no")
         %td= t("fee.age.ref_date")
         %th= @fee.age_ref_date
       %tr
