@@ -1377,11 +1377,13 @@ table.float-center { margin-left: auto; margin-right: auto; }
 }
 
 .ql-container.ql-snow .ql-editor h2 {
-  font-size: 1.7em;
+  font-size: 2.1em;
+  font-size: round(up, 1.75em, 1px); /* 32px on flatly */
 }
 
 .ql-container.ql-snow .ql-editor h3 {
-  font-size: 2.1em;
+  font-size: 1.7em;
+  font-size: round(up, 1.7em, 1px); /* 26px on flatly */
 }
 
 .ql-editor ul {
