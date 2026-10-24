@@ -1378,7 +1378,7 @@ table.float-center { margin-left: auto; margin-right: auto; }
 
 .ql-container.ql-snow .ql-editor h2 {
   font-size: 2.1em;
-  font-size: round(up, 1.75em, 1px); /* 32px on flatly */
+  font-size: round(up, 2.1em, 1px); /* 32px on flatly */
 }
 
 .ql-container.ql-snow .ql-editor h3 {
