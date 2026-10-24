@@ -69,9 +69,9 @@ class ClubsDirectoryController extends Controller {
   }
 
   refresh() {
-    this.mapMarkers.forEach(({ marker, element }) => {
-      element.src = this.markerValue;
-      marker.getElement().style.zIndex = "";
+    this.mapMarkers.forEach(entry => {
+      entry.highlighted = false;
+      entry.element.src = this.markerValue;
     });
     this.matchingIds = new Set(JSON.parse(this.resultsTarget.textContent));
     let count = 0;
@@ -120,9 +120,9 @@ class ClubsDirectoryController extends Controller {
   highlightMarker(event) {
     const entry = this.mapMarkers.find(({ data }) => data.id === Number(event.currentTarget.dataset.clubId));
     if (entry) {
-      const highlighted = event.type === "mouseenter";
-      entry.element.src = highlighted ? this.highlightedMarkerValue : this.markerValue;
-      entry.marker.getElement().style.zIndex = highlighted ? "1" : "";
+      entry.highlighted = event.type === "mouseenter";
+      entry.element.src = entry.highlighted ? this.highlightedMarkerValue : this.markerValue;
+      entry.marker.getElement().style.zIndex = entry.highlighted ? "2" : this.matchingIds.has(entry.data.id) ? "1" : "0";
     }
   }
 
@@ -215,11 +215,13 @@ class ClubsDirectoryController extends Controller {
   updateMap(fit = true) {
     const includeInactive = this.formTarget.querySelector("[name='include_inactive']:checked");
     const selected = [];
-    this.mapMarkers.forEach(({ data, marker, element }) => {
+    this.mapMarkers.forEach(({ data, marker, element, highlighted }) => {
       const visible = (data.active || includeInactive) && this.inRadius(data);
       const matching = this.matchingIds.has(data.id);
       marker.getElement().classList.toggle("hidden", !visible);
-      element.style.opacity = matching ? "1" : "0.6";
+      marker.getElement().style.zIndex = highlighted ? "2" : matching ? "1" : "0";
+      element.style.opacity = matching ? "1" : "0.4";
+      element.style.filter = matching ? "none" : "sepia(1)";
       if (!visible && marker.getPopup().isOpen()) marker.togglePopup();
       if (visible && matching) selected.push([data.lng, data.lat]);
     });

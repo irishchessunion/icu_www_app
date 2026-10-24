@@ -1371,10 +1371,39 @@ table.float-center { margin-left: auto; margin-right: auto; }
   margin-right: 1em !important;
 }
 
+.ql-container.ql-snow {
+  font-size: 1em;
+  font-family: Lato, Arial, Helvetica, sans-serif;
+}
+
+.ql-container.ql-snow .ql-editor h2 {
+  font-size: 2.1em;
+  font-size: round(up, 1.75em, 1px); /* 32px on flatly */
+}
+
+.ql-container.ql-snow .ql-editor h3 {
+  font-size: 1.7em;
+  font-size: round(up, 1.7em, 1px); /* 26px on flatly */
+}
+
+.ql-editor ul {
+  margin: 0;
+  padding: 0 0 0 1.5em;
+}
+
 /* Text from the WYSIWYG editor has a paragraph per line, with empty ones for blank lines, as in the
    editor itself (see WysiwygEditable#wysiwyg_class). */
 .wysiwyg-content p {
   margin: 0;
+}
+
+.wysiwyg-content :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  line-height: 1.5em;
+}
+
+#description > h4:has(+ .wysiwyg-content > :is(h2, h3, h4):first-child) {
+  display: none;
 }
 
 /* A floated [IMG:] starts below any earlier image on the same side, rather than beside it, so it appears

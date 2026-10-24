@@ -31,6 +31,28 @@ $(function() {
   var textarea = document.querySelector(".wysiwyg-editor");
   if (!textarea) return;
 
+  // Extend Quill's list blots: https://quilljs.com/docs/customization#extending-blots
+  var ListItem = Quill.import("formats/list");
+  var OrderedList = Quill.import("formats/list-container");
+
+  class UnorderedList extends OrderedList {}
+  UnorderedList.blotName = "unordered-list-container";
+  UnorderedList.tagName = "UL";
+
+  class ListItemWithUnorderedList extends ListItem {
+    optimize(context) {
+      super.optimize(context);
+      var container = this.domNode.getAttribute("data-list") === "bullet" ? UnorderedList : OrderedList;
+      if (this.parent.statics.blotName !== container.blotName) {
+        var list = this.parent.isolate(this.offset(this.parent), this.length());
+        list.replaceWith(container.blotName);
+      }
+    }
+  }
+
+  Quill.register(UnorderedList);
+  Quill.register(ListItemWithUnorderedList, true);
+
   var container = document.createElement("div");
   container.id = "wysiwyg_editor_mount";
   container.innerHTML = textarea.value;
