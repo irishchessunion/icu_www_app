@@ -295,7 +295,7 @@ describe Article do
 
     def set_editor_html(html)
       expect(page).to have_css("#wysiwyg_editor_mount .ql-editor", wait: 5)
-      page.execute_script("document.querySelector('#wysiwyg_editor_mount').__quill.root.innerHTML = #{html.to_json};")
+      page.execute_script("document.querySelector('#wysiwyg_editor_mount').__quill.clipboard.dangerouslyPasteHTML(#{html.to_json});")
     end
 
     before(:each) do
@@ -392,12 +392,13 @@ describe Article do
 
     it "previews the unsaved text, with shortcuts expanded, in another tab" do
       fill_in title, with: "Draft Article"
-      set_editor_html("<p>Draft text.</p><p>[IMG:#{linked_image.id}:width=200:right]</p>")
+      set_editor_html("<p>Draft text.</p><ul><li>Bring a clock</li></ul><p>[IMG:#{linked_image.id}:width=200:right]</p>")
 
       preview = window_opened_by { find("#wysiwyg_toolbar_extra button", text: I18n.t("article.preview")).click }
       within_window(preview) do
         expect(page).to have_css("h1", text: "Draft Article")
         expect(page).to have_css("#article", text: "Draft text.")
+        expect(page).to have_css("#article ul > li", text: "Bring a clock")
         expect(page).to have_css("#article div.float-right img[alt='#{linked_image.caption}']")
       end
       expect(Article.count).to eq 1
