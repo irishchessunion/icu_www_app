@@ -1382,6 +1382,11 @@ table.float-center { margin-left: auto; margin-right: auto; }
   margin: 0;
 }
 
+.wysiwyg-content :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  line-height: 1.5em;
+}
+
 /* A floated [IMG:] starts below any earlier image on the same side, rather than beside it, so it appears
    where the writer put it in the text. */
 #article div.float-left, .news div.float-left {
