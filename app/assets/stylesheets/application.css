@@ -1371,6 +1371,11 @@ table.float-center { margin-left: auto; margin-right: auto; }
   margin-right: 1em !important;
 }
 
+.ql-editor ul {
+  margin: 0;
+  padding: 0 0 0 1.5em;
+}
+
 /* Text from the WYSIWYG editor has a paragraph per line, with empty ones for blank lines, as in the
    editor itself (see WysiwygEditable#wysiwyg_class). */
 .wysiwyg-content p {
