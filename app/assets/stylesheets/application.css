@@ -1371,6 +1371,19 @@ table.float-center { margin-left: auto; margin-right: auto; }
   margin-right: 1em !important;
 }
 
+.ql-container.ql-snow {
+  font-size: 1em;
+  font-family: Lato, Arial, Helvetica, sans-serif;
+}
+
+.ql-container.ql-snow .ql-editor h2 {
+  font-size: 1.7em;
+}
+
+.ql-container.ql-snow .ql-editor h3 {
+  font-size: 2.1em;
+}
+
 .ql-editor ul {
   margin: 0;
   padding: 0 0 0 1.5em;
