@@ -130,7 +130,7 @@ describe Club do
       expect(page).to have_current_path(county_clubs_path(county: "dublin"))
       expect(page.evaluate_script("window.directoryPage")).to eq(true)
       expect(page.evaluate_script("document.querySelectorAll('.maplibregl-marker').length")).to eq(3)
-      expect(page).to have_css(".maplibregl-marker img[style*='opacity: 0.6']", count: 2, visible: :all)
+      expect(page).to have_css(".maplibregl-marker img[style*='opacity: 0.4']", count: 2, visible: :all)
 
       fill_in directory_search, with: "Missing club"
       expect(page).to have_content("0 clubs found")
