@@ -51,6 +51,27 @@ describe Event do
       visit event_path(event)
       expect(page).to have_css("#entries")
     end
+
+    it "shows the correct entries when section names differ only by symbols", js: true do
+      event.update!(sections: ">1900 girls, <1900 girls")
+      fee = create(:entry_fee, event: event)
+      higher = create(:paid_entry_item, fee: fee, section: ">1900 girls")
+      lower = create(:paid_entry_item, fee: fee, section: "<1900 girls")
+
+      visit event_path(event)
+      within "#entries" do
+        expect(page).to have_content(higher.player.name)
+        expect(page).not_to have_content(lower.player.name)
+
+        click_link "<1900 girls"
+        expect(page).to have_content(lower.player.name)
+        expect(page).not_to have_content(higher.player.name)
+
+        click_link ">1900 girls"
+        expect(page).to have_content(higher.player.name)
+        expect(page).not_to have_content(lower.player.name)
+      end
+    end
   end
 
   context "admin/organiser show page" do
