@@ -39,7 +39,7 @@
 
       %ul.nav.nav-tabs.underline-tabs
         - section_names.each_with_index do |section, index|
-          - section_id = section.parameterize
+          - section_id = "#{section.parameterize}-#{index}"
           - section_entries = @entries_by_section[section] || []
           - count = section_entries.size
           %li{ class: ("active" if index.zero?) }
@@ -59,7 +59,7 @@
 
       %div{id: "myTabContent", class:"entries-list tab-content"}
         - section_names.each_with_index do |section, index|
-          - section_id = section.parameterize
+          - section_id = "#{section.parameterize}-#{index}"
           - section_entries = @entries_by_section[section] || []
           %ol{id: section_id, class:"tab-pane fade #{'active in' if index.zero?}"}
             - section_entries.each do |entry_item|
