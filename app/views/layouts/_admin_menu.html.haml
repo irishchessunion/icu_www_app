@@ -14,7 +14,6 @@
   - links += 1 if mevnts  = can?(:index, MailEvent)
   - links += 1 if items   = can?(:index, Item)
   - links += 1 if events  = can?(:index, Event)
-  - links += 1 if trans   = can?(:manage, Translation)
   - links += 1 if pages   = can?(:read, Page)
   - links += 1 if pgns    = can?(:index, Pgn)
   - links += 1 if offs    = can?(:index, Officer)
@@ -76,8 +75,6 @@
           %li{class: active("admin/pages", "test_email")}= link_to "Test Email", admin_test_email_path
         - if stats
           %li{class: active("admin/statistics")}= link_to "Statistics", admin_statistics_path
-        - if trans
-          %li{class: active("admin/translations")}= link_to "Translations", admin_translations_path
         - if usage
           %li= link_to "Usage Stats", "/webalizer/", target: "_usage"
         - if users

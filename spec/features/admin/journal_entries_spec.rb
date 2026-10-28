@@ -15,15 +15,6 @@ describe JournalEntry do
     [Club.find_by(name: "Wandering Dragons"), JournalEntry.find_by(journalable_type: "Club", action: "create")]
   end
 
-  def edit_translation
-    translation = create(:translation)
-    visit admin_translation_path(translation)
-    click_link "Edit"
-    fill_in "translation_value", with: "bruscar"
-    click_button "Save"
-    [Translation.find_by(value: "bruscar"), JournalEntry.find_by(journalable_type: "Translation", action: "update", to: "bruscar")]
-  end
-
   def edit_user
     user = create(:user)
     visit admin_user_path(user)
@@ -49,7 +40,6 @@ describe JournalEntry do
     @name = @admin.signature[0,10]
     @ip = "127.0.0.1"
     @club, @club_creation = create_club
-    @translation, @translation_change = edit_translation
     @user, @user_change = edit_user
   end
 
@@ -61,20 +51,14 @@ describe JournalEntry do
     expect(page).to have_xpath(xpath("changes"), count: 1)
     expect(page).to have_xpath(xpath("changes", "create", @name), count: 1)
 
-    visit admin_translation_path(@translation)
-    expect(page).to have_css("h4", text: "Changes")
-    expect(page).to have_xpath(xpath("changes"), count: 1)
-    expect(page).to have_xpath(xpath("changes", "update", "value", "bruscar", @name), count: 1)
-
     visit admin_user_path(@user)
     expect(page).to have_css("h4", text: "Changes")
     expect(page).to have_xpath(xpath("changes"), count: 2)
     expect(page).to have_xpath(xpath("changes", "update", "status", "banned", @name), count: 1)
 
     visit admin_journal_entries_path
-    expect(page).to have_xpath(xpath("results"), count: 4)
+    expect(page).to have_xpath(xpath("results"), count: 3)
     expect(page).to have_xpath(xpath("results", "Club", @club.id, "create", @name, @ip), count: 1)
-    expect(page).to have_xpath(xpath("results", "Translation", @translation.id, "update", "value", "bruscar", @name, @ip), count: 1)
     expect(page).to have_xpath(xpath("results", "User", @user.id, "update", "status", "banned", @name, @ip), count: 1)
   end
 
@@ -85,41 +69,11 @@ describe JournalEntry do
     expect(page).to_not have_css("h4", text: "Changes")
     expect(page).to_not have_xpath(xpath("changes"))
 
-    visit admin_translation_path(@translation)
-    expect(page).to have_css(failure, text: unauthorized)
-
     visit admin_journal_entries_path
     expect(page).to have_css(failure, text: unauthorized)
 
     visit admin_journal_entry_path(@club_creation)
     expect(page).to have_css(failure, text: unauthorized)
-
-    visit admin_journal_entry_path(@translation_change)
-    expect(page).to have_css(failure, text: unauthorized)
-
-    visit admin_journal_entry_path(@user_change)
-    expect(page).to have_css(failure, text: unauthorized)
-  end
-
-  it "translator view" do
-    login "translator"
-
-    visit club_path(@club)
-    expect(page).to_not have_css("h4", text: "Changes")
-    expect(page).to_not have_xpath(xpath("changes"))
-
-    visit admin_translation_path(@translation)
-    expect(page).to have_css("h4", text: "Changes")
-    expect(page).to have_xpath(xpath("changes"), count: 1)
-
-    visit admin_journal_entries_path
-    expect(page).to have_css(failure, text: unauthorized)
-
-    visit admin_journal_entry_path(@club_creation)
-    expect(page).to have_css(failure, text: unauthorized)
-
-    visit admin_journal_entry_path(@translation_change)
-    expect(page).to_not have_css(failure)
 
     visit admin_journal_entry_path(@user_change)
     expect(page).to have_css(failure, text: unauthorized)
@@ -132,16 +86,10 @@ describe JournalEntry do
     expect(page).to_not have_css("h4", text: "Changes")
     expect(page).to_not have_xpath(xpath("changes"))
 
-    visit admin_translation_path(@translation)
-    expect(page).to have_css(failure, text: unauthorized)
-
     visit admin_journal_entries_path
     expect(page).to have_css(failure, text: unauthorized)
 
     visit admin_journal_entry_path(@club_creation)
-    expect(page).to have_css(failure, text: unauthorized)
-
-    visit admin_journal_entry_path(@translation_change)
     expect(page).to have_css(failure, text: unauthorized)
 
     visit admin_journal_entry_path(@user_change)
@@ -149,14 +97,12 @@ describe JournalEntry do
   end
 
   it "delete parent object" do
-    expect(JournalEntry.where(journalable_type: "Translation").count).to eq 1
+    expect(JournalEntry.where(journalable_type: "User").count).to eq 2
 
-    @translation.active = false
-    @translation.save
     login "admin"
-    visit admin_translation_path(@translation)
+    visit admin_user_path(@user)
     click_link "Delete"
 
-    expect(JournalEntry.where(journalable_type: "Translation").count).to eq 2
+    expect(JournalEntry.where(journalable_type: "User").count).to eq 3
   end
 end

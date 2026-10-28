@@ -1,0 +1,174 @@
+# Irish translations. Missing keys fall back to English (config.i18n.fallbacks).
+ga:
+  address: Seoladh
+  any: Aon ceann
+  by: ag
+  cancel: Cealaigh
+  club:
+    club: Club
+    clubs: Clubanna
+    co: Contae
+    county: Contae
+    district: Ceantar
+    lat: Domhanleithead
+    location: Ionad
+    long: Domhanfhad
+    meet: Cruinnithe
+    phone: Guthán
+    province: Cúige
+    web: Suíomh Gréasáin
+  created_at: Cruthaithe
+  delete: Scrios
+  edit: Cuir in eagar
+  either: Ceachtar
+  email: Ríomhphost
+  errors:
+    attributes:
+      password:
+        digits: Ba comhair uimhir amháin ar a laghad a bheith ann
+        length: íosmhéid %{minimum}
+  home: Baile
+  icu:
+    ICU: ICU
+    icu: Cumann Ficheall na hÉireann
+    logo: Lógó ICU
+  inactive: Neamhghníomhach
+  ireland:
+    co:
+      antrim: Aontroim
+      any: Aon contae
+      armagh: Ard Mhacha
+      carlow: Ceatharlach
+      cavan: Cabhán
+      clare: An Clár
+      cork: Corcaigh
+      derry: Doire
+      donegal: Dún na nGall
+      down: An Dún
+      dublin: Áth Cliath
+      fermanagh: Fear Manach
+      galway: Gaillimh
+      kerry: Ciarraí
+      kildare: Cill Dara
+      kilkenny: Cill Chainnigh
+      laois: Laois
+      leitrim: Liatrom
+      limerick: Luimneach
+      longford: An Longfort
+      louth: Lú
+      mayo: Maigh Eo
+      meath: An Mhí
+      monaghan: Muineachán
+      offaly: Uíbh Fháilí
+      roscommon: Ros Comáin
+      sligo: Sligeach
+      tipperary: Tiobraid Árann
+      tyrone: Tír Eoghain
+      waterford: Port Láirge
+      westmeath: An Iarmhí
+      wexford: Loch Garman
+      wicklow: Cill Mhantáin
+    prov:
+      any: Aon cúige
+      connaught: Connacht
+      leinster: Laighean
+      munster: Mumhan
+      ulster: Ulaidh
+  item:
+    member:
+      new_hint_html: An raibh an duine seo ina bhall den ICU cheana? Úsáid <em>%{select}</em> chun iad a aimsiú. Níl <em>%{new}</em> ach do dhaoine nach raibh ID ICU acu riamh.
+  last_search: Cuardach Deiridh
+  'no': Níl
+  no_matches: Neamh-chomhoiriúnach
+  order: Ord
+  pagination:
+    frst: céad
+    last: críoch
+    next: ar aghaidh
+    of: ó
+    prev: roimhe
+  player:
+    abbrev:
+      F: B
+      M: F
+      dob: DB
+      gender: I
+      id: ID
+      yob: BB
+    age: Aois
+    any_gender: Aon inscne
+    dob: Dáta breithe
+    duplicate: Dúblach
+    duplicate_of: Dúblaigh de
+    duplicates: Dúblaigh
+    first_name: Céadainm
+    gender:
+      F: Baineann
+      M: Fear
+      gender: Inscne
+    id: ID ICU
+    id_order: órd ID
+    joined: Dáta ballraíocht tosú
+    last_name: Sloinne
+    logins: Cuntais ballraíochta
+    master_id: Príomh ID
+    name: Ainm
+    player: Ficheallaí
+    players: Ficheallaithe
+    source:
+      archive: Cartlann
+      import: Iompórtáil
+      officer: Oifigeach
+      source: Foinse
+      subscription: Suibscríbhinn
+    status:
+      active: Gníomhach
+      deceased: Duine Éagtha
+      foreign: Eachtrannach
+      inactive: Neamhghníomhach
+      status: Stádas
+    yob: Bliain breithe
+  please_select: Roghnaigh
+  save: Sábháil
+  search: Cuardaigh
+  session:
+    account_disabled: Cuntas díchumasaithe
+    enter_email: Iontráil R-phost le do thoil
+    enter_password: Iontráil pasfhocal le do thoil
+    invalid_email: R-phost nó pasfhocal neamhbhailí
+    invalid_password: R-phost nó pasfhocal neamhbhailí
+    subscription_expired: Suibscríbhinn as feidhm
+    unverified_email: R-phost dofhíoraithe
+  shop:
+    guest_help:
+      events: Imeachtaí
+      more: Tuilleadh faoi shuibscríbhinní agus ballraíocht
+      new_html: "<strong>Níor bhall den ICU riamh é an duine?</strong> Roghnaigh an tsuibscríbhinn a oireann dá aois agus dá chúinsí, ansin úsáid <em>%{new}</em>."
+      no_account: Ní gá cuntas chun aon rud a cheannach anseo. Roghnaigh suibscríbhinn thíos, ansin abair cé dó í.
+      renewing_html: "<strong>Ag athnuachan, nó ag íoc as duine a bhí ina bhall cheana</strong> (páiste a d'imir in imeachtaí ICU san áireamh): úsáid <em>%{select}</em> chun iad a aimsiú de réir ainm. Ná húsáid <em>%{new}</em> dóibh, mar cruthaíonn sé sin an dara taifead ICU."
+      sign_in: Sínigh isteach
+      sign_in_html: "<strong>An bhfuil cuntas agat cheana?</strong> %{sign_in} chun <em>%{me}</em> a úsáid."
+      title: Ballraíocht a cheannach
+      tournament_html: "<strong>Ag cur isteach ar chomórtas?</strong> Úsáid an cnaipe Cuir Isteach ar leathanach an chomórtais in %{events}."
+  show: Taispeáin
+  under_construction: Á Thógáil
+  updated_at: Nuashonruithe deiridh
+  user:
+    expires: As feidhm ar
+    lang:
+      en: Béarla
+      ga: Gaeilge
+    locale: Teanga
+    password: Pasfhocal
+    preferences: Roghanna
+    role:
+      admin: Riarthóir
+      editor: Eagarthóir
+      membership: Oifigeach Fhorbairt Ballraíochta
+      translator: Aistritheoir
+      treasurer: Cisteoir
+    theme: Téama
+    ticket: Ticéad séasúir
+    updated: Roghanna cothrom le dáta go rathúil
+    user: Úsáideoir
+  'yes': Tá
