@@ -94,8 +94,12 @@ describe "Pay", js: true do
         wait.until { browser.find_elements(:css, '#challengeFrame').any? }
         browser.switch_to.frame(browser.find_element(:css, '#challengeFrame'))
         step = "#test-source-authorize-3ds button"
-        wait.until { browser.find_elements(:css, '#test-source-authorize-3ds').any? }
-        browser.find_element(:css, '#test-source-authorize-3ds').click
+        # The button can be in the DOM before it's clickable; a premature click is silently ignored.
+        button = wait.until { browser.find_elements(:css, '#test-source-authorize-3ds').find { |b| b.displayed? && b.enabled? } }
+        button.click
+        browser.switch_to.default_content
+        step = "3DS challenge iframe closing after authorize"
+        wait.until { browser.find_elements(:css, "iframe[src*='three-ds-2-challenge']").none? }
       rescue Selenium::WebDriver::Error::WebDriverError => e
         raise "3DS step failed at #{step} after #{(Time.now - started).round(1)}s: #{e.class}: #{e.message.lines.first&.strip}"
       ensure
