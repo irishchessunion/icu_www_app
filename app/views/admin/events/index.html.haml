@@ -26,8 +26,8 @@
                 %td
                   = link_to event.name, admin_event_path(event)
                   - unless current_user.admin?
-                    - if event.creator?(current_user)
-                      %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.creator")
+                    - if event.owner?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.owner")
                     - elsif event.has_limited_access?(current_user)
                       %span.label.label-rounded.label-margin-left.panel-pastel-warning= t("event.admin.limited_access")
                     - else
@@ -55,8 +55,8 @@
                 %td
                   = link_to event.name, edit_admin_event_path(event)
                   - unless current_user.admin?
-                    - if event.creator?(current_user)
-                      %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.creator")
+                    - if event.owner?(current_user)
+                      %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.owner")
                     - elsif event.has_limited_access?(current_user)
                       %span.label.label-rounded.label-margin-left.panel-pastel-warning= t("event.admin.limited_access")
                     - else

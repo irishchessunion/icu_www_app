@@ -2,7 +2,7 @@
   .panel-heading
     = t("event.admin.changelog")
   .panel-body
-    - if entries.matches.any? && (@event.creator?(current_user) || current_user.admin?)
+    - if entries.matches.any? && (@event.owner?(current_user) || current_user.admin?)
       %ul.panel-list.with-divider
         - entries.matches.each do |entry|
           %li

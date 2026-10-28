@@ -75,7 +75,7 @@ describe Event do
   end
 
   context "admin/organiser show page" do
-    it "shows the admin panel to the event creator" do
+    it "shows the admin panel to the event owner" do
       login event.user
       visit event_path(event)
       expect(page).to have_link("Manage Event")

@@ -344,7 +344,7 @@ describe Event do
       end
 
       it "hides user filter dropdown" do
-        expect(page).not_to have_select(I18n.t("event.creator"))
+        expect(page).not_to have_select(I18n.t("event.owner"))
       end
     end
 
@@ -369,11 +369,11 @@ describe Event do
       end
 
       it "shows user filter dropdown" do
-        expect(page).to have_select(I18n.t("event.creator"))
+        expect(page).to have_select(I18n.t("event.owner"))
       end
 
       it "filters by user" do
-        select organiser1.name, from: I18n.t("event.creator")
+        select organiser1.name, from: I18n.t("event.owner")
         click_button I18n.t("search")
 
         expect(page).to have_content("Dublin Congress")
@@ -383,9 +383,9 @@ describe Event do
       end
 
       it "shows all users when 'All' is selected" do
-        select organiser1.name, from: I18n.t("event.creator")
+        select organiser1.name, from: I18n.t("event.owner")
         click_button I18n.t("search")
-        select I18n.t("all"), from: I18n.t("event.creator")
+        select I18n.t("all"), from: I18n.t("event.owner")
         click_button I18n.t("search")
 
         expect(page).to have_content("Dublin Congress")

@@ -113,7 +113,7 @@ class Ability
   end
 
   def grant_full_event_permissions(user)
-    # Creator has full manage rights
+    # Owner has full manage rights
     can :manage, Event, user_id: user.id
 
     # Event users with full_access can manage (except destroy)
@@ -134,7 +134,7 @@ class Ability
     # Can manage event_users for events they created
     can [:create, :destroy], EventUser do |event_user|
       event = event_user.event
-      event.creator?(user) || user.admin?
+      event.owner?(user) || user.admin?
     end
   end
 end

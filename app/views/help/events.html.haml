@@ -48,7 +48,7 @@
     %li Contact persons' name, email & phone number,
     %li URLs: links to external content for players such as pairings, results and live boards,
     %li Notes: A description text field for any other notes,
-    %li Organizer: This user is the event's creator,
+    %li Organizer: This user is the event's owner,
   %li
     click
     = succeed(",") do
@@ -81,7 +81,7 @@
 %p
   Note that you cannot edit Events created by other organisers unless added to that Event as an
   = link_to "Event User", help_event_users_path
-  by its creator
+  by its owner
 %p To edit an event:
 %ul
   %li
@@ -109,4 +109,4 @@
 
 %h3 Deleting Events
 
-%p Note: only the creator of an event can delete that event.
+%p Note: only the owner of an event can delete that event.

@@ -54,19 +54,19 @@ describe Ability do
   end
 
   context "Event permissions" do
-    let(:creator) { create(:user, roles: "organiser") }
+    let(:owner) { create(:user, roles: "organiser") }
     let(:full_user) { create(:user, roles: "organiser") }
     let(:limited_user) { create(:user, roles: "organiser") }
     let(:other_user) { create(:user) }
-    let(:event) { create(:event, user: creator, subscription_required: false) }
+    let(:event) { create(:event, user: owner, subscription_required: false) }
 
     before do
       create(:event_user, event: event, user: full_user, role: "full_access")
       create(:event_user, event: event, user: limited_user, role: "limited_access")
     end
 
-    context "creator" do
-      let(:ability) { Ability.new(creator) }
+    context "owner" do
+      let(:ability) { Ability.new(owner) }
 
       it "can manage their own event" do
         expect(ability.can?(:manage, event)).to be true
@@ -97,7 +97,7 @@ describe Ability do
         expect(ability.can?(:destroy, event_user)).to be false
       end
 
-      it "can create, read and update fees the creator added, but not delete them" do
+      it "can create, read and update fees the owner added, but not delete them" do
         fee = create(:entry_fee, event: event)
         expect(ability.can?(:create, Fee::Entry.new(event: event))).to be true
         expect(ability.can?(:read, fee)).to be true

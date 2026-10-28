@@ -6,9 +6,9 @@ describe "Fees for full-access event users" do
   let(:amount)    { I18n.t("fee.amount") }
   let(:fee_name)  { I18n.t("fee.name") }
 
-  let(:creator)   { create(:user, roles: "organiser") }
+  let(:owner)   { create(:user, roles: "organiser") }
   let(:full_user) { create(:user, roles: "organiser") }
-  let(:event)     { create(:event, user: creator) }
+  let(:event)     { create(:event, user: owner) }
   let!(:fee)      { create(:entry_fee, name: "Ennis Open", event: event) }
 
   before(:each) do
@@ -16,7 +16,7 @@ describe "Fees for full-access event users" do
     login full_user
   end
 
-  it "can edit a fee the creator added" do
+  it "can edit a fee the owner added" do
     visit admin_event_path(event)
     click_link "Edit", href: edit_admin_fee_path(fee)
     fill_in fee_name, with: "Ennis Major"
@@ -37,7 +37,7 @@ describe "Fees for full-access event users" do
   end
 
   it "can't add a fee to an event they don't have access to" do
-    other_event = create(:event, user: creator)
+    other_event = create(:event, user: owner)
     visit new_admin_fee_path(type: "Fee::Entry", event_id: other_event.id)
     fill_in fee_name, with: "Sneaky"
     fill_in amount, with: "1"
