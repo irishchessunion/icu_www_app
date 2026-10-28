@@ -163,16 +163,16 @@ class Event < ApplicationRecord
 
 
   # EventUser helpers
-  def creator
+  def owner
     user
   end
 
-  def creator?(user)
+  def owner?(user)
     self.user_id == user.id
   end
 
   def has_full_access?(user)
-    return true if creator?(user)
+    return true if owner?(user)
     event_users.exists?(user_id: user.id, role: "full_access")
   end
 
@@ -181,7 +181,7 @@ class Event < ApplicationRecord
   end
 
   def has_any_access?(user)
-    return true if creator?(user)
+    return true if owner?(user)
     event_users.exists?(user_id: user.id)
   end
 

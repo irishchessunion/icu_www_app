@@ -1,7 +1,7 @@
 class Admin::EventUsersController < ApplicationController
   before_action :set_event
   before_action :set_event_user, only: [:destroy]
-  before_action :authorize_creator_or_admin, only: [:create, :destroy]
+  before_action :authorize_owner_or_admin, only: [:create, :destroy]
 
   def create
     @event_user = @event.event_users.new(event_user_params)
@@ -23,7 +23,7 @@ class Admin::EventUsersController < ApplicationController
 
   def destroy
     if @event_user.user_id == @event.user_id
-      flash.now[:alert] = I18n.t("event.admin.cannot_remove_creator")
+      flash.now[:alert] = I18n.t("event.admin.cannot_remove_owner")
       render "admin/events/show"
       return
     end
@@ -50,9 +50,9 @@ class Admin::EventUsersController < ApplicationController
     @event_user = @event.event_users.find(params[:id])
   end
 
-  def authorize_creator_or_admin
-    unless current_user.admin? || @event.creator?(current_user)
-      flash.now[:alert] = I18n.t("event.admin.only_creator_or_admin")
+  def authorize_owner_or_admin
+    unless current_user.admin? || @event.owner?(current_user)
+      flash.now[:alert] = I18n.t("event.admin.only_owner_or_admin")
       render "admin/events/show"
     end
   end
