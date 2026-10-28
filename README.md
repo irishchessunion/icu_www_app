@@ -24,7 +24,7 @@ the server and application software.
 
 ### Running the Application
 
-Start all services (web server, MySQL, Redis):
+Start all services (web server, MySQL):
 ```bash
 docker-compose up
 ```
@@ -91,7 +91,6 @@ docker-compose build web
 
 The Docker setup uses named volumes to persist data:
 - `mysql_data` - MySQL database files
-- `redis_data` - Redis data
 - `bundle_cache` - Bundled gems (speeds up rebuilds)
 
 To reset the database completely:

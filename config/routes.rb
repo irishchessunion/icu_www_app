@@ -136,7 +136,6 @@ IcuWwwApp::Application.routes.draw do
     resources :sponsors, only: [:new, :create, :edit, :update, :show]
     resources :statistics, only: [:index]
     resources :tournaments,     only: [:new, :create, :edit, :update, :destroy]
-    resources :translations,    only: [:index, :show, :edit, :update, :destroy]
     resources :user_inputs,     only: [:show, :new, :create, :edit, :update, :destroy]
     resources :users do
       get :login, on: :member

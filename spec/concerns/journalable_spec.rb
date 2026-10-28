@@ -21,7 +21,6 @@ describe Journalable do
     [Player, "/admin/players/%d"],
     [Series, "/series/%d"],
     [Tournament, "/tournaments/%d"],
-    [Translation, "/admin/translations/%d"],
     [User, "/admin/users/%d"],
     [UserInput, "/admin/user_inputs/%d"],
   ].each do |klass, path|

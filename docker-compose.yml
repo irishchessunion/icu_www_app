@@ -16,19 +16,6 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      # Host port 6380, so it doesn't clash with a Redis already running on the Mac (6379).
-      - "6380:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   web:
     build:
       context: .
@@ -44,13 +31,10 @@ services:
       DATABASE_HOST: db
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: password
-      REDIS_URL: redis://redis:6379/0
       BUNDLE_GEMFILE: ${BUNDLE_GEMFILE:-Gemfile}
       SKIP_DB_SETUP: ${SKIP_DB_SETUP:-false}
     depends_on:
       db:
-        condition: service_healthy
-      redis:
         condition: service_healthy
     stdin_open: true
     tty: true
@@ -68,5 +52,4 @@ services:
 
 volumes:
   mysql_data:
-  redis_data:
   bundle_cache:

@@ -85,11 +85,6 @@ class Ability
       can [:destroy, :update], Result
     end
 
-    if user.translator?
-      can :manage, Translation
-      can :show, JournalEntry, journalable_type: "Translation"
-    end
-
     if user.auditor?
       can :index, [Item, Cart]
       can :show, Cart

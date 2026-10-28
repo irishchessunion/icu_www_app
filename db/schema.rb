@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_120000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -792,23 +792,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
     t.index ["format"], name: "index_tournaments_on_format"
     t.index ["name"], name: "index_tournaments_on_name"
     t.index ["year"], name: "index_tournaments_on_year"
-  end
-
-  create_table "translations", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
-    t.boolean "active"
-    t.datetime "created_at", precision: nil
-    t.string "english"
-    t.string "key"
-    t.string "locale", limit: 2
-    t.string "old_english"
-    t.datetime "updated_at", precision: nil
-    t.string "user"
-    t.string "value"
-    t.index ["active"], name: "index_translations_on_active"
-    t.index ["english"], name: "index_translations_on_english"
-    t.index ["key"], name: "index_translations_on_key"
-    t.index ["user"], name: "index_translations_on_user"
-    t.index ["value"], name: "index_translations_on_value"
   end
 
   create_table "uploads", id: :integer, charset: "utf8mb3", force: :cascade do |t|
