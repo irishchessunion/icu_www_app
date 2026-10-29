@@ -1,0 +1,22 @@
+.row
+  .col-md-9
+    = render "admin/overview/chart_section",
+      key: "new-players",
+      title: "New Players",
+      url: admin_overview_new_players_path,
+      breakdowns: [["accounts", "Login Accounts"], ["age", "Age"], ["gender", "Gender"]]
+  .col-md-3
+    %section.charts.voffset3
+      %h4.no-margin Latest Players
+      .panel.panel-default
+        .list-group
+          - @latest_players.each do |player|
+            .list-group-item.inline-between
+              %span
+                = player.name
+              %small
+                = "#{time_ago_in_words(player.created_at).delete_prefix('about ')} ago"
+          .list-group-item.inline-between
+            = link_to players_path do
+              See all
+            %span.glyphicon.glyphicon-chevron-right.glyphicon-xs.text-success{"aria-hidden": "true"}

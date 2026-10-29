@@ -4,5 +4,7 @@
   = javascript_include_tag "apexcharts.min"
 - @show_main_container = "false"
 
-= render "utils/title_panel", header_text: "Overview"
+= render "utils/title_panel", header_text: "Overview", css: "no-margin"
 
+.container
+  = render "admin/overview/show_players"
