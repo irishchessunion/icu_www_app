@@ -1265,14 +1265,13 @@
 
 = render "header", topic: "appendix.google"
 %p
+  The <em>ratings</em> site uses
   %a{href: "https://google-developers.appspot.com/chart/", target: "external"} Google Charts
-  is used for rating graphs and the <em>www</em> site uses
-  %a{href: "https://google-developers.appspot.com/maps/", target: "external"} Google Maps
-  for club and event maps. The latter requires an API key which goes in
-  %strong config/secrets.yaml
-  (see
-  = succeed(").") do
-    = render "link", topic: "appendix.secrets"
+  for rating site graphs
+%p
+  the <em>www</em> site uses
+  %a{href: "https://apexcharts.com/docs/", target: "external"} Apex Charts
+  for charts & graphs, and Open Street Maps for club and event maps.
 
 = render "header", topic: "appendix.linode"
 %p

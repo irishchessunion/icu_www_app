@@ -1,0 +1,8 @@
+- content_for :title, "Overview"
+- content_for :header_bg_color, "var(--gray-lighter)"
+- content_for :includes do
+  = javascript_include_tag "apexcharts.min"
+- @show_main_container = "false"
+
+= render "utils/title_panel", header_text: "Overview"
+
