@@ -46,6 +46,15 @@ describe "Public page structured data", type: :request do
     expect(data["location"]["geo"]).to include("latitude" => 53.259, "longitude" => -9.077)
   end
 
+  it "omits structured data for inactive events" do
+    event = create(:event, active: false)
+
+    get event_path(event)
+
+    expect(response).to have_http_status(:ok)
+    expect(Nokogiri::HTML(response.body).css('script[type="application/ld+json"]')).to be_empty
+  end
+
   it "omits missing optional details and safely embeds names" do
     event = create(:event, name: '</script><script id="injected">1</script>')
     data = structured_data(event_path(event))

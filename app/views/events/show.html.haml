@@ -2,7 +2,8 @@
 - content_for :header_bg_color, "var(--gray-lighter)"
 - @show_main_container = "false"
 - content_for :includes do
-  %script{type: "application/ld+json"}= raw json_escape(JSON.generate(event_structured_data(@event)))
+  - if @event.active
+    %script{type: "application/ld+json"}= raw json_escape(JSON.generate(event_structured_data(@event)))
   = javascript_include_tag "maplibre-gl"
   = stylesheet_link_tag "maplibre-gl", skip_pipeline: true
 - content_for :javascript do
