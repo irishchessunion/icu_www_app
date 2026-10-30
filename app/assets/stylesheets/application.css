@@ -1482,7 +1482,11 @@ a.no-underline {
   text-decoration: none !important;
 }
 
-/* For Google Maps. */
+/* For Maps. */
+.maplibregl-popup {
+  z-index: 5;
+}
+
 #map-canvas {
   height: 600px;
 }
