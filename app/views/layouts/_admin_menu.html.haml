@@ -32,34 +32,19 @@
         Admin
         %b.caret
       %ul.dropdown-menu
-        - if apikeys
-          %li{class: active("admin/api_keys")}= link_to t("api_key.api_keys"), admin_api_keys_path
+        - if can?(:show, :admin_overview)
+          %li{class: active("admin/overview")}= link_to "Overview", admin_overview_path
+          %li.divider{role: "presentation"}
         - if carts
           %li{class: active("admin/carts")}= link_to "Carts", admin_carts_path
-        - if bdlgns
-          %li{class: active("admin/bad_logins")}= link_to "Bad Logins", admin_bad_logins_path
         - if events
           %li{class: active("admin/events")}= link_to "Events", admin_events_path
-        - if fails
-          %li{class: active("admin/failures")}
-            = link_to admin_failures_path do
-              Failures
-              - if nfails > 0
-                %span.label.label-danger= nfails
         - if fees
           %li{class: active("admin/fees")}= link_to "Fees", admin_fees_path
         - if pgns
           %li{class: active("admin/pgns")}= link_to "Game Uploads", admin_pgns_path
         - if items
           %li{class: active("admin/items")}= link_to "Items", admin_items_path
-        - if entries
-          %li{class: active("admin/journal_entries")}= link_to "Journal", admin_journal_entries_path
-        - if logins
-          %li{class: active("admin/logins")}= link_to "Logins", admin_logins_path
-        - if mevnts
-          %li{class: active("admin/mail_events")}= link_to "Mail Events", admin_mail_events_path
-        - if rlays
-          %li{class: active("admin/relays")}= link_to "Mail Relays", admin_relays_path
         - if offs
           %li{class: active("admin/officers")}= link_to "Officers", admin_officers_path
         - if perrs
@@ -68,16 +53,36 @@
           %li{class: active("admin/refunds")}= link_to "Refunds", admin_refunds_path
         - if results
           %li{class: active("admin/results")}= link_to "Results", admin_results_path
+        - if stats
+          %li{class: active("admin/statistics")}= link_to "Statistics", admin_statistics_path
+        - if users
+          %li{class: active("admin/users")}= link_to "Users", admin_users_path
+        - if current_user.admin?
+          %li.divider{role: "presentation"}
+        - if apikeys
+          %li{class: active("admin/api_keys")}= link_to t("api_key.api_keys"), admin_api_keys_path
+        - if bdlgns
+          %li{class: active("admin/bad_logins")}= link_to "Bad Logins", admin_bad_logins_path
+        - if deploy_info
+          %li{class: active("admin/deployment_info")}= link_to "Deployment Info", admin_deployment_info_path
+        - if fails
+          %li{class: active("admin/failures")}
+            = link_to admin_failures_path do
+              Failures
+              - if nfails > 0
+                %span.label.label-danger= nfails
+        - if entries
+          %li{class: active("admin/journal_entries")}= link_to "Journal", admin_journal_entries_path
+        - if logins
+          %li{class: active("admin/logins")}= link_to "Logins", admin_logins_path
+        - if mevnts
+          %li{class: active("admin/mail_events")}= link_to "Mail Events", admin_mail_events_path
+        - if rlays
+          %li{class: active("admin/relays")}= link_to "Mail Relays", admin_relays_path
         - if pages
           %li{class: active("admin/pages", "session_info")}= link_to "Session Info", admin_session_info_path
           %li{class: active("admin/pages", "system_info")}= link_to "System Info", admin_system_info_path
         - if pages
           %li{class: active("admin/pages", "test_email")}= link_to "Test Email", admin_test_email_path
-        - if stats
-          %li{class: active("admin/statistics")}= link_to "Statistics", admin_statistics_path
         - if usage
           %li= link_to "Usage Stats", "/webalizer/", target: "_usage"
-        - if users
-          %li{class: active("admin/users")}= link_to "Users", admin_users_path
-        - if deploy_info
-          %li{class: active("admin/deployment_info")}= link_to "Deployment Info", admin_deployment_info_path

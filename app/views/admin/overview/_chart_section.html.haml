@@ -1,0 +1,45 @@
+%section.charts.full-width.voffset3{
+  id: key,
+  "aria-labelledby": "#{key}-title",
+  data: {
+    controller: "overview-chart",
+    overview_chart_url_value: url,
+    overview_chart_title_value: title,
+    overview_chart_dark_value: %w[Cyborg Darkly Slate Superhero].include?(current_user.preferred_theme)
+  }
+}
+
+  %header.inline-between.flex-wrap
+    %h4.no-margin{id: "#{key}-title"}
+      = title
+    .inline-flex{
+      role: "group",
+      "aria-label": "#{title} period",
+      data: { overview_chart_target: "period", action: "change->overview-chart#load" }
+    }
+      %span Period:
+      = render "utils/inline_radio_field",
+        name: "#{key}_period",
+        options: [["month", "Month"], ["season", "Season"], ["year", "Year"]],
+        checked: "month",
+        include_all: false
+  .panel.panel-chart-filters{
+    role: "group",
+    "aria-label": "#{title} breakdown",
+    data: { overview_chart_target: "breakdown", action: "change->overview-chart#refresh" }
+  }
+    .panel-body
+      = render "utils/inline_radio_field",
+        name: "#{key}_breakdown",
+        options: breakdowns,
+        checked: breakdowns.first.first,
+       include_all: false
+
+  %p.text-muted.voffset2{role: "status", data: { overview_chart_target: "status" }}
+    Loading chart...
+
+  %div{
+    role: "region",
+    "aria-label": "#{title} chart",
+    data: { overview_chart_target: "chart" }
+  }

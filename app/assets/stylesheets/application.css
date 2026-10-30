@@ -766,6 +766,24 @@ section.stats-panel .list-col {
   padding: 1.5em
 }
 
+section.charts h4 {
+  font-weight: bold;
+  color: var(--gray-base);
+  margin-bottom: 6px;
+}
+
+.panel.panel-chart-filters {
+  border-color: #ecf0f1;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  margin: 0 0 10px 0;
+}
+
+.panel.panel-chart-filters > .panel-body {
+  padding: 10px 0 0 0;
+}
+
 /* Homepage Links */
 .home-page-links>.mobile-links {
   display: none;

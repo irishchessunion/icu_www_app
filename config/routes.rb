@@ -77,6 +77,8 @@ IcuWwwApp::Application.routes.draw do
   end
 
   namespace :admin do
+    get "overview" => "overview#show"
+    get "overview/new_players" => "overview#new_players", defaults: { format: :json }
     resources :api_keys,        only: [:index, :show, :new, :create, :edit, :update]
     %w[session_info system_info test_email].each do |page|
       get page => "pages##{page}"

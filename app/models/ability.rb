@@ -93,6 +93,7 @@ class Ability
 
     if user.treasurer?
       grant_full_event_permissions(user)
+      can :show, :admin_overview
       can :create, CashPayment
       can :index, [Item, Item::Entry, PaymentError, Refund]
       can :manage, [Cart, Fee, Sponsor, UserInput]
