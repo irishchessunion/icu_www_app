@@ -61,7 +61,9 @@ class Admin::NewPlayersChart
   def bucket_sql
     case @period
     when "month" then "DATE_FORMAT(players.joined, '%Y-%m')"
-    when "season" then "YEAR(DATE_SUB(players.joined, INTERVAL 8 MONTH))"
+    when "season"
+      # Shift September to January to match the September 1 start in Season#start.
+      "YEAR(DATE_SUB(players.joined, INTERVAL 8 MONTH))"
     when "year" then "YEAR(players.joined)"
     end
   end
