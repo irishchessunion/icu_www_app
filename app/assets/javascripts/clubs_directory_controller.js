@@ -1,6 +1,6 @@
 class ClubsDirectoryController extends Controller {
   static targets = ["form", "content", "controls", "map", "markers", "results", "list", "count", "empty", "radius", "geolocation", "locate", "locationStatus"]
-  static values = { marker: String, highlightedMarker: String, countOne: String, countOther: String, locationError: String }
+  static values = { marker: String, highlightedMarker: String, countOne: String, countOther: String, distanceAway: String, locationError: String }
 
   connect() {
     this.mobile = window.matchMedia("(max-width: 768px)");
@@ -74,10 +74,19 @@ class ClubsDirectoryController extends Controller {
       entry.element.src = this.markerValue;
     });
     this.matchingIds = new Set(JSON.parse(this.resultsTarget.textContent));
+    const clubs = Array.from(this.listTarget.querySelectorAll("[data-club-id]"));
+    if (this.position) {
+      clubs.sort((a, b) => this.distanceTo(a.dataset) - this.distanceTo(b.dataset));
+      clubs.forEach(club => club.parentElement.appendChild(club));
+    }
     let count = 0;
-    this.listTarget.querySelectorAll("[data-club-id]").forEach(row => {
+    clubs.forEach(row => {
       const visible = this.inRadius(row.dataset);
       row.classList.toggle("hidden", !visible);
+      const distance = row.querySelector("h4 > small");
+      const showDistance = this.position && visible;
+      distance.classList.toggle("hidden", !showDistance);
+      distance.textContent = showDistance ? this.distanceAwayValue.replace("%{distance}", (Math.ceil(this.distanceTo(row.dataset) / 100) / 10).toFixed(1)) : "";
       if (visible) count++;
     });
     const countMessage = count === 1 ? this.countOneValue : this.countOtherValue;
@@ -180,9 +189,12 @@ class ClubsDirectoryController extends Controller {
   }
 
   inRadius(point) {
-    if (!this.position) return true;
-    if (point.lat == null || point.lng == null || point.lat === "" || point.lng === "") return false;
-    return this.position.distanceTo(new maplibregl.LngLat(Number(point.lng), Number(point.lat))) <= Number(this.radiusTarget.value) * 1000;
+    return !this.position || this.distanceTo(point) <= Number(this.radiusTarget.value) * 1000;
+  }
+
+  distanceTo(point) {
+    if (point.lat == null || point.lng == null || point.lat === "" || point.lng === "") return Infinity;
+    return this.position.distanceTo(new maplibregl.LngLat(Number(point.lng), Number(point.lat)));
   }
 
   ensureMap() {

@@ -15,11 +15,13 @@
     .list-group.no-margin
       - @clubs.each do |club|
         = link_to club_path(club), class: "list-group-item", id: "club_#{club.id}", data: { turbo: false, club_id: club.id, lat: club.lat, lng: club.long, action: "mouseenter->clubs-directory#highlightMarker mouseleave->clubs-directory#highlightMarker" } do
-          %h4.list-group-item-heading
-            %strong= club.name
-            - unless club.active
-              %small
-                %span.label.label-default= t("inactive")
+          %h4.list-group-item-heading.inline-between
+            %strong
+              = club.name
+              - unless club.active
+                %small
+                  %span.label.label-default= t("inactive")
+            %small.hidden
           .inline-glyph.clubs-detail
             %span.glyphicon.glyphicon-map-marker.glyphicon-sm.text-muted{"aria-hidden": "true"}
             %div

@@ -16,6 +16,7 @@ en:
       or: or
       near_me: Find clubs near me
       radius: Search radius
+      distance_away: "%{distance} km away"
       location_error: Unable to find your location. Please allow location access and try again.
       found:
         one: "%{count} club found"

@@ -155,6 +155,7 @@ describe Club do
       page.current_window.resize_to(390, 844)
       visit clubs_path
       expect(page).to have_select("Search radius", selected: "10km")
+      expect(page).not_to have_css(".clubs-scroll h4 > small", text: "km away")
       select "25km", from: "Search radius"
       page.execute_script <<~JS
         const position = { coords: { latitude: 53.35, longitude: -6.26 } };
@@ -169,6 +170,7 @@ describe Club do
       expect(page).not_to have_css(".clubs-controls")
       click_link "List"
       expect(page).to have_content("2 clubs found")
+      expect(page).to have_css(".clubs-scroll h4 > small", text: "km away", count: 2)
       expect(page).to have_select("day_of_week", selected: "Any day")
       controls = find(".clubs-controls").rect
       tabs = find(".list-map-tabs").rect
@@ -179,14 +181,17 @@ describe Club do
       expect(page).to have_css(".clubs-show-map #clubs-map", visible: true)
       expect(page).not_to have_css(".clubs-controls")
       click_link "List"
-      choose "All", allow_label_click: true
-      expect(page).to have_content("2 clubs found")
-      expect(page).to have_css(".clubs-scroll .list-group-item", count: 2)
-      expect(page).not_to have_css(".clubs-scroll .list-group-item", text: "Cork club")
       select "150km", from: "Search radius"
+      choose "All", allow_label_click: true
+      expect(page).to have_content("3 clubs found")
       expect(page).to have_css(".clubs-scroll .list-group-item", count: 3)
+      expect(page).not_to have_css(".clubs-scroll .list-group-item", text: "Cork club")
+      expect(page).to have_css(".clubs-scroll h4 > small", text: "km away", count: 3)
+      expect(page.all(".clubs-scroll h4 strong").map(&:text)).to eq ["Dublin club", "Wicklow club", "Wexford club"]
       click_link "Clear search filters"
       expect(page).to have_css(".clubs-scroll .list-group-item", count: 4)
+      expect(page.all(".clubs-scroll h4 strong").map(&:text)).to eq ["Cork club", "Dublin club", "Wexford club", "Wicklow club"]
+      expect(page).not_to have_css(".clubs-scroll h4 > small", text: "km away")
       expect(page).to have_select("Search radius", selected: "10km")
     ensure
       page.current_window.resize_to(1920, 1080)
