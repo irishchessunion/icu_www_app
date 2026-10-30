@@ -1,6 +1,6 @@
 class ClubsDirectoryController extends Controller {
   static targets = ["form", "content", "controls", "map", "markers", "results", "list", "count", "empty", "radius", "geolocation", "locate", "locationStatus"]
-  static values = { marker: String, highlightedMarker: String, countOne: String, countOther: String, locationError: String }
+  static values = { marker: String, highlightedMarker: String, countOne: String, countOther: String, distanceAway: String, locationError: String }
 
   connect() {
     this.mobile = window.matchMedia("(max-width: 768px)");
@@ -83,6 +83,10 @@ class ClubsDirectoryController extends Controller {
     clubs.forEach(row => {
       const visible = this.inRadius(row.dataset);
       row.classList.toggle("hidden", !visible);
+      const distance = row.querySelector("h4 > small");
+      const showDistance = this.position && visible;
+      distance.classList.toggle("hidden", !showDistance);
+      distance.textContent = showDistance ? this.distanceAwayValue.replace("%{distance}", (Math.ceil(this.distanceTo(row.dataset) / 100) / 10).toFixed(1)) : "";
       if (visible) count++;
     });
     const countMessage = count === 1 ? this.countOneValue : this.countOtherValue;
