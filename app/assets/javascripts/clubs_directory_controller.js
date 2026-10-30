@@ -74,8 +74,13 @@ class ClubsDirectoryController extends Controller {
       entry.element.src = this.markerValue;
     });
     this.matchingIds = new Set(JSON.parse(this.resultsTarget.textContent));
+    const clubs = Array.from(this.listTarget.querySelectorAll("[data-club-id]"));
+    if (this.position) {
+      clubs.sort((a, b) => this.distanceTo(a.dataset) - this.distanceTo(b.dataset));
+      clubs.forEach(club => club.parentElement.appendChild(club));
+    }
     let count = 0;
-    this.listTarget.querySelectorAll("[data-club-id]").forEach(row => {
+    clubs.forEach(row => {
       const visible = this.inRadius(row.dataset);
       row.classList.toggle("hidden", !visible);
       if (visible) count++;
@@ -180,9 +185,12 @@ class ClubsDirectoryController extends Controller {
   }
 
   inRadius(point) {
-    if (!this.position) return true;
-    if (point.lat == null || point.lng == null || point.lat === "" || point.lng === "") return false;
-    return this.position.distanceTo(new maplibregl.LngLat(Number(point.lng), Number(point.lat))) <= Number(this.radiusTarget.value) * 1000;
+    return !this.position || this.distanceTo(point) <= Number(this.radiusTarget.value) * 1000;
+  }
+
+  distanceTo(point) {
+    if (point.lat == null || point.lng == null || point.lat === "" || point.lng === "") return Infinity;
+    return this.position.distanceTo(new maplibregl.LngLat(Number(point.lng), Number(point.lat)));
   }
 
   ensureMap() {
