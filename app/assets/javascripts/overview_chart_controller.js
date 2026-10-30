@@ -1,6 +1,6 @@
 class OverviewChartController extends Controller {
   static targets = ["period", "breakdown", "chart", "status"]
-  static values = { url: String, title: String, dark: Boolean }
+  static values = { url: String, title: String }
 
   connect() {
     this.cache = new Map();
@@ -88,7 +88,6 @@ class OverviewChartController extends Controller {
         zoom: { enabled: false }
       },
       colors,
-      theme: { mode: this.darkValue ? "dark" : "light" },
       plotOptions: { bar: { horizontal: false, columnWidth: "65%" } },
       dataLabels: { enabled: false },
       stroke: { width: 0 },
