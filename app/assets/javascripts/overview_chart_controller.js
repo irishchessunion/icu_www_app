@@ -94,8 +94,56 @@ class OverviewChartController extends Controller {
       yaxis: { opposite: true, min: 0, decimalsInFloat: 0, title: { text: this.titleValue } },
       grid: { borderColor: color("--gray-light") },
       legend: { position: "bottom" },
-      tooltip: { shared: true, intersect: false, y: { formatter: value => value == null ? "" : value.toLocaleString("en-IE") } }
+      tooltip: { shared: true, intersect: false, custom: options => this.tooltipContent(options) }
     };
+  }
+
+  tooltipContent({ series, dataPointIndex, w }) {
+    const tooltip = document.createElement("div");
+    const title = document.createElement("div");
+    title.className = "apexcharts-tooltip-title";
+    title.textContent = w.config.xaxis.categories[dataPointIndex];
+    tooltip.append(title);
+
+    let total = 0;
+    series.forEach((values, index) => {
+      if (w.globals.collapsedSeriesIndices.includes(index)) return;
+
+      const value = values[dataPointIndex] ?? 0;
+      total += value;
+      tooltip.append(this.tooltipRow(w.globals.seriesNames[index], value, w.globals.colors[index]));
+    });
+
+    const separator = document.createElement("hr");
+    separator.className = "no-margin";
+    tooltip.append(separator, this.tooltipRow("Total", total));
+    return tooltip;
+  }
+
+  tooltipRow(name, value, color) {
+    const row = document.createElement("div");
+    row.className = "apexcharts-custom-tooltip";
+    if (color) {
+      const marker = document.createElement("span");
+      marker.className = "apexcharts-tooltip-marker";
+      marker.setAttribute("aria-hidden", "true");
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 12 12");
+      const circle = document.createElementNS(svg.namespaceURI, "circle");
+      Object.entries({ cx: 6, cy: 6, r: 5, fill: color }).forEach(([key, value]) => circle.setAttribute(key, value));
+      svg.append(circle);
+      marker.append(svg);
+      row.append(marker);
+    }
+
+    const label = document.createElement("span");
+    label.className = "apexcharts-tooltip-text-y-label";
+    label.textContent = `${name}: `;
+    const amount = document.createElement("span");
+    amount.className = "apexcharts-tooltip-text-y-value";
+    amount.textContent = value.toLocaleString("en-IE");
+    row.append(label, amount);
+    return row;
   }
 
   setStatus(message, error = false) {
