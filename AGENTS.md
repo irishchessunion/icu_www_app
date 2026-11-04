@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) and other AI agents 
 
 ## Project
 
-Source for version 2 of the Irish Chess Union's web site (www.icu.ie) — a Rails 7 app. See the [wiki](https://github.com/sanichi/icu_www_app/wiki) for server setup/maintenance instructions beyond initial dev setup.
+Source for version 2 of the Irish Chess Union's web site (www.icu.ie) — a Rails 7 app. See the [wiki](https://github.com/irishchessunion/icu_www_app/wiki) for server setup/maintenance instructions beyond initial dev setup.
 
 Views are written in **HAML** (`.html.haml`), not ERB — use HAML syntax/whitespace-significant indentation when editing or adding views. Tests are written in **RSpec** (models, controllers, requests, and Capybara/Selenium feature specs) — there is no Minitest in this codebase.
 
