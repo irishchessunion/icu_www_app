@@ -27,6 +27,11 @@ describe "Rack::Attack", type: :request do
     expect(response).to have_http_status(:forbidden)
   end
 
+  it "refuses SQL injection in the path" do
+    get "/news/4306-1))%20OR%20977=(SELECT%20977%20FROM%20PG_SLEEP(15))--"
+    expect(response).to have_http_status(:forbidden)
+  end
+
   it "refuses requests for other platforms' files" do
     get "/wp-login.php"
     expect(response).to have_http_status(:forbidden)

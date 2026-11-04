@@ -1,13 +1,13 @@
 # Bans vulnerability scanners and throttles IPs that send too many requests.
 # Counts are kept in Rails.cache, which production keeps in tmp/cache so all Passenger processes share them.
 class Rack::Attack
-  # Things no genuine visitor sends: other platforms' files in the path, and SQL injection in the parameters.
+  # Things no genuine visitor sends: other platforms' files in the path, and SQL injection in the URL or form.
   PROBE_PATH  = /\.(php|aspx?|jsp|cgi)\b|\/wp-(admin|login|content|includes)\b|\/\.(env|git)\b/i
-  PROBE_PARAM = /waitfor\s+delay|\bsleep\s*\(|\bbenchmark\s*\(|\bunion(\s|\/\*.*?\*\/)+(all\s+)?select\b|information_schema/i
+  PROBE_PARAM = /waitfor\s+delay|sleep\s*\(|\bbenchmark\s*\(|\bunion(\s|\/\*.*?\*\/)+(all\s+)?select\b|information_schema/i
 
   def self.probe?(req)
     return true if PROBE_PATH.match?(req.path)
-    PROBE_PARAM.match?(CGI.unescape(req.query_string)) || PROBE_PARAM.match?(req.POST.to_s)
+    PROBE_PARAM.match?(CGI.unescape(req.fullpath)) || PROBE_PARAM.match?(req.POST.to_s)
   rescue StandardError # a malformed body is for Rails to reject, not us
     false
   end
