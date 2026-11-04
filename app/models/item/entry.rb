@@ -1,6 +1,6 @@
 class Item::Entry < Item
   validates :start_date, :end_date, presence: true
-  validates :player, presence: true, unless: Proc.new { |e| e.player_data.present? }
+  validates :player, presence: true, if: Proc.new { |e| e.player_id.present? || e.player_data.blank? }
   validate :membership_check
   validate :no_duplicates
   belongs_to :fee_entry, class_name: 'Fee::Entry', foreign_key: :fee_id

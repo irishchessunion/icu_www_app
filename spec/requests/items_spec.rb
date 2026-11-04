@@ -76,4 +76,27 @@ describe "Items", type: :request do
       expect(Item.pluck(:fee_id)).to eq [fee.id]
     end
   end
+  context "a subscription with a made-up player" do
+    let(:fee)    { create(:subscription_fee) }
+    let(:newbie) { build(:new_player).to_json }
+
+    def subscribe(player_id, player_data)
+      post items_path, params: { item: { type: "Item::Subscription", fee_id: fee.id, player_id: player_id, player_data: player_data } }
+    end
+
+    it "is refused when the player doesn't exist, even with new player data" do
+      subscribe(Player.maximum(:id).to_i + 1, newbie)
+      expect(response).to have_http_status(:ok)
+      expect(Item.count).to eq 0
+    end
+
+    it "is refused, not a crash, when the cart already has a subscription and the player data is junk" do
+      subscribe(player.id, nil)
+      expect(Item.count).to eq 1
+
+      subscribe(nil, "01/01/1967")
+      expect(response).to have_http_status(:ok)
+      expect(Item.count).to eq 1
+    end
+  end
 end

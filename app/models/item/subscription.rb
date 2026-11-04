@@ -1,6 +1,6 @@
 class Item::Subscription < Item
   validates :start_date, :end_date, presence: true, unless: Proc.new { |i| i.description.match(/life/i) }
-  validates :player, presence: true, unless: Proc.new { |s| s.player_data.present? }
+  validates :player, presence: true, if: Proc.new { |s| s.player_id.present? || s.player_data.blank? }
   validate :no_duplicates, :valid_player_data
 
   scope :lifetime_duplicates, ->(player)           { active.where(player_id: player.id, end_date: nil) }
@@ -21,9 +21,9 @@ class Item::Subscription < Item
   end
 
   def duplicate_of?(item)
-    if type == item.type && fee.years == item.fee.years && player_id.present? && player_id == item.player_id
+    if type == item.type && fee.years == item.fee.years && player && player_id == item.player_id
       I18n.t("item.error.subscription.already_in_cart", member: player.name(id: true), season: fee.years)
-    elsif player_data.present? && new_player == item.new_player
+    elsif new_player && new_player == item.new_player
       I18n.t("item.error.subscription.new_player_duplicate.cart", name: new_player.name, dob: new_player.dob.to_s)
     else
       false
