@@ -25,6 +25,7 @@ gem "jquery-rails"
 gem "turbo-rails", "~> 2.0" # Hotwire Turbo (opt-in; Drive disabled in hotwire.js)
 gem "stimulus-rails", "~> 1.3" # Hotwire Stimulus
 gem "cancancan" # cancan is no longer maintained, newer version is cancancan
+gem "rack-attack" # bans vulnerability scanners and throttles busy IPs
 # gem "therubyracer", platforms: :ruby # (no longer needed)
 gem "icu_name", "1.3.0"
 gem "icu_utils", "1.3.3"
