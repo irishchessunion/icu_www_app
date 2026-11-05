@@ -13,6 +13,7 @@ class Sponsor < ApplicationRecord
 
   validates_attachment :logo, content_type: { content_type: /\Aimage\/(#{Image::TYPES})\z/, file_name: /\.(#{Image::TYPES})\z/i }
   validates_presence_of :name, :weblink, :weight
+  validates :weblink, url: true, allow_blank: true
   validates :contact_email, email: true, allow_nil: true, allow_blank: true
   validates :valid_until, date: { on_or_after: 3.months.ago }, allow_nil: true
   before_create :init_clicks

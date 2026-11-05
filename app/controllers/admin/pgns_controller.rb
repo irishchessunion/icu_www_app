@@ -25,7 +25,7 @@ class Admin::PgnsController < ApplicationController
     if file = @pgn.file
       @pgn.file_name = file.original_filename
       @pgn.file_size = file.size
-      @pgn.content_type = `file -b --mime-type #{file.path}`.strip
+      @pgn.content_type = IO.popen(["file", "-b", "--mime-type", file.path], &:read).strip
     end
 
     # We need to get a pgn id to save in any imported games
