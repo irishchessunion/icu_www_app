@@ -20,11 +20,8 @@ module SessionsHelper
     # If there's no memoized cart, see if there's one in the session.
     if !@current_cart && session[:cart_id]
       @current_cart = Cart.include_items_plus.where(id: session[:cart_id], status: "unpaid").first
-      unless @current_cart
-        details = failure_details(message: "the session contained an invalid cart ID", cart_id: session[:cart_id])
-        Failure.log("InvalidSessionCartID", details)
-        session.delete(:cart_id)
-      end
+      # Missing if the nightly cleanup deleted it, or it was paid for, while the session cookie lived on.
+      session.delete(:cart_id) unless @current_cart
     end
 
     # If an unpaid cart exists return it immediately.
