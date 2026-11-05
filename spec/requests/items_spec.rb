@@ -99,4 +99,14 @@ describe "Items", type: :request do
       expect(Item.count).to eq 1
     end
   end
+
+  context "an item type we don't sell" do
+    let(:fee) { create(:subscription_fee) }
+
+    it "is a bad request, not an error" do
+      post items_path, params: { item: { type: "Item::Subscription6dMILQpV", fee_id: fee.id, player_id: player.id } }
+      expect(response).to have_http_status(:bad_request)
+      expect(Item.count).to eq 0
+    end
+  end
 end

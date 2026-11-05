@@ -32,6 +32,11 @@ describe "Rack::Attack", type: :request do
     expect(response).to have_http_status(:forbidden)
   end
 
+  it "refuses Oracle SQL injection" do
+    post items_path, params: { item: { type: "Item::Subscription'||DBMS_PIPE.RECEIVE_MESSAGE(CHR(98)||CHR(98)||CHR(98),15)||'" } }
+    expect(response).to have_http_status(:forbidden)
+  end
+
   it "refuses requests for other platforms' files" do
     get "/wp-login.php"
     expect(response).to have_http_status(:forbidden)
