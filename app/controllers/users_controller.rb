@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, except: [:new, :create, :confirm, :verify]
+  # Slows down guessing season tickets. Counted per IP address.
+  rate_limit to: 5, within: 3.minutes, only: :create, with: -> { redirect_to sign_up_path, alert: t("session.too_many_attempts") }
 
   def account
   end

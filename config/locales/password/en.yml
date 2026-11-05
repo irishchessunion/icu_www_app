@@ -1,6 +1,7 @@
 en:
   send_request: Send request
   password:
+    changed: Your password has been changed. Please sign in with your new password.
     disclaimer: If you are a member, but never set up an account, please create an account by clicking the link below.
     email: Email
     forgotten_password_email_sent: You have been sent an email with a link in it.

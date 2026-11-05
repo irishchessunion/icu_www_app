@@ -34,25 +34,14 @@ class PasswordsController < ApplicationController
     @password = NewPassword.new(password_params)
 
     if @password.save
-      # Login as the user
-      session[:user_id] = @password.user.id
-      session[:old_locale] = session[:locale] || I18n.default_locale
-      session[:old_hide_header] = !show_header?
-      switch_locale(@password.user.locale)
-      switch_header(@password.user.hide_header)
-      last_page_before_sign_in_or_home('Your password was successfully changed.')
+      # Sign in as normal, so disabled, unverified and expired accounts are still refused.
+      redirect_to switch_to_tls(:sign_in), notice: t("password.changed"), allow_other_host: true
     else
       render :new
     end
   end
 
   private
-
-  def last_page_before_sign_in_or_home(notice)
-    goto = session[:last_page_before_sign_in]
-    goto = :home unless goto.present? && goto.match(/\A\//)
-    redirect_to switch_from_tls(goto), notice: notice, allow_other_host: true
-  end
 
   # Only allow a trusted parameter "white list" through.
   def password_params

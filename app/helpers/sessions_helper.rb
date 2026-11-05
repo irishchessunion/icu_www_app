@@ -11,6 +11,11 @@ module SessionsHelper
         Failure.log("InvalidSessionUserID", details)
         session.delete(:user_id)
       end
+      # Disabling an account also signs it out.
+      unless @current_user.nil? || @current_user.status_ok?
+        session.delete(:user_id)
+        @current_user = nil
+      end
     end
     @current_user ||= User::Guest.new
   end
