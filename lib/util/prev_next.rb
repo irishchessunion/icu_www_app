@@ -12,7 +12,7 @@ module Util
 
     def initialize(session, klass, curr_id, key: klass.to_s.tableize, admin: false)
       @klass   = klass
-      @curr_id = curr_id
+      @curr_id = curr_id.to_i # as find does, so junk like "4306-1)) OR ..." can't break the regexps below
       @path    = session["last_search_path_#{key}".to_sym]
       @results = session["last_search_list_#{key}".to_sym]
       @admin   = admin
