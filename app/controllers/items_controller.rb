@@ -12,6 +12,8 @@ class ItemsController < ApplicationController
   end
 
   def create
+    # Anything else is a probe, and would make Item.new raise SubclassNotFound
+    return head :bad_request unless %w[Item::Entry Item::Other Item::Subscription].include?(params.dig(:item, :type))
     @item = Item.new(item_params)
     @fee = fee_for_sale(@item.fee_id)
     unless @fee

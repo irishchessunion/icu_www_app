@@ -3,7 +3,7 @@
 class Rack::Attack
   # Things no genuine visitor sends: other platforms' files in the path, and SQL injection in the URL or form.
   PROBE_PATH  = /\.(php|aspx?|jsp|cgi)\b|\/wp-(admin|login|content|includes)\b|\/\.(env|git)\b/i
-  PROBE_PARAM = /waitfor\s+delay|sleep\s*\(|\bbenchmark\s*\(|\bunion(\s|\/\*.*?\*\/)+(all\s+)?select\b|information_schema/i
+  PROBE_PARAM = /\bdbms_pipe\b|\bchr\s*\(\s*\d+\s*\)|waitfor\s+delay|sleep\s*\(|\bbenchmark\s*\(|\bunion(\s|\/\*.*?\*\/)+(all\s+)?select\b|information_schema/i
 
   def self.probe?(req)
     return true if PROBE_PATH.match?(req.path)
