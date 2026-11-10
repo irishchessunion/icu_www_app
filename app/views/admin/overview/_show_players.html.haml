@@ -1,9 +1,11 @@
 .row
   .col-md-9
-    = render "admin/overview/chart_section",
+    = render "utils/chart",
+      css: "voffset3",
       key: "new-players",
       title: "New Players",
       url: admin_overview_new_players_path,
+      periods: %w[month season year],
       breakdowns: [["accounts", "Login Accounts"], ["age", "Age"], ["gender", "Gender"]]
   .col-md-3
     %section.charts.voffset3
