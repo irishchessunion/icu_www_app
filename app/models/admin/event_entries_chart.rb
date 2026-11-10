@@ -6,8 +6,8 @@ class Admin::EventEntriesChart
     raise ArgumentError, "Invalid chart period" unless PERIODS.include?(period)
 
     @event = event
-    @period = ChartPeriod.new(period, today: today)
-    @today = today
+    @end_date = [today, event.start_date].min
+    @period = ChartPeriod.new(period, today: @end_date)
   end
 
   def data
@@ -49,7 +49,7 @@ class Admin::EventEntriesChart
   def grouped_totals
     bucket = Arel.sql(@period.bucket_sql(ENTRY_DATE_SQL))
     Item::Entry.paid.joins(:fee).left_joins(:cart).where(fees: { event_id: @event.id }).
-      where("#{ENTRY_DATE_SQL} >= ? AND #{ENTRY_DATE_SQL} < ?", @period.starts.first.in_time_zone, (@today + 1).in_time_zone).
+      where("#{ENTRY_DATE_SQL} >= ? AND #{ENTRY_DATE_SQL} < ?", @period.starts.first.in_time_zone, (@end_date + 1).in_time_zone).
       group(bucket, "items.section", "items.fee_id").
       pluck(bucket, "items.section", "items.fee_id", Arel.sql("COUNT(*)"), Arel.sql("SUM(items.cost)"))
   end
