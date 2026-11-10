@@ -1,6 +1,6 @@
 class Admin::EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
-  authorize_resource
+  before_action :set_event, only: [:show, :entries_chart, :edit, :update, :destroy]
+  authorize_resource except: [:entries_chart]
 
   def index
     @events = Event.admin_search(params, admin_events_path, current_user)
@@ -8,6 +8,14 @@ class Admin::EventsController < ApplicationController
 
   def show
     @entries = @event.journal_search if can?(:create, Event)
+  end
+
+  def entries_chart
+    authorize! :index, Item::Entry.new(fee_entry: Fee::Entry.new(event: @event))
+    period = params.fetch(:period, "day")
+    return head :bad_request unless Admin::EventEntriesChart::PERIODS.include?(period)
+
+    render json: Admin::EventEntriesChart.new(@event, period: period).data
   end
 
   def new

@@ -98,6 +98,7 @@ IcuWwwApp::Application.routes.draw do
     resources :clubs,           only: [:new, :create, :edit, :update]
     resources :downloads,       only: [:show, :new, :create, :edit, :update, :destroy]
     resources :events do
+      get :entries_chart, on: :member, defaults: { format: :json }
       resources :event_users, only: [:create, :destroy]
     end
     resources :event_ids,      only: [:index]
