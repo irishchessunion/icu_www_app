@@ -9,62 +9,30 @@ class Admin::NewPlayersChart
   def initialize(period: "month", today: Date.current)
     raise ArgumentError, "Invalid chart period" unless PERIODS.include?(period)
 
-    @period = period
+    @period = ChartPeriod.new(period, today: today)
     @today = today
   end
 
   def data
     counts = SERIES.transform_values do |names|
-      names.to_h { |name| [name, Array.new(starts.size, 0)] }
+      names.to_h { |name| [name, Array.new(@period.starts.size, 0)] }
     end
-    indices = starts.each_with_index.to_h { |date, index| [bucket_key(date), index] }
+    indices = @period.starts.each_with_index.to_h
 
     grouped_counts.each do |bucket, accounts, age, gender, count|
-      index = indices.fetch(bucket.to_s)
+      index = indices.fetch(Date.parse(bucket.to_s))
       { accounts: accounts, age: age, gender: gender }.each do |breakdown, name|
         counts.fetch(breakdown).fetch(name)[index] += count
       end
     end
 
     {
-      categories: starts.map { |date| bucket_label(date) },
+      categories: @period.labels,
       series: counts.transform_values { |groups| groups.map { |name, values| { name: name, data: values } } }
     }
   end
 
   private
-
-  def starts
-    @starts ||= case @period
-    when "month"
-      Array.new(12) { |index| @today.beginning_of_month << (11 - index) }
-    when "season"
-      year = Season.new(@today).start.year
-      (year - 7..year).map { |start_year| Date.new(start_year, 9, 1) }
-    when "year"
-      (@today.year - 7..@today.year).map { |year| Date.new(year, 1, 1) }
-    end
-  end
-
-  def bucket_key(date)
-    @period == "month" ? date.strftime("%Y-%m") : date.year.to_s
-  end
-
-  def bucket_label(date)
-    case @period
-    when "month" then date.strftime("%b %Y")
-    when "season" then Season.new(date).to_s
-    when "year" then date.year.to_s
-    end
-  end
-
-  def bucket_sql
-    case @period
-    when "month" then "DATE_FORMAT(players.joined, '%Y-%m')"
-    when "season" then "YEAR(DATE_SUB(players.joined, INTERVAL 8 MONTH))"
-    when "year" then "YEAR(players.joined)"
-    end
-  end
 
   def grouped_counts
     accounts = "CASE WHEN users.id IS NULL THEN 'No User' ELSE 'Has User' END"
@@ -83,8 +51,8 @@ class Admin::NewPlayersChart
       END
     SQL
 
-    groups = [bucket_sql, accounts, age, gender].map { |sql| Arel.sql(sql) }
-    Player.where(players: { player_id: nil, joined: starts.first..@today }).left_joins(:users).
+    groups = [@period.bucket_sql("players.joined"), accounts, age, gender].map { |sql| Arel.sql(sql) }
+    Player.where(players: { player_id: nil, joined: @period.starts.first..@today }).left_joins(:users).
       group(*groups).pluck(*groups, Arel.sql("COUNT(DISTINCT players.id)"))
   end
 end
