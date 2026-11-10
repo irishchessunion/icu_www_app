@@ -1,5 +1,7 @@
 - content_for :title, @event.name
 - content_for :header_bg_color, "var(--gray-lighter)"
+- content_for :includes do
+  = javascript_include_tag "apexcharts.min"
 - @show_main_container = "false"
 
 = render "utils/title_panel", header_text: @event.name, back_button: true, back_text: t("event.event").downcase, back_path: event_path(@event) do
@@ -12,6 +14,13 @@
 .container
   .row
     .col-md-8.col-sm-12
+      - if can?(:index, Item::Entry.new(fee_entry: Fee::Entry.new(event: @event)))
+        = render "utils/chart",
+          key: "event-entries",
+          title: "Entries",
+          url: entries_chart_admin_event_path(@event),
+          periods: %w[day week month],
+          breakdowns: [["section", "Section"], ["fee", "Fee"], ["gross", "Gross"]]
       - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
         = render "admin/events/entry_fees_panel"
 
