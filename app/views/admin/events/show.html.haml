@@ -14,14 +14,13 @@
 .container
   .row
     .col-md-8.col-sm-12
-      - if can?(:index, Item::Entry.new(fee_entry: Fee::Entry.new(event: @event)))
+      - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
         = render "utils/chart",
           key: "event-entries",
           title: "Entries",
           url: entries_chart_admin_event_path(@event),
           periods: %w[day week month],
           breakdowns: [["section", "Section"], ["fee", "Fee"], ["gross", "Gross"]]
-      - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
         = render "admin/events/entry_fees_panel"
 
     %aside.col-md-4.col-sm-12
