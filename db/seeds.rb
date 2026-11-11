@@ -236,16 +236,6 @@ if seed_sample_data
       )
     end
 
-    # Sample data for relays
-    5.times do |i|
-      Relay.create!(
-        from: "email#{i}@icu.ie",
-        to: "email#{i}@gmail.com",
-        provider_id: "provider_#{i}",
-        enabled: true
-      )
-    end
-
     # Sample data for results
     5.times do |i|
       Result.create!(

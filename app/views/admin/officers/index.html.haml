@@ -11,13 +11,15 @@
           %th= t("officer.role")
           %th= t("officer.rank")
           %th= t("email")
+          %th= t("officer.phone")
           %th= t("officer.incumbent")
       %tbody
         - @officers.each do |officer|
           %tr
             %td= link_to "#{officer.name}#{officer.executive ? "" : "*"}", [:admin, officer]
             %td{class: officer.active ? nil : "text-done"}= officer.rank
-            %td= officer.emails.join(", ")
+            %td= officer.email
+            %td= officer.phone
             %td= officer.player.name(id: true) if officer.player.present?
 %p.small.text-center
   = "*"

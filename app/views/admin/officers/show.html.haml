@@ -22,10 +22,12 @@
       %tr
         %th Rank
         %td= @officer.rank
-      - @officer.relays.each do |relay|
-        %tr
-          %th= t("email")
-          %td= "#{relay.from} → #{relay.to}"
+      %tr
+        %th= t("email")
+        %td= @officer.email
+      %tr
+        %th= t("officer.phone")
+        %td= @officer.phone
       - if @officer.player.present?
         %tr
           %th Incumbent

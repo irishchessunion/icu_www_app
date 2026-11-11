@@ -4,7 +4,7 @@
       %th= t("officer.officer")
       %th= t("name")
       %th= t("email")
-      %th= t("player.phone.phones")
+      %th= t("officer.phone")
   %tbody
     - officers.each do |officer|
       %tr
@@ -12,8 +12,8 @@
           = succeed(officer.executive ? "" : "*") do
             = officer.name
         %td= officer.player.name if officer.player
-        %td= officer.html_emails
-        %td= officer.player.phones(filter: true) if officer.player
+        %td= officer.html_email
+        %td= officer.phone
 %p.small.text-center
   = "*"
   = t("officer.non_exec")

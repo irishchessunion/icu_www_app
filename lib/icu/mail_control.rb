@@ -5,7 +5,6 @@ module ICU
       stop, reason = check_for_spike(2.0, 24) unless stop  # cost of last 24 hours (ignoring allowance)
       stop, reason = check_for_spike(0.2, 1) unless stop   # cost of last hour (ignoring allowance)
       if stop
-        Relay.toggle_all(false)
         if print
           puts "EMERGENCY STOP: #{reason}"
         else
