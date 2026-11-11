@@ -21,4 +21,15 @@ describe ICU::PGN do
     expect { ICU::PGN.new.database(false) }.to output(/has not changed/).to_stdout
     expect { ICU::PGN.new.database(true) }.to output(/compressed PGN/).to_stdout
   end
+
+  it "tries again on the next run if the build failed" do
+    expect { ICU::PGN.new.database(false) }.to output(/compressed PGN/).to_stdout
+    Game.first.update_column(:updated_at, 1.hour.from_now)
+    allow(File).to receive(:open).and_call_original
+    allow(File).to receive(:open).with(Game::PGN_FILE, "w").and_raise(Errno::EACCES)
+    expect { ICU::PGN.new.database(false) }.to output(/EACCES/).to_stdout
+
+    allow(File).to receive(:open).and_call_original
+    expect { ICU::PGN.new.database(false) }.to output(/compressed PGN/).to_stdout
+  end
 end
