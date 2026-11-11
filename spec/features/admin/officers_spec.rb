@@ -51,6 +51,8 @@ describe Officer do
     let(:role)        { I18n.t("officer.role") }
     let(:rank)        { I18n.t("officer.rank") }
     let(:executive)   { I18n.t("officer.exec") }
+    let(:email)       { I18n.t("email") }
+    let(:phone)       { I18n.t("officer.phone") }
     let(:name)        { "Arbiters Officer" }
 
     before(:each) do
@@ -62,6 +64,8 @@ describe Officer do
     it "success" do
       fill_in role, with: name
       fill_in rank, with: "15"
+      fill_in email, with: "arbiters@icu.ie"
+      fill_in phone, with: "087 123 4567"
       uncheck executive
       click_button save
 
@@ -76,11 +80,14 @@ describe Officer do
       expect(officer.active).to eq true
       expect(officer.player).to be_nil
       expect(officer.role).to be_nil
+      expect(officer.email).to eq "arbiters@icu.ie"
+      expect(officer.phone).to eq "087 123 4567"
 
       expect(JournalEntry.where(journalable_type: "Officer", journalable_id: officer.id, action: "create").count).to eq 1
 
       visit icu_officers_path
       expect(page).to have_css("td", text: "#{name}*")
+      expect(page).to have_css("td", text: "087 123 4567")
     end
 
     it "duplicate name" do

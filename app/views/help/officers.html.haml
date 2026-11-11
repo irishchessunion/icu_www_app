@@ -3,58 +3,26 @@
 %a{name: "what"}
 %h3 What does this Involve?
 
-%p There are two main tasks:
-%ol
-  %li
-    linking each officer to the member who currently holds that position
-    so that the correct name and phone numbers are displayed on the
-    = succeed(",") do
-      = link_to "contacts page", icu_officers_path
-  %li
-    keeping the forwarding addresses of the ICU's mail relays
-    in sync with the personal emails of the current office holders.
 %p
-  The former is managed on this website while relays are managed partly
-  on this website and partly on the website of our email service provider,
-  = succeed(".") do
-    %em= t("relay.provider")
-%p
-  Each relay has a
-  %strong ICU
-  address (ending in
+  Each officer (a position, such as
   = succeed(")") do
-    %em @icu.ie
-  and one or more
-  %strong forwarding
-  addresses (personal emails).
-%p
-  There are 3 relevant database tables:
-  = succeed(",") do
-    %strong officers
-  = succeed(",") do
-    %strong players
-  and
-  = succeed(".") do
-    %strong relays
+    %em Secretary
+  is listed on the
+  = link_to "contacts page", icu_officers_path
+  with the name of the member who holds it, an email address and a phone number.
 %p If an officer is linked to:
 %ul
-  %li no player — then no name or phone numbers are listed for that position (it's unfilled),
-  %li a player — then that player's name and phone numbers will be listed for that officer on the contacts page.
+  %li no player — then no name is listed for that position (it's unfilled),
+  %li a player — then that player's name is listed for that officer on the contacts page.
 %p
-  If an officer is linked to:
-%ul
-  %li no relays (rare, if ever) — then no email address will appear on the contacts page for that officer,
-  %li one relay (the usual case) — then the ICU address of the relay will be listed for that officer,
-  %li
-    more than one relay (rare, but see the
-    %em FIDE & ECU Delegate
-    example below) — then the ICU addresses of the relays will all be listed for that officer.
+  The email address and phone number are stored with the officer, not taken from the player's profile,
+  so they must be updated whenever the incumbent changes. Either can be left blank, in which case nothing is listed.
 
 %a{name: "who"}
-%h3 Who can Manage Officers and Relays?
+%h3 Who can Manage Officers?
 
 At the moment only the webmaster can do this, so to complete any of the tasks below the
-webmaster must first login to this or the service provider's website.
+webmaster must first login.
 
 %a{name: "relink"}
 %h3 How to Change an Incumbent Officer
@@ -67,7 +35,10 @@ webmaster must first login to this or the service provider's website.
     click
     %em= t("officer.officers")
     from the top navigation bar
-  %li find and click the officer you want to change,
+  %li
+    find and click the officer you want to change, then click
+    = succeed(",") do
+      %em= t("edit")
   %li
     do one of two things:
     %ul
@@ -76,79 +47,25 @@ webmaster must first login to this or the service provider's website.
         if you don't know their ID, search for it using
         %em= t("officer.select_incumbent")
         and click their ID when you've found it,
+  %li enter the email address and phone number the new incumbent wants members to use,
   %li
     click
     = succeed(".") do
       %em= t("save")
-%p To update the email relay:
-%ul
-  %li
-    click
-    %em= t("relay.relays")
-    from the top navigation bar
-  %li
-    find the relay corresponding to the officer and click the ICU email (the
-    %em= t("relay.from")
-    address),
-  %li
-    click
-    = succeed(",") do
-      %em= t("edit")
-  %li
-    enter the new incumbent's personal email address in the
-    %em= t("relay.to")
-    box,
-  %li
-    click
-    = succeed(".") do
-      %em= t("save")
-%p Alternatively, the changes can be made via the service provider and synced back to the ICU database:
-%ul
-  %li
-    login to the ICU's
-    = t("relay.provider")
-    control panel,
-  %li
-    click
-    = succeed(",") do
-      %em Routes
-  %li
-    find and click the
-    %em filter expression
-    corresponding to the officer's ICU email address,
-  %li
-    update the
-    %em forwarding address
-    for the new incumbent's personal email address,
-  %li
-    click
-    = succeed(",") do
-      Save
-  %li
-    click
-    %em= t("relay.relays")
-    from the top navigation bar, scroll to the bottom and click
-    %em= t("relay.refresh")
-    which ensures all ICU relays are up-to-date with any changes made via the service provider.
 
 %a{name: "blank"}
-%h3 When an Role is Unfilled
+%h3 When a Role is Unfilled
 
 %p It sometimes happens that a position is unfilled. In this case we want:
 %ul
   %li
     the officer still to be displayed on the
     = link_to "contacts page", icu_officers_path
-    but with blanks where the incumbents's name and telephone numbers would normally go,
-  %li
-    emails sent to the officer's standard ICU email address to
-    be relayed to someone else (usually the secretary).
+    but with a blank where the incumbent's name would normally go,
+  %li emails about that position to go to someone else (usually the secretary).
 %p
   To achieve this, follow the instructions above for changing an incumbent
-  but with the following modifications:
-%ul
-  %li enter a blank ICU ID when editing the officer,
-  %li use the secretary's personal email for the forwarding address when editing the relay.
+  but enter a blank ICU ID and the secretary's email address and phone number.
 
 %a{name: "officers"}
 %h3 Creating, Deleting and Updating Officers
@@ -161,12 +78,12 @@ webmaster must first login to this or the service provider's website.
   page and entering the name of the role (e.g.
   = succeed("),") do
     %em Arbiters Officer
-  its rank and whether or not it is an executive position. If the new officer should have an ICU email address,
-  a relay for it must first be created (see below) and then linked to the officer.
+  its rank, its email address and phone number, and whether or not it is an executive position.
 %p Existing officers can be edited in the following ways:
 %ul
   %li as already discussed, they can be linked to different players,
   %li the name of their role can be changed,
+  %li their email address and phone number can be changed,
   %li
     their
     %em rank
@@ -174,155 +91,3 @@ webmaster must first login to this or the service provider's website.
   %li
     their status can be set to inactive, in which case they won't be listed at all. This is how to retire a position
     that is no longer required, as officers can't be deleted.
-
-%a{name: "relays"}
-%h3 Creating, Deleting and Updating Relays
-
-%p
-  Relays can only be created or destroyed via
-  = succeed(".") do
-    = t("relay.provider")
-  Relay forwarding addresses can be edited on
-  = t("relay.provider")
-  or, for convenience and because it's so common, on
-  this website as well (see above).
-%p
-  One aspect of relays which is managed exclusively on this website is which officer (if any) each links to.
-  It's fairly rare that one would need to change the links between officers and relays because, for the
-  most part, one relay has been created for each officer and the links will already have been established.
-  The
-  %em FIDE & ECU Delegate
-  example below describes a scenario where some relinking of officers and relays would be required.
-
-%a{name: "disable"}
-%h3 Disabling Relays
-
-%p
-  In normal circumstances
-  = succeed(".") do
-    %strong all relays should be enabled
-  However, in exceptional circumstances, such as the provider's service being down or
-  a problem with our account, then some or all relays can be disabled.
-%p There are two consequences of a relay being disabled:
-%ul
-  %li if the relay is linked to an officer, the incumbent's personal email will be listed on the contacts page instead of the generic ICU address,
-  %li any emails sent to the ICU address will be stopped by the service provider and not be delivered.
-%p
-  As mentioned in the
-  = succeed(",") do
-    = link_to t("help.privacy"), help_privacy_path(anchor: "emails")
-  this is the only circumstance where persoanl emails would be publically available on the site.
-%p In order to:
-%ul
-  %li
-    disable a single relay: edit the relay, untick the
-    %em= t("relay.enabled")
-    checkbox and click
-    = succeed(",") do
-      %em= t("save")
-  %li
-    enable a single relay: edit the relay, tick the
-    %em= t("relay.enabled")
-    checkbox and click
-    = succeed(",") do
-      %em= t("save")
-  %li
-    disable all relays: click the
-    %em= t("relay.disable_all")
-    button if it's present (it will be if there's at least one enabled route),
-  %li
-    enable all relays: click the
-    %em= t("relay.enable_all")
-    button if it's present (it will be if there's at least one disabled route).
-
-%a{name: "relay_officer"}
-%h3 Not all Relays will be Linked to an Officer
-
-%p
-  There are more relays than officers and in most cases each officer has only one relay
-  which means there must be some relays not linked to any officer. This is normal and
-  there are good reasons why some ICU addresses should not appear on the contacts page.
-  For example, some, which forward to the webmaster's personal address, are for emails
-  registered with our internet providers (for hosting, domains or payment services) and
-  which members don't need to be informed of. Others, forwarding to the secretary, are
-  for officers that no longer exist (e.g. ICJ editor, IUCA delegate).
-
-%a{name: "phones"}
-%h3 Adjusting the Phone Numbers Displayed for an Officer
-
-%p
-  By default, the
-  = link_to "contacts page", icu_officers_path
-  lists all the telephone numbers of each officer,
-  but some officers may not want this.
-%p
-  Configuring which numbers are displayed and which remain hidden is something each
-  officer can manage for themselves, it doesn't require the webmaster. See
-  = succeed(".") do
-    = link_to t("help.privacy"), help_privacy_path(anchor: "phone_numbers")
-
-%a{name: "fide_ecu"}
-%h3
-  Extended Example:
-  %em FIDE & ECU Delegate
-
-%p This officer is a special case for two reasons:
-%ol
-  %li
-    there are two corresponding relays
-    = precede("(") do
-      %em fide@icu.ie
-    and
-    = succeed(")") do
-      %em ecu@icu.ie
-    instead of the usual one,
-  %li
-    it's theoretically possible that the position could be split in two
-    = precede("(") do
-      %em FIDE Delegate
-    and
-    = succeed(")") do
-      %em ECU Delegate
-    sometime in the future.
-%p At the time this documentation was written:
-%ul
-  %li
-    the
-    %em FIDE & ECU Delegate
-    officer was active, linked to a player and linked to both relays (which forwarded to personal emails of that player),
-  %li
-    the
-    %em FIDE Delegate
-    and
-    %em ECU Delegate
-    officers were both inactive (so not listed) and not linked to any players or relays.
-%p If the position were to be split between two different players (A and B) here is how that could be managed:
-%ol
-  %li
-    make the
-    %em FIDE Delegate
-    and
-    %em ECU Delegate
-    roles active and link them to players A and B respectively,
-  %li
-    edit the
-    %em fide@icu.ie
-    relay, link it to the
-    %em FIDE Delegate
-    officer (instead of
-    = succeed(")") do
-      %em FIDE & ECU Delegate
-    and forward it to A's personal address,
-  %li
-    edit the
-    %em ecu@icu.ie
-    relay and link it to the
-    %em ECU Delegate
-    officer (instead of
-    = succeed(")") do
-      %em FIDE & ECU Delegate
-    and forward it to B's personal address,
-  %li
-    make the
-    %em FIDE & ECU Delegate
-    officer inactive and unlink it from the former incumbent.

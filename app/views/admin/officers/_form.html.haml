@@ -13,6 +13,8 @@
         - locals = { form: f, object: @officer, col: "sm", pad: 2, width: 2 }
         = render "utils/text_field_for", locals.merge(param: :name, text: t("officer.role"), width: 5)
         = render "utils/text_field_for", locals.merge(param: :player_id, text: t("player.id"))
+        = render "utils/text_field_for", locals.merge(param: :email, text: t("email"), width: 5)
+        = render "utils/text_field_for", locals.merge(param: :phone, text: t("officer.phone"), width: 3)
         = render "utils/text_field_for", locals.merge(param: :rank, text: t("officer.rank"))
         = render "utils/check_box_for", locals.merge(param: :active, text: t("active"))
         = render "utils/check_box_for", locals.merge(param: :executive, text: t("officer.exec"))

@@ -81,51 +81,18 @@
   If you never want the ICU to contact you by phone then don't supply any numbers or delete the numbers
   that are already stored for you.
 %p
-  There is one exception to the rule that telephone numbers are never displayed publicly on the website and
-  that is if you become an ICU officer. By default, in that case, all your numbers are displayed on the
+  Your phone numbers are not shown on the
   = link_to t("icu.officers"), icu_officers_path
-  page. If you don't want all (or even any of) your numbers to be displayed there, then there are two solutions.
-%ol
-  %li
-    On your profile page click
-    = succeed(",") do
-      %em= t("player.edit_profile")
-    delete any phone numbers you don't want displayed, and then click
-    = succeed(".") do
-      %em= t("save")
-    The drawback of this option is that it hides your numbers from everyone, including ICU officers.
-  %li
-    The preferred option is to mark some or all of your phone numbers as private.
-    After clicking
-    = succeed(",") do
-      %em= t("player.edit_profile")
-    select the numbers you want to hide from the
-    %em= t("player.privacy")
-    menu and then click
-    = succeed(".") do
-      %em= t("save")
-    In that case, only the remaining, non-private numbers (if any) will be displayed on the contacts page
-    while all your numbers will still be available to ICU officers.
-%p As an ICU officer, it's preferable that you make at least one phone number publicly available for ICU members to call you.
+  page if you become an ICU officer. Instead, each officer has a phone number which is entered by
+  the webmaster, and you choose which number (if any) to give for that.
 
 %a{name: "emails"}
 %h3 Email Address
 
 %p
   Your contact email address (the one in your profile) is only available to privileged users.
-  Unlike phone numbers, your email address won't normally be published publicly if you become
-  an ICU officer because personal email addresses are not used to contact officers.
-  Instead the ICU uses a set of generic addresses ending in
-  %em @icu.ie
-  (such as
-  = succeed(")") do
-    %em secretary@icu.ie
-  each of which relays messages to the incumbent without their personal address having to
-  be listed on the website.
-%p
-  ICU mail relaying is provided by an external service and if that service is down or there are
-  other problems with it then the personal emails of officers may appear on the contacts page.
-  If this ever happens it will be in exceptional circumstances and should be temporary.
+  It isn't shown on the contacts page if you become an ICU officer. Instead, each officer has an
+  email address which is entered by the webmaster, and you choose which address to give for that.
 %p
   You can set, update or delete your contact email via
   = succeed(".") do
