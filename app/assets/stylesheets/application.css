@@ -773,7 +773,7 @@ section.charts h4 {
 }
 
 .panel.panel-chart-filters {
-  border-color: #ecf0f1;
+  border-color: var(--gray-lighter);
   border-left: 0;
   border-right: 0;
   border-radius: 0;

@@ -4,11 +4,15 @@ describe "Admin overview", type: :request do
   %w[admin treasurer].each do |role|
     it "is accessible to a #{role}" do
       user = create(:user, roles: role)
+      player = create(:player)
       post sessions_path, params: { email: user.email, password: "password" }
 
       get admin_overview_path
 
       expect(response).to have_http_status(:ok)
+      page = Capybara.string(response.body)
+      expect(page).to have_text(player.name)
+      expect(page.has_link?(player.name, href: admin_player_path(player))).to eq(role == "admin")
 
       get admin_overview_new_players_path, params: { period: "season" }
 
