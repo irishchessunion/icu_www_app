@@ -3,15 +3,16 @@
   .panel.panel-default
     .list-group
       - if can?(:create, Fee)
-        .list-group-item
-          = link_to new_admin_fee_path(type: "Fee::Entry", event_id: @event.id), class: "btn btn-pastel-success btn-sm" do
+        .list-group-item.inline-between
+          = link_to "View on fees page", admin_fees_path(event_id: @event.id, sale: "all", active: "")
+          = link_to new_admin_fee_path(type: "Fee::Entry", event_id: @event.id), class: "btn btn-primary btn-sm" do
             %span.inline-glyph
               Add New Fee
               %span.glyphicon-plus{"aria-hidden": "true"}
       - @event.fee_entries.each do |fee|
         .list-group-item.inline-between
           %span
-            %span.label.label-primary= format_fee_with_discount(fee)
+            %span.label.panel-pastel-success= format_fee_with_discount(fee)
             = fee.name
           - if can?(:edit, fee)
             %small.inline-flex

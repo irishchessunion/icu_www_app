@@ -1156,6 +1156,13 @@ input:checked+.slider:before {
 .voffset3 { margin-top: 20px; }
 .vcenter { vertical-align: middle !important; }
 
+/* Mobile-only */
+@media (max-width: 991px) {
+  .voffset1-sm { margin-top: 10px; }
+  .voffset2-sm { margin-top: 15px; }
+  .voffset3-sm { margin-top: 20px; }
+}
+
 /* To stop text wrapping */
 .cell-no-wrap { white-space: nowrap; width: 1%; }
 .no-wrap { white-space: nowrap; }

@@ -24,7 +24,7 @@
         .row.voffset3
           .col-md-7.col-sm-12
             = render "admin/events/entry_fees_panel"
-          .col-md-5.col-sm-12
+          .col-md-5.col-sm-12.voffset3-sm
             %section.charts#latest-entries
               %h4.no-margin Latest Entries
               .panel.panel-default
@@ -40,7 +40,7 @@
                       All Entry Payments
                     %span.glyphicon.glyphicon-chevron-right.glyphicon-xs.text-success{"aria-hidden": "true"}
 
-    %aside.col-md-4.col-sm-12
+    %aside.col-md-4.col-sm-12.voffset3-sm
       - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
         .panel.panel-default
           .panel-heading
