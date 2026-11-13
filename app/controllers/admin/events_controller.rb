@@ -14,6 +14,7 @@ class Admin::EventsController < ApplicationController
   end
 
   def entries_chart
+    authorize! :show, @event
     unless @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
       raise CanCan::AccessDenied
     end

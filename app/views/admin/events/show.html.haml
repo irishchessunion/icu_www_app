@@ -35,10 +35,11 @@
                         = entry.player&.name || entry.new_player&.name || "Unknown Player"
                       %small
                         = "#{time_ago_in_words(entry.cart&.payment_completed || entry.created_at).delete_prefix('about ')} ago"
-                  .list-group-item.inline-between
-                    = link_to admin_items_path(event_id: @event.id) do
-                      All Entry Payments
-                    %span.glyphicon.glyphicon-chevron-right.glyphicon-xs.text-success{"aria-hidden": "true"}
+                  - if can?(:index, Item)
+                    .list-group-item.inline-between
+                      = link_to admin_items_path(event_id: @event.id) do
+                        All Entry Payments
+                      %span.glyphicon.glyphicon-chevron-right.glyphicon-xs.text-success{"aria-hidden": "true"}
 
     %aside.col-md-4.col-sm-12.voffset3-sm
       - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
