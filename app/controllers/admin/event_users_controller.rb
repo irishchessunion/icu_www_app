@@ -7,36 +7,30 @@ class Admin::EventUsersController < ApplicationController
     @event_user = @event.event_users.new(event_user_params)
 
     unless @event_user.user&.organiser?
-      flash.now[:alert] = I18n.t("event.admin.user_must_be_organiser")
-      render "admin/events/show"
+      redirect_to admin_event_path(@event), alert: I18n.t("event.admin.user_must_be_organiser")
       return
     end
 
     if @event_user.save
-      flash.now[:notice] = I18n.t("event.admin.user_added")
-      render "admin/events/show"
+      redirect_to admin_event_path(@event), notice: I18n.t("event.admin.user_added")
     else
-      flash.now[:alert] = @event_user.errors.full_messages.join(", ")
-      render "admin/events/show"
+      redirect_to admin_event_path(@event), alert: @event_user.errors.full_messages.join(", ")
     end
   end
 
   def destroy
     if @event_user.user_id == @event.user_id
-      flash.now[:alert] = I18n.t("event.admin.cannot_remove_owner")
-      render "admin/events/show"
+      redirect_to admin_event_path(@event), alert: I18n.t("event.admin.cannot_remove_owner")
       return
     end
 
     if @event_user.user_id == current_user.id
-      flash.now[:alert] = I18n.t("event.admin.cannot_remove_self")
-      render "admin/events/show"
+      redirect_to admin_event_path(@event), alert: I18n.t("event.admin.cannot_remove_self")
       return
     end
 
     @event_user.destroy
-    flash.now[:notice] = I18n.t("event.admin.user_removed")
-    render "admin/events/show"
+    redirect_to admin_event_path(@event), notice: I18n.t("event.admin.user_removed")
   end
 
   private
@@ -52,8 +46,7 @@ class Admin::EventUsersController < ApplicationController
 
   def authorize_owner_or_admin
     unless current_user.admin? || @event.owner?(current_user)
-      flash.now[:alert] = I18n.t("event.admin.only_owner_or_admin")
-      render "admin/events/show"
+      redirect_to admin_event_path(@event), alert: I18n.t("event.admin.only_owner_or_admin")
     end
   end
 
