@@ -1,4 +1,4 @@
-class OverviewChartController extends Controller {
+class ChartController extends Controller {
   static targets = ["period", "breakdown", "chart", "status"]
   static values = { url: String, title: String }
 
@@ -37,9 +37,6 @@ class OverviewChartController extends Controller {
       if (version !== this.version) return;
 
       this.chartData = this.cache.get(period);
-      const series = Object.values(this.chartData.series)[0];
-      const hasData = series.some(group => group.data.some(value => value > 0));
-      this.setStatus(hasData ? "" : "No data for this period.");
       await this.refresh();
     } catch (error) {
       if (version === this.version && error.name !== "AbortError") this.showError(error);
@@ -53,13 +50,28 @@ class OverviewChartController extends Controller {
       if (!this.chartData || !this.element.isConnected) return;
 
       const breakdown = this.breakdownTarget.querySelector("input:checked").value;
+      const series = this.chartData.series[breakdown];
+      const currency = this.chartData.currencies?.[breakdown];
+      const formatValue = value => value == null ? "" : value.toLocaleString("en-IE", currency ? { style: "currency", currency } : { maximumFractionDigits: 0 });
+      this.setStatus("");
+
       const options = {
-        series: structuredClone(this.chartData.series[breakdown]),
-        xaxis: { categories: this.chartData.categories.slice() }
+        series: structuredClone(series),
+        chart: { stacked: !currency },
+        xaxis: { categories: this.chartData.categories.slice() },
+        yaxis: {
+          opposite: true,
+          min: 0,
+          decimalsInFloat: currency ? 2 : 0,
+          title: { text: currency ? `${series[0].name} (${currency})` : this.titleValue },
+          labels: { formatter: formatValue }
+        },
+        tooltip: { shared: true, intersect: false, custom: options => this.tooltipContent(options, formatValue) }
       };
       if (this.chart) return this.chart.updateOptions(options, false, false);
 
-      this.chart = new ApexCharts(this.chartTarget, { ...this.chartOptions(), ...options });
+      const defaults = this.chartOptions();
+      this.chart = new ApexCharts(this.chartTarget, { ...defaults, ...options, chart: { ...defaults.chart, ...options.chart } });
       return this.chart.render();
     });
 
@@ -78,7 +90,6 @@ class OverviewChartController extends Controller {
     return {
       chart: {
         type: "bar",
-        stacked: true,
         height: 360,
         fontFamily: style.fontFamily,
         foreColor: style.color,
@@ -91,14 +102,12 @@ class OverviewChartController extends Controller {
       plotOptions: { bar: { horizontal: false, columnWidth: "65%" } },
       dataLabels: { enabled: false },
       stroke: { width: 0 },
-      yaxis: { opposite: true, min: 0, decimalsInFloat: 0, title: { text: this.titleValue } },
       grid: { borderColor: color("--gray-light") },
-      legend: { position: "bottom" },
-      tooltip: { shared: true, intersect: false, custom: options => this.tooltipContent(options) }
+      legend: { position: "bottom" }
     };
   }
 
-  tooltipContent({ series, dataPointIndex, w }) {
+  tooltipContent({ series, dataPointIndex, w }, formatValue) {
     const tooltip = document.createElement("div");
     const title = document.createElement("div");
     title.className = "apexcharts-tooltip-title";
@@ -111,12 +120,12 @@ class OverviewChartController extends Controller {
 
       const value = values[dataPointIndex] ?? 0;
       total += value;
-      tooltip.append(this.tooltipRow(w.globals.seriesNames[index], value, w.globals.colors[index]));
+      tooltip.append(this.tooltipRow(w.globals.seriesNames[index], formatValue(value), w.globals.colors[index]));
     });
 
     const separator = document.createElement("hr");
     separator.className = "no-margin";
-    tooltip.append(separator, this.tooltipRow("Total", total));
+    tooltip.append(separator, this.tooltipRow("Total", formatValue(total)));
     return tooltip;
   }
 
@@ -141,7 +150,7 @@ class OverviewChartController extends Controller {
     label.textContent = `${name}: `;
     const amount = document.createElement("span");
     amount.className = "apexcharts-tooltip-text-y-value";
-    amount.textContent = value.toLocaleString("en-IE");
+    amount.textContent = value;
     row.append(label, amount);
     return row;
   }
@@ -154,7 +163,7 @@ class OverviewChartController extends Controller {
   }
 
   showError(error) {
-    console.error("Unable to load overview chart", error);
+    console.error("Unable to load chart", error);
     this.setStatus("Unable to load chart. Please reload the page to try again.", true);
   }
 }

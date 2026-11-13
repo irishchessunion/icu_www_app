@@ -723,47 +723,8 @@ section.entries .entries-list {
 
 /* Admin */
 
-section.stats-panel {
-  overflow: hidden;
-}
-
-section.stats-panel .panel-body {
-  display: flex;
-  padding: 0
-}
-
-section.stats-panel .panel-body :is(h1, h2, h3, h4, h5, h6) {
-  margin: 0
-}
-
-section.stats-panel .stats-col {
-  display: flex;
-  flex-direction: column;
-  gap: calc(1em / 1.5);
-  background: var(--brand-success-dark);
-  color: var(--body-bg);
-  padding: 1.5em
-}
-
-section.stats-panel .stats-col > hr {
-  margin: 0.5em 0;
-  width: 100%;
-  height: 1px;
-  border: 0;
-  background-color: var(--brand-success-light);
-}
-
-section.stats-panel .stats-col .stats-numeric {
-  /* width: fit-content; */
-  text-align: right;
-}
-
-section.stats-panel .stats-col .stats-numeric span {
-  color: var(--brand-success-lighter);
-}
-
-section.stats-panel .list-col {
-  padding: 1.5em
+.stats-figure {
+  font-size: 1.8em;
 }
 
 section.charts h4 {
@@ -1194,6 +1155,13 @@ input:checked+.slider:before {
 .voffset2 { margin-top: 15px; }
 .voffset3 { margin-top: 20px; }
 .vcenter { vertical-align: middle !important; }
+
+/* Mobile-only */
+@media (max-width: 991px) {
+  .voffset1-sm { margin-top: 10px; }
+  .voffset2-sm { margin-top: 15px; }
+  .voffset3-sm { margin-top: 20px; }
+}
 
 /* To stop text wrapping */
 .cell-no-wrap { white-space: nowrap; width: 1%; }

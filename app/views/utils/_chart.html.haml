@@ -1,10 +1,11 @@
-%section.charts.full-width.voffset3{
+%section.charts.full-width{
+  class: local_assigns[:css],
   id: key,
   "aria-labelledby": "#{key}-title",
   data: {
-    controller: "overview-chart",
-    overview_chart_url_value: url,
-    overview_chart_title_value: title
+    controller: "chart",
+    chart_url_value: url,
+    chart_title_value: title
   }
 }
 
@@ -14,31 +15,31 @@
     .inline-flex{
       role: "group",
       "aria-label": "#{title} period",
-      data: { overview_chart_target: "period", action: "change->overview-chart#load" }
+      data: { chart_target: "period", action: "change->chart#load" }
     }
       %span Period:
       = render "utils/inline_radio_field",
         name: "#{key}_period",
-        options: [["month", "Month"], ["season", "Season"], ["year", "Year"]],
-        checked: "month",
+        options: periods.map { |period| [period, period.humanize] },
+        checked: periods.first,
         include_all: false
   .panel.panel-chart-filters{
     role: "group",
     "aria-label": "#{title} breakdown",
-    data: { overview_chart_target: "breakdown", action: "change->overview-chart#refresh" }
+    data: { chart_target: "breakdown", action: "change->chart#refresh" }
   }
     .panel-body
       = render "utils/inline_radio_field",
         name: "#{key}_breakdown",
         options: breakdowns,
         checked: breakdowns.first.first,
-       include_all: false
+        include_all: false
 
-  %p.text-muted.voffset2{role: "status", data: { overview_chart_target: "status" }}
+  %p.text-muted.voffset2{role: "status", data: { chart_target: "status" }}
     Loading chart...
 
   %div{
     role: "region",
     "aria-label": "#{title} chart",
-    data: { overview_chart_target: "chart" }
+    data: { chart_target: "chart" }
   }

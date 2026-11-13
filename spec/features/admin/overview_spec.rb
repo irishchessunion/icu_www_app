@@ -51,7 +51,7 @@ describe "Overview players chart", type: :feature, js: true do
     visit admin_overview_path
 
     expect(page).to have_css("#new-players .apexcharts-canvas")
-    expect(page).to have_content("No data for this period.")
+    expect(page).not_to have_content("No data for this period.")
     within "#new-players" do
       choose "Age", allow_label_click: true
       expect(page).to have_css(".apexcharts-legend-text", text: "Unknown")

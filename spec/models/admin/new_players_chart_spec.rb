@@ -19,7 +19,7 @@ describe Admin::NewPlayersChart do
     create(:player, joined: today).update_column(:joined, today + 1)
 
     data = chart
-    expect(data[:categories]).to eq ["Nov 2025", "Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026"]
+    expect(data[:categories]).to eq %w[Nov25 Dec25 Jan26 Feb26 Mar26 Apr26 May26 Jun26 Jul26 Aug26 Sep26 Oct26]
     expect(values(data, :accounts, "No User")).to eq [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
   end
 

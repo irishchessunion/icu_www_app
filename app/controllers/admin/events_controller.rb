@@ -1,6 +1,6 @@
 class Admin::EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
-  authorize_resource
+  before_action :set_event, only: [:show, :entries_chart, :edit, :update, :destroy]
+  authorize_resource except: [:entries_chart]
 
   def index
     @events = Event.admin_search(params, admin_events_path, current_user)
@@ -8,6 +8,21 @@ class Admin::EventsController < ApplicationController
 
   def show
     @entries = @event.journal_search if can?(:create, Event)
+    @latest_entries = Item::Entry.paid.joins(:fee).left_joins(:cart).
+      where(fees: { event_id: @event.id }).preload(:player, :cart).
+      order("carts.payment_completed" => :desc, created_at: :desc, id: :desc).limit(8)
+  end
+
+  def entries_chart
+    authorize! :show, @event
+    unless @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
+      raise CanCan::AccessDenied
+    end
+
+    period = params.fetch(:period, "day")
+    return head :bad_request unless Admin::EventEntriesChart::PERIODS.include?(period)
+
+    render json: Admin::EventEntriesChart.new(@event, period: period).data
   end
 
   def new

@@ -53,7 +53,7 @@
             - @events[:past].matches.each do |event|
               %tr
                 %td
-                  = link_to event.name, edit_admin_event_path(event)
+                  = link_to event.name, admin_event_path(event)
                   - unless current_user.admin?
                     - if event.owner?(current_user)
                       %span.label.label-rounded.label-margin-left.panel-pastel-info= t("event.admin.owner")

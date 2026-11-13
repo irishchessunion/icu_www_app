@@ -443,6 +443,22 @@ describe Event do
     end
   end
 
+  it "lists the event's latest eight paid entries in payment order" do
+    event = create(:event, subscription_required: false)
+    fee = create(:entry_fee, event: event)
+    entries = 9.times.map do |index|
+      cart = create(:cart, status: "paid", payment_completed: index.days.ago)
+      create(:paid_entry_item, fee: fee, cart: cart, created_at: (10 - index).days.ago)
+    end
+    create(:entry_item, fee: fee)
+    create(:paid_entry_item, fee: create(:entry_fee, name: "Other event"))
+    login "admin"
+    visit admin_event_path(event)
+
+    names = all("#latest-entries .list-group-item > span:first-child").map(&:text)
+    expect(names).to eq entries.first(8).map { |entry| entry.player.name }
+  end
+
   context "edit a event thats ended" do
     let(:user) { create(:user, roles: "organiser") }
 
