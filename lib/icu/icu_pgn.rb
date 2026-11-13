@@ -3,9 +3,11 @@ module ICU
     def database(force)
       Game::LinkedGameMarker.new.run # marks all in use games
       count = get_count || return
-      last_mod = get_last_mod(count, force) || return
+      last_mod = get_last_mod(force) || return
       compile_pgn
       compress_zip
+      # Only after a successful build, so a failed run is retried the next day.
+      ::Game.save_last_pgn_db(last_mod, count)
     rescue => e
       # For the cron log.
       puts "#{signature}: #{count}, #{last_mod}, #{e.class}, #{e.message}\n#{e.backtrace[0..3].join("\n")}"
@@ -40,7 +42,7 @@ module ICU
       puts "#{signature}: generated PGN in #{seconds} seconds"
     end
 
-    def get_last_mod(new_count, force)
+    def get_last_mod(force)
       new_last_mod = Game.maximum(:updated_at).to_fs(:db)
 
       # Do we need to regenerate the file?
@@ -51,9 +53,6 @@ module ICU
           return false
         end
       end
-
-      # Log the last modified time and count.
-      ::Game.save_last_pgn_db(new_last_mod, new_count)
 
       # Return the last modified time.
       new_last_mod

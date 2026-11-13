@@ -15,7 +15,7 @@
           - @latest_players.each do |player|
             .list-group-item.inline-between
               %span
-                = player.name
+                = link_to_if can?(:show, player), player.name, admin_player_path(player), target: "_blank", rel: "noopener"
               %small
                 = "#{time_ago_in_words(player.created_at).delete_prefix('about ')} ago"
           .list-group-item.inline-between

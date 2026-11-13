@@ -7,7 +7,6 @@
   - links += 1 if users   = can?(:manage, User)
   - links += 1 if carts   = can?(:index, Cart)
   - links += 1 if rfnds   = can?(:index, Refund)
-  - links += 1 if rlays   = can?(:index, Relay)
   - links += 1 if perrs   = can?(:index, PaymentError)
   - links += 1 if fees    = can?(:index, Fee)
   - links += 1 if fails   = can?(:index, Failure)
@@ -77,8 +76,6 @@
           %li{class: active("admin/logins")}= link_to "Logins", admin_logins_path
         - if mevnts
           %li{class: active("admin/mail_events")}= link_to "Mail Events", admin_mail_events_path
-        - if rlays
-          %li{class: active("admin/relays")}= link_to "Mail Relays", admin_relays_path
         - if pages
           %li{class: active("admin/pages", "session_info")}= link_to "Session Info", admin_session_info_path
           %li{class: active("admin/pages", "system_info")}= link_to "System Info", admin_system_info_path

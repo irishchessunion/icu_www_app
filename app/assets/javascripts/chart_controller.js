@@ -66,7 +66,7 @@ class ChartController extends Controller {
           title: { text: currency ? `${series[0].name} (${currency})` : this.titleValue },
           labels: { formatter: formatValue }
         },
-        tooltip: { shared: true, intersect: false, y: { formatter: formatValue } }
+        tooltip: { shared: true, intersect: false, custom: options => this.tooltipContent(options, formatValue) }
       };
       if (this.chart) return this.chart.updateOptions(options, false, false);
 
@@ -105,6 +105,54 @@ class ChartController extends Controller {
       grid: { borderColor: color("--gray-light") },
       legend: { position: "bottom" }
     };
+  }
+
+  tooltipContent({ series, dataPointIndex, w }, formatValue) {
+    const tooltip = document.createElement("div");
+    const title = document.createElement("div");
+    title.className = "apexcharts-tooltip-title";
+    title.textContent = w.config.xaxis.categories[dataPointIndex];
+    tooltip.append(title);
+
+    let total = 0;
+    series.forEach((values, index) => {
+      if (w.globals.collapsedSeriesIndices.includes(index)) return;
+
+      const value = values[dataPointIndex] ?? 0;
+      total += value;
+      tooltip.append(this.tooltipRow(w.globals.seriesNames[index], formatValue(value), w.globals.colors[index]));
+    });
+
+    const separator = document.createElement("hr");
+    separator.className = "no-margin";
+    tooltip.append(separator, this.tooltipRow("Total", formatValue(total)));
+    return tooltip;
+  }
+
+  tooltipRow(name, value, color) {
+    const row = document.createElement("div");
+    row.className = "apexcharts-custom-tooltip";
+    if (color) {
+      const marker = document.createElement("span");
+      marker.className = "apexcharts-tooltip-marker";
+      marker.setAttribute("aria-hidden", "true");
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 12 12");
+      const circle = document.createElementNS(svg.namespaceURI, "circle");
+      Object.entries({ cx: 6, cy: 6, r: 5, fill: color }).forEach(([key, value]) => circle.setAttribute(key, value));
+      svg.append(circle);
+      marker.append(svg);
+      row.append(marker);
+    }
+
+    const label = document.createElement("span");
+    label.className = "apexcharts-tooltip-text-y-label";
+    label.textContent = `${name}: `;
+    const amount = document.createElement("span");
+    amount.className = "apexcharts-tooltip-text-y-value";
+    amount.textContent = value;
+    row.append(label, amount);
+    return row;
   }
 
   setStatus(message, error = false) {

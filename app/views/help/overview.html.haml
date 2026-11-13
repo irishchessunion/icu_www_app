@@ -149,7 +149,7 @@
     = succeed(").") do
       = render "link", topic: "appendix.stripe"
   %li
-    An account with an email provider for delivery and relays (see
+    An account with an email provider for delivery (see
     = succeed(").") do
       = render "link", topic: "appendix.mailgun"
   %li
@@ -1269,7 +1269,7 @@
   %a{href: "https://google-developers.appspot.com/chart/", target: "external"} Google Charts
   for rating site graphs
 %p
-  the <em>www</em> site uses
+  The <em>www</em> site uses
   %a{href: "https://apexcharts.com/docs/", target: "external"} Apex Charts
   for charts & graphs, and Open Street Maps for club and event maps.
 
@@ -1333,21 +1333,11 @@
   Unless a credit card is registered with the account, then the service
   simply stops if the threshold is exceeded and no mail would be delivered
   until the start of the next monthly billing period.
-%p There are two types of email delivery this service provides:
-%ol
-  %li Emails sent from the production server (e.g. payment confirmations).
-  %li Emails sent to an @icu.ie address and relayed to one or more private addresses.
-%p In order to work, the relays need the following (which the webmaster is responsible for):
-%ul
-  %li Mail exchange DNS records pointing at Mailgun's servers.
-  %li SPF and DKIM text DNS records for security (values obtained from the Mailgun dashboard).
-  %li Mappings, stored with Mailgun, from @icu.ie addresses to one or more private addresses.
 %p
-  See
+  The service delivers emails sent from the production server (e.g. payment confirmations).
+  For security it needs SPF and DKIM text DNS records (values obtained from the Mailgun dashboard). See
   = render "link", topic: "appendix.register365"
-  for more on DNS entries and
-  = link_to t("help.officers"), help_officers_path, target: "internal"
-  for how to manage the @icu.ie mappings.
+  for more on DNS entries.
 %p
   As well as delivering mail, the Mailgun service includes a log of all transactions
   which is very useful for identifying delivery problems. Sometimes the reason for
@@ -1358,15 +1348,13 @@
   emails that were delivered to them.
 %p
   In practice the Mailgun service is free, but in theory the cost is unlimited (if a credit card is registered).
-  Therefore certain safeguards are in place to automatically disable all relays
-  (which are responsible for most of the transactions) if either the predicted
-  end-of-month cost is too high or there is a sudden spike in transactions.
+  Therefore certain safeguards are in place to alert the webmaster (as a failure, shown when they sign in)
+  if either the predicted end-of-month cost is too high or there is a sudden spike in transactions.
   Additionally, details of the predicted cost are calculated on the ICU server
   every night (using Mailgun's API) and the details sent by email to the webmaster.
-%p If the relays are automatically disabled the webmaster should:
+%p If this alert is raised the webmaster should:
 %ul
   %li ascertain the reason,
-  %li manually re-enable all relays (if safe to do so),
   %li (optional) adjust the automatic safeguards (in <em>lib/icu/mail_control.rb</em>).
 
 = render "header", topic: "appendix.mysql"

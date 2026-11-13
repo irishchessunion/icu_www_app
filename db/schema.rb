@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_11_120000) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -559,8 +559,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_120000) do
   create_table "officers", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.boolean "active", default: true
     t.datetime "created_at", precision: nil
+    t.string "email"
     t.boolean "executive", default: true
     t.string "name", limit: 50, null: false
+    t.string "phone", limit: 30
     t.integer "player_id"
     t.integer "rank", limit: 1
     t.string "role", limit: 20
@@ -714,16 +716,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_120000) do
     t.index ["cart_id"], name: "index_refunds_on_cart_id"
     t.index ["created_at"], name: "index_refunds_on_created_at"
     t.index ["user_id"], name: "index_refunds_on_user_id"
-  end
-
-  create_table "relays", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
-    t.datetime "created_at", precision: nil
-    t.boolean "enabled", default: true
-    t.string "from", limit: 50
-    t.integer "officer_id"
-    t.string "provider_id", limit: 50
-    t.string "to"
-    t.datetime "updated_at", precision: nil
   end
 
   create_table "results", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|

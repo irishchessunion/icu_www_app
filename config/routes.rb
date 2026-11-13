@@ -124,11 +124,6 @@ IcuWwwApp::Application.routes.draw do
     resources :pgns
     resources :players,         only: [:show, :new, :create, :edit, :update]
     resources :refunds,         only: [:index]
-    resources :relays,          only: [:index, :show, :edit, :update] do
-      get :refresh, on: :collection
-      get :enable_all, on: :collection
-      get :disable_all, on: :collection
-    end
     resources :results, except: [:show] do
       member do
         post :ban

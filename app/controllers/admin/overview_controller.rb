@@ -2,6 +2,7 @@ class Admin::OverviewController < ApplicationController
   before_action :authorize_overview
 
   def show
+    # Latest Players uses record creation time; the chart uses the ICU joining date.
     @latest_players = Player.non_duplicates.where.not(created_at: nil).
       select(:id, :first_name, :last_name, :created_at).
       order(created_at: :desc, id: :desc).limit(8)

@@ -35,7 +35,9 @@ class ChartPeriod
     when "day" then "DATE(#{column})"
     when "week" then "DATE_SUB(DATE(#{column}), INTERVAL WEEKDAY(#{column}) DAY)"
     when "month" then "DATE_FORMAT(#{column}, '%Y-%m-01')"
-    when "season" then "DATE_FORMAT(DATE_SUB(#{column}, INTERVAL 8 MONTH), '%Y-09-01')"
+    when "season"
+      # Shift September to January to match the September 1 start in Season#start.
+      "DATE_FORMAT(DATE_SUB(#{column}, INTERVAL 8 MONTH), '%Y-09-01')"
     when "year" then "DATE_FORMAT(#{column}, '%Y-01-01')"
     end
   end

@@ -1,7 +1,5 @@
 module Util
   class Mailgun
-    STOP = "stop()"
-    NOT_APPLICABLE = /\A(catch_all|match_header)/
     CHARGEABLE = %w[received delivered dropped]
     MAX_EVENTS_PAGES = 10
     MAX_EVENTS_PER_PAGE = 300
@@ -11,66 +9,6 @@ module Util
     def self.validate(address)
       result = client("public").get "address/validate", { address: address }
       result.to_h["is_valid"]
-    end
-
-    def self.routes(min_expected=1)
-      routes = client.get("routes").to_h["items"].each_with_object({}) do |route, hash|
-        raise "no expression found in #{route}" unless route["expression"].present?
-        next if route["expression"].match(NOT_APPLICABLE)
-        if route["expression"].match(/\Amatch_recipient\(["'](\w+@icu\.ie)["']\)\z/)
-          from = $1
-        else
-          raise "couldn't parse expression in #{route}"
-        end
-        forwards = []
-        enabled = true
-        if route["actions"].is_a?(Array)
-          enabled = false if route["actions"][0] == STOP
-          route["actions"].each do |action|
-            next if action == STOP
-            if action.match(/\Aforward\(["']([^,"'\s@]+@[^,"'\s@]+)["']\)\z/)
-              forwards.push($1)
-            else
-              raise "unrecognised action in #{route}"
-            end
-          end
-        else
-          raise "expected array of actions in #{route}"
-        end
-        if route["id"].present?
-          id = route["id"]
-        else
-          raise "couldn't get ID for #{route}"
-        end
-        hash[from] = { id: id, forwards: forwards, enabled: enabled }
-      end
-      raise "unexpectedly low number of routes #{routes.size}, expected at least #{min_expected}" unless routes.size >= min_expected
-      routes
-    end
-
-    def self.update_route(id, forwards, enabled)
-      mm = []
-      mm.push ["action", STOP] unless enabled
-      forwards.each { |email| mm.push ["action", "forward('#{email.strip}')"] }
-      mm.push ["action", STOP]
-      client.put "routes/#{id}", mm.map{ |key,val| "#{CGI.escape(key)}=#{CGI.escape(val)}" }.join('&')
-    end
-
-    def self.toggle_all(on_or_off)
-      # First, get all the live routes.
-      routes = self.routes
-
-      # Loop over them and update any that need it, if it's allowed from the current environment.
-      routes.each do |from, data|
-        id, forwards, enabled = %i[id forwards enabled].map { |key| data[key] }
-        if on_or_off ^ enabled && ::Relay.route_update_allowed?(from)
-          update_route(id, forwards, on_or_off)
-          data[:enabled] = on_or_off
-        end
-      end
-
-      # Finally, return the altered routes so the database can be updated.
-      routes
     end
 
     def self.stats(start_date)
