@@ -17,7 +17,7 @@
       - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
         = render "utils/chart",
           key: "event-entries",
-          title: "Entries",
+          title: "Entries by",
           url: entries_chart_admin_event_path(@event),
           periods: %w[day week month],
           breakdowns: [["section", "Section"], ["fee", "Fee"], ["gross", "Gross"]]

@@ -14,7 +14,10 @@ class Admin::EventsController < ApplicationController
   end
 
   def entries_chart
-    authorize! :index, Item::Entry.new(fee_entry: Fee::Entry.new(event: @event))
+    unless @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
+      raise CanCan::AccessDenied
+    end
+
     period = params.fetch(:period, "day")
     return head :bad_request unless Admin::EventEntriesChart::PERIODS.include?(period)
 
