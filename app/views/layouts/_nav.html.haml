@@ -35,6 +35,11 @@
             %li.dropdown-header= t("club.manage_clubs")
             - secretary_clubs.each do |id, name|
               %li= link_to name, edit_admin_club_path(id)
+            %li.divider{role: "presentation"}
+            %li
+              = link_to help_clubs_path do
+                = t("help.help")
+                %span.glyphicon.glyphicon-sm.glyphicon-question-sign
       - else
         %li{class: active("clubs")}= link_to t("club.clubs"), clubs_path
       %li= link_to t("player.rating.ratings"), "http://ratings.icu.ie", target: "ratings"
