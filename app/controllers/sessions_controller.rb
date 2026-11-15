@@ -6,6 +6,7 @@ class SessionsController < ApplicationController
     begin
       user = User.authenticate!(params[:email], params[:password], request.remote_ip)
       session[:user_id] = user.id
+      refresh_secretary_clubs(user)
       session[:old_locale] = session[:locale] || I18n.default_locale
       session[:old_hide_header] = !show_header?
       switch_locale(user.locale)
@@ -19,7 +20,7 @@ class SessionsController < ApplicationController
 
   def destroy
     if session[:user_id]
-      %i[user_id cart_id completed_carts].each { |key| session.delete(key) }
+      %i[user_id secretary_clubs cart_id completed_carts].each { |key| session.delete(key) }
       switch_locale(session.delete(:old_locale))
       switch_header(session.delete(:old_hide_header))
       last_page_before_sign_in_or_home(t("session.signed_out"))

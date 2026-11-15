@@ -61,6 +61,7 @@ class Admin::UsersController < ApplicationController
       redirect_to admin_user_path(@user), alert: "Can't switch to another administrator"
     else
       session[:user_id] = @user.id
+      refresh_secretary_clubs(@user)
       redirect_to home_path, notice: "#{t('session.signed_in_as')} #{@user.email}"
     end
   end
