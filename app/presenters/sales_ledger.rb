@@ -2,7 +2,7 @@ class SalesLedger
   attr_reader :seasons, :items, :bad_items, :subs, :bad_subs, :other_subs
 
   ITEM_TYPES = %w[subscription entry other total]
-  SUB_TYPES = ["Standard", "Over 65", "Under 18", "Under 12", "New U18", "Overseas", "Unemployed", "Other", "Total"]
+  SUB_TYPES = ["Standard", "Over 65", "Under 18", "Under 12", "New U18", "Overseas", "Unemployed/Student", "Other", "Total"]
 
   class Counter
     attr_reader :count, :total
