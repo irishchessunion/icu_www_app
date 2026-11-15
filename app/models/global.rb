@@ -35,7 +35,7 @@ module Global
 
   # A list of help page names.
   HELP_PAGES = %w[
-    accounts articles downloads events event_users exceptions fees header images index markdown membership
+    accounts articles clubs downloads events event_users exceptions fees header images index markdown membership
     officers offline_payments overview password_reset pgn pgn_upload players
     privacy profile rollover_subs shortcuts suspend_account treasurer
   ]
