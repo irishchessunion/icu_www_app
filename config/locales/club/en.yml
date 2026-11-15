@@ -38,6 +38,7 @@ en:
     lat: Latitude
     location: Location
     long: Longitude
+    manage_clubs: Manage Club(s)
     map: Clubs Map
     meet: Meetings
     meetings:
