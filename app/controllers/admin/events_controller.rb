@@ -1,6 +1,6 @@
 class Admin::EventsController < ApplicationController
   before_action :set_event, only: [:show, :entries_chart, :edit, :update, :destroy]
-  authorize_resource except: [:entries_chart]
+  authorize_resource
 
   def index
     @events = Event.admin_search(params, admin_events_path, current_user)
@@ -14,11 +14,6 @@ class Admin::EventsController < ApplicationController
   end
 
   def entries_chart
-    authorize! :show, @event
-    unless @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
-      raise CanCan::AccessDenied
-    end
-
     period = params.fetch(:period, "day")
     return head :bad_request unless Admin::EventEntriesChart::PERIODS.include?(period)
 

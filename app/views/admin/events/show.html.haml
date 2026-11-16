@@ -3,6 +3,7 @@
 - content_for :includes do
   = javascript_include_tag "apexcharts.min"
 - @show_main_container = "false"
+- can_view_entries = can?(:entries_chart, @event)
 
 = render "utils/title_panel", header_text: @event.name, back_button: true, back_text: t("event.event").downcase, back_path: event_path(@event) do
   %div.inline-flex
@@ -14,7 +15,7 @@
 .container
   .row
     .col-md-8.col-sm-12
-      - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
+      - if can_view_entries
         = render "utils/chart",
           key: "event-entries",
           title: "Entries by",
@@ -42,7 +43,7 @@
                       %span.glyphicon.glyphicon-chevron-right.glyphicon-xs.text-success{"aria-hidden": "true"}
 
     %aside.col-md-4.col-sm-12.voffset3-sm
-      - if @event.has_full_access?(current_user) || current_user.admin? || current_user.treasurer?
+      - if can_view_entries
         .panel.panel-default
           .panel-heading
             %strong.stats-figure= euros(event_total_paid_fees(@event))
