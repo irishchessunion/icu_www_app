@@ -14,6 +14,14 @@
           =t("pages.news.add")
           %span.glyphicon-plus
 
+  - if current_user.renewal_due?
+    %article.news-item
+      .news-item-body
+        %header
+          %h4= t("shop.renew")
+        .news
+          %p= t("shop.renew_html", season: current_user.last_season, expires: "#{current_user.expires_on.day.ordinalize} #{current_user.expires_on.strftime('%B')}", shop: link_to(t("shop.renew"), shop_path))
+
   - if @results.present? && @results.length > 0
     - (@results[0..3] || []).each do |result|
       .panel.panel-pastel-info.featured-result

@@ -153,6 +153,23 @@ describe User do
     end
   end
 
+  context "#renewal_due?" do
+    include ActiveSupport::Testing::TimeHelpers
+
+    let(:user) { build(:user, expires_on: Season.new("2025-26").end_of_grace_period) }
+
+    it "from September, after the season ends, until the login expires in December" do
+      travel_to(Date.new(2026, 8, 31))  { expect(user.renewal_due?).to be false }
+      travel_to(Date.new(2026, 9, 1))   { expect(user.renewal_due?).to be true }
+      travel_to(Date.new(2026, 12, 31)) { expect(user.renewal_due?).to be true }
+      expect(user.last_season.to_s).to eq "2025-26"
+    end
+
+    it "never for life members" do
+      expect(build(:user, expires_on: Date.today + 100.years).renewal_due?).to be false
+    end
+  end
+
   context "#season_ticket" do
     it "get" do
       user = create(:user)

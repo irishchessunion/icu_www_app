@@ -82,6 +82,16 @@ class User < ApplicationRecord
     not expires_on.past?
   end
 
+  # In the grace period: from September, when their season has ended, until their login expires in December.
+  def renewal_due?
+    expires_on.months_ago(4) < Date.today
+  end
+
+  # The season they last paid for, which ended 4 months before their login expires.
+  def last_season
+    Season.new(expires_on.months_ago(4))
+  end
+
   def season_ticket
     t = SeasonTicket.new(player_id, expires_on)
     t.valid? ? t.to_s : t.error
@@ -117,6 +127,7 @@ class User < ApplicationRecord
     def id; 0 end
     def name; "Guest" end
     def guest?; true end
+    def renewal_due?; false end
     def member?; false end
     def player; nil end
     def roles; nil end

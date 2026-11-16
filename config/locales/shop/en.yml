@@ -1,6 +1,8 @@
 en:
   shop:
     join_icu: Join ICU
+    renew: Renew Membership
+    renew_html: "Thank you for being a paid up member last season (%{season}). Your membership will expire on %{expires}. We would be very grateful if you resubscribed here: %{shop}."
     guest_help:
       title: Buying a membership
       no_account: You don't need an account to buy anything here. Choose a subscription below, then say who it's for.
