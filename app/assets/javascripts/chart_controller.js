@@ -53,7 +53,8 @@ class ChartController extends Controller {
       const series = this.chartData.series[breakdown];
       const currency = this.chartData.currencies?.[breakdown];
       const formatValue = value => value == null ? "" : value.toLocaleString("en-IE", currency ? { style: "currency", currency } : { maximumFractionDigits: 0 });
-      this.setStatus("");
+      const hasData = Object.values(this.chartData.series).some(groups => groups.some(group => group.data.some(value => value > 0)));
+      this.setStatus(hasData ? "" : "No data for this period.");
 
       const options = {
         series: structuredClone(series),

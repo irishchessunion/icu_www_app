@@ -45,18 +45,26 @@ describe "Overview players chart", type: :feature, js: true do
     expect(page).not_to have_content("Unable to load chart")
   end
 
-  it "shows empty periods in a dark theme at mobile width" do
+  it "shows empty periods without moving the chart in a dark theme at mobile width" do
+    create(:player, joined: Date.current.prev_year(2))
     login create(:user, roles: "treasurer", theme: "Darkly")
     page.current_window.resize_to(390, 844)
     visit admin_overview_path
 
     expect(page).to have_css("#new-players .apexcharts-canvas")
-    expect(page).not_to have_content("No data for this period.")
+    expect(page).to have_css("#new-players [role=status]", text: "No data for this period.")
+    plot = find("#new-players .chart-plot")
+    original_bounds = [plot.native.rect.y, plot.native.rect.height]
     within "#new-players" do
       choose "Age", allow_label_click: true
       expect(page).to have_css(".apexcharts-legend-text", text: "Unknown")
       choose "Year", allow_label_click: true
       expect(page).to have_css(".apexcharts-xaxis-texts-g text", count: 8)
+      expect(page).not_to have_content("No data for this period.")
+      expect([plot.native.rect.y, plot.native.rect.height]).to eq original_bounds
+      choose "Month", allow_label_click: true
+      expect(page).to have_css("[role=status]", text: "No data for this period.")
+      expect([plot.native.rect.y, plot.native.rect.height]).to eq original_bounds
     end
     expect(page).not_to have_content("Unable to load chart")
     expect(page.evaluate_script("document.documentElement.scrollWidth <= window.innerWidth")).to be true

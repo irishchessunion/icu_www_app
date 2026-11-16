@@ -745,6 +745,28 @@ section.charts h4 {
   padding: 10px 0 0 0;
 }
 
+.chart-plot {
+  position: relative;
+  min-height: 360px;
+  margin: 0;
+}
+
+.chart-plot > figcaption {
+  position: absolute;
+  top: 45%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.chart-plot > figcaption > span {
+  display: inline-block;
+  padding: 0.5em 1em;
+  background: var(--body-bg);
+  border-radius: 4px;
+}
+
 /* Homepage Links */
 .home-page-links>.mobile-links {
   display: none;

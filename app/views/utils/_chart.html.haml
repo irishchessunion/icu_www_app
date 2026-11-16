@@ -35,11 +35,12 @@
         checked: breakdowns.first.first,
         include_all: false
 
-  %p.text-muted.voffset2{role: "status", data: { chart_target: "status" }}
-    Loading chart...
-
-  %div{
-    role: "region",
-    "aria-label": "#{title} chart",
-    data: { chart_target: "chart" }
-  }
+  %figure.chart-plot
+    %div{
+      role: "region",
+      "aria-label": "#{title} chart",
+      data: { chart_target: "chart" }
+    }
+    %figcaption.text-center
+      %span.text-muted{role: "status", data: { chart_target: "status" }}
+        Loading chart...
