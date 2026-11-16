@@ -27,7 +27,7 @@ describe Club do
       within("nav.navbar li.dropdown", text: "Manage Club(s)") do
         expect(page).to have_link("Clubs", href: "#")
         expect(page).to have_link("Clubs", href: clubs_path)
-        expect(page.all("ul.dropdown-menu a").map(&:text)).to eq ["Clubs", "Bangor", "Cork"]
+        expect(page.all("ul.dropdown-menu a").map(&:text)).to eq ["Clubs", "Bangor", "Cork", "Help"]
         expect(page).to have_link("Cork", href: edit_admin_club_path(cork))
         click_link "Bangor"
       end
