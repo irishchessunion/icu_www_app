@@ -5,7 +5,7 @@
   data: {
     controller: "chart",
     chart_url_value: url,
-    chart_title_value: title
+    chart_title_value: local_assigns.fetch(:axis_title, title)
   }
 }
 

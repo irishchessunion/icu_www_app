@@ -19,6 +19,7 @@
         = render "utils/chart",
           key: "event-entries",
           title: "Entries by",
+          axis_title: "Entries",
           url: entries_chart_admin_event_path(@event),
           periods: %w[day week month],
           breakdowns: [["section", "Section"], ["fee", "Fee"], ["gender", "Gender"], ["age", "Age"], ["gross", "Gross"]]
