@@ -10,7 +10,7 @@ class Admin::EventEntriesChart
     raise ArgumentError, "Invalid chart period" unless PERIODS.include?(period)
 
     @event = event
-    @end_date = [today, event.start_date].min
+    @end_date = [today, event.end_date].min
     @period = ChartPeriod.new(period, today: @end_date)
   end
 

@@ -29,6 +29,19 @@ describe Admin::EventEntriesChart do
     expect(values(data, :gross, "Gross").last).to eq 100.75
   end
 
+  it "includes final-day payments and anchors past events at their end date" do
+    event.update_columns(start_date: today - 5, end_date: today - 3)
+    [event.end_date, event.end_date + 1].each do |date|
+      cart = create(:cart, status: "paid", payment_completed: date.in_time_zone.end_of_day)
+      create(:paid_entry_item, fee: standard, section: "A", cart: cart)
+    end
+
+    data = chart
+    expect(data[:categories].last).to eq "5 Jan"
+    expect(values(data, :section, "A").last).to eq 1
+    expect(values(data, :section, "A").sum).to eq 1
+  end
+
   it "zero-fills the last fourteen days, twelve Monday-based weeks, and twelve months by payment date" do
     %w[2025-01-31 2025-02-01 2025-12-28 2025-12-29 2026-01-08 2026-01-09].each do |date|
       cart = create(:cart, status: "paid", payment_completed: Date.parse(date).in_time_zone)
