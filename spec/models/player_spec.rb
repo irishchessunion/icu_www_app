@@ -14,18 +14,18 @@ describe Player do
     let!(:life)        { create(:player).tap { |p| create(:lifetime_subscription, player: p) } }
     let!(:deceased)    { create(:player, status: "deceased", dob: nil, joined: nil).tap { |p| create(:lifetime_subscription, player: p) } }
 
-    it "include life members and, until the end of December, last season's members" do
-      travel_to(Date.new(2026, 12, 31)) do
-        expect(Player.current_members).to contain_exactly(this_season, last_season, life)
-      end
-      travel_to(Date.new(2027, 1, 1)) do
+    it "include life members but not last season's members, even in the grace period" do
+      travel_to(Date.new(2026, 9, 1)) do
         expect(Player.current_members).to contain_exactly(this_season, life)
+      end
+      travel_to(Date.new(2026, 8, 31)) do
+        expect(Player.current_members).to contain_exactly(last_season, life)
       end
     end
 
     it "are what the current season's members search finds, while a past season's finds only its own" do
       travel_to(Date.new(2026, 10, 21)) do
-        expect(Player.search_subscribers({ season: "2026-27" }, "/").matches).to contain_exactly(this_season, last_season, life)
+        expect(Player.search_subscribers({ season: "2026-27" }, "/").matches).to contain_exactly(this_season, life)
         expect(Player.search_subscribers({ season: "2025-26" }, "/").matches).to contain_exactly(last_season)
       end
     end
