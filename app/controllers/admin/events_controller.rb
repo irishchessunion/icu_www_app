@@ -10,7 +10,7 @@ class Admin::EventsController < ApplicationController
     @entries = @event.journal_search if can?(:create, Event)
     @latest_entries = Item::Entry.paid.joins(:fee).left_joins(:cart).
       where(fees: { event_id: @event.id }).preload(:player, :cart).
-      order("carts.payment_completed" => :desc, created_at: :desc, id: :desc).limit(8)
+      order(Arel.sql("COALESCE(carts.payment_completed, items.created_at) DESC"), created_at: :desc, id: :desc).limit(8)
   end
 
   def entries_chart
