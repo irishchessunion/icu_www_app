@@ -33,10 +33,18 @@
                 .list-group
                   - @latest_entries.each do |entry|
                     .list-group-item.inline-between
-                      %span
+                      %div
                         = entry.player&.name || entry.new_player&.name || "Unknown Player"
-                      %small
-                        = "#{time_ago_in_words(entry.cart&.payment_completed || entry.created_at).delete_prefix('about ')} ago"
+                        - if entry.section.present?
+                          %br
+                          %small.event-metadata.text-muted= entry.section
+                      .text-right
+                        - rating = entry.player&.latest_rating || entry.player&.legacy_rating
+                        - if rating.present?
+                          = rating
+                          %br
+                        %small.text-muted
+                          = "#{time_ago_in_words(entry.cart&.payment_completed || entry.created_at).delete_prefix('about ')} ago"
                   - if can?(:index, Item)
                     .list-group-item.inline-between
                       = link_to admin_items_path(event_id: @event.id) do

@@ -457,7 +457,7 @@ describe Event do
     login "admin"
     visit admin_event_path(event)
 
-    names = all("#latest-entries .list-group-item > span:first-child").map(&:text)
+    names = all("#latest-entries .list-group-item > div:first-child").map { |details| details.text.lines.first.strip }
     expect(names).to eq [entries.first, undated_entry, *entries[1, 6]].map { |entry| entry.player.name }
   end
 
