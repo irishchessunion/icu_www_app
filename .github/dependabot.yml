@@ -1,0 +1,22 @@
+# Pull requests for outdated gems and CI actions. Security fixes come separately, as soon as they are published.
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # One pull request for all minor and patch updates. Each major update gets its own.
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  # The actions used by the CI workflow, in one pull request a month.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
