@@ -77,6 +77,6 @@ end
 
 # Avoiding CVE problems - these are found with `bundle audit`
 gem "nokogiri", ">= 1.18.9"
-gem "rack", "~> 2.2.20"
+gem "rack", "~> 3.2.8"
 gem "rexml", ">= 3.3.9"
 gem "thor", ">= 1.4.0"
