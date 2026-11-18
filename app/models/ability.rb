@@ -118,7 +118,7 @@ class Ability
     can :manage, Event, user_id: user.id
 
     # Event users with full_access can manage (except destroy)
-    can [:read, :update, :edit], Event do |event|
+    can [:read, :update, :edit, :entries_chart], Event do |event|
       event.event_users.exists?(user_id: user.id, role: "full_access")
     end
 
@@ -127,7 +127,7 @@ class Ability
       event.event_users.exists?(user_id: user.id, role: "limited_access")
     end
 
-    can [:read, :show], Event if user.treasurer?
+    can [:read, :show, :entries_chart], Event if user.treasurer?
 
     # Can view the admin events index
     can :index, Event

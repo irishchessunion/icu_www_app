@@ -443,6 +443,24 @@ describe Event do
     end
   end
 
+  it "lists the event's latest eight paid entries, falling back to creation date for missing payment dates" do
+    event = create(:event, subscription_required: false)
+    fee = create(:entry_fee, event: event)
+    entries = 9.times.map do |index|
+      cart = create(:cart, status: "paid", payment_completed: index.days.ago)
+      create(:paid_entry_item, fee: fee, cart: cart, created_at: (10 - index).days.ago)
+    end
+    undated_cart = create(:cart, status: "paid", payment_completed: nil)
+    undated_entry = create(:paid_entry_item, fee: fee, cart: undated_cart, created_at: 12.hours.ago)
+    create(:entry_item, fee: fee)
+    create(:paid_entry_item, fee: create(:entry_fee, name: "Other event"))
+    login "admin"
+    visit admin_event_path(event)
+
+    names = all("#latest-entries .list-group-item > div:first-child").map { |details| details.text.lines.first.strip }
+    expect(names).to eq [entries.first, undated_entry, *entries[1, 6]].map { |entry| entry.player.name }
+  end
+
   context "edit a event thats ended" do
     let(:user) { create(:user, roles: "organiser") }
 
