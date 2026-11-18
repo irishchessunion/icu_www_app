@@ -6,7 +6,7 @@ gem "rails", "~> 8.1.0"
 # Ruby 3.2 includes `base64` as a default gem (0.1.1). Under Passenger it may be
 # activated before Bundler loads, causing "already activated base64 0.1.1" errors
 # if the lockfile wants a newer base64.
-gem "base64", "0.1.1"
+gem "base64", "0.3.0"
 
 gem "puma", ">= 6.4.3" # web server
 # gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '3543363026121ee28d98dfce4cb6366980c055ee' # Lastest version of mimemagic has copyright issues and breaks
@@ -19,7 +19,7 @@ gem "haml-rails"
 gem "jbuilder"
 gem "sass-rails"
 #gem "uglifier", ">= 1.3.0"
-gem "terser", "~> 1.2.6"
+gem "terser", "~> 1.2.8"
 gem "mini_racer", platforms: :ruby
 gem "jquery-rails"
 gem "turbo-rails", "~> 2.0" # Hotwire Turbo (opt-in; Drive disabled in hotwire.js)
@@ -27,7 +27,7 @@ gem "stimulus-rails", "~> 1.3" # Hotwire Stimulus
 gem "cancancan" # cancan is no longer maintained, newer version is cancancan
 gem "rack-attack" # bans vulnerability scanners and throttles busy IPs
 # gem "therubyracer", platforms: :ruby # (no longer needed)
-gem "icu_name", "1.3.0"
+gem "icu_name", "1.4.0"
 gem "icu_utils", "1.3.3"
 gem "redcarpet", "3.6.1"
 gem "stripe"
