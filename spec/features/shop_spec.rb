@@ -348,7 +348,7 @@ describe "Shop" do
     let!(:event)          { create(:event) }
     let!(:fee_requires_sub) { create(:entry_fee, name: "Requires Subscription", event: event) }
     let!(:subscribed_player) { create(:player) }
-    let!(:subscription_item) { create(:subscription_item, player: subscribed_player, end_date: Date.new(Date.today.year, 8, 31)) }
+    let!(:subscription_item) { create(:paid_subscription_item, player: subscribed_player, end_date: Date.new(Date.today.year, 8, 31)) }
     
     let(:too_high_error)  { I18n.t("item.error.rating.high", member: master.name, limit: u1400_fee.max_rating) }
     let(:too_low_error)   { I18n.t("item.error.rating.low", member: beginner.name, limit: premier_fee.min_rating) }

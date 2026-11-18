@@ -84,9 +84,9 @@ class Player < ApplicationRecord
   end
 
   # @return [Item::Subscription]
-  # This code handles the problem of lifetime members properly.
+  # This code handles the problem of lifetime members properly. Unpaid and refunded subscriptions don't count.
   def most_recent_subscription
-    Item::Subscription.where(player_id: id).order(Arel.sql("coalesce(start_date, CURRENT_DATE) DESC")).limit(1).first
+    Item::Subscription.paid.where(player_id: id).order(Arel.sql("coalesce(start_date, CURRENT_DATE) DESC")).limit(1).first
   end
 
   # Checks if a player is subscribed for the current season
@@ -101,6 +101,17 @@ class Player < ApplicationRecord
 
     cutoff_date = Date.new(cutoff_date.year, 12, 31) if include_grace_period # Change to Dec 31 if including grace period 
     Date.today <= cutoff_date
+  end
+
+  # For entry lists and Swiss-Manager exports.
+  # @return [String] L for life members, S for this season, P for last season, and U for all others.
+  def subscription_code
+    sub = most_recent_subscription
+    return 'U' unless sub
+    return 'L' if sub.description.start_with?('Lifetime')
+    return 'S' if Date.today <= sub.end_date
+    return 'P' if 1.year.ago.to_date <= sub.end_date
+    'U'
   end
 
   def age(ref=Date.today)

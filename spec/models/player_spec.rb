@@ -31,6 +31,40 @@ describe Player do
     end
   end
 
+  context "subscriptions" do
+    include ActiveSupport::Testing::TimeHelpers
+
+    let(:player) { create(:player) }
+
+    def subscribe(season, status: "paid")
+      create(:legacy_subscription_item, player: player, status: status, description: "Standard ICU Subscription #{season}",
+        start_date: Season.new(season).start, end_date: Season.new(season).end)
+    end
+
+    it "only paid ones count" do
+      travel_to(Date.new(2026, 11, 16)) do
+        subscribe("2025-26")
+        subscribe("2026-27", status: "unpaid")
+        subscribe("2026-27", status: "refunded")
+        expect(player.is_subscribed?(false)).to be false
+        expect(player.is_subscribed?(true)).to be true
+        expect(player.subscription_code).to eq "P"
+      end
+    end
+
+    it "codes for entry lists" do
+      travel_to(Date.new(2026, 11, 16)) do
+        expect(player.subscription_code).to eq "U"
+        subscribe("2024-25")
+        expect(player.subscription_code).to eq "U"
+        subscribe("2026-27")
+        expect(player.subscription_code).to eq "S"
+        create(:lifetime_subscription, player: player)
+        expect(player.subscription_code).to eq "L"
+      end
+    end
+  end
+
   context "normalisation" do
     it "name" do
       player = create(:player, first_name: " MARK j L ", last_name: " O ToolE ")

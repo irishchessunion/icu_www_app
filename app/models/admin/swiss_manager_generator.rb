@@ -28,7 +28,7 @@ module Admin
       yob = player.dob ? player.dob.year.to_s : "19??"
       # Add gender (if female) and club (if there is one) but replace any occurrences of "w" in club.
       # Also add a something to indicate subscription (lifetime, this season or last season).
-      flag = "#{player.gender == 'F' ? 'w' : ''}#{subscription_type(player)}"
+      flag = "#{player.gender == 'F' ? 'w' : ''}#{player.subscription_code}"
       club = player.club_name
       if club
         club = club.gsub('W', 'U')
@@ -53,18 +53,6 @@ module Admin
         add_player(item.player) if item.player.present?
       end
       @content
-    end
-
-    private
-    # @param player [Player]
-    # @return [String] It returns L for lifetime members, S for currently paid up members, P for paid up last year members, and U for all others.
-    def subscription_type(player)
-      sub = player.most_recent_subscription
-      return 'U' unless sub
-      return 'L' if sub.description.start_with?('Lifetime')
-      return 'S' if Date.today <= sub.end_date
-      return 'P' if 1.year.ago.to_date <= sub.end_date
-      'U'
     end
   end
 end

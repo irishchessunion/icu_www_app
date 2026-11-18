@@ -118,14 +118,20 @@
   In practice many subscribers pay late, even though the
   = link_to_if can_see_icu_doc?(:membership_byelaws), "Membership Bye-laws", icu_membership_byelaws_path
   specify that subscriptions are due on or before September 1st.
-  For the purposes of the September rating list and logging into the ICU websites only,
-  members who subscribed for the previous season are considered to still be members for the months of September to December.
-  However, if you still haven't subscribed by January your rating won't be published that month and your logins,
+  As a courtesy, members who subscribed for the previous season have a grace period from September to December, during which:
+%ul
+  %li their rating is still published on the September rating list,
+  %li they can still log in to the ICU websites and see members-only content,
+  %li they can still enter events on this website that require an ICU subscription.
+%p
+  However, they are not current members until they renew. They aren't listed as members for the new season,
+  and they will see a reminder to renew on the home page when they log in.
+  If you still haven't subscribed by January your rating won't be published that month and your logins,
   if you have any, will expire.
 %p
   For all other purposes, the grace period does not apply. This would include, for example, eligibility to represent
-  Ireland or to play in tournaments (such as the Leinster and Munster leagues) that require membership of the ICU
-  (unless their organisers have a similar grace period).
+  Ireland or to play in tournaments entered outside this website (such as the Leinster and Munster leagues) that require
+  membership of the ICU (unless their organisers have a similar grace period).
 
 %a{name: "fide_federation"}
 %h3 FIDE Federation

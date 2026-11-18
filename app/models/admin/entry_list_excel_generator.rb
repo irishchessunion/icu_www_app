@@ -9,14 +9,6 @@ module Admin
       # ID_no Fide_no Name Title Fed Rtg_Nat Rtg_Int Games Birthday Sub Sex ClubName
       # The information for FIDE ID and FIDE rating are currently missing from the main database
 
-      year = Time.now.year
-      month = Time.now.month
-
-      # New season starts in August
-      if month < 8
-        year -= 1
-      end
-
       rows = []
       for item in items
         title = ''
@@ -27,16 +19,7 @@ module Admin
         # Outputs YOB/01/01 to hide DOB
         dob = item.player.dob ? Date.new(item.player.dob.year, 1, 1).strftime("%Y/%m/%d") : '1900/01/01'
 
-        most_recent_sub = item.player.most_recent_subscription
-
-        sub = 'L'
-
-        # If not a lifetime member, check the start date of their latest subscription
-        sub = case most_recent_sub.start_date.year
-          when year then 'S'   # Subscribed for the current season
-          when year-1 then 'P' # Subscribed for the previous season
-          else 'U'             # Not subscribed for the either
-        end unless most_recent_sub.description.include?("Lifetime") # This is the way that the system handles lifetime subs
+        sub = item.player.subscription_code
 
         sex = item.player.gender == "F" ? "F": ""
 
