@@ -16,6 +16,10 @@ class ClubsController < ApplicationController
 
   def show
     @club = Club.find(params[:id])
+    if !@club.active && !can?(:update, @club)
+      return redirect_to clubs_path, alert: t("club.no_longer_active")
+    end
+
     @entries = @club.journal_search if can?(:create, Club)
   end
 end
