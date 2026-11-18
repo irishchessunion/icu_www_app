@@ -347,5 +347,40 @@ describe Club do
       visit club_path(bangor)
       expect(page).to have_css("#map-canvas")
     end
+
+    context "inactive clubs" do
+      before { bangor.update!(active: false) }
+
+      it "redirects guests and members with an alert" do
+        ["guest", nil].each do |role|
+          login role
+          visit club_path(bangor)
+          expect(page).to have_current_path(clubs_path)
+          expect(page).to have_css(failure, text: I18n.t("club.no_longer_active"))
+        end
+      end
+
+      it "allows admins and editors to view" do
+        %w[admin editor].each do |role|
+          login role
+          visit club_path(bangor)
+          expect(page).to have_css(".show-panel h2", text: bangor.name)
+        end
+      end
+
+      it "allows secretaries to view only their own club" do
+        secretary = create(:user)
+        bangor.update!(secretary: secretary.player)
+        other_club = create(:club, name: "Other Chess Club", active: false)
+
+        login secretary
+        visit club_path(bangor)
+        expect(page).to have_css(".show-panel h2", text: bangor.name)
+
+        visit club_path(other_club)
+        expect(page).to have_current_path(clubs_path)
+        expect(page).to have_css(failure, text: I18n.t("club.no_longer_active"))
+      end
+    end
   end
 end
