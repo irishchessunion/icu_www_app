@@ -1,0 +1,13 @@
+# Weekly pull requests for outdated gems. Security fixes come separately, as soon as they're published.
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # One pull request for all minor and patch updates. Each major update gets its own.
+      minor-and-patch:
+        update-types: [minor, patch]
