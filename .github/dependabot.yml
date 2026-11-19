@@ -8,7 +8,7 @@ updates:
       day: monday
     open-pull-requests-limit: 5
     ignore:
-      # Must match Ruby 3.2's built-in base64, or Passenger can't start the app (see the Gemfile).
+      # Must match the base64 installed with the server's Ruby, or Passenger can't start the app (see the Gemfile).
       - dependency-name: base64
     groups:
       # One pull request for all minor and patch updates. Each major update gets its own.

@@ -3,10 +3,11 @@ source "https://rubygems.org"
 gem "rake"
 gem "rails", "~> 8.1.0"
 
-# Ruby 3.2 includes `base64` as a default gem (0.1.1). Under Passenger it may be
-# activated before Bundler loads, causing "already activated base64 0.1.1" errors
-# if the lockfile wants a newer base64.
-gem "base64", "0.1.1"
+# Ruby 3.4 installs `base64` 0.2.0 with Ruby itself. Under Passenger it may be
+# activated before Bundler loads, causing "already activated base64 0.2.0" errors
+# if the lockfile wants a different base64. Keep this in step with the server's Ruby.
+gem "base64", "0.2.0"
+gem "csv" # no longer part of Ruby's standard library from 3.4
 
 gem "puma", ">= 6.4.3" # web server
 # gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '3543363026121ee28d98dfce4cb6366980c055ee' # Lastest version of mimemagic has copyright issues and breaks
@@ -20,7 +21,6 @@ gem "jbuilder"
 gem "sass-rails"
 #gem "uglifier", ">= 1.3.0"
 gem "terser", "~> 1.2.8"
-gem "mini_racer", platforms: :ruby
 gem "jquery-rails"
 gem "turbo-rails", "~> 2.0" # Hotwire Turbo (opt-in; Drive disabled in hotwire.js)
 gem "stimulus-rails", "~> 1.3" # Hotwire Stimulus
