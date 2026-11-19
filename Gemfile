@@ -6,7 +6,7 @@ gem "rails", "~> 8.1.0"
 # Ruby 3.2 includes `base64` as a default gem (0.1.1). Under Passenger it may be
 # activated before Bundler loads, causing "already activated base64 0.1.1" errors
 # if the lockfile wants a newer base64.
-gem "base64", "0.1.1"
+gem "base64", "0.3.0"
 
 gem "puma", ">= 6.4.3" # web server
 # gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '3543363026121ee28d98dfce4cb6366980c055ee' # Lastest version of mimemagic has copyright issues and breaks
@@ -44,7 +44,7 @@ gem 'terrapin'
 gem 'flag_shih_tzu' # Used to implement bitfields in ActiveRecord models
 
 gem "caxlsx"
-gem "rubyzip", "~> 2.3" # Pin to avoid RubyZip 3.0 breaking API changes
+gem "rubyzip", "~> 3.7" # Pin to avoid RubyZip 3.0 breaking API changes
 gem "mail"
 
 group :development do
