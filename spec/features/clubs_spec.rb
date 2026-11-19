@@ -6,6 +6,35 @@ describe Club do
   let(:county) { I18n.t("club.county") }
   let(:directory_search) { I18n.t("club.directory.search") }
 
+  context "navigation" do
+    it "keeps a direct Clubs link for guests" do
+      visit home_path
+
+      within("nav.navbar") do
+        expect(page).to have_link("Clubs", href: clubs_path)
+        expect(page).not_to have_css(".dropdown-toggle", text: "Clubs")
+      end
+    end
+
+    it "shows edit links for the secretary's clubs" do
+      secretary = create(:user)
+      cork = create(:club, name: "Cork", secretary: secretary.player, active: false)
+      bangor = create(:club, name: "Bangor", secretary: secretary.player)
+      create(:club, name: "Other club")
+
+      login secretary
+
+      within("nav.navbar li.dropdown", text: "Manage Club(s)") do
+        expect(page).to have_link("Clubs", href: "#")
+        expect(page).to have_link("Clubs", href: clubs_path)
+        expect(page.all("ul.dropdown-menu a").map(&:text)).to eq ["Clubs", "Bangor", "Cork", "Help"]
+        expect(page).to have_link("Cork", href: edit_admin_club_path(cork))
+        click_link "Bangor"
+      end
+      expect(page).to have_current_path(edit_admin_club_path(bangor))
+    end
+  end
+
   context "search" do
     before(:each) do
       create(:club, name: "Bangor", city: "Groomsport", contact: "Mark", county: "down")

@@ -14,6 +14,7 @@ class Admin::ClubsController < ApplicationController
     if @club.save
       @club.journal(:create, current_user, request.remote_ip)
       journal_meetings("")
+      refresh_secretary_clubs
       redirect_to @club, notice: "Club was successfully created"
     else
       flash_first_error(@club, base_only: true)
@@ -29,6 +30,7 @@ class Admin::ClubsController < ApplicationController
     if @club.save
       @club.journal(:update, current_user, request.remote_ip)
       journal_meetings(previous_meetings)
+      refresh_secretary_clubs
       redirect_to @club, notice: "Club was successfully updated"
     else
       flash_first_error(@club, base_only: true)

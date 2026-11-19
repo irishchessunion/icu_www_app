@@ -10,14 +10,25 @@ module SessionsHelper
         details = failure_details(message: "the session contained an invalid user ID", user_id: session[:user_id])
         Failure.log("InvalidSessionUserID", details)
         session.delete(:user_id)
+        session.delete(:secretary_clubs)
       end
       # Disabling an account also signs it out.
       unless @current_user.nil? || @current_user.status_ok?
         session.delete(:user_id)
+        session.delete(:secretary_clubs)
         @current_user = nil
       end
     end
     @current_user ||= User::Guest.new
+  end
+
+  def current_secretary_clubs
+    return [] if current_user.guest?
+    session[:secretary_clubs] ||= refresh_secretary_clubs
+  end
+
+  def refresh_secretary_clubs(user=current_user)
+    session[:secretary_clubs] = user.player_id.present? ? Club.where(secretary_id: user.player_id).pluck(:id, :name) : []
   end
 
   # @return [Cart]

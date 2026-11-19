@@ -1,0 +1,78 @@
+= render "titles", text: "help.clubs"
+
+.row
+
+  .col-lg-6
+    .panel.panel-pastel-info.no-margin
+      .panel-body
+        %h4.no-margin
+          %strong
+            Only club secretaries can edit club details
+        .voffset1
+          If your club secretary is unable to view below functionality,
+          contact the
+          = mail_to "webmaster@icu.ie"
+          to check that your secretary information is up-to-date.
+        .voffset1
+          If you were recently added as secretary, sign out & in again to refresh the menu.
+
+  .col-lg-12
+    %h3 Edit your Club
+
+    %ol
+      %li
+        = link_to "Sign in", sign_in_path
+        to your ICU account.
+      %li
+        Open the
+        %em= t("club.clubs")
+        menu in the top navigation bar and select your club under
+        = succeed(".") do
+          %em= t("club.manage_clubs")
+      %li Update the club details and meetings as needed.
+      %li
+        Click
+        %em= t("save")
+        and review the updated club page.
+
+    %p
+      You can also open your club's page from the directory and click the
+      %em Edit Club
+      button.
+
+    %h3 Club Details
+
+    %ul
+      %li Name and website.
+      %li
+        Address, city, county and Eircode.
+        %br
+        %em Clubs without Latitude & longitude information won't appear on the directory map.
+      %li Contact name, email address and phone number.
+      %li Notes about the club, such as facilities, membership fees or information for visitors.
+      %li Active status, which controls whether the club appears in the public directory.
+
+    %p
+      Use
+      %em= t("club.meetings.add")
+      to add a meeting. Set its day, start time, whether juniors are welcome and any audience restrictions.
+      You can edit existing meetings or remove meetings that no longer take place.
+      Click
+      %em= t("save")
+      to save these changes.
+
+    %h3 Change the Club Secretary
+
+    %ol
+      %li
+        In the edit form, use the
+        %em Select Secretary
+        button to pick the ICU ID of your new club secretary
+      %li
+        Click
+        %em= t("save")
+        and that user will now be the club secretary
+    %p
+      %strong
+        A club can have only one secretary.
+      By choosing a new secretary, you will no longer have access to edit your club.

@@ -24,7 +24,24 @@
       - else
         %li= link_to t("home"), home_path
       %li{class: active("payments")}= link_to t("shop.shop"), shop_path
-      %li{class: active("clubs")}= link_to t("club.clubs"), clubs_path
+      - if (secretary_clubs = current_secretary_clubs).any?
+        %li.dropdown{class: active("clubs")}
+          = link_to "#", class: "dropdown-toggle", data: { toggle: "dropdown" } do
+            = t("club.clubs")
+            %b.caret
+          %ul.dropdown-menu
+            %li= link_to t("club.clubs"), clubs_path
+            %li.divider{role: "presentation"}
+            %li.dropdown-header= t("club.manage_clubs")
+            - secretary_clubs.each do |id, name|
+              %li= link_to name, edit_admin_club_path(id)
+            %li.divider{role: "presentation"}
+            %li
+              = link_to help_clubs_path do
+                = t("help.help")
+                %span.glyphicon.glyphicon-sm.glyphicon-question-sign
+      - else
+        %li{class: active("clubs")}= link_to t("club.clubs"), clubs_path
       %li= link_to t("player.rating.ratings"), "http://ratings.icu.ie", target: "ratings"
       %li{class: active("pages", "juniors")}= link_to t("junior.juniors"), juniors_path
       %li{class: active("pages", "women")}= link_to t("woman.women"), women_path
