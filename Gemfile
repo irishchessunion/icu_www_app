@@ -21,7 +21,6 @@ gem "jbuilder"
 gem "sass-rails"
 #gem "uglifier", ">= 1.3.0"
 gem "terser", "~> 1.2.8"
-gem "mini_racer", platforms: :ruby
 gem "jquery-rails"
 gem "turbo-rails", "~> 2.0" # Hotwire Turbo (opt-in; Drive disabled in hotwire.js)
 gem "stimulus-rails", "~> 1.3" # Hotwire Stimulus
