@@ -40,7 +40,7 @@ RSpec.describe Admin::ImagesController, type: :controller do
 
       it "re-renders the upload form with visible validation errors on failure" do
         post :create, params: { image: valid_attributes.merge(caption: "") }, session: valid_session
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(Image.count).to eq(0)
         expect(response.body).to include("image_ids_upload_form_wrapper")
         expect(response.body).to include("Caption can&#39;t be blank")

@@ -23,7 +23,7 @@ class Admin::ImagesController < ApplicationController
     else
       flash_first_error(@image)
       if turbo_frame_request?
-        render partial: "admin/image_ids/upload_form", locals: { image: @image }, status: :unprocessable_entity
+        render partial: "admin/image_ids/upload_form", locals: { image: @image }, status: :unprocessable_content
       else
         render action: "new"
       end
