@@ -166,7 +166,7 @@ GEM
     ffi (1.17.3-x86_64-darwin)
     ffi (1.17.3-x86_64-linux-gnu)
     ffi (1.17.3-x86_64-linux-musl)
-    flag_shih_tzu (1.0.7)
+    flag_shih_tzu (1.0.8)
       version_gem (~> 1.1, >= 1.1.17)
     globalid (1.3.0)
       activesupport (>= 6.1)
@@ -375,7 +375,7 @@ GEM
       logger (~> 1.4)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    simplecov (1.2.0)
+    simplecov (1.3.2)
     sprockets (4.4.1)
       concurrent-ruby (~> 1.1)
       logger
