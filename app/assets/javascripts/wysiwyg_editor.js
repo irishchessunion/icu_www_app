@@ -59,17 +59,54 @@ $(function() {
   textarea.style.display = "none";
   textarea.parentNode.insertBefore(container, textarea.nextSibling);
 
+  // Each value is a method of Quill's table module: https://quilljs.com/docs/modules/table
+  var tableActions = {
+    insertTable: "Insert table",
+    insertRowAbove: "Add row above",
+    insertRowBelow: "Add row below",
+    insertColumnLeft: "Add column left",
+    insertColumnRight: "Add column right",
+    deleteRow: "Delete row",
+    deleteColumn: "Delete column",
+    deleteTable: "Delete table"
+  };
+
   var quill = new Quill(container, {
     theme: "snow",
     modules: {
-      toolbar: [
-        [{ header: [2, 3, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["blockquote", "link"],
-        ["clean"]
-      ]
+      table: true,
+      toolbar: {
+        container: [
+          [{ header: [2, 3, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["blockquote", "link"],
+          [{ "table-menu": Object.keys(tableActions) }],
+          ["clean"]
+        ],
+        handlers: {
+          // The row and column actions do nothing unless the cursor is in a table
+          "table-menu": function(action) {
+            var editor = this.quill;
+            var table = editor.getModule("table");
+            if (action !== "insertTable") return table[action]();
+            if (table.getTable()[0]) return;
+            // Start the table on a new line, or Quill puts the text of the current one in its first cell
+            var line = editor.getLine(editor.getSelection(true).index)[0];
+            if (line.length() > 1) {
+              var end = editor.getIndex(line) + line.length() - 1;
+              editor.insertText(end, "\n", "user");
+              editor.setSelection(end + 1, 0, "user");
+            }
+            table.insertTable(3, 3);
+          }
+        }
+      }
     }
+  });
+
+  quill.getModule("toolbar").container.querySelectorAll(".ql-table-menu .ql-picker-item").forEach(function(item) {
+    item.setAttribute("data-label", tableActions[item.getAttribute("data-value")]);
   });
 
   window.wysiwygEditor = quill;

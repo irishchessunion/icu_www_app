@@ -3,8 +3,9 @@ module Remarkable
   # Used to sanitize content submitted as pre-rendered HTML (markdown: false),
   # since the client-side editor can be bypassed entirely by posting directly
   # to the create/update endpoints.
-  EDITOR_ALLOWED_TAGS = %w[p h2 h3 strong em u s ol ul li blockquote a br].freeze
-  EDITOR_ALLOWED_ATTRIBUTES = %w[href].freeze
+  EDITOR_ALLOWED_TAGS = %w[p h2 h3 strong em u s ol ul li blockquote a br table tbody tr td].freeze
+  # data-row is how Quill knows which cells share a row when a saved table is edited again
+  EDITOR_ALLOWED_ATTRIBUTES = %w[href data-row].freeze
 
   def to_html(text, filter_html: true)
     return "" unless text.present?
