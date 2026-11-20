@@ -87,6 +87,14 @@ describe Article do
       expect(article.text).to include("Hi")
     end
 
+    it "keeps tables from the editor, but not attributes it doesn't make" do
+      html = %q{<table><tbody><tr><td data-row="row-a" onclick="alert(1)">A</td><td data-row="row-a">B</td></tr></tbody></table>}
+      article = create(:article, markdown: false, text: html)
+      expect(article.text.scan(%q{<td data-row="row-a">}).size).to eq 2
+      expect(article.text).to include("<table><tbody><tr>")
+      expect(article.text).to_not include("onclick")
+    end
+
     it "leaves markdown-source text untouched" do
       article = create(:article, markdown: true, text: "Some *markdown* text")
       expect(article.text).to eq("Some *markdown* text")

@@ -1397,10 +1397,30 @@ table.float-center { margin-left: auto; margin-right: auto; }
   padding: 0 0 0 1.5em;
 }
 
+/* The toolbar's Table menu (see wysiwyg_editor.js), labelled like Quill's own heading menu */
+.ql-snow .ql-picker.ql-table-menu {
+  width: 5.5em;
+}
+.ql-snow .ql-picker.ql-table-menu .ql-picker-label::before {
+  content: "Table";
+}
+.ql-snow .ql-picker.ql-table-menu .ql-picker-item::before {
+  content: attr(data-label);
+}
+
 /* Text from the WYSIWYG editor has a paragraph per line, with empty ones for blank lines, as in the
    editor itself (see WysiwygEditable#wysiwyg_class). */
 .wysiwyg-content p {
   margin: 0;
+}
+
+/* Tables made with the editor's Table menu, wherever its text is shown (article and news tables have their own styles) */
+.wysiwyg-content table {
+  border-collapse: collapse;
+}
+.wysiwyg-content td {
+  border: 1px solid var(--gray-light);
+  padding: 0.4em;
 }
 
 .wysiwyg-content :is(h1, h2, h3, h4, h5, h6) {

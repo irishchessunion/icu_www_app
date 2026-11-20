@@ -303,6 +303,39 @@ describe Article do
       visit new_admin_article_path
     end
 
+    it "inserts a table and adds a row from the Table menu, and edits it again" do
+      def table_menu(action)
+        find(".ql-table-menu .ql-picker-label").click
+        find(".ql-table-menu .ql-picker-item[data-value='#{action}']").click
+      end
+
+      fill_in title, with: "Table Article"
+      fill_in year, with: Date.today.year
+      select I18n.t("article.category.general"), from: categories
+      select I18n.t("access.all"), from: access
+      set_editor_html("<p>Results</p>")
+
+      find("#wysiwyg_editor_mount .ql-editor").click
+      table_menu("insertTable")
+      expect(page).to have_css(".ql-editor table tr", count: 3)
+      find(".ql-editor td", match: :first).click
+      find(".ql-editor td", match: :first).send_keys("Round 1")
+      table_menu("insertRowBelow")
+      table_menu("insertRowBelow")
+      expect(page).to have_css(".ql-editor table tr", count: 5)
+
+      click_button save
+      expect(page).to have_css(success, text: created)
+      article = Article.find_by!(title: "Table Article")
+      expect(article.text).to start_with("<p>Results</p><table>")
+      expect(article.text.scan("<tr>").size).to eq 5
+      expect(article.text).to include(">Round 1</td>")
+
+      visit edit_admin_article_path(article)
+      expect(page).to have_css(".ql-editor table tr", count: 5, wait: 5)
+      expect(page).to have_css(".ql-editor td", text: "Round 1")
+    end
+
     it "creates an article with quick-links inserted via the pickers" do
       fill_in title, with: "My Article"
       fill_in year, with: Date.today.year
