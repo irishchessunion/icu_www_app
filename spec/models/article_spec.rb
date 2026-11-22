@@ -95,6 +95,12 @@ describe Article do
       expect(article.text).to_not include("onclick")
     end
 
+    it "keeps text alignment from the editor, but not unsafe styles" do
+      html = %q{<p style="text-align: center;">A</p><p style="text-align: right; background: url(javascript:alert(1))">B</p>}
+      article = create(:article, markdown: false, text: html)
+      expect(article.text).to eq(%q{<p style="text-align:center;">A</p><p style="text-align:right;">B</p>})
+    end
+
     it "leaves markdown-source text untouched" do
       article = create(:article, markdown: true, text: "Some *markdown* text")
       expect(article.text).to eq("Some *markdown* text")
