@@ -52,6 +52,8 @@ $(function() {
 
   Quill.register(UnorderedList);
   Quill.register(ListItemWithUnorderedList, true);
+  // Align with an inline style rather than Quill's ql-align-* classes, so it shows on public pages without Quill's CSS
+  Quill.register(Quill.import("attributors/style/align"), true);
 
   var container = document.createElement("div");
   container.id = "wysiwyg_editor_mount";
@@ -80,6 +82,7 @@ $(function() {
           [{ header: [2, 3, false] }],
           ["bold", "italic", "underline", "strike"],
           [{ list: "ordered" }, { list: "bullet" }],
+          [{ align: [] }],
           ["blockquote", "link"],
           [{ "table-menu": Object.keys(tableActions) }],
           ["clean"]
