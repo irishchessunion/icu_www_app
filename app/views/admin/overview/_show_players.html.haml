@@ -7,6 +7,18 @@
       url: admin_overview_new_players_path,
       periods: %w[month season year],
       breakdowns: [["accounts", "Login Accounts"], ["age", "Age"], ["gender", "Gender"]]
+
+    %hr.hatched{style: "margin: 10px 0"}
+
+    = render "utils/chart",
+      css: "voffset3",
+      key: "active-players",
+      title: "Active Players",
+      axis_title: "Subscribed Players",
+      url: admin_overview_active_players_path,
+      periods: Admin::ActivePlayersChart::PERIODS,
+      breakdowns: [["membership", "Membership"], ["accounts", "Login Accounts"], ["age", "Age"], ["gender", "Gender"]]
+
   .col-md-3
     %section.charts.voffset3
       %h4.no-margin Latest Players

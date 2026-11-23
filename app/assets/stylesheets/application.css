@@ -100,6 +100,13 @@
   align-items: center;
 }
 
+hr.hatched {
+  height: 12px;
+  border-top: 1px solid var(--gray-lighter);
+  border-bottom: 1px solid var(--gray-lighter);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 4px, var(--gray-lighter) 4px 5px);
+}
+
 /* Indicator for maintenance mode. */
 #maintenance {
   position: fixed;
