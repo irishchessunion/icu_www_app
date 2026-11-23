@@ -6,7 +6,6 @@ class Admin::ActivePlayersChart
     age: ChartDemographics::AGE_BANDS,
     gender: ChartDemographics::GENDERS
   }.freeze
-  PAID_AT_SQL = "COALESCE(carts.payment_completed, items.created_at)".freeze
   LIFETIME_SQL = "items.description LIKE 'Lifetime%'".freeze
 
   def initialize(period: "month", today: Date.current)
@@ -65,8 +64,8 @@ class Admin::ActivePlayersChart
 
   def active_memberships
     # Collapse overlapping subscriptions to one row per player and snapshot.
-    Item::Subscription.paid.left_joins(:cart).
-      joins("INNER JOIN (#{snapshot_table}) snapshots ON #{PAID_AT_SQL} < snapshots.cutoff_at").
+    Item::Subscription.paid_before(Arel.sql("snapshots.cutoff_at")).
+      joins("CROSS JOIN (#{snapshot_table}) snapshots").
       where("(items.start_date <= snapshots.snapshot_on AND items.end_date >= snapshots.snapshot_on) OR #{LIFETIME_SQL}").
       group("snapshots.snapshot_on", "snapshots.cutoff_at", "items.player_id").
       select("snapshots.snapshot_on", "snapshots.cutoff_at", "items.player_id AS member_id",
@@ -74,9 +73,8 @@ class Admin::ActivePlayersChart
   end
 
   def prior_subscriptions
-    Item::Subscription.paid.left_joins(:cart).
-      where("items.player_id = memberships.member_id AND items.end_date < memberships.season_start").
-      where("#{PAID_AT_SQL} < memberships.cutoff_at").select("1")
+    Item::Subscription.paid_before(Arel.sql("memberships.cutoff_at")).
+      where("items.player_id = memberships.member_id AND items.end_date < memberships.season_start").select("1")
   end
 
   def snapshot_table

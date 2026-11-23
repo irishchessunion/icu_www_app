@@ -7,6 +7,10 @@ class Item::Subscription < Item
   scope :season_duplicates,   ->(player, end_date) { active.where(player_id: player.id, end_date: end_date) }
   scope :any_duplicates,      ->(player, end_date) { active.where(player_id: player.id).where("end_date = ? OR end_date IS NULL", end_date) }
 
+  scope :paid_before, ->(cutoff) {
+    paid.left_joins(:cart).where("COALESCE(carts.payment_completed, items.created_at) < ?", cutoff)
+  }
+
   def additional_information
     info = []
     if active?

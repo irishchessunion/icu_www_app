@@ -39,6 +39,15 @@ describe Admin::ActivePlayersChart do
     expect(counts[:membership]).to include("New Members" => [1, 0, 0, 0], "Renewed Members" => [0, 0, 1, 1])
   end
 
+  it "excludes prior-season payments at the cutoff" do
+    player = create(:player)
+    subscribe(player)
+    cart = create(:cart, status: "paid", payment_completed: Time.zone.local(2026, 11, 1))
+    subscribe(player, fee: previous_fee, cart: cart)
+
+    expect(counts(columns: 2)[:membership]).to include("New Members" => [1, 0], "Renewed Members" => [0, 1])
+  end
+
   it "counts lifetime members from their grant" do
     player = create(:player, status: "deceased")
     subscribe(player)
