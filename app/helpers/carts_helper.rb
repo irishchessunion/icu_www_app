@@ -3,6 +3,12 @@ module CartsHelper
     number_to_currency(amount, precision: precision, unit: "€")
   end
 
+  def continue_shopping_path(cart)
+    last_item = cart.items.max_by(&:id)
+    event = last_item.fee&.event if last_item.is_a?(Item::Entry)
+    event ? event_path(event) : shop_path
+  end
+
   # Extra lines shown under each item in payment receipts to help admins and treasurers identify records.
   def item_reference_lines(item)
     lines = []
