@@ -31,6 +31,9 @@ describe "Entering an event", js: true do
     expect(Item::Subscription.last.fee).to eq overseas
     expect(page).to have_content(overseas.description(:full))
     expect(page).to have_content(fee.description(:full))
+
+    click_link I18n.t("shop.cart.continue")
+    expect(page).to have_current_path(event_path(event))
   end
 
   it "searches for a player while typing, without leaving the field (as iPhones don't)" do

@@ -2,9 +2,12 @@
 - if can?(:create, CashPayment)
   - add_help("offline_payments")
 
+- last_item = @cart.items.max_by(&:id)
+- event = last_item.fee&.event if last_item.is_a?(Item::Entry)
+
 .row
   .col-md-12.text-center
-    = link_to t("shop.cart.continue"), shop_path, class: "btn btn-info btn-md"
+    = link_to t("shop.cart.continue"), event ? event_path(event) : shop_path, class: "btn btn-info btn-md"
     - if current_cart && current_cart.items.count > 0
       = link_to t("shop.cart.checkout"), switch_to_tls(:card), class: "btn btn-success btn-md"
       - if can?(:create, CashPayment)
