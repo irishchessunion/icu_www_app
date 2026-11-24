@@ -19,6 +19,12 @@ describe "Admin overview", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body.fetch("categories").size).to eq 8
       expect(response.parsed_body.fetch("series").keys).to eq %w[accounts age gender]
+
+      get admin_overview_active_players_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.fetch("categories").size).to eq 12
+      expect(response.parsed_body.fetch("series").keys).to eq %w[membership accounts age gender]
     end
   end
 
@@ -34,6 +40,10 @@ describe "Admin overview", type: :request do
       get admin_overview_new_players_path
 
       expect(response).to redirect_to sign_in_path
+
+      get admin_overview_active_players_path
+
+      expect(response).to redirect_to sign_in_path
     end
   end
 
@@ -45,6 +55,10 @@ describe "Admin overview", type: :request do
     get admin_overview_new_players_path
 
     expect(response).to redirect_to sign_in_path
+
+    get admin_overview_active_players_path
+
+    expect(response).to redirect_to sign_in_path
   end
 
   it "rejects unsupported chart periods" do
@@ -52,6 +66,10 @@ describe "Admin overview", type: :request do
     post sessions_path, params: { email: user.email, password: "password" }
 
     get admin_overview_new_players_path, params: { period: "invalid" }
+
+    expect(response).to have_http_status(:bad_request)
+
+    get admin_overview_active_players_path, params: { period: "year" }
 
     expect(response).to have_http_status(:bad_request)
   end

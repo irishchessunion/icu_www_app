@@ -45,6 +45,21 @@ describe "Overview players chart", type: :feature, js: true do
     expect(page).not_to have_content("Unable to load chart")
   end
 
+  it "switches the Active Players period" do
+    create(:paid_subscription_item)
+    login "admin"
+    visit admin_overview_path
+
+    within "#active-players" do
+      expect(page).to have_css(".apexcharts-legend-text", text: "New Members")
+      expect(page).to have_css(".apexcharts-xaxis-texts-g text", count: 12)
+      choose "Season", allow_label_click: true
+      expect(page).to have_css(".apexcharts-xaxis-texts-g text", text: Season.new.to_s)
+    end
+
+    expect(page).to have_css("#new-players .apexcharts-xaxis-texts-g text", count: 12)
+  end
+
   it "shows empty periods without moving the chart in a dark theme at mobile width" do
     create(:player, joined: Date.current.prev_year(2))
     login create(:user, roles: "treasurer", theme: "Darkly")

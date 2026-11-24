@@ -86,7 +86,7 @@ class ChartController extends Controller {
   chartOptions() {
     const style = getComputedStyle(this.element);
     const color = name => style.getPropertyValue(name).trim();
-    const colors = ["--brand-info", "--brand-success", "--brand-warning", "--brand-danger", "--brand-primary", "--gray-dark", "--gray-light", "--gray-darker", "--gray"].map(color);
+    const colors = ["--brand-info-dark", "--brand-success", "--brand-warning", "--brand-danger", "--brand-info-light",  "--brand-success-dark",  "--brand-warning-dark",  "--brand-danger-dark", "--brand-primary-light", "--gray-darker"].map(color);
 
     return {
       chart: {

@@ -15,6 +15,13 @@ class Admin::OverviewController < ApplicationController
     render json: Admin::NewPlayersChart.new(period: period).data
   end
 
+  def active_players
+    period = params.fetch(:period, "month")
+    return head :bad_request unless Admin::ActivePlayersChart::PERIODS.include?(period)
+
+    render json: Admin::ActivePlayersChart.new(period: period).data
+  end
+
   private
 
   def authorize_overview
